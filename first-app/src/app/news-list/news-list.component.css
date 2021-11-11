@@ -1,0 +1,17 @@
+.news_item
+{
+    border: 1px solid black;
+    width: 80%;
+    padding: 30px;
+    background-color:white;
+    margin: 10px auto;
+}
+.news_title{
+    padding-left: 30px;
+}
+.news_time{
+    padding-left: 10px;
+}
+.news_item.selected{
+    background-color: yellowgreen;
+}

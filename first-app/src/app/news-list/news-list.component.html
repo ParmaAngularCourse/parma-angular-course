@@ -1,0 +1,5 @@
+<div class='news_item' [ngClass]="getClass(news)" *ngFor="let news of newsList">
+    <input type='checkbox' (change)="chackedChanged($event,news)" />
+    <label class='news_time'>{{news.dateTime}}</label>
+    <p class='news_title'>{{news.title}}</p>
+</div>
