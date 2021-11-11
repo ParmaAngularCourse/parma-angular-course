@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Задание со звездочкой</title>
+    <script>
+        let isShow = true;
+        let change = function (eventItem) {
+            isShow = eventItem.checked;
+        }
+        
+        let items = [
+            {name:'Иван', data: '01.01.2021'},
+            {name:'Петр', data: '01.02.2021'},
+            {name:'Сидр', data: '01.03.2021'}
+        ];
+
+        add = function (){
+            var uName = document.getElementsByName('uName')[0].value;
+            var uDate = document.getElementsByName('uDate')[0].value;
+            if(uName.length > 0 && uDate.length > 0) {
+                items.push({name: uName, data: convertDate(uDate)});
+            }
+            else {
+                alert('введите имя и/или дату')
+            }
+        }
+
+        function convertDate(inputFormat) {
+            function pad(s) { return (s < 10) ? '0' + s : s; }
+            var d = new Date(inputFormat)
+            return [pad(d.getDate()), pad(d.getMonth()+1), d.getFullYear()].join('.')
+        }
+    </script>
+</head>
+<body>
+    <div myIf="isShow">Поле1</div>
+    <div myIf="!isShow">Поле2</div>
+    <input type="checkbox" onchange="change(this)" checked="checked">
+    
+    <hr>
+
+    <label>Имя</label>
+    <input name="uName" >
+    <label>Дата рождения</label>
+    <input type="date" name="uDate">
+    <button type="button" onclick="add()" >Добавить</button>
+    
+    <ul myFor="let item of items">
+        <li>${item.name} - ${item.data}</li>
+    </ul>
+    
+    <script src="myIf.js"></script>
+    <script src="myFor.js"></script>
+
+</body>
+</html>
