@@ -1,0 +1,16 @@
+.newsStyle{
+    border: 2px solid black;
+    margin-top: 2px;
+    width: 250px;
+    height: auto;
+    padding: 3px;
+    background-color: azure;
+    display: flex;
+    vertical-align: middle;
+}
+
+.newsStyle input{
+    align-self: center;
+    margin-right: 10px;
+}
+
