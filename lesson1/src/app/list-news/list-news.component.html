@@ -1,4 +1,4 @@
-<div class="newsStyle" [style.background-color]="news.backgroundColor" *ngFor="let news of listNews">
+<div class="newsStyle" [class.grayBackground]="news.isSelected" *ngFor="let news of listNews">
     <input type="checkbox" (change)="onChangeColor($event, news)"/>
     <p>{{news.date}}</p>
     <p>Заголовок: {{news.header}}</p>

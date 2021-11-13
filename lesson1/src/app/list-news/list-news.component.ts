@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 type News = {
   date: string, 
   header: string,
-  backgroundColor: string
+  isSelected: boolean
 }
 
 @Component({
@@ -13,17 +13,14 @@ type News = {
 })
 export class ListNewsComponent implements OnInit {
 
-  private defaultBackgroundColor: string = 'azure';
-  private selectedBackgroundColor: string = 'grey';
-  
   public listNews: News[] = [
-    {date:'01.01.2021 08:09', header: 'News 1', backgroundColor: this.defaultBackgroundColor},
-    {date: '01.01.2021 10:16', header: 'News 2', backgroundColor: this.defaultBackgroundColor},
-    {date: '02.01.2021 11:18', header: 'News 3', backgroundColor: this.defaultBackgroundColor},
-    {date: '03.01.2021 14:16', header: 'News 4', backgroundColor: this.defaultBackgroundColor},
-    {date: '04.01.2021 10:16', header: 'News 5', backgroundColor: this.defaultBackgroundColor},
-    {date: '05.01.2021 15:18', header: 'News 6', backgroundColor: this.defaultBackgroundColor},
-    {date: '06.01.2021 13:15', header: 'News 7', backgroundColor: this.defaultBackgroundColor},
+    {date:'01.01.2021 08:09', header: 'News 1', isSelected: false},
+    {date: '01.01.2021 10:16', header: 'News 2', isSelected: false},
+    {date: '02.01.2021 11:18', header: 'News 3', isSelected: false},
+    {date: '03.01.2021 14:16', header: 'News 4', isSelected: false},
+    {date: '04.01.2021 10:16', header: 'News 5', isSelected: false},
+    {date: '05.01.2021 15:18', header: 'News 6', isSelected: false},
+    {date: '06.01.2021 13:15', header: 'News 7', isSelected: false},
   ];
 
   constructor() { 
@@ -35,10 +32,10 @@ export class ListNewsComponent implements OnInit {
   onChangeColor($event: Event, news: News){
     var checkBox = ($event.target as HTMLInputElement);
     if (checkBox.checked) {
-      news.backgroundColor = this.selectedBackgroundColor;
+      news.isSelected = true;
     }
     else{
-      news.backgroundColor = this.defaultBackgroundColor;
+      news.isSelected = false;
     }
   }
 
