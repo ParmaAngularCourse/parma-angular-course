@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <title>Блок 2 js директивы</title>
+    </head>
+    <body>
+        <div ngIf="false">
+            <p>Блок ngIf</p>
+        </div>
+        <div ngFor="let item of [1,2,3,4]">
+            <p>Блок ngFor</p>
+        </div>
+        <script lang="Javascript">
+            var elementsIf = document.querySelectorAll("[ngIf]");
+
+            var lengthIf = elementsIf.length;
+
+            for (var i = 0; i < lengthIf; i++) {
+                var elementWithIf = elementsIf[i];
+                var condition = elementWithIf.getAttribute('ngIf');
+                var conditionValue = eval(condition);
+                if (!conditionValue) {
+                    elementWithIf.setAttribute('hidden', '');
+                }
+                else
+                {
+                    elementWithIf.removeAttribute('hidden');
+                }
+            }
+
+            var elementsFor = document.querySelectorAll("[ngFor]");
+
+            var lengthFor = elementsFor.length;
+
+            for(let i = 0; i < lengthFor; i++)
+            {
+                let elementFor = elementsFor[i];
+                let parentElementFor = elementFor.parentElement;
+                parentElementFor.removeChild(elementFor);
+                let forCondition = elementFor.getAttribute('ngFor');
+                let scriptCreateFor = `for (${forCondition}) {let newElement = elementFor.cloneNode(true);parentElementFor.appendChild(newElement);}`;
+                eval(scriptCreateFor);
+            }
+        </script>
+    </body>
+</html>
