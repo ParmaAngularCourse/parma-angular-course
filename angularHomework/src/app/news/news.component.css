@@ -1,0 +1,14 @@
+label {
+  margin-left: 1em;
+  font-size: larger;
+}
+
+p {
+    margin-left: 2em;
+}
+
+.news {
+  border: solid;
+  padding: 1em;
+  margin: 1em;
+}
