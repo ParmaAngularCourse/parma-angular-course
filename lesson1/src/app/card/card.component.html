@@ -1,0 +1,7 @@
+<div class="card" [ngStyle]="{'background-color': card.isSelected ? 'yellow' : 'gray'}">
+    <input type="checkbox" value="{{card.isSelected}}" (click)='onChange()'>
+    <label>{{card.title}}</label>
+    <p>{{card.text}}</p>
+    <br>
+    <p>{{card.uploadDate | date}}</p>
+</div>

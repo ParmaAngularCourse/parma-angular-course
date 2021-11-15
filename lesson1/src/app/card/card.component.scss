@@ -1,0 +1,12 @@
+$blue: #3bbfca;
+$gray: #b0938f;
+$black: #000000;
+
+$margin: 16px;
+
+.card {
+    padding: $margin / 2;
+    margin: $margin;
+    background-color: $gray;
+    border-color: $black;
+}
