@@ -1,8 +1,18 @@
 <div class="header-div">
   <p>News</p>
 </div>
+
 <div>
-  <ng-container *ngFor="let item of news" >
-  <app-card [card]="item" ></app-card>
-</ng-container>
+  <ng-container *ngFor="let item of news">
+    <app-card [card]="item"></app-card>
+  </ng-container>
+</div>
+
+
+<div class="footer-my-directives">
+  <hr>
+  <p *myIf="true">Текст видно по условию myIf </p>
+  <p *myIf="false"> Текст не видно</p>
+
+  <p *myFor="[1,2,3,4,5]" >Мой цикл</p>
 </div>
