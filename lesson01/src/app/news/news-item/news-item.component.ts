@@ -1,10 +1,11 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {NewsItemModel} from "../news-types";
 
 @Component({
   selector: 'app-news-item',
   templateUrl: './news-item.component.html',
-  styleUrls: ['./news-item.component.css']
+  styleUrls: ['./news-item.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NewsItemComponent implements OnInit {
 
