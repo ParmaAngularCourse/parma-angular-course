@@ -1,5 +1,7 @@
 <app-news-item
   *ngFor="let newItem of news"
   [newsItem]="newItem"
+  (removeItem)="onRemoveItem($event)"
+  (editItem)="onEditItem($event)"
 >
 </app-news-item>

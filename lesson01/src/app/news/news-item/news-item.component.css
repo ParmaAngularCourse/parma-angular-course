@@ -8,3 +8,7 @@
 .active {
   background-color: lightgray;
 }
+
+.news-item button {
+  margin-right: 5px;
+}

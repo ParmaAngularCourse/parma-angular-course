@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {NewsItemModel} from "../news-types";
 
 @Component({
@@ -8,10 +8,11 @@ import {NewsItemModel} from "../news-types";
 })
 export class NewsItemComponent implements OnInit {
 
-  isactive: boolean = false;
-  activeClassName: string = "";
+  isActive: boolean = false;
 
   @Input() newsItem!: NewsItemModel;
+  @Output() removeItem: EventEmitter<number> = new EventEmitter<number>();
+  @Output() editItem: EventEmitter<number> = new EventEmitter<number>();
   constructor() {
   }
 
@@ -19,7 +20,14 @@ export class NewsItemComponent implements OnInit {
   }
 
   checkboxChange($event: Event){
-    this.isactive = ($event.target as HTMLInputElement).checked;
-    this.activeClassName = this.isactive ? 'active' : '';
+    this.isActive = ($event.target as HTMLInputElement).checked;
+  }
+
+  remove() {
+    this.removeItem.emit(this.newsItem.id);
+  }
+
+  edit() {
+    this.editItem.emit(this.newsItem.id);
   }
 }
