@@ -1,0 +1,5 @@
+<div class="news-item" [ngClass]="activeClassName" >
+  <input type="checkbox" (change)="checkboxChange($event)" />
+  <div>{{newsItem.date}}</div>
+  <div>{{newsItem.desc}}</div>
+</div>

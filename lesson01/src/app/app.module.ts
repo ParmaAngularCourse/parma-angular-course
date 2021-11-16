@@ -3,16 +3,16 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppComponent } from './app.component';
 import { NewsComponent } from './news/news.component';
-import {FormsModule} from "@angular/forms";
+import { NewsItemComponent } from './news/news-item/news-item.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     NewsComponent,
+    NewsItemComponent,
   ],
   imports: [
-    BrowserModule,
-    FormsModule
+    BrowserModule
   ],
   providers: [],
   bootstrap: [AppComponent]
