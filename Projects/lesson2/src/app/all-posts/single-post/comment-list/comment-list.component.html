@@ -1,0 +1,3 @@
+<div *ngFor="let item of comments">{{item.commentText}}</div>
+<input #newComment type="text">
+<button (click)="clickAddButton(newComment.value)">Добавить</button>

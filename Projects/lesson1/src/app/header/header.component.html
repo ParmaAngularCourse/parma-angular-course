@@ -1,0 +1,4 @@
+<p (click)="changeColor('green')" [style.color]="style_color">Привет {{ randomValue }} header works!</p>
+<input #newColor type='text'>
+
+<button (click)="changeColor(newColor.value)">Меняем цвет</button>
