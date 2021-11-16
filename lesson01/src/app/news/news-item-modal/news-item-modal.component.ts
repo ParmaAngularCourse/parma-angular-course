@@ -8,7 +8,7 @@ import {NewsItemModel} from "../news-types";
 })
 export class NewsItemModalComponent implements OnInit {
 
-  @Input() newsItem!: NewsItemModel;
+  @Input() newsItem?: NewsItemModel;
   @Output() close : EventEmitter<any> = new EventEmitter<any>();
   @Output() save : EventEmitter<NewsItemModel> = new EventEmitter<NewsItemModel>();
 
@@ -20,7 +20,7 @@ export class NewsItemModalComponent implements OnInit {
 
   ngOnInit(): void {
     if(this.newsItem != undefined)
-      this.item = this.newsItem;
+      this.item = new NewsItemModel(this.newsItem.id, this.newsItem.date, this.newsItem.head, this.newsItem.desc);
   }
 
   cancel() {
@@ -28,7 +28,7 @@ export class NewsItemModalComponent implements OnInit {
   }
 
   saveItem() {
-    this.save.emit(this.newsItem);
+    this.save.emit(this.item);
     this.close.emit();
   }
 

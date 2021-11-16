@@ -16,7 +16,7 @@ export class NewsComponent implements OnInit {
   ]
 
   showModal: boolean = false;
-  editedItem!: NewsItemModel;
+  editedItem?: NewsItemModel;
 
   constructor() { }
 
@@ -39,7 +39,18 @@ export class NewsComponent implements OnInit {
     if($event.id > 0) {
       let index = this.news.findIndex(p => p.id == $event.id);
       this.news[index] = $event;
+    } else {
+      let maxId = this.news
+        .map((v) => { return v.id;})
+        .sort()[this.news.length - 1];
+      $event.id = maxId + 1;
+      this.news.push($event);
     }
+  }
+
+  onAdd() {
+    this.editedItem = undefined;
+    this.showModal = true;
   }
 
   onCloseModal() {
