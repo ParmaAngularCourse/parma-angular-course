@@ -12,7 +12,7 @@ export class NewsItemComponent implements OnInit {
 
   @Input() newsItem!: NewsItemModel;
   @Output() removeItem: EventEmitter<number> = new EventEmitter<number>();
-  @Output() editItem: EventEmitter<number> = new EventEmitter<number>();
+  @Output() editItem: EventEmitter<NewsItemModel> = new EventEmitter<NewsItemModel>();
   constructor() {
   }
 
@@ -28,6 +28,6 @@ export class NewsItemComponent implements OnInit {
   }
 
   edit() {
-    this.editItem.emit(this.newsItem.id);
+    this.editItem.emit(this.newsItem);
   }
 }

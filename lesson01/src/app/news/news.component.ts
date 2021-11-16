@@ -15,6 +15,9 @@ export class NewsComponent implements OnInit {
     new NewsItemModel(4, "01.04.2021 00:00:04", "Новость #4", "Текст новости #4")
   ]
 
+  showModal: boolean = false;
+  editedItem!: NewsItemModel;
+
   constructor() { }
 
   ngOnInit(): void {
@@ -27,7 +30,19 @@ export class NewsComponent implements OnInit {
     }
   }
 
-  onEditItem($event: number) {
-    console.log($event);
+  onEditItem($event: NewsItemModel) {
+    this.editedItem = $event;
+    this.showModal = true;
+  }
+
+  onSaveItem($event: NewsItemModel) {
+    if($event.id > 0) {
+      let index = this.news.findIndex(p => p.id == $event.id);
+      this.news[index] = $event;
+    }
+  }
+
+  onCloseModal() {
+    this.showModal = false;
   }
 }

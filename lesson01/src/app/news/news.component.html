@@ -5,3 +5,10 @@
   (editItem)="onEditItem($event)"
 >
 </app-news-item>
+<app-news-item-modal
+  *ngIf="showModal"
+  [newsItem]="editedItem"
+  (save)="onSaveItem($event)"
+  (close)="onCloseModal()"
+></app-news-item-modal>
+
