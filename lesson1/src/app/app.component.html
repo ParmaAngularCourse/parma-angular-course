@@ -2,7 +2,7 @@
   <p>News</p>
 </div>
 <div>
-  <ng-container *ngFor="let item of news">
-    <app-card></app-card>
-  </ng-container>
+  <ng-container *ngFor="let item of news" >
+  <app-card [card]="item" ></app-card>
+</ng-container>
 </div>

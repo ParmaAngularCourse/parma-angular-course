@@ -8,6 +8,6 @@ import { Card } from './card/card';
 })
 export class AppComponent {
 
-  news :Array<Card> = new NewsService().GetNews();
+  public news :Array<Card> = new NewsService().GetNews();
   title = 'Angular project';
 }
