@@ -1,0 +1,15 @@
+<div class="news-block">
+    <div>
+      <div class="news-header" [ngClass]="{'news-block-uncheked': !checkBoxState, 'news-block-cheked': checkBoxState}">
+        <!--<div class="timeline" ngIf="!checkBoxState"></div>-->
+        <!--Кастомная js функция скрывает timeline элемент-->
+        <div class="timeline"></div>
+        <div class="circle" *ngIf="!checkBoxState"></div>
+        <div class="news-title">
+            <input type="checkbox" (change)="onCheckboxChange($event)" [checked]="checkBoxState">
+            <h3>{{currentNews.date}} {{currentNews.title}}</h3>
+        </div>
+        <div>{{currentNews.body}}</div>
+      </div>      
+    </div>
+  </div>
