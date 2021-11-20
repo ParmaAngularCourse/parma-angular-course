@@ -1,4 +1,4 @@
-<div class="news" *ngFor="let item of news; index as i" [style.background-color]="getColor(i)">
+<div class="news" *ngFor="let item of news; index as i" [style.background-color]="item.isChecked ? 'lightgrey' : 'white'">
     <input type="checkbox" id="checkbox" [checked]="item.isChecked" (change)="onChange(i)">
     <label>{{item.title}}</label>
     <p>{{item.dateTime}}</p>

@@ -28,12 +28,4 @@ export class NewsComponent implements OnInit {
   onChange(i: number) {
     this.news[i].isChecked = !this.news[i].isChecked;
   }
-
-  getColor(i: number): string {
-    if (this.news[i].isChecked)
-      return "lightgrey";
-    else
-      return "white";
-  }
-
 }
