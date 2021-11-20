@@ -1,0 +1,8 @@
+<div class="main_block">
+<p class="title_header">{{title}}</p>
+    <div class="news_content">
+        <div *ngFor="let newsItem of newsArray">
+            <app-news-block [currentNews] = "newsItem"></app-news-block>
+        </div>
+    </div>
+</div>
