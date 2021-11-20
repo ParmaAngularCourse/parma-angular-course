@@ -1,14 +1,16 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { News } from 'src/model/news';
 
 @Component({
   selector: 'app-news-list',
   templateUrl: './news-list.component.html',
-  styleUrls: ['./news-list.component.css']
+  styleUrls: ['./news-list.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NewsListComponent implements OnInit {
 
   public newsArray:News[];
+  public showEditForm: boolean = false;  
 
   constructor()
   {
@@ -24,4 +26,23 @@ export class NewsListComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  onDeleteNews(news:News){
+    var newsIndex = this.newsArray.indexOf(news, 0);
+    if (newsIndex > -1) {
+      this.newsArray.splice(newsIndex, 1);
+   }
+  }
+
+  onShowEditForm(){
+    this.showEditForm = !this.showEditForm;
+  }
+  
+  onSaveNewNews(newNews: News){
+    this.newsArray.push(newNews);
+    this.newsArray = this.newsArray.sort((newsF, newsS)=>newsS.date.getTime() - newsF.date.getTime());
+  }
+
+  ngDoCheck(){
+    console.log('app-news-list');
+  }
 }
