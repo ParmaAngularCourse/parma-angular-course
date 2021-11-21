@@ -1,0 +1,41 @@
+.detailStyle {
+    width: 300px;
+}
+
+div {
+    margin: 10px;
+}
+
+p {
+    margin: 5px;
+    display: block;
+}
+
+input {
+    border: 1px solid gray;
+    border-radius: 5px;
+    height: 16px;
+    padding: 5px;
+    width: 100%;
+}
+
+button {
+    color: white;
+    background-color: dodgerblue;
+    margin: 10px;
+    padding: 6px;
+    border: 1px solid gray;
+    border-radius: 5px;
+}
+
+button:disabled {
+    color: white;
+    background-color: darkgrey;
+    border-radius: 5px;
+}
+
+.buttonStyle {
+    display: block;
+    float: right;
+    margin: 0px;
+}
