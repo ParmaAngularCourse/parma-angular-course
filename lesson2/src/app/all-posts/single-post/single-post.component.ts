@@ -1,10 +1,11 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { PostObj } from '../post-types';
 
 @Component({
   selector: 'app-single-post',
   templateUrl: './single-post.component.html',
-  styleUrls: ['./single-post.component.css']
+  styleUrls: ['./single-post.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SinglePostComponent implements OnInit {
 
@@ -24,6 +25,10 @@ export class SinglePostComponent implements OnInit {
   deletePostHandler(post:PostObj)
   {
     this.deletePost.emit(post);
+  }
+
+  ngDoCheck() {
+    console.log('single-post ' + this.post.id);
   }
 
 }

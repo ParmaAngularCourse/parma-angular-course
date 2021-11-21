@@ -1,10 +1,11 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { PostObj } from './post-types';
 
 @Component({
   selector: 'app-all-posts',
   templateUrl: './all-posts.component.html',
-  styleUrls: ['./all-posts.component.css']
+  styleUrls: ['./all-posts.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AllPostsComponent implements OnInit {
 
@@ -56,6 +57,10 @@ export class AllPostsComponent implements OnInit {
     if (index > -1) {
       this.posts.splice(index, 1);
     }
+  }
+
+  ngDoCheck() {
+    console.log('all-posts');
   }
 
 }
