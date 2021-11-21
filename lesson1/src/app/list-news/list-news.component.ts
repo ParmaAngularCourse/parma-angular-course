@@ -29,14 +29,8 @@ export class ListNewsComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  onChangeColor($event: Event, news: News){
-    var checkBox = ($event.target as HTMLInputElement);
-    if (checkBox.checked) {
-      news.isSelected = true;
-    }
-    else{
-      news.isSelected = false;
-    }
+  onChangeColor(checked: boolean, news: News){
+    news.isSelected = checked;
   }
 
 }
