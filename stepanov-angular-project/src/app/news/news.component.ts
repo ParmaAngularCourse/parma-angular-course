@@ -45,6 +45,20 @@ export class NewsComponent implements OnInit {
   }
 
   saveNewItem($event: NewsPart) {
+    if(!$event.id) {
+      $event.id = this.findMaxId() + 1;
+    }
     this.items.push($event);
+  }
+
+  findMaxId() : number {
+    var maxId = -1;
+    this.items.forEach(item => {
+      var currentId = item.id!!;
+      if(currentId > maxId) {
+        maxId = currentId;
+      }
+    });
+    return maxId;
   }
 }
