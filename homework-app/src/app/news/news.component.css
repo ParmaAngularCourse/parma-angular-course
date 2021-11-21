@@ -1,0 +1,22 @@
+.newsList {
+    border: solid 1px;
+    padding: 20px;
+    width: 30%;
+    margin: auto;
+}
+.newsColumn {
+    display: inline-block;
+    vertical-align: top;
+    margin-right: 10px;
+}
+.newsItem {
+    border: solid 1px;
+    padding: 5px;
+    margin: 10px;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 12px;
+    display: flex;
+}
+.selectedNews {
+    background-color: lightgrey;
+}
