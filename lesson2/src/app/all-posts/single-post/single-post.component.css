@@ -1,0 +1,46 @@
+.newsStyle{
+    border: 2px solid black;
+    margin-top: 2px;
+    width: 300px;
+    height: auto;
+    padding: 3px;
+    background-color: azure;
+    display: block;
+}
+
+.checkboxStyle{
+    display: inline-block;
+}
+
+.postStyle {
+    display: inline-block;
+}
+
+.checkboxStyle input{
+    align-self: center;
+    margin-right: 10px;
+}
+
+.grayBackground {
+    background-color: gray;
+}
+
+button {
+    color: white;
+    background-color: dodgerblue;
+    margin: 10px;
+    padding: 6px;
+    border: 1px solid gray;
+    border-radius: 5px;
+}
+
+button:disabled {
+    color: white;
+    background-color: darkgrey;
+    border-radius: 5px;
+}
+
+.buttonStyle {
+    display: block;
+    margin-left: 15px;
+}
