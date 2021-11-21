@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function(){ 
-    
+
     document.querySelectorAll('[ngFor]').forEach(el => { 
         let ngForValue = el.getAttribute('ngFor');
         let ngForItem = ngForValue.split(' ')[1];
