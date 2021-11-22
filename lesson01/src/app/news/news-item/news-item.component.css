@@ -1,0 +1,14 @@
+.news-item {
+  border: 1px solid navy;
+  width: 300px;
+  margin: 5px;
+  padding: 10px;
+}
+
+.active {
+  background-color: lightgray;
+}
+
+.news-item button {
+  margin-right: 5px;
+}

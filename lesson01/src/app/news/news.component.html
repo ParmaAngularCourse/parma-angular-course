@@ -1,17 +1,15 @@
-<h3>Вариант 1 как мне кажется самый верный</h3>
-
-<div class="news-item" *ngFor="let newItem of news" [class.active]="newItem.isactive" >
-  <input type="checkbox" [(ngModel)]="newItem.isactive"/>
-  <div>{{newItem.date}}</div>
-  <div>{{newItem.desc}}</div>
-</div>
-
-<h3>Вариант 1 (через [ngClass])</h3>
-
-<div class="news-item" *ngFor="let newItem of news2" [ngClass]="newItem.isactive ? 'active' : ''" >
-  <input type="checkbox" (change)="checkboxChange($event, newItem)" />
-  <div>{{newItem.date}}</div>
-  <div>{{newItem.desc}}</div>
-</div>
-
+<button (click)="onAdd()">Добавить</button>
+<app-news-item
+  *ngFor="let newItem of news"
+  [newsItem]="newItem"
+  (removeItem)="onRemoveItem($event)"
+  (editItem)="onEditItem($event)"
+>
+</app-news-item>
+<app-news-item-modal
+  *ngIf="showModal"
+  [newsItem]="editedItem"
+  (save)="onSaveItem($event)"
+  (close)="onCloseModal()"
+></app-news-item-modal>
 

@@ -3,16 +3,18 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppComponent } from './app.component';
 import { NewsComponent } from './news/news.component';
-import {FormsModule} from "@angular/forms";
+import { NewsItemComponent } from './news/news-item/news-item.component';
+import { NewsItemModalComponent } from './news/news-item-modal/news-item-modal.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     NewsComponent,
+    NewsItemComponent,
+    NewsItemModalComponent
   ],
   imports: [
     BrowserModule,
-    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

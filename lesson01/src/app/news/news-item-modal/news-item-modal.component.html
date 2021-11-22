@@ -1,0 +1,13 @@
+<div class="sub"></div>
+<div class="modal">
+  <div class="modal-inner">
+    <label>Дата:</label>
+    <input type="text" [value]="item.date" #date (change)="onDateChange(date.value)" />
+    <label>Заголовок:</label>
+    <input type="text" [value]="item.head" #head (change)="onHeadChange(head.value)" />
+    <label>Описание:</label>
+    <input type="text" [value]="item.desc" #desc (change)="onDescChange(desc.value)" />
+    <button (click)="saveItem()">Сохранить</button>
+    <button (click)="cancel()">Отмена</button>
+  </div>
+</div>

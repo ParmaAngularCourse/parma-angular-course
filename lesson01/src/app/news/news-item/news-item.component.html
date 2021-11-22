@@ -1,0 +1,7 @@
+<div class="news-item" [ngClass]="this.isActive ? 'active' : ''" >
+  <input type="checkbox" (change)="checkboxChange($event)" />
+  <div>{{newsItem.date}}</div>
+  <div>{{newsItem.head}}</div>
+  <button (click)="edit()">Редактировать</button>
+  <button (click)="remove()" [disabled]="!this.isActive">Удалить</button>
+</div>
