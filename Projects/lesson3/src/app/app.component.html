@@ -1,0 +1,15 @@
+<ng-container #containerTemplate></ng-container>
+<app-child-component #contextMenuComponent></app-child-component>
+<button (click)="onShowButtonClick()">Включим меню</button>
+<h1 #title style="background: khaki;">Большой, большой текст</h1>
+<button (click)="onChangeColor()">Меняем цвет</button>
+
+<ng-template #titletemplate>
+  <h1 style="background: red;">Текст шаблона</h1>
+</ng-template>
+<button (click)="onShowTemplate()">Встраиваем шаблон</button>
+
+<div style="background: red; margin-top: 30px;">
+<app-parent-component *ngFor="let item of [1, 2, 3]"></app-parent-component>
+<button (click)="onShowParentClick()">Выведем в консоль</button>
+</div>

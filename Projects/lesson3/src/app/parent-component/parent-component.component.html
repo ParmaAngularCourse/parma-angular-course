@@ -1,0 +1,16 @@
+<ng-template #childComponent>
+    <ng-content></ng-content>
+</ng-template>
+
+<div style="background-color: khaki;">
+    <div style="background-color: red;" *ngIf="isFlag == 1">
+        <ng-container [ngTemplateOutlet]="childComponent"></ng-container>
+    </div>
+    <div style="background-color: green;" *ngIf="isFlag == 2">
+        <ng-container [ngTemplateOutlet]="childComponent"></ng-container>
+    </div>
+    <div style="background-color: blue;" *ngIf="isFlag == 3">
+        <ng-container [ngTemplateOutlet]="childComponent"></ng-container>
+    </div>
+</div>
+<button (click)="checkButton()">Переключим</button>
