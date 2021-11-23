@@ -1,0 +1,44 @@
+.news {
+  padding: 30px;
+  background-color: ghostwhite;
+  margin: 10px auto;
+  display: flex;
+  align-items: center;
+}
+
+.checked {
+  background: linear-gradient(to right, red, orange, yellow, green, cyan, blue, violet);
+  background-size: 400% 400%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  -webkit-animation: rainbow 20s ease infinite;
+  animation: rainbow 20s ease infinite;
+}
+
+@-webkit-keyframes rainbow {
+  0% {
+    background-position: 0% 50%
+  }
+
+  50% {
+    background-position: 100% 50%
+  }
+
+  100% {
+    background-position: 0% 50%
+  }
+}
+
+@keyframes rainbow {
+  0% {
+    background-position: 0% 50%
+  }
+
+  50% {
+    background-position: 100% 50%
+  }
+
+  100% {
+    background-position: 0% 50%
+  }
+}

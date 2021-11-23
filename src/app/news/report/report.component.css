@@ -1,0 +1,7 @@
+[type=checkbox] {
+  margin-right: 10px;
+}
+
+::ng-deep .checked button {
+  background: none !important;
+}

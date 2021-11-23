@@ -1,0 +1,3 @@
+<button (click)="clickAddButton()">Добавить</button>
+<app-report (initReport)="initReport($event, i)" (deleteReport)="deleteReport(i)" class="news" *ngFor="let n of news; let i = index" [report]="n" [ngClass]="{checked:n.isChecked}"></app-report>
+<app-edit-report-form (saveReport)="saveReport($event)" [report]="modalData" *ngIf="isModalVisible"></app-edit-report-form>
