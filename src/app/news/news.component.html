@@ -1,0 +1,12 @@
+<ng-container *ngFor="let n of news">
+  <div class="news" [ngClass]="{checked:n.isChecked}">
+    <table>
+      <tr>
+        <th rowspan="2"><input (click)="onCheckedChange(n)" type="checkbox"></th>
+        <th><p>{{n.body}}</p></th>
+      </tr>
+      <tr>
+        <td>На момент времени: {{n.timestamp}}</td>
+      </tr>
+    </table>
+  </div>
