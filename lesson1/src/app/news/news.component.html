@@ -1,9 +1,8 @@
-<link rel="stylesheet" href="news.component.css">
 <ng-container *ngFor = "let item of items" class="com">
 <div class="border" [ngClass] = "{isChecked:item.isChecked}">
     <table >
         <tr>
-            <th><input (click)="Check(item)" type="checkbox"></th>
+            <th><input (click)="check(item)" type="checkbox"></th>
             <th><p>{{item.header}}</p></th>
         </tr>
         <tr>

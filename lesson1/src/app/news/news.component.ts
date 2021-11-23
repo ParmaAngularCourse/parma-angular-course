@@ -14,8 +14,6 @@ type news = {
 })
 export class NewsComponent implements OnInit {
 
-  public isChecked : boolean = false;
-
   public items: news[] = [{
     header: "Заголовок 1",
     dateTime: "15.11.2021",
@@ -38,7 +36,7 @@ export class NewsComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  Check(item : news): void {
+  check(item : news): void {
    item.isChecked = !item.isChecked;
   }
 
