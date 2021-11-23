@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { News } from 'src/model/news';
-
+import { News } from 'src/model/News';
 
 @Component({
   selector: 'app-news-block',
@@ -12,12 +11,12 @@ export class NewsBlockComponent implements OnInit {
 
   @Input() public currentNews: News;
   @Output() public deleteNews: EventEmitter<News> = new EventEmitter();
+  @Output() public editNews: EventEmitter<News> = new EventEmitter();
   public checkBoxState: boolean;
-  public enableDeleteButton: boolean;
-  public showEditForm: boolean = false;       
+  public enableDeleteButton: boolean;       
 
   constructor() { 
-    this.currentNews = new News(new Date, "Новость", "");
+    this.currentNews = new News(-1, new Date, "Новость", "");
     this.checkBoxState = false;
     this.enableDeleteButton = this.checkBoxState;          
   }
@@ -35,8 +34,8 @@ export class NewsBlockComponent implements OnInit {
     this.deleteNews.emit(this.currentNews)
   }
 
-  onShowEditForm(){
-    this.showEditForm = !this.showEditForm;
+  onEditNew(event:Event){    
+    this.editNews.emit(this.currentNews); 
   }
   
   ngDoCheck(){

@@ -2,14 +2,13 @@
     z-index: 1000;
     position: fixed;
     top: 30%;
-    bottom: 0;
     left: 30%;   
 }
 
 .mmodal-body {
     border: 10px groove #3306af;
     background: #fff;
-    margin: 40px;
+    margin: 0px;
     padding: 20px;
 }
 

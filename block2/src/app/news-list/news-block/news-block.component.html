@@ -8,8 +8,7 @@
             <h3>{{currentNews.date | date:'dd MMMM yyyy':'':'ru-Ru'}} {{currentNews.title}}</h3>
         </div>
         <div>{{currentNews.body}}</div>
-        <button class="control-button" name="EditButton" (click)="onShowEditForm()">Редактировать</button>
-        <app-news-editor *ngIf="showEditForm" (closeEditFrom)="showEditForm = false" [currentNews] = "currentNews"></app-news-editor>
+        <button class="control-button" name="EditButton" (click)="onEditNew($event)">Редактировать</button>        
         <button class="control-button" name="DeleteButton" [disabled]="!enableDeleteButton" (click)="onDeleteNew($event)">Удалить</button>
       </div>      
     </div>

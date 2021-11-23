@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { News } from 'src/model/news';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { INewsData } from 'src/model/INewsData';
 
 @Component({
   selector: 'app-news-editor',
@@ -8,26 +8,19 @@ import { News } from 'src/model/news';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NewsEditorComponent implements OnInit {  
-  @Input() public currentNews: News | undefined;
+  @Input() public currentNews: INewsData | undefined;
   @Output() public closeEditFrom: EventEmitter<Event> = new EventEmitter();
-  @Output() public saveEditFrom: EventEmitter<News> = new EventEmitter();
+  @Output() public saveEditFrom: EventEmitter<INewsData> = new EventEmitter();
+  public id:number = -1;
   public newsDate:Date = new Date; 
   public newsTitle:string = "Заголовок";
   public newsBody:string = "Текст";
 
-  constructor(private element: ElementRef<HTMLElement>){
+  constructor(){}
 
-  }
-
-  ngOnInit(): void { 
-    this.element.nativeElement.addEventListener('click', (event:Event)=> {  
-      var htmlElement = event.target as Element;  
-      if (htmlElement.className === 'mmodal-background') {
-        this.closeForm();
-      }        
-    });
-    
+  ngOnInit(): void {   
     if(this.currentNews != undefined){
+      this.id = this.currentNews.id;
       this.newsDate = this.currentNews.date;
       this.newsTitle = this.currentNews.title;
       this.newsBody = this.currentNews.body;
@@ -35,16 +28,13 @@ export class NewsEditorComponent implements OnInit {
   }
 
   saveForm() {
-    if(this.currentNews == undefined){
-      this.currentNews = new News(this.newsDate, this.newsTitle, this.newsBody);    
-      this.saveEditFrom.emit(this.currentNews);
-    }
-    else{
-      this.currentNews.date = this.newsDate;
-      this.currentNews.title = this.newsTitle;
-      this.currentNews.body = this.newsBody;
-    }
-    this.closeForm();
+    this.saveEditFrom.emit({
+      id: this.id,
+      date: this.newsDate,
+      title: this.newsTitle,
+      body: this.newsBody
+    });     
+    this.closeForm();   
   }
 
   closeForm() {
