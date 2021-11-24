@@ -17,7 +17,7 @@ export class NewsComponent implements OnInit {
   ]
 
   showModal: boolean = false;
-  editedItem?: NewsItemModel;
+  editedItem!: NewsItemModel;
 
   constructor() { }
 
@@ -32,26 +32,38 @@ export class NewsComponent implements OnInit {
   }
 
   onEditItem($event: NewsItemModel) {
-    this.editedItem = $event;
+    this.editedItem = new NewsItemModel($event.id, $event.date, $event.head, $event.desc);
     this.showModal = true;
   }
 
-  onSaveItem($event: NewsItemModel) {
-    if($event.id > 0) {
-      let index = this.news.findIndex(p => p.id == $event.id);
-      this.news[index] = $event;
+  onAdd() {
+    this.editedItem = new NewsItemModel(-1, "", "" , "");
+    this.showModal = true;
+  }
+
+  onDateChange(value: string) {
+    this.editedItem.date = value;
+  }
+
+  onHeadChange(value: string) {
+    this.editedItem.head = value;
+  }
+
+  onDescChange(value: string) {
+    this.editedItem.desc = value;
+  }
+
+  onSaveModal(){
+    if(this.editedItem.id > 0) {
+      let index = this.news.findIndex(p => p.id == this.editedItem.id);
+      this.news[index] = this.editedItem;
     } else {
       let maxId = this.news
         .map((v) => { return v.id;})
         .sort()[this.news.length - 1];
-      $event.id = maxId + 1;
-      this.news.push($event);
+      this.editedItem.id = maxId + 1;
+      this.news.push(this.editedItem);
     }
-  }
-
-  onAdd() {
-    this.editedItem = undefined;
-    this.showModal = true;
   }
 
   onCloseModal() {
