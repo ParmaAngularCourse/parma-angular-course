@@ -1,0 +1,30 @@
+label {
+    margin-left: 1em;
+    font-size: larger;
+}
+  
+p {
+    margin-left: 2em;
+}
+  
+.news {
+    border: solid;
+    padding: 1em;
+    margin: 1em;
+}
+
+button {
+    color: white;
+    border: none;
+    background-color: dodgerblue;
+    margin: 0.2em;
+    padding: 1em 0.5em;
+    border-radius: 5px;
+    cursor:pointer;
+  }
+  
+  button:disabled,
+  button[disabled]{
+    background-color: lightgray;
+    cursor: default;
+  }
