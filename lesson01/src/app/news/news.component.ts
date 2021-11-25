@@ -1,6 +1,8 @@
-import {ChangeDetectionStrategy, Component, OnInit, ViewChild} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnInit, QueryList, ViewChild, ViewChildren} from '@angular/core';
 import {NewsItemModel} from "./news-types";
 import {NewsItemModalComponent} from "./news-item-modal/news-item-modal.component";
+import {ContextMenuComponent} from "./context-menu/context-menu.component";
+import {NewsItemComponent} from "./news-item/news-item.component";
 
 @Component({
   selector: 'app-news',
@@ -28,8 +30,11 @@ export class NewsComponent implements OnInit {
     { tag: "internet", text: "Интернет" }
   ];
 
-  @ViewChild('modalComponent', {static: false}) modal! : NewsItemModalComponent;
+  @ViewChild('modalComponent') modal! : NewsItemModalComponent;
   editedItem!: NewsItemModel;
+
+  @ViewChild('contextMenuComponent') menuComponent! : ContextMenuComponent;
+  @ViewChildren(NewsItemComponent) newsItems!: QueryList<NewsItemComponent>;
 
   constructor() {
   }
@@ -82,5 +87,19 @@ export class NewsComponent implements OnInit {
       this.editedItem.id = maxId + 1;
       this.news.push(this.editedItem);
     }
+  }
+
+  onContextMenu($event: MouseEvent) {
+    if($event.button == 2) {
+      $event.preventDefault();
+      this.menuComponent.show({
+        top: $event.clientY,
+        left: $event.clientX
+      });
+    }
+  }
+
+  onSelectAll() {
+    this.newsItems.forEach(p => p.setSelected(true));
   }
 }

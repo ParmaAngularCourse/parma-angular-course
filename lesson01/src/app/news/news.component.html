@@ -4,6 +4,7 @@
   [newsItem]="newItem"
   (removeItem)="onRemoveItem($event)"
   (editItem)="onEditItem($event)"
+  (contextmenu)="onContextMenu($event)"
 >
 </app-news-item>
 <app-news-item-modal #modalComponent
@@ -61,3 +62,8 @@
     </div>
   </ng-container>
 </ng-template>
+
+<app-context-menu
+  #contextMenuComponent
+  (selectAll)="onSelectAll()"
+></app-context-menu>

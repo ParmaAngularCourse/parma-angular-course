@@ -1,5 +1,14 @@
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output
+} from '@angular/core';
 import {NewsItemModel} from "../news-types";
+import {ChangeDetection} from "@angular/cli/lib/config/workspace-schema";
 
 @Component({
   selector: 'app-news-item',
@@ -14,7 +23,7 @@ export class NewsItemComponent implements OnInit {
   @Input() newsItem!: NewsItemModel;
   @Output() removeItem: EventEmitter<number> = new EventEmitter<number>();
   @Output() editItem: EventEmitter<NewsItemModel> = new EventEmitter<NewsItemModel>();
-  constructor() {
+  constructor(public cd: ChangeDetectorRef) {
   }
 
   ngOnInit(): void {
@@ -30,5 +39,10 @@ export class NewsItemComponent implements OnInit {
 
   edit() {
     this.editItem.emit(this.newsItem);
+  }
+
+  setSelected(isSelect: boolean){
+    this.isActive = isSelect;
+    this.cd.markForCheck();
   }
 }

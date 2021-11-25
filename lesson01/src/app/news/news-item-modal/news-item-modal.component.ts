@@ -9,7 +9,7 @@ import {ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, OnI
 export class NewsItemModalComponent implements OnInit {
 
   @Output() save : EventEmitter<void> = new EventEmitter<void>();
-  isShow: boolean = false;
+  isVisible: boolean = false;
 
   constructor(public cd : ChangeDetectorRef) { }
 
@@ -17,16 +17,16 @@ export class NewsItemModalComponent implements OnInit {
   }
 
   show() {
-    this.isShow = true;
+    this.isVisible = true;
     this.cd.markForCheck();
   }
 
   cancel() {
-    this.isShow = false;
+    this.isVisible = false;
   }
 
   saveItem() {
     this.save.emit();
-    this.isShow = false;
+    this.isVisible = false;
   }
 }
