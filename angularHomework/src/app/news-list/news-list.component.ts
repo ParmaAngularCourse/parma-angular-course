@@ -45,9 +45,11 @@ export class NewsListComponent implements OnInit {
     if ($event.id === 0) {
       $event.id = this.news.length + 1;
       this.news.push($event);
-    } 
-    else {
-      this.news = [...this.news].map(item => { if (item.id === $event.id) return {...item}; else return item})
+    } else {
+      let index = this.news.findIndex(item => item.id === $event.id);
+      if (index > -1) {
+        this.news[index] = $event;
+      }
     }
     this.isOpenModal = false;
     this.selectedNews = undefined;
