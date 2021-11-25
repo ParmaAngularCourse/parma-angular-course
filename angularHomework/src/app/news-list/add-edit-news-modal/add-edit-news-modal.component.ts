@@ -1,12 +1,11 @@
-import { ValueConverter } from '@angular/compiler/src/render3/view/template';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { News } from '../news-type';
-import { NewsComponent } from '../news/news.component';
 
 @Component({
   selector: 'app-add-edit-news-modal',
   templateUrl: './add-edit-news-modal.component.html',
-  styleUrls: ['./add-edit-news-modal.component.css']
+  styleUrls: ['./add-edit-news-modal.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AddEditNewsModalComponent implements OnInit {
 
@@ -21,21 +20,15 @@ export class AddEditNewsModalComponent implements OnInit {
   }
 
   clickSaveNews(date: string, title: string, text: string) {
-    let newNews = this.news;
-    if (newNews) {
-      newNews.dateTime = date;
-      newNews.title = title;
-      newNews.text = text;
-    } else {
-      newNews = {
-        id: 0,
-        title: title,
-        text: text,
-        dateTime: date,
-        isChecked: false
-      }
+    let id = this.news ? this.news.id : 0;
+    let isChecked = this.news ? this.news.isChecked :false;
+    let newNews = {
+      id: id,
+      title: title,
+      text: text,
+      dateTime: date,
+      isChecked: isChecked
     }
-
     this.saveNews.emit(newNews);
   }
 
