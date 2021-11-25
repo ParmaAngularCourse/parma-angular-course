@@ -13,21 +13,53 @@
 >
   <ng-container ngProjectAs="modal-title">{{editedItem.id != -1 ? "Изменить новость" : "Добавить новость"}}</ng-container>
   <ng-container ngProjectAs="modal-inner">
-    <label>Дата:</label>
-    <input type="datetime-local" [value]="editedItem.dateLocal" #date (change)="onDateChange(date.value)" />
-    <label>Заголовок:</label>
-    <input type="text" [value]="editedItem.head" #head (change)="onHeadChange(head.value)" />
-    <label>Описание:</label>
-    <input type="text" [value]="editedItem.desc" #desc (change)="onDescChange(desc.value)" />
-    <label>Тип:</label>
-    <ng-container *ngFor="let tagItem of tagsList">
-      <div>
-        <input type="radio" [id]="tagItem.tag" name="tags" [value]="tagItem.tag"
-               [checked]="editedItem.tag == tagItem.tag" #tag (change)="onTagsChange(tag.value)" />
-        <label [for]="tagItem.tag">{{tagItem.text}}</label>
-      </div>
+    <ng-container [ngTemplateOutlet]="inputTemplate"
+                  [ngTemplateOutletContext]="{
+                    inputType: 'datetime-local',
+                    label: 'Дата',
+                    inputValue: editedItem.dateLocal,
+                    onChange: onDateChange.bind(this)
+                  }">
+    </ng-container>
+    <ng-container [ngTemplateOutlet]="inputTemplate"
+                  [ngTemplateOutletContext]="{
+                    inputType: 'text',
+                    label: 'Заголовок',
+                    inputValue: editedItem.head,
+                    onChange: onHeadChange.bind(this)
+                  }" >
+    </ng-container>
+    <ng-container [ngTemplateOutlet]="inputTemplate"
+                  [ngTemplateOutletContext]="{
+                    inputType: 'text',
+                    label: 'Описание',
+                    inputValue: editedItem.desc,
+                    onChange: onDescChange.bind(this)
+                  }" >
+    </ng-container>
+    <ng-container [ngTemplateOutlet]="inputRadioTemplate"
+                  [ngTemplateOutletContext]="{
+                    label: 'Тип',
+                    inputValue: editedItem.tag,
+                    list: tagsList,
+                    onChange: onTagsChange.bind(this)
+                  }" >
     </ng-container>
   </ng-container>
-
 </app-news-item-modal>
 
+<ng-template #inputTemplate let-inputType = "inputType" let-label = "label" let-inputValue = "inputValue" let-onChange = "onChange" >
+  <label>{{label}}:</label>
+  <input [type]="inputType" [value]="inputValue" #item (change)="onChange(item.value)" />
+</ng-template>
+
+<ng-template #inputRadioTemplate let-label = "label" let-list = "list" let-inputValue = "inputValue" let-onChange = "onChange">
+  <label>{{label}}:</label>
+  <ng-container *ngFor="let tagItem of list">
+    <div>
+      <input type="radio" [id]="tagItem.tag" name="tags" [value]="tagItem.tag"
+             [checked]="inputValue == tagItem.tag" #tag (change)="onChange(tag.value)" />
+      <label [for]="tagItem.tag">{{tagItem.text}}</label>
+    </div>
+  </ng-container>
+</ng-template>
