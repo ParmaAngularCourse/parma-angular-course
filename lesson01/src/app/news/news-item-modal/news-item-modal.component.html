@@ -1,5 +1,5 @@
-<div class="sub"></div>
-<div class="modal">
+<div class="sub" *ngIf="isShow"></div>
+<div class="modal" *ngIf="isShow">
   <div class="modal-header">
     <span>
       <ng-content select="modal-title"></ng-content>

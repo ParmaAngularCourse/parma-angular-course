@@ -1,5 +1,6 @@
-import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnInit, ViewChild} from '@angular/core';
 import {NewsItemModel} from "./news-types";
+import {NewsItemModalComponent} from "./news-item-modal/news-item-modal.component";
 
 @Component({
   selector: 'app-news',
@@ -27,13 +28,14 @@ export class NewsComponent implements OnInit {
     { tag: "internet", text: "Интернет" }
   ];
 
-  showModal: boolean = false;
+  @ViewChild('modalComponent', {static: false}) modal! : NewsItemModalComponent;
   editedItem!: NewsItemModel;
 
   constructor() {
   }
 
   ngOnInit(): void {
+    this.editedItem = new NewsItemModel(-1, new Date(), "" , "", "");
   }
 
   onRemoveItem($event: number) {
@@ -45,12 +47,12 @@ export class NewsComponent implements OnInit {
 
   onEditItem($event: NewsItemModel) {
     this.editedItem = new NewsItemModel($event.id, $event.date, $event.head, $event.desc, $event.tag);
-    this.showModal = true;
+    this.modal.show();
   }
 
   onAdd() {
     this.editedItem = new NewsItemModel(-1, new Date(), "" , "", "");
-    this.showModal = true;
+    this.modal.show();
   }
 
   onDateChange(value: string) {
@@ -80,9 +82,5 @@ export class NewsComponent implements OnInit {
       this.editedItem.id = maxId + 1;
       this.news.push(this.editedItem);
     }
-  }
-
-  onCloseModal() {
-    this.showModal = false;
   }
 }

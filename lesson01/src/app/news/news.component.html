@@ -6,10 +6,8 @@
   (editItem)="onEditItem($event)"
 >
 </app-news-item>
-<app-news-item-modal
-  *ngIf="showModal"
+<app-news-item-modal #modalComponent
   (save)="onSaveModal()"
-  (close)="onCloseModal()"
 >
   <ng-container ngProjectAs="modal-title">{{editedItem.id != -1 ? "Изменить новость" : "Добавить новость"}}</ng-container>
   <ng-container ngProjectAs="modal-inner">

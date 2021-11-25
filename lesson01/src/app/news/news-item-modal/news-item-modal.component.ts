@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, OnInit, Output} from '@angular/core';
 
 @Component({
   selector: 'app-news-item-modal',
@@ -8,20 +8,25 @@ import {ChangeDetectionStrategy, Component, EventEmitter, OnInit, Output} from '
 })
 export class NewsItemModalComponent implements OnInit {
 
-  @Output() close : EventEmitter<void> = new EventEmitter<void>();
   @Output() save : EventEmitter<void> = new EventEmitter<void>();
+  isShow: boolean = false;
 
-  constructor() { }
+  constructor(public cd : ChangeDetectorRef) { }
 
   ngOnInit(): void {
   }
 
+  show() {
+    this.isShow = true;
+    this.cd.markForCheck();
+  }
+
   cancel() {
-    this.close.emit();
+    this.isShow = false;
   }
 
   saveItem() {
     this.save.emit();
-    this.close.emit();
+    this.isShow = false;
   }
 }
