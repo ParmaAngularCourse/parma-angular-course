@@ -7,5 +7,6 @@ app-news-item-modal input[type=datetime-local]{
   padding-right: 0;
 }
 
-
-
+button {
+  margin-right: 5px;
+}

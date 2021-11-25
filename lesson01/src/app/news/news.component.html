@@ -1,10 +1,12 @@
 <button (click)="onAdd()">Добавить</button>
+<button (click)="onDeleteSelected()" [disabled]="!this.isSomeItemSelected">Удалить</button>
 <app-news-item
   *ngFor="let newItem of news"
   [newsItem]="newItem"
   (removeItem)="onRemoveItem($event)"
   (editItem)="onEditItem($event)"
   (contextmenu)="onContextMenu($event)"
+  (itemSelected)="onItemSelected($event)"
 >
 </app-news-item>
 <app-news-item-modal #modalComponent

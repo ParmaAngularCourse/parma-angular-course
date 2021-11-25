@@ -7,8 +7,8 @@ import {NewsItemComponent} from "./news-item/news-item.component";
 @Component({
   selector: 'app-news',
   templateUrl: './news.component.html',
-  styleUrls: ['./news.component.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  styleUrls: ['./news.component.css']/*,
+  changeDetection: ChangeDetectionStrategy.OnPush*/
 })
 export class NewsComponent implements OnInit {
 
@@ -34,7 +34,12 @@ export class NewsComponent implements OnInit {
   editedItem!: NewsItemModel;
 
   @ViewChild('contextMenuComponent') menuComponent! : ContextMenuComponent;
-  @ViewChildren(NewsItemComponent) newsItems!: QueryList<NewsItemComponent>;
+  @ViewChildren(NewsItemComponent) newsItemComponents!: QueryList<NewsItemComponent>;
+//  isSomeItemSelected: boolean = false;
+  selectedItemsIds: number[] = [];
+  get isSomeItemSelected(): boolean {
+    return this.selectedItemsIds.length > 0;
+  }
 
   constructor() {
   }
@@ -47,6 +52,7 @@ export class NewsComponent implements OnInit {
     let index = this.news.findIndex(p => p.id == $event);
     if(index > -1) {
       this.news.splice(index, 1);
+      this.selectedItemsIds = this.selectedItemsIds.filter(p => p != $event);
     }
   }
 
@@ -84,6 +90,7 @@ export class NewsComponent implements OnInit {
       let maxId = this.news
         .map((v) => { return v.id;})
         .sort()[this.news.length - 1];
+      maxId = maxId == undefined ? 1 : maxId;
       this.editedItem.id = maxId + 1;
       this.news.push(this.editedItem);
     }
@@ -100,6 +107,40 @@ export class NewsComponent implements OnInit {
   }
 
   onSelectAll() {
-    this.newsItems.forEach(p => p.setSelected(true));
+    this.newsItemComponents.forEach(p => p.setSelected(true));
   }
+
+  onDeleteSelected() {
+    this.selectedItemsIds.forEach(id => {
+        this.onRemoveItem(id);
+      });
+    this.selectedItemsIds = [];
+  }
+
+  onItemSelected($event: {id:number, isSelected: boolean}) {
+    if($event.isSelected)
+    {
+      if(!this.selectedItemsIds.includes($event.id)){
+        this.selectedItemsIds.push($event.id);
+      }
+    } else {
+      this.selectedItemsIds = this.selectedItemsIds.filter(p => p != $event.id);
+    }
+  }
+
+  // onDeleteSelected() {
+  //   let selectedItemsIds = this.newsItemComponents
+  //     .filter(p => p.isActive)
+  //     .map(a => a.newsItem.id);
+  //
+  //   selectedItemsIds.forEach(id => {
+  //     this.onRemoveItem(id);
+  //   });
+  //   this.isSomeItemSelected = false;
+  // }
+
+  // onItemSelected($event: {id:number, isSelected: boolean}) {
+  //   this.isSomeItemSelected = this.newsItemComponents
+  //     .filter(p => p.isActive).length > 0;
+  // }
 }

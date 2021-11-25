@@ -23,6 +23,7 @@ export class NewsItemComponent implements OnInit {
   @Input() newsItem!: NewsItemModel;
   @Output() removeItem: EventEmitter<number> = new EventEmitter<number>();
   @Output() editItem: EventEmitter<NewsItemModel> = new EventEmitter<NewsItemModel>();
+  @Output() itemSelected: EventEmitter<{ id: number, isSelected: boolean}> = new EventEmitter<{ id: number, isSelected: boolean}>();
   constructor(public cd: ChangeDetectorRef) {
   }
 
@@ -31,6 +32,7 @@ export class NewsItemComponent implements OnInit {
 
   checkboxChange($event: Event){
     this.isActive = ($event.target as HTMLInputElement).checked;
+    this.itemSelected.emit({id: this.newsItem.id, isSelected: this.isActive});
   }
 
   remove() {
@@ -43,6 +45,7 @@ export class NewsItemComponent implements OnInit {
 
   setSelected(isSelect: boolean){
     this.isActive = isSelect;
+    this.itemSelected.emit({id: this.newsItem.id, isSelected: this.isActive});
     this.cd.markForCheck();
   }
 }
