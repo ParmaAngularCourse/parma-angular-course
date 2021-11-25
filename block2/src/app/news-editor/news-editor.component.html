@@ -1,0 +1,23 @@
+<div class="mmodal">
+    <div class="mmodal-body">
+        <ul class="input-data-block">
+            <li>
+                <label class ="input-data-label">Дата:</label><br> 
+                <input type="date" [value]="newsDate | date:'yyyy-MM-dd'" (input)="newsDate=parseDate($event)">
+            </li>
+            <li>
+                <label class ="input-data-label">Заголовок:</label><br>
+                <input class ="input-data-textbox" type="text" [value]="newsTitle" (input)="newsTitle = onChangeStringInput($event)">
+            </li>
+            <li>
+                <label class ="input-data-label">Текст:</label><br>
+                <textarea class="input-data-textarea" [value]="newsBody" (input)="newsBody = onChangeStringInput($event)"></textarea>
+            </li>
+        </ul>
+        <div>
+            <button class="control-button" (click)="saveForm()">Сохранить</button>
+            <button class="control-button" (click)="closeForm()">Отмена</button>
+        </div>        
+    </div>
+</div>
+<div class="mmodal-background" (click)="closeForm()"></div>

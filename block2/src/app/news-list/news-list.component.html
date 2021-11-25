@@ -1,3 +1,7 @@
+<div>
+    <button class="control-button" (click)="onAddNews()">Добавить</button>
+    <app-news-editor *ngIf="showEditForm" (closeEditFrom)="showEditForm = false" (saveEditFrom)="onSaveNews($event)" [currentNews] = "newsForEdit"></app-news-editor>
+</div>
 <div *ngFor="let newsItem of newsArray">
-    <app-news-block [currentNews] = "newsItem"></app-news-block>
+    <app-news-block (deleteNews)="onDeleteNews($event)" (editNews)="onEditNews($event)" [currentNews] = "newsItem"></app-news-block>
 </div>
