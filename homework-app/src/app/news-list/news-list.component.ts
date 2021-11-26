@@ -1,7 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { News } from './news-types';
-import { MatDialog } from '@angular/material/dialog';
-import { NewsEditformComponent } from './news-editform/news-editform.component';
 
 @Component({
   selector: 'app-news-list',
@@ -34,8 +32,17 @@ export class NewsListComponent implements OnInit {
       selected: false
     }
   ];
+  public newsToEdit: News = {
+    id: 0,
+    date: new Date(),
+    title: '',
+    text: '',
+    selected: false
+  };
+  public showEditForm: boolean = false;
+  public isEditMode: boolean = false;
 
-  constructor(public dialog: MatDialog, private cdr: ChangeDetectorRef) { }
+  constructor(private cdr: ChangeDetectorRef) { }
 
   ngOnInit(): void {
   }
@@ -44,17 +51,41 @@ export class NewsListComponent implements OnInit {
     this.allNews = this.allNews.filter(item => item.id !== $event);
   }
 
-  openCreateNewsDialog() {
-    const dialogRef = this.dialog.open(NewsEditformComponent);
+  onSaveNews(newsToSave: News) {
+    if(this.isEditMode) {
+      var replaceIndex = this.allNews.findIndex(item => item.id == newsToSave.id);
+      this.allNews[replaceIndex] = newsToSave;
+    }
+    else {
+      newsToSave.id = Math.max(...(this.allNews.map(el => el.id))) + 1;
+      this.allNews.push(newsToSave);
+    }
+    this.showEditForm = false;
+  }
 
-    const subOnSaveNews = dialogRef.componentInstance.saveNews.subscribe(($newsToAdd: News) => {
-      $newsToAdd.id = Math.max(...(this.allNews.map(el => el.id))) + 1;
-      this.allNews.push($newsToAdd);
-      this.cdr.detectChanges();
-    })
+  onCloseEditForm($event: Event) {
+    this.showEditForm = false;
+  }
 
-    dialogRef.afterClosed().subscribe(result => {
-      subOnSaveNews.unsubscribe();
-    });
+  openAddNewsDialog() {
+    this.isEditMode = false;
+    this.newsToEdit = {
+      id: 0,
+      date: new Date(),
+      title: '',
+      text: '',
+      selected: false
+    }
+    this.openEditForm(this.newsToEdit);
+  }
+
+  openEditNewsDialog(newsToEdit: News) {
+    this.isEditMode = true;
+    this.openEditForm(newsToEdit);
+  }
+
+  openEditForm(news: News) {
+    this.newsToEdit = news;
+    this.showEditForm = true;
   }
 }

@@ -5,6 +5,7 @@
 }
 .newsItem {
     border: solid 1px;
+    padding: 5px;
     margin-top: 10px;
     font-family: Verdana, Geneva, Tahoma, sans-serif;
     font-size: 12px;
@@ -13,5 +14,13 @@
     display: flex;
 }
 .selectedNews {
-    background-color: grey;
+    background-color: lightgrey;
+}
+
+.news-button {
+    margin-left: 5px;
+  }
+  
+.news-actions {
+    text-align: end;
 }
