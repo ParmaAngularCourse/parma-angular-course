@@ -1,11 +1,6 @@
 import { style } from '@angular/animations';
 import { Component, OnInit } from '@angular/core';
-
-type news = {
-  header: string,
-  dateTime: string,
-  isChecked : boolean
-}
+import { News } from './News';
 
 @Component({
   selector: 'app-news',
@@ -14,7 +9,7 @@ type news = {
 })
 export class NewsComponent implements OnInit {
 
-  public items: news[] = [{
+  public items: News[] = [{
     header: "Заголовок 1",
     dateTime: "15.11.2021",
     isChecked: false
@@ -36,8 +31,8 @@ export class NewsComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  check(item : news): void {
-   item.isChecked = !item.isChecked;
+  check(item: News): void {
+    item.isChecked = !item.isChecked;
   }
 
 }
