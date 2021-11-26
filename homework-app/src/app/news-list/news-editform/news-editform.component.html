@@ -1,0 +1,26 @@
+<mat-dialog-content class="edit-form">
+    <p>
+        <mat-form-field appearance="fill">
+            <mat-label>Дата</mat-label>
+            <input matInput [matDatepicker]="picker" [value]="news.date" #newsDate>
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+    </p>
+    <p>
+        <mat-form-field class="full-width" appearance="fill">
+            <mat-label>Заголовок</mat-label>
+            <textarea matInput [value]="news.title" #newsTitle></textarea>
+        </mat-form-field>
+    </p>
+    <p>
+        <mat-form-field class="full-width" appearance="fill">
+            <mat-label>Текст</mat-label>
+            <textarea matInput [value]="news.text" #newsText></textarea>
+        </mat-form-field>
+    </p>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close (click)="save(newsDate.value, newsTitle.value, newsText.value)">Сохранить</button>
+    <button mat-button mat-dialog-close>Отмена</button>
+</mat-dialog-actions>

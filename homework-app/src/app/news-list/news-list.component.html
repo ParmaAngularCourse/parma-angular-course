@@ -1,0 +1,4 @@
+<mat-card class='newsList'>
+    <button mat-raised-button color="primary" (click)="openCreateNewsDialog()">Добавить</button>
+    <app-news *ngFor='let news of allNews' [newsItem]='news' (removeNews)='onRemoveNews($event)'></app-news>
+</mat-card>

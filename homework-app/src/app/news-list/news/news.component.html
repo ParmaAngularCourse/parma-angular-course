@@ -1,0 +1,15 @@
+<mat-card class='newsItem' [ngClass]='news.selected ? "selectedNews" : ""'>
+    <mat-card-content class='newsContent'>
+        <div class='newsColumn'>
+            <mat-checkbox [checked]='news.selected' (change)='changeSelection($event.checked, news)'></mat-checkbox>
+        </div>
+        <div class='newsColumn'>
+            <div>{{news.date | date:'dd.MM.yyyy'}}</div>
+            <h4>{{news.title}}</h4>
+        </div>
+    </mat-card-content>
+    <mat-card-actions align="end">
+        <button mat-raised-button color="primary" (click)='openEditNewsDialog($event, news)'>Редактировать</button>
+        <button mat-raised-button color="primary" [disabled]='!news.selected' (click)='remove($event, news)'>Удалить</button>
+    </mat-card-actions>
+</mat-card>
