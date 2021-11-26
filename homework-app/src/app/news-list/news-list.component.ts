@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { News } from './news-types';
 
 @Component({
@@ -32,17 +32,11 @@ export class NewsListComponent implements OnInit {
       selected: false
     }
   ];
-  public newsToEdit: News = {
-    id: 0,
-    date: new Date(),
-    title: '',
-    text: '',
-    selected: false
-  };
+  public newsToEdit: News = this.generateEmptyNews();
   public showEditForm: boolean = false;
   public isEditMode: boolean = false;
 
-  constructor(private cdr: ChangeDetectorRef) { }
+  constructor() { }
 
   ngOnInit(): void {
   }
@@ -61,22 +55,17 @@ export class NewsListComponent implements OnInit {
       this.allNews.push(newsToSave);
     }
     this.showEditForm = false;
+    this.newsToEdit = this.generateEmptyNews();
   }
 
-  onCloseEditForm($event: Event) {
+  onCloseEditForm($event: News) {
     this.showEditForm = false;
+    this.newsToEdit = this.generateEmptyNews();
   }
 
   openAddNewsDialog() {
     this.isEditMode = false;
-    this.newsToEdit = {
-      id: 0,
-      date: new Date(),
-      title: '',
-      text: '',
-      selected: false
-    }
-    this.openEditForm(this.newsToEdit);
+    this.openEditForm(this.generateEmptyNews());
   }
 
   openEditNewsDialog(newsToEdit: News) {
@@ -87,5 +76,16 @@ export class NewsListComponent implements OnInit {
   openEditForm(news: News) {
     this.newsToEdit = news;
     this.showEditForm = true;
+  }
+
+  private generateEmptyNews() : News {
+    let generatedNews : News = {
+      id: 0,
+      date: new Date(),
+      title: '',
+      text: '',
+      selected: false
+    };
+    return generatedNews;
   }
 }

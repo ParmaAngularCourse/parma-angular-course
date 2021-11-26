@@ -16,8 +16,7 @@ import { NewsEditformComponent } from './news-list/news-editform/news-editform.c
   imports: [
     BrowserModule
   ],
-  providers: [
-  ],
+  providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

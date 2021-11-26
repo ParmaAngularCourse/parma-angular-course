@@ -11,7 +11,7 @@ export class NewsEditformComponent implements OnInit {
 
   @Input("initialNews") news!: News;
   @Output() saveNews : EventEmitter<News> = new EventEmitter();
-  @Output() closeNews : EventEmitter<Event> = new EventEmitter();
+  @Output() closeNews : EventEmitter<News> = new EventEmitter();
 
   constructor() { 
   }
@@ -29,7 +29,7 @@ export class NewsEditformComponent implements OnInit {
     this.saveNews.emit(this.news);
   }
 
-  close($event: Event) {
+  close($event: News) {
     this.closeNews.emit($event);
   }
 }

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { News } from '../news-types';
 
 @Component({
@@ -13,7 +13,7 @@ export class NewsComponent implements OnInit {
   @Output() removeNews : EventEmitter<number> = new EventEmitter();
   @Output() editNews : EventEmitter<News> = new EventEmitter();
 
-  constructor(private cdr: ChangeDetectorRef) { }
+  constructor() { }
 
   ngOnInit(): void {
   }
