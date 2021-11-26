@@ -1,0 +1,19 @@
+.default_style {
+    border: black 1px solid;
+    background-color: transparent;
+}
+
+.another_style {
+    border: black 1px solid;
+    background-color: lightblue;
+}
+
+figcaption {
+    font-size: x-large;
+    font-weight: bold;
+}
+
+fieldset, fieldset p {
+    border-radius: 5px;
+    padding: 5px;
+}

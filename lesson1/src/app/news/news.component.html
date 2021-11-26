@@ -1,0 +1,15 @@
+
+<fieldset> <figcaption>Новости</figcaption> 
+
+<p *ngFor="let newsItem of ourNews"
+    [class.default_style]="!newsItem.checked"
+    [class.another_style]="newsItem.checked" >
+
+    <label><input type="checkbox" [checked]="newsItem.checked" 
+            (click)="setCheckedNews($event, newsItem)" >
+         {{newsItem.date | date:'dd.MM.yyyy - h:mm'}}
+    </label>
+    <br>{{newsItem.caption}} 
+   {{newsItem.checked}} 
+</p>
+</fieldset>

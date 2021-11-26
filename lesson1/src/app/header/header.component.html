@@ -1,0 +1,14 @@
+<p [class]="headerClass">Привет {{randomValue}} {{user.addres?.street?? 'нет адреса'}} header works!</p>
+ <p [style.width.px]="myWidth"> Байндинг </p>
+
+ <p (click)="style_color='green'" [style.color]="style_color"> Цвета! </p>
+ <p (click)="changeColor('green')" [style.color]="style_color"> Цвета 2! </p>
+
+ <input type="text" (input)="getInputValue($event)">реагируем на ввод
+ <br>
+ <input #newColor type="text" (keydown.enter)="getInputValue($event)">реагируем на Enter
+ <br>
+ <input type="text" (keydown.shift.control.enter)="getInputValue($event)">реагируем на Enter + shift + Ctrl
+
+
+ <button (click)="changeColor(newColor.value)"> Меняем цвет из 2 поля </button>
