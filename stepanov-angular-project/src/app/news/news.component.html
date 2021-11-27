@@ -1,5 +1,5 @@
 <div>
     <button (click)="addNewItem()">Добавить</button>
-    <app-news-maker *ngIf="isVisibleModalDialog" (onCancelAction)="isVisibleModalDialog=false" (onAddAction)="saveNewItem($event)"></app-news-maker>
+    <app-news-maker *ngIf="isVisibleModalDialog" [news_item]="edit_item" (onCancelAction)="isVisibleModalDialog=false" (onAddAction)="saveNewItem($event)"></app-news-maker>
 </div>
-<app-news-item *ngFor="let item of items" [data_item]="item" (onDeleteNews)="deleteNewsItem($event)"></app-news-item>
+<app-news-item *ngFor="let item of items" [data_item]="item" (onEditNews)="editNewsItem($event)" (onDeleteNews)="deleteNewsItem($event)"></app-news-item>

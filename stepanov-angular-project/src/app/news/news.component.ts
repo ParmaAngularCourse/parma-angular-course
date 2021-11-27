@@ -22,13 +22,15 @@ export class NewsComponent implements OnInit {
 
   public items: NewsPart[];
 
+  public edit_item: NewsPart | null = null;
+
   constructor() 
   {
     this.items = 
     [
-      { id: 1, date: new Date(2020,1,20,10,52,30), title: 'Погода', text: 'В ближайшие дни ожидается мокрый дождь со снегом', isChecked: false },
-      { id: 2, date: new Date(2021,2,12,8,19,56), title: 'Работа', text: 'Корпоративу на НГ - быть!', isChecked: false },
-      { id: 3, date: new Date(2022,3,16,20,11,9), title: '.NET', text: 'Вышел новый подкаст на тему ".net 6"', isChecked: false },
+      new NewsPart(1, new Date(2020,1,20,10,52,30), 'Погода', 'В ближайшие дни ожидается мокрый дождь со снегом'),
+      new NewsPart(2, new Date(2021,2,12,8,19,56), 'Работа', 'Корпоративу на НГ - быть!'),
+      new NewsPart(3, new Date(2022,3,16,20,11,9), '.NET', 'Вышел новый подкаст на тему ".net 6"')
     ]
   }
 
@@ -40,6 +42,11 @@ export class NewsComponent implements OnInit {
     this.items.splice(removingIndex, 1);
   }
 
+  editNewsItem($event: NewsPart) {
+    this.edit_item = $event;
+    this.isVisibleModalDialog = true;
+  }
+
   addNewItem() {
     this.isVisibleModalDialog = true;
   }
@@ -47,8 +54,11 @@ export class NewsComponent implements OnInit {
   saveNewItem($event: NewsPart) {
     if(!$event.id) {
       $event.id = this.findMaxId() + 1;
+      this.items.push($event);
+    } else {
+      var foundItemIndex = this.items.findIndex(item => item.id == $event.id);
+      this.items[foundItemIndex] = $event;
     }
-    this.items.push($event);
   }
 
   findMaxId() : number {

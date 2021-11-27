@@ -6,4 +6,3 @@
     <button (click)="onEditNewsItem()">Редактировать</button>
     <button [disabled]="!news_item.isChecked" (click)="onDeleteNewsItem(news_item.id)" >Удалить</button>
 </div>
-<app-news-maker *ngIf="isVisibleModalDialog" [news_item]="news_item" (onCancelAction)="isVisibleModalDialog=false"></app-news-maker>

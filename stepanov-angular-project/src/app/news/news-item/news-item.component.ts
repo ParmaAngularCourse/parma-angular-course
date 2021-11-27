@@ -12,10 +12,11 @@ export class NewsItemComponent implements OnInit {
   @Input("data_item")
   news_item!: NewsPart;
 
-  isVisibleModalDialog: boolean = false;
-
   @Output()
   onDeleteNews: EventEmitter<number> = new EventEmitter();
+
+  @Output()
+  onEditNews: EventEmitter<NewsPart> = new EventEmitter();
 
   constructor() { }
 
@@ -34,7 +35,6 @@ export class NewsItemComponent implements OnInit {
   }
 
   onEditNewsItem() {
-    this.isVisibleModalDialog = true;
+    this.onEditNews.emit(this.news_item);
   }
-
 }
