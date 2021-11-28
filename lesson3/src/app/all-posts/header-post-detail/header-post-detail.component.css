@@ -1,0 +1,14 @@
+.buttonStyle {
+    font-size: large;
+    display: inline-flex;
+    justify-content: right;
+    border: 0px;
+    background-color: transparent;
+}
+
+.headerStyle {
+    font-size: 1.1em;
+    display: inline-flex;
+    width: 90%;
+    justify-content: center;
+}
