@@ -6,8 +6,8 @@
         <p>{{post.date}}</p>
         <p>Заголовок: {{post.title}}</p>
     </div>
-    <div class="buttonStyle">
-        <button (click)="editPostHandler()" >Редактировать</button>
-        <button [disabled]="!post.isSelected" (click)="deletePostHandler()">Удалить</button>
+    <div class="divButtonStyle">
+        <button class="buttonStyle" (click)="editPostHandler()" >Редактировать</button>
+        <button class="buttonStyle" [disabled]="!post.isSelected" (click)="deletePostHandler()">Удалить</button>
     </div>
 </div>

@@ -45,6 +45,20 @@ export class AllPostsComponent {
       text:"Text Post 5",
       isSelected: false
     },
+    {
+      id: 5,
+      date: "06.01.2021 16:16",
+      title: "Post 6",
+      text:"Text Post 6",
+      isSelected: false
+    },
+    {
+      id: 6,
+      date: "07.01.2021 17:16",
+      title: "Post 7",
+      text:"Text Post 7",
+      isSelected: false
+    },
   ]
 
   @Input() isVisiblePostDetailPopup: boolean = false;

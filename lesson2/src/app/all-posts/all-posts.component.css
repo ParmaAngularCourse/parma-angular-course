@@ -1,4 +1,4 @@
-button {
+.buttonStyle {
     color: white;
     background-color: dodgerblue;
     margin: 10px;
@@ -7,7 +7,7 @@ button {
     border-radius: 5px;
 }
 
-button:disabled {
+.buttonStyle:disabled {
     color: white;
     background-color: darkgrey;
     border-radius: 5px;
