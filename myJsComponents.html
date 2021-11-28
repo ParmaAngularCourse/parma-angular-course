@@ -1,0 +1,18 @@
+<html>
+  <head>
+      <title>Test</title>
+  </head>
+  <body>
+    <div id = "mainDiv" class='app'/>
+      <input id="testCB" type="checkbox">
+      <div id="testDiv"></div>
+      <template id="testTemplate">
+        <div id="rectangle" style="width:100px; height:50px; background-color:blue" ngIf="isTestCBChecked()"></div>
+        <ul>
+          <li ngFor="let item of items">`${item}`</li>
+        </ul>
+      </template>
+    </div>
+    <script src='myJsComponents.js'></script>
+  </body>
+</html>
