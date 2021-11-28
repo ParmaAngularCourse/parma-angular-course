@@ -6,17 +6,33 @@
     opacity: 0.9;
 }
 
-.news_modal_body {
-    margin: auto;
-    background-color: white;
+.news_modal_title {
+    vertical-align: middle;
+    text-align: center;
+    background-color: burlywood;
+    height: 8%;
+}
+
+.news_modal_title button {
+    text-align: center;
+    height: 100%;
+    float: right;
+}
+
+.news_modal_window {
     left: 45%;
     top: 25%;
-    height: 290px;
+    height: 331px;
     width: 250px;
-    padding: 5px;
-    position: fixed;
     border: 3px solid darkgray;
     box-shadow: 1px 1px 3px 3px lightgray;
+    position: fixed;
+    margin: auto;
+}
+
+.news_modal_body {
+    padding: 10px;
+    background-color: white;
 }
 
 .news_modal_button {

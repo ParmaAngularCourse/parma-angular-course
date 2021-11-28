@@ -48,6 +48,7 @@ export class NewsComponent implements OnInit {
   }
 
   addNewItem() {
+    this.edit_item = null;
     this.isVisibleModalDialog = true;
   }
 

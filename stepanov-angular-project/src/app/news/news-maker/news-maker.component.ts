@@ -21,6 +21,8 @@ export class NewsMakerComponent implements OnInit {
   @Output()
   onAddAction: EventEmitter<INewsPart> = new EventEmitter();
 
+  modalWindowTitle: string | null = null;
+
   id: number | null = null;
   newsDate: Date = new Date();
   newsTitle: string = "";
@@ -34,6 +36,10 @@ export class NewsMakerComponent implements OnInit {
       this.newsDate = this.news_item.date;
       this.newsTitle = this.news_item.title;
       this.newsText = this.news_item.text;
+
+      this.modalWindowTitle = 'Изменить новость';
+    } else {
+      this.modalWindowTitle = 'Добавить новость';      
     }
   }
 
