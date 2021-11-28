@@ -1,12 +1,14 @@
-<div class="detailStyle">
-    <p>Дата:</p>
-    <input type="text" />
-    <p>Заголовок:</p>
-    <input type="text" />
-    <p>Текст:</p>
-    <input type="text" />
-    <div class="buttonStyle">
-        <button>Сохранить</button>
-        <button>Отмена</button>
+<div class="b-popup">
+    <div class="b-popup-content">
+    <label>Дата:</label>
+    <input #datePost class="inputStyle" type="text" [value]="post.date" />
+    <label>Заголовок:</label>
+    <input #titlePost class="inputStyle" type="text" [value]="post.title" />
+    <label>Текст:</label>
+    <input #textPost class="inputStyle" type="text" [value]="post.text" />
+        <div class="divButtonsStyle">
+            <button class="buttonStyle" (click)="savePostHandler(datePost.value, titlePost.value, textPost.value)">Сохранить</button>
+            <button class="buttonStyle" (click)="cancelSavePostHandler()">Отмена</button>
+        </div>
     </div>
 </div>

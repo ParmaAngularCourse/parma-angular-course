@@ -1,41 +1,48 @@
-.detailStyle {
-    width: 300px;
-}
-
-div {
-    margin: 10px;
-}
-
-p {
-    margin: 5px;
-    display: block;
-}
-
-input {
+.inputStyle {
     border: 1px solid gray;
     border-radius: 5px;
     height: 16px;
     padding: 5px;
-    width: 100%;
+    width: 95%;
+    margin: auto 10px auto auto
 }
 
-button {
+.buttonStyle {
     color: white;
     background-color: dodgerblue;
     margin: 10px;
     padding: 6px;
     border: 1px solid gray;
     border-radius: 5px;
+    display: flex;
 }
 
-button:disabled {
+.buttonStyle:disabled {
     color: white;
     background-color: darkgrey;
     border-radius: 5px;
 }
 
-.buttonStyle {
-    display: block;
-    float: right;
+.divButtonsStyle {
+    display: flex;
     margin: 0px;
+    justify-content: right;
+}
+
+.b-popup{
+    width:100%;
+    height: 100vh;
+    background-color: rgba(0,0,0,0.5);
+    overflow:hidden;
+    position:fixed;
+    top:0px;
+}
+.b-popup .b-popup-content{
+    margin:100px auto 40px auto;
+    width:340px;
+    height: 200px;
+    padding:10px;
+    background-color: #c5c5c5;
+    border-radius:5px;
+    box-shadow: 0px 0px 10px #000;
 }

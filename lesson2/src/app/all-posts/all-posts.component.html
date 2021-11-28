@@ -1,3 +1,3 @@
-<button>Добавить</button>
-<app-single-post *ngFor="let item of posts" [single_post_data]="item" (deletePost)="deletePostHandler($event)"></app-single-post>
-<app-single-post-detail></app-single-post-detail>
+<button (click)="addNewPostHandler()">Добавить</button>
+<app-single-post *ngFor="let item of posts" [post]="item" (deletePostEvent)="deletePostHandler($event)" (editPostEvent)="editPostHandler($event)"></app-single-post>
+<app-single-post-detail *ngIf="isVisiblePostDetailPopup" (saveNewPostEvent)="saveNewPostHandler($event)" (closePopupEvent)="closePopupPostDetailsHandler()" [post]="editPost" ></app-single-post-detail>
