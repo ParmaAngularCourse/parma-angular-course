@@ -8,8 +8,8 @@
             <h3>{{currentNews.date | date:'dd MMMM yyyy':'':'ru-Ru'}} {{currentNews.title}}</h3>
         </div>
         <div>{{currentNews.body}}</div>
-        <button class="control-button" name="EditButton" (click)="onEditNew($event)">Редактировать</button>        
-        <button class="control-button" name="DeleteButton" [disabled]="!enableDeleteButton" (click)="onDeleteNew($event)">Удалить</button>
+        <button class="control-button" name="EditButton" (click)="onEditNew()">Редактировать</button>        
+        <button class="control-button" name="DeleteButton" [disabled]="!enableDeleteButton" (click)="onDeleteNew()">Удалить</button>
       </div>      
     </div>
   </div>

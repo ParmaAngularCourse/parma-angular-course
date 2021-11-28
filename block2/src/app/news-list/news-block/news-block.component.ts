@@ -5,13 +5,14 @@ import { News } from 'src/model/News';
   selector: 'app-news-block',
   templateUrl: './news-block.component.html',
   styleUrls: ['./news-block.component.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  //changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NewsBlockComponent implements OnInit {
 
   @Input() public currentNews: News;
   @Output() public deleteNews: EventEmitter<News> = new EventEmitter();
   @Output() public editNews: EventEmitter<News> = new EventEmitter();
+  @Output() public selectedNews: EventEmitter<News> = new EventEmitter();
   public checkBoxState: boolean;
   public enableDeleteButton: boolean;       
 
@@ -28,13 +29,14 @@ export class NewsBlockComponent implements OnInit {
     var checkBox = (event.target as HTMLInputElement);
     this.checkBoxState = checkBox.checked;
     this.enableDeleteButton = this.checkBoxState;
+    this.selectedNews.emit(this.currentNews);
   }
 
-  onDeleteNew(event:Event){
+  onDeleteNew(){
     this.deleteNews.emit(this.currentNews)
   }
 
-  onEditNew(event:Event){    
+  onEditNew(){    
     this.editNews.emit(this.currentNews); 
   }
   
