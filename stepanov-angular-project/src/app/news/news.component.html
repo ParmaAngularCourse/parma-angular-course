@@ -1,6 +1,5 @@
-<div *ngFor="let item of items" [ngClass]="{activeState: item.isChecked, disabledState: !item.isChecked}">
-<!--<div *ngFor="let item of items" [class.activeState]="item.isChecked">-->
-    <input #newsCheck type="checkbox" (change)="onUserChecked(item, $event)">
-    <label for="newsCheck">{{ item.date }}</label>
-    <p><label>{{ item.title }}</label></p>
+<div>
+    <button (click)="addNewItem()">Добавить</button>
+    <app-news-maker *ngIf="isVisibleModalDialog" [news_item]="edit_item" (onCancelAction)="isVisibleModalDialog=false" (onAddAction)="saveNewItem($event)"></app-news-maker>
 </div>
+<app-news-item *ngFor="let item of items" [data_item]="item" (onEditNews)="editNewsItem($event)" (onDeleteNews)="deleteNewsItem($event)"></app-news-item>

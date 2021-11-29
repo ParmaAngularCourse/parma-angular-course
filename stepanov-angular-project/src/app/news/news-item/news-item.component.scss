@@ -1,0 +1,31 @@
+div {
+    width: 400px;
+    height: auto;
+    outline: 2px solid black;
+    margin: 10px;
+    padding: 10px;
+}
+
+button {
+    font-weight: bold;
+    font-size: 10px;
+    height: 40px;
+    border-radius: 6px;
+    border: none;
+    background-color: #3D8BCD;
+    color: white;
+    margin-right: 5px;
+    text-align: center;
+}
+
+button:disabled {
+    background-color: lightgray;
+}
+
+.activeState {
+    background-color: gray;
+}
+
+.disabledState {
+    background-color: white;
+}
