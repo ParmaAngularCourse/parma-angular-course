@@ -1,0 +1,6 @@
+<div *ngFor="let item of (users | filterMan)">{{item.name}} {{item.gender | genderPipe}}</div>
+<input type='text' #newUser>
+<button (click)="addUser(newUser.value)">Добавить</button>
+<button (click)="clickUns()">Отписаться</button>
+
+<p>Модель: {{o$ | async }}</p>
