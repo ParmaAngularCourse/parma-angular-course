@@ -12,10 +12,12 @@ export class SinglePostComponent {
   @Input() post!: PostObj;
   @Output() deletePostEvent: EventEmitter<PostObj> = new EventEmitter();
   @Output() editPostEvent: EventEmitter<PostObj> = new EventEmitter();
+  @Output() selectPostEvent: EventEmitter<PostObj> = new EventEmitter();
 
   selectedPostHandler(checked:boolean, post: PostObj)
   {
     post.isSelected=checked;
+    this.selectPostEvent.emit(post);
   }
 
   deletePostHandler()

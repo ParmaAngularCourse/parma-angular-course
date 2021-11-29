@@ -71,16 +71,31 @@ export class AllPostsComponent {
   editPost!:PostObj;
   titleDialog!:string;
   @ViewChild("popupPostDetailWindow") popupPostDetailWindow!: SinglePostDetailComponent;
+  isVisibleContextMenu: boolean = false;
+  contextMenuX = 0;
+  contextMenuY = 0;
+  isActiveDeletePostBtn: boolean = false;
+
+  ngDoCheck() {
+    console.log('all-posts');
+  }
+
+  deletePostsHandler() {
+    let postsDeleted: PostObj[] = [];
+    this.posts.forEach((e) => { 
+      if (!e.isSelected) {
+        postsDeleted.push(e);
+      }
+    });
+
+    this.posts = postsDeleted;
+  }
 
   deletePostHandler(post:PostObj) {
     const index = this.posts.findIndex((e) => e.id == post.id);
     if (index > -1) {
       this.posts.splice(index, 1);
     }
-  }
-
-  ngDoCheck() {
-    console.log('all-posts');
   }
 
   addNewPostHandler() {
@@ -119,6 +134,40 @@ export class AllPostsComponent {
     this.popupPostDetailWindow.isVisible = true;
     this.editPost = post;
     this.titleDialog = "Изменить новость";
+  }
+
+  rightClickHandler(event:any) {
+    this.contextMenuX=event.clientX
+    this.contextMenuY=event.clientY
+    this.isVisibleContextMenu=true;
+  }
+
+  disableContextMenuHandler(){
+    this.isVisibleContextMenu= false;
+  }
+
+  selectAllPostsHandler() {
+    this.posts.forEach(e => {
+      if (!e.isSelected) {
+        e.isSelected = true;
+      }
+    });
+    this.isActiveDeletePostBtn = true;
+    this.disableContextMenuHandler();
+  }
+
+  selectPostHandler(post:PostObj) {
+    let findPost = this.posts.find(e => e.id == post.id);
+    if (findPost) {
+      findPost.isSelected = post.isSelected;
+    }
+    this.isActiveDeletePostBtn = false;
+    this.posts.forEach(e => {
+      if (e.isSelected) {
+        this.isActiveDeletePostBtn = true;
+        return;
+      }
+    });
   }
 
 }
