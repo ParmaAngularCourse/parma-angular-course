@@ -10,24 +10,34 @@
   position: absolute;
   top: 100px;
   left: 100px;
-  height: 173px;
+  height: auto;
   width: 300px;
   border: 1px solid darkgray;
   box-shadow: 1px 1px 5px 5px lightgray;
   background-color: white;
 }
 
-.modal-inner{
+.modal-inner {
   margin: 10px;
-}
-
-input {
-  margin-bottom: 5px;
-  width: 100%;
-  padding-left: 0;
-  padding-right: 0;
 }
 
 button {
   margin-right: 5px;
+}
+
+.modal-header {
+  background-color: cyan;
+  padding: 10px;
+}
+
+.modal-header .close-icon {
+  float: right;
+  cursor: pointer;
+}
+
+.modal-inner input {
+  margin-bottom: 5px;
+  width: 100%;
+  padding-left: 0;
+  padding-right: 0;
 }

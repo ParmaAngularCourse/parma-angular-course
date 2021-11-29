@@ -1,5 +1,4 @@
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {NewsItemModel} from "../news-types";
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, OnInit, Output} from '@angular/core';
 
 @Component({
   selector: 'app-news-item-modal',
@@ -9,39 +8,25 @@ import {NewsItemModel} from "../news-types";
 })
 export class NewsItemModalComponent implements OnInit {
 
-  @Input() newsItem?: NewsItemModel;
-  @Output() close : EventEmitter<any> = new EventEmitter<any>();
-  @Output() save : EventEmitter<NewsItemModel> = new EventEmitter<NewsItemModel>();
+  @Output() save : EventEmitter<void> = new EventEmitter<void>();
+  isVisible: boolean = false;
 
-  item : NewsItemModel;
-
-  constructor() {
-    this.item = new NewsItemModel(-1, "", "" , "");
-  }
+  constructor(public cd : ChangeDetectorRef) { }
 
   ngOnInit(): void {
-    if(this.newsItem != undefined)
-      this.item = new NewsItemModel(this.newsItem.id, this.newsItem.date, this.newsItem.head, this.newsItem.desc);
+  }
+
+  show() {
+    this.isVisible = true;
+    this.cd.markForCheck();
   }
 
   cancel() {
-    this.close.emit();
+    this.isVisible = false;
   }
 
   saveItem() {
-    this.save.emit(this.item);
-    this.close.emit();
-  }
-
-  onDateChange(value: string) {
-    this.item.date = value;
-  }
-
-  onHeadChange(value: string) {
-    this.item.head = value;
-  }
-
-  onDescChange(value: string) {
-    this.item.desc = value;
+    this.save.emit();
+    this.isVisible = false;
   }
 }
