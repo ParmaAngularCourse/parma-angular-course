@@ -1,7 +1,13 @@
 <div>
     <button class="control-button" (click)="onAddNews()">Добавить</button>
-    <app-news-editor *ngIf="showEditForm" (closeEditFrom)="showEditForm = false" (saveEditFrom)="onSaveNews($event)" [currentNews] = "newsForEdit"></app-news-editor>
+    <button class="control-button" (click)="onDeleteAllSelectedNews()" [disabled]="!enableDeleteButton">Удалить</button>
+    <app-news-editor #newsEditForm (saveEditForm)="onSaveNews($event)">
+        <ng-container><h2>{{editFormCaption}}</h2></ng-container>
+    </app-news-editor>
 </div>
-<div *ngFor="let newsItem of newsArray">
-    <app-news-block (deleteNews)="onDeleteNews($event)" (editNews)="onEditNews($event)" [currentNews] = "newsItem"></app-news-block>
+<div *ngFor="let newsItem of newsArray" (contextmenu)="onRightClick($event)">
+    <app-news-block (deleteNews)="onDeleteNews($event)" (editNews)="onEditNews($event)" (selectedNews) = "onSelectedNews($event)" [currentNews] = "newsItem"></app-news-block>
 </div>
+<app-news-context-menu #contextMenu>
+    <button class='contextMenuButton' (click)="onSelectAllNews()">Отметить всё</button>
+</app-news-context-menu>

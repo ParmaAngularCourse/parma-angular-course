@@ -12,6 +12,7 @@ export class NewsBlockComponent implements OnInit {
   @Input() public currentNews: News;
   @Output() public deleteNews: EventEmitter<News> = new EventEmitter();
   @Output() public editNews: EventEmitter<News> = new EventEmitter();
+  @Output() public selectedNews: EventEmitter<News> = new EventEmitter();
   public checkBoxState: boolean;
   public enableDeleteButton: boolean;       
 
@@ -24,21 +25,21 @@ export class NewsBlockComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  onCheckboxChange(event:Event){
-    var checkBox = (event.target as HTMLInputElement);
-    this.checkBoxState = checkBox.checked;
+  onCheckboxChange(checked:boolean){    
+    this.checkBoxState = checked;
     this.enableDeleteButton = this.checkBoxState;
+    this.selectedNews.emit(this.currentNews);
   }
 
-  onDeleteNew(event:Event){
+  onDeleteNew(){
     this.deleteNews.emit(this.currentNews)
   }
 
-  onEditNew(event:Event){    
+  onEditNew(){    
     this.editNews.emit(this.currentNews); 
   }
   
   ngDoCheck(){
-    console.log('app-news-block' + this.currentNews.title);
+    console.log('app-news-block - ' + this.currentNews.title);
   }
 }
