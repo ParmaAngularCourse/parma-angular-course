@@ -1,0 +1,30 @@
+<div class="edit-form">
+    <div class="field">
+        <div>
+            <label for="date">Дата</label>
+        </div>
+        <div>
+            <input type="date" id="date" [value]="news.date.toLocaleDateString('ru-Ru').split('.').reverse( ).join( '-' )" #newsDate>
+        </div>
+    </div>
+    <div class="field">
+        <div>
+            <label for="title">Заголовок</label>
+        </div>
+        <div>
+            <textarea id="title" class="text-field" [value]="news.title" #newsTitle></textarea>
+        </div>
+    </div>
+    <div class="field">
+        <div>
+            <label for="text">Текст</label>
+        </div>
+        <div>
+            <textarea id="text" class="text-field" [value]="news.text" #newsText></textarea>
+        </div>
+    </div>
+    <div class="news-actions">
+        <button class="news-button" (click)="save(newsDate.value, newsTitle.value, newsText.value)">Сохранить</button>
+        <button class="news-button" (click)="close(news)">Отмена</button>
+    </div>
+</div>

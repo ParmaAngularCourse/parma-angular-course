@@ -1,0 +1,27 @@
+.edit-form {
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  font-size: 12px;
+  border: solid 1px;
+  padding: 10px;
+  width: 25%;
+  margin: auto;
+  margin-top: 50px;
+  background-color: white;
+}
+
+.news-button {
+  margin-left: 5px;
+}
+
+.news-actions {
+  text-align: end;
+}
+
+.field {
+  margin: 10px;
+}
+
+.text-field {
+  width: 100%;
+  resize: vertical;
+}
