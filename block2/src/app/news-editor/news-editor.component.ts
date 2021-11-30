@@ -6,7 +6,7 @@ import { TypeNews } from 'src/model/TypeNews';
   selector: 'app-news-editor',
   templateUrl: './news-editor.component.html',
   styleUrls: ['./news-editor.component.css'],
-  //changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NewsEditorComponent implements OnInit { 
   @Output() public saveEditForm: EventEmitter<INewsData> = new EventEmitter(); 
@@ -58,7 +58,7 @@ export class NewsEditorComponent implements OnInit {
     this.newsTitle = this.currentNews.title;
     this.newsBody = this.currentNews.body;
     this.newsType = this.currentNews.type;
-    //this.cd.markForCheck();
+    this.cd.markForCheck();
   }
 
   closeForm() {
@@ -82,6 +82,6 @@ export class NewsEditorComponent implements OnInit {
   }
 
   ngDoCheck(){
-    console.log('app-news-editor ' + this.currentNews?.title);
+    console.log('app-news-editor - ' + this.currentNews?.title);
   }
 }

@@ -10,7 +10,7 @@ import { NewsBlockComponent } from './news-block/news-block.component';
   selector: 'app-news-list',
   templateUrl: './news-list.component.html',
   styleUrls: ['./news-list.component.css'],
-  //changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NewsListComponent implements OnInit {
   @ViewChild('newsEditForm') newsEditForm!: NewsEditorComponent
@@ -82,9 +82,8 @@ export class NewsListComponent implements OnInit {
   }
   
   onSelectAllNews(){
-    this.childrenComponents.forEach(x=>x.checkBoxState = true);
-    this.newsContextMenu.closeMenu();
-    this.enableDeleteButton = true;
+    this.childrenComponents.forEach(x=>x.onCheckboxChange(true));
+    this.newsContextMenu.closeMenu();    
   }
 
   onSelectedNews(news:News){

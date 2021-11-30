@@ -5,7 +5,7 @@ import { News } from 'src/model/News';
   selector: 'app-news-block',
   templateUrl: './news-block.component.html',
   styleUrls: ['./news-block.component.css'],
-  //changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NewsBlockComponent implements OnInit {
 
@@ -25,9 +25,8 @@ export class NewsBlockComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  onCheckboxChange(event:Event){
-    var checkBox = (event.target as HTMLInputElement);
-    this.checkBoxState = checkBox.checked;
+  onCheckboxChange(checked:boolean){    
+    this.checkBoxState = checked;
     this.enableDeleteButton = this.checkBoxState;
     this.selectedNews.emit(this.currentNews);
   }
@@ -41,6 +40,6 @@ export class NewsBlockComponent implements OnInit {
   }
   
   ngDoCheck(){
-    console.log('app-news-block' + this.currentNews.title);
+    console.log('app-news-block - ' + this.currentNews.title);
   }
 }
