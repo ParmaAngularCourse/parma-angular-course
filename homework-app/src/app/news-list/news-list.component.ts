@@ -55,12 +55,10 @@ export class NewsListComponent implements OnInit {
       this.allNews.push(newsToSave);
     }
     this.showEditForm = false;
-    this.newsToEdit = this.generateEmptyNews();
   }
 
   onCloseEditForm($event: News) {
     this.showEditForm = false;
-    this.newsToEdit = this.generateEmptyNews();
   }
 
   openAddNewsDialog() {

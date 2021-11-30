@@ -20,13 +20,12 @@ export class NewsEditformComponent implements OnInit {
   }
 
   save(newsDate: string, newsTitle: string, newsText: string) {
-    this.news = {
+    this.saveNews.emit({
       ...this.news,
       date:  new Date(newsDate),
       title: newsTitle,
       text: newsText
-    };
-    this.saveNews.emit(this.news);
+    });
   }
 
   close($event: News) {

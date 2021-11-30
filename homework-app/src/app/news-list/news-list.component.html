@@ -2,4 +2,4 @@
     <button (click)=" openAddNewsDialog()">Добавить</button>
     <app-news *ngFor='let news of allNews' [newsItem]='news' (removeNews)='onRemoveNews($event)' (editNews)='openEditNewsDialog($event)'></app-news>
 </div>
-<app-news-editform [initialNews]='newsToEdit' (saveNews)='onSaveNews($event)' (closeNews)='onCloseEditForm($event)' [ngClass]='showEditForm ? "modal" : "hidden"'></app-news-editform>
+<app-news-editform [initialNews]='newsToEdit' (saveNews)='onSaveNews($event)' (closeNews)='onCloseEditForm($event)' *ngIf='showEditForm' class="modal"></app-news-editform>
