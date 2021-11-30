@@ -1,0 +1,6 @@
+<div class="panel"> 
+    <div class="news" [style.backgroundColor]="item.checked?'gray':'white'" *ngFor="let item of newsItems">
+        <div>{{item.dt}}</div>
+        <input type="checkbox" (click)="selectNews(item.id)">{{item.name}}
+    </div>
+</div>
