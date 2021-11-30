@@ -1,8 +1,11 @@
 .news-block {
   width: 90%;
-  margin: 0 auto;
-  display: inline-block;
-  padding-left: 30px;    
+  display: inline-block;  
+  margin-left: 10px;
+  margin-bottom: 5px;
+  margin-top: 5px;
+  padding-bottom: 10px; 
+  padding-left: 30px; 
 }
 
 .news-block-uncheked{
@@ -19,6 +22,10 @@
 
 .news-title{
   display:flex;
+}
+
+.news-title-block{
+  width: 95%;
 }
 
 .timeline {
@@ -46,4 +53,12 @@
   height: 30px;
   width: 100px;
   text-align: center;
+}
+
+.news-type-tag {	
+	height: 30px;
+	width: 30px;
+	color: white;
+	text-align: center;
+	font-size: 1.2em;
 }
