@@ -7,7 +7,7 @@ export class NewsPart implements INewsPart {
     public text: string;
     public isChecked: boolean;
 
-    constructor(id: number, date: Date, title: string, text: string)
+    constructor(id: number | null, date: Date, title: string, text: string)
     {
         this.id = id;
         this.date = date;

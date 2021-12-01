@@ -1,22 +1,11 @@
 <div class="news_modal_back"></div>
 <div class="news_modal_window">
     <div class="news_modal_title">
-        <label>{{modalWindowTitle}}</label>
+        <ng-content select="news_content_title"></ng-content>
         <button (click)="cancelAction()">X</button>
     </div>
     <div class="news_modal_body">
-        <div>
-            <label class="news_modal_label">Дата:</label>
-            <p><input type="datetime" class="news_modal_input" [value]="newsDate | date:'dd.MM.yyyy hh:mm:ss'" (input)="newsDate=tryParseDate($event)"></p>
-        </div>
-        <div>
-            <label class="news_modal_label">Заголовок:</label>
-            <p><input type="text" class="news_modal_input" [value]="newsTitle" (input)="newsTitle=onTextChanged($event)" placeholder="Введите заголовок новости"></p>
-        </div>
-        <div>
-            <label class="news_modal_label">Текст:</label>
-            <p><input type="text" class="news_modal_input" [value]="newsText" (input)="newsText=onTextChanged($event)" placeholder="Введите текст новости"></p>
-        </div>
+        <ng-content select="news-content-body"></ng-content>
         <div>
             <button class="news_modal_button" (click)="addAction()">Сохранить</button>
             <button class="news_modal_button" (click)="cancelAction()">Отмена</button>
