@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, Component, OnInit, QueryList, ViewChild, ViewChildren} from '@angular/core';
-import {NewsItemModel, NewsTag, TagsList} from "./news-types";
+import {NewsItemModel, NewsTag, TagsList, Permissions, Permission} from "./news-types";
 import {NewsItemModalComponent} from "./news-item-modal/news-item-modal.component";
 import {ContextMenuComponent} from "./context-menu/context-menu.component";
 import {NewsItemComponent} from "./news-item/news-item.component";
@@ -23,6 +23,7 @@ export class NewsComponent implements OnInit {
       "Новость #4", "Текст новости #4", "tourism")
   ];
   tagsList: NewsTag[] = TagsList;
+  perms: Permission[] = Permissions;
 
   @ViewChild('modalComponent') modal! : NewsItemModalComponent;
   editedItem!: NewsItemModel;

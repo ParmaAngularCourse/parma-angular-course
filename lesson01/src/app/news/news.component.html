@@ -1,5 +1,5 @@
 <button (click)="onAdd()">Добавить</button>
-<button (click)="onDeleteSelected()" [disabled]="!this.isSomeItemSelected">Удалить</button>
+<button (click)="onDeleteSelected()" [disabled]="!this.isSomeItemSelected" *appPermission="perms; action: 'deleteItem'" >Удалить</button>
 <app-news-item
   *ngFor="let newItem of news"
   [newsItem]="newItem"
@@ -20,7 +20,7 @@
                     label: 'Дата',
                     inputValue: editedItem.dateLocal,
                     onChange: onDateChange.bind(this)
-                  }">
+                  }" >
     </ng-container>
     <ng-container [ngTemplateOutlet]="inputTemplate"
                   [ngTemplateOutletContext]="{

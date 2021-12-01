@@ -8,7 +8,7 @@
   </div>
   <div class="modal-inner">
     <ng-content select="modal-inner"></ng-content>
-    <button (click)="saveItem()">Сохранить</button>
+    <button (click)="saveItem()" *appPermission="perms; action:'edit'">Сохранить</button>
     <button (click)="cancel()">Отмена</button>
   </div>
 </div>
