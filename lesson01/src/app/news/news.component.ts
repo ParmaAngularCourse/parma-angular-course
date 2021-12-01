@@ -14,7 +14,7 @@ export class NewsComponent implements OnInit {
 
   news: NewsItemModel[] = [
     new NewsItemModel(1, new Date(2021, 0, 1, 0, 0, 1),
-      "Новость #1", "Текст новости #1", "politic"),
+      "новость #1", "Текст новости #1", "politic"),
     new NewsItemModel(2, new Date(2021, 1, 1, 0, 0, 2),
       "Новость #2", "Текст новости #2","internet"),
     new NewsItemModel(3, new Date(2021, 2, 1, 0, 0, 3),
