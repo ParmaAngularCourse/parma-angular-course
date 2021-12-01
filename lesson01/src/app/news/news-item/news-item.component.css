@@ -12,3 +12,8 @@
 .news-item button {
   margin-right: 5px;
 }
+
+.tags-span {
+  float: right;
+  cursor: default;
+}

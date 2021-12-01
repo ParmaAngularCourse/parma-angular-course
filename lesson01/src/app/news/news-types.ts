@@ -21,3 +21,18 @@ export class NewsItemModel {
     ).toISOString().slice(0, 16);
   }
 }
+
+export class NewsTag {
+  constructor(public tag: string,
+              public text: string,
+              public color: string) {
+  }
+}
+
+export let TagsList: NewsTag[] = [
+  new NewsTag("politic", "Политика", "#58B957"),
+  new NewsTag("tourism", "Туризм", "#55BFE0"),
+  new NewsTag("economy", "Экономика", "#EFAC43"),
+  new NewsTag("science", "Наука", "#3D8BCD"),
+  new NewsTag("internet", "Интернет", "#999999")
+];

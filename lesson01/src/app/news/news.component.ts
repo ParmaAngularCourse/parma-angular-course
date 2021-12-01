@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, Component, OnInit, QueryList, ViewChild, ViewChildren} from '@angular/core';
-import {NewsItemModel} from "./news-types";
+import {NewsItemModel, NewsTag, TagsList} from "./news-types";
 import {NewsItemModalComponent} from "./news-item-modal/news-item-modal.component";
 import {ContextMenuComponent} from "./context-menu/context-menu.component";
 import {NewsItemComponent} from "./news-item/news-item.component";
@@ -22,13 +22,7 @@ export class NewsComponent implements OnInit {
     new NewsItemModel(4, new Date(2021, 3, 1, 0, 0, 4),
       "Новость #4", "Текст новости #4", "tourism")
   ];
-  tagsList: {tag:string, text:string}[] = [
-    { tag: "politic", text: "Политика" },
-    { tag: "tourism", text: "Туризм" },
-    { tag: "economy", text: "Экономика" },
-    { tag: "science", text: "Наука" },
-    { tag: "internet", text: "Интернет" }
-  ];
+  tagsList: NewsTag[] = TagsList;
 
   @ViewChild('modalComponent') modal! : NewsItemModalComponent;
   editedItem!: NewsItemModel;
