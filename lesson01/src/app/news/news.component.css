@@ -10,3 +10,14 @@ app-news-item-modal input[type=datetime-local]{
 button {
   margin-right: 5px;
 }
+
+.tags {
+  margin-bottom: 3px;
+}
+
+.tags-label{
+  padding: 0px 4px 0px 4px;
+  border-radius: 5px;
+  font-weight: bold;
+  color: white;
+}

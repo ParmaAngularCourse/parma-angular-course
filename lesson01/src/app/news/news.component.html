@@ -57,10 +57,10 @@
 <ng-template #inputRadioTemplate let-label = "label" let-list = "list" let-inputValue = "inputValue" let-onChange = "onChange">
   <label>{{label}}:</label>
   <ng-container *ngFor="let tagItem of list">
-    <div>
+    <div class="tags">
       <input type="radio" [id]="tagItem.tag" name="tags" [value]="tagItem.tag"
              [checked]="inputValue == tagItem.tag" #tag (change)="onChange(tag.value)" />
-      <label [for]="tagItem.tag">{{tagItem.text}}</label>
+      <label class="tags-label" [appColorizedLabel]="tagItem.color" [for]="tagItem.tag">{{tagItem.text}}</label>
     </div>
   </ng-container>
 </ng-template>

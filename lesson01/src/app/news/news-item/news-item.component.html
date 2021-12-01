@@ -1,6 +1,6 @@
 <div class="news-item" [ngClass]="this.isActive ? 'active' : ''" >
   <input type="checkbox" [checked]="this.isActive" (change)="checkboxChange($event)" />
-  <span class="tags-span" [title]="this.tag.text">{{this.tag | minitags }}</span>
+  <span class="tags-span" [title]="this.tag.text" [appColorizedLabel]="this.tag.color" >{{this.tag | minitags }}</span>
   <div>{{newsItem.date | date:'dd.MM.yyyy HH:mm'}}</div>
   <div>{{newsItem.head | capitalize}}</div>
   <button (click)="edit()">Редактировать</button>

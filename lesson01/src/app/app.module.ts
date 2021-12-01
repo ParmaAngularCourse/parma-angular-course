@@ -8,6 +8,7 @@ import { NewsItemModalComponent } from './news/news-item-modal/news-item-modal.c
 import { ContextMenuComponent } from './news/context-menu/context-menu.component';
 import { CapitalizePipe } from './news/capitalize.pipe';
 import { MinitagsPipe } from './news/minitags.pipe';
+import { ColorizedLabelDirective } from './news/colorized-label.directive';
 
 @NgModule({
   declarations: [
@@ -17,7 +18,8 @@ import { MinitagsPipe } from './news/minitags.pipe';
     NewsItemModalComponent,
     ContextMenuComponent,
     CapitalizePipe,
-    MinitagsPipe
+    MinitagsPipe,
+    ColorizedLabelDirective
   ],
   imports: [
     BrowserModule,
