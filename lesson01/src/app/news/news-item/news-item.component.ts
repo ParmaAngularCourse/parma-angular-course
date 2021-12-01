@@ -20,7 +20,7 @@ export class NewsItemComponent implements OnInit {
 
   isActive: boolean = false;
   tagsList: NewsTag[] = TagsList;
-  tag!: NewsTag;
+  tag: NewsTag | undefined;
 
   @Input() newsItem!: NewsItemModel;
   @Output() removeItem: EventEmitter<number> = new EventEmitter<number>();
@@ -30,7 +30,7 @@ export class NewsItemComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.tag = this.tagsList.filter(p => p.tag == this.newsItem.tag)[0];
+    this.tag = this.tagsList.find(p => p.tag == this.newsItem.tag);
   }
 
   checkboxChange($event: Event){
