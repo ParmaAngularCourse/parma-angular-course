@@ -1,0 +1,9 @@
+<div [class]="brd">
+    <div *ngFor="let item of items; let i = index"> 
+        <div [class]="brd" [ngClass]={checked:item.clicked}>
+            <input type="checkbox" [checked]="item.clicked" (click)="changeColor(item)">
+            <a [style.color]="style_color"> {{item.date.toISOString().slice(0,10) + "  " + item.date.toISOString().slice(11,-5)}}</a>
+            <h3 [style.color]="style_color" > {{item.tytle}}</h3>
+        </div>
+    </div>
+</div>
