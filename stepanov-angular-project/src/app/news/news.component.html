@@ -7,15 +7,15 @@
         <ng-container ngProjectAs="news-content-body">
             <div>
                 <label class="news_modal_label">Дата:</label>
-                <p><input type="datetime" class="news_modal_input" [value]="edit_item?.date | date:'dd.MM.yyyy hh:mm:ss'" (input)="edit_item!.date=tryParseDate($event)"></p>
+                <p><input type="datetime-local" class="news_modal_input" [value]="edit_item.localDateStr" (input)="edit_item.date=tryParseDate($event)"></p>
             </div>
             <div>
                 <label class="news_modal_label">Заголовок:</label>
-                <p><input type="text" class="news_modal_input" [value]="edit_item?.title" (input)="edit_item!.title=onTextChanged($event)" placeholder="Введите заголовок новости"></p>
+                <p><input type="text" class="news_modal_input" [value]="edit_item.title" (input)="edit_item.title=onTextChanged($event)" placeholder="Введите заголовок новости"></p>
             </div>
             <div>
                 <label class="news_modal_label">Текст:</label>
-                <p><input type="text" class="news_modal_input" [value]="edit_item?.text" (input)="edit_item!.text=onTextChanged($event)" placeholder="Введите текст новости"></p>
+                <p><input type="text" class="news_modal_input" [value]="edit_item.text" (input)="edit_item.text=onTextChanged($event)" placeholder="Введите текст новости"></p>
             </div>
         </ng-container>
     </app-news-maker>

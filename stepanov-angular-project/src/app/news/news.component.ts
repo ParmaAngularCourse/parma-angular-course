@@ -43,7 +43,6 @@ export class NewsComponent implements OnInit {
   }
 
   editNewsItem($event: NewsPart) {
-    console.log($event);
     this.edit_item = new NewsPart($event.id, $event.date, $event.title, $event.text);
     this.isVisibleModalDialog = true;
   }
