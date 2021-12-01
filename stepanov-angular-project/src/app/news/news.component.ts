@@ -1,15 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { NewsPart } from './news-types';
-
-/* 
-   хотел сначала даты хранить в Date, но понял, что для формата даты понадобится DatePipe
-   Примерно такой метод был бы преобразования в нужный формат даты:
-   
-   formatDate(date: Date): string|null {
-    var datepipe = new DatePipe('en-US');
-    return datepipe.transform(date, 'dd.MM.yyyy hh:mm:ss');
-  }
-*/
+import { NewsPart, NewsType } from './news-types';
 
 @Component({
   selector: 'app-news',
@@ -24,13 +14,15 @@ export class NewsComponent implements OnInit {
 
   public edit_item!: NewsPart;
 
+  public newsTypeValues: typeof NewsType = NewsType;
+
   constructor() 
   {
     this.items = 
     [
-      new NewsPart(0, new Date(2020,1,20,10,52,30), 'Погода', 'В ближайшие дни ожидается мокрый дождь со снегом'),
-      new NewsPart(1, new Date(2021,2,12,8,19,56), 'Работа', 'Корпоративу на НГ - быть!'),
-      new NewsPart(2, new Date(2022,3,16,20,11,9), '.NET', 'Вышел новый подкаст на тему ".net 6"')
+      new NewsPart(0, new Date(2020,1,20,10,52,30), 'Погода', 'В ближайшие дни ожидается мокрый дождь со снегом', NewsType.Internet),
+      new NewsPart(1, new Date(2021,2,12,8,19,56), 'Работа', 'Корпоративу на НГ - быть!', NewsType.Tourism),
+      new NewsPart(2, new Date(2022,3,16,20,11,9), '.NET', 'Вышел новый подкаст на тему ".net 6"', NewsType.Science)
     ]
   }
 
@@ -43,12 +35,12 @@ export class NewsComponent implements OnInit {
   }
 
   editNewsItem($event: NewsPart) {
-    this.edit_item = new NewsPart($event.id, $event.date, $event.title, $event.text);
+    this.edit_item = new NewsPart($event.id, $event.date, $event.title, $event.text, $event.type);
     this.isVisibleModalDialog = true;
   }
 
   addNewItem() {
-    this.edit_item = new NewsPart(null, new Date(), '', '');
+    this.edit_item = new NewsPart(null, new Date(), '', '', NewsType.Politics);
     this.isVisibleModalDialog = true;
   }
 
@@ -84,5 +76,9 @@ export class NewsComponent implements OnInit {
         return new Date(input.value);
     }
     return new Date();
+  }
+
+  onNewsTypeInputChange(value: string) {
+    this.edit_item.type = value as NewsType;
   }
 }

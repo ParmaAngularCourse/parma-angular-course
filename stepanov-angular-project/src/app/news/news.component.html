@@ -17,6 +17,13 @@
                 <label class="news_modal_label">Текст:</label>
                 <p><input type="text" class="news_modal_input" [value]="edit_item.text" (input)="edit_item.text=onTextChanged($event)" placeholder="Введите текст новости"></p>
             </div>
+            <!--https://stackoverflow.com/questions/38554562/how-can-i-use-ngfor-to-iterate-over-typescript-enum-as-an-array-of-strings-->
+            <div>
+                <div *ngFor="let item of newsTypeValues | keyvalue">
+                    <input type="radio" [id]="item.key" name="newsTypeName" [checked]="edit_item.type==item.value" (change)="onNewsTypeInputChange(item.value)">
+                    <label [for]="item.key">{{item.value}}</label>
+                </div>
+            </div>
         </ng-container>
     </app-news-maker>
 </div>
