@@ -1,13 +1,13 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { PostObj } from './post-types';
 
 @Component({
   selector: 'app-all-posts',
   templateUrl: './all-posts.component.html',
   styleUrls: ['./all-posts.component.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  //changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AllPostsComponent implements OnInit {
+export class AllPostsComponent {
 
   public posts: PostObj[] = [
     {
@@ -45,15 +45,27 @@ export class AllPostsComponent implements OnInit {
       text:"Text Post 5",
       isSelected: false
     },
+    {
+      id: 5,
+      date: "06.01.2021 16:16",
+      title: "Post 6",
+      text:"Text Post 6",
+      isSelected: false
+    },
+    {
+      id: 6,
+      date: "07.01.2021 17:16",
+      title: "Post 7",
+      text:"Text Post 7",
+      isSelected: false
+    },
   ]
 
-  constructor() { }
+  @Input() isVisiblePostDetailPopup: boolean = false;
+  editPost!:PostObj;
 
-  ngOnInit(): void {
-  }
-
-  deletePostHandler($event:PostObj){
-    const index = this.posts.findIndex((e) => e.id == $event.id);
+  deletePostHandler(post:PostObj) {
+    const index = this.posts.findIndex((e) => e.id == post.id);
     if (index > -1) {
       this.posts.splice(index, 1);
     }
@@ -61,6 +73,42 @@ export class AllPostsComponent implements OnInit {
 
   ngDoCheck() {
     console.log('all-posts');
+  }
+
+  addNewPostHandler() {
+    this.isVisiblePostDetailPopup = true;
+    this.editPost = {id:-1, date:"", title:"", text:"", isSelected:false};
+  }
+
+  saveNewPostHandler(post:PostObj) {
+    const findPost = this.posts.find((e) => e.id == post.id);
+    if (findPost) {
+      findPost.date = post.date;
+      findPost.title = post.title;
+      findPost.text = post.text;
+      findPost.isSelected = post.isSelected;
+    }
+    else {
+      let maxIndex = -1;
+      this.posts.forEach((e) => {
+        if (e.id > maxIndex) {
+          maxIndex = e.id;
+        }
+      });
+      maxIndex+=1;
+      post.id = maxIndex;
+      this.posts.push(post);
+    }
+    this.isVisiblePostDetailPopup = false;
+  }
+
+  closePopupPostDetailsHandler() {
+    this.isVisiblePostDetailPopup = false;
+  }
+
+  editPostHandler(post:PostObj) {
+    this.isVisiblePostDetailPopup = true;
+    this.editPost = post;
   }
 
 }
