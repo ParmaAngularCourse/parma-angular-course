@@ -1,5 +1,11 @@
-<div class='newsList'>
-    <button (click)=" openAddNewsDialog()">Добавить</button>
-    <app-news *ngFor='let news of allNews' [newsItem]='news' (removeNews)='onRemoveNews($event)' (editNews)='openEditNewsDialog($event)'></app-news>
+<div (click)="hideContextMenu()">
+    <div class='newsList' (contextmenu)="openContextMenu($event)">
+        <button class="news-list-button" (click)="openAddNewsDialog()">Добавить</button>
+        <button class="news-list-button" (click)="removeSelectedNews()">Удалить</button>
+        <app-news *ngFor='let news of allNews' [newsItem]='news' (removeNews)='onRemoveNews($event)' (editNews)='openEditNewsDialog($event)'></app-news>
+    </div>
+    <app-news-editform [initialNews]='newsToEdit' (saveNews)='onSaveNews($event)' (closeNews)='onCloseEditForm($event)'>
+        <app-header-editform [title]='isEditMode ? "Изменить новость" : "Добавить новость"' (closeNews)='onCloseEditForm($event)'></app-header-editform>
+    </app-news-editform>
+    <app-context-menu #contextMenuComponent (selectAll)="onSelectAll()"></app-context-menu>
 </div>
-<app-news-editform [initialNews]='newsToEdit' (saveNews)='onSaveNews($event)' (closeNews)='onCloseEditForm($event)' *ngIf='showEditForm' class="modal"></app-news-editform>

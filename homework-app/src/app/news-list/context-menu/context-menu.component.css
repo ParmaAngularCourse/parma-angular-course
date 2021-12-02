@@ -1,0 +1,13 @@
+.context-menu {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 12px;
+    border: solid 1px;
+    padding: 10px;
+    width: auto;
+    background-color: white;
+    position: absolute;
+}
+.menuItem {
+    background-color: inherit;
+    border: 0;
+}
