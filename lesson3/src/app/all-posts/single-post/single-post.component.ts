@@ -1,18 +1,27 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angular/core';
 import { PostObj } from '../post-types';
 
 @Component({
   selector: 'app-single-post',
   templateUrl: './single-post.component.html',
   styleUrls: ['./single-post.component.css'],
-  //changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SinglePostComponent {
+  private _post!: PostObj;
+  @Input() set post(value:PostObj) { 
+    this._post = value;
+    this.cdr.markForCheck();
+  }
+  get post():PostObj {
+    return this._post;
+  }
 
-  @Input() post!: PostObj;
   @Output() deletePostEvent: EventEmitter<PostObj> = new EventEmitter();
   @Output() editPostEvent: EventEmitter<PostObj> = new EventEmitter();
   @Output() selectPostEvent: EventEmitter<PostObj> = new EventEmitter();
+
+  constructor(private cdr: ChangeDetectorRef) { }
 
   selectedPostHandler(checked:boolean, post: PostObj)
   {

@@ -1,15 +1,24 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angular/core';
 import { PostObj, PostType } from '../post-types';
 @Component({
   selector: 'app-single-post-detail',
   templateUrl: './single-post-detail.component.html',
-  styleUrls: ['./single-post-detail.component.css']
+  styleUrls: ['./single-post-detail.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SinglePostDetailComponent {
-    @Input() post: PostObj = {id:-1, date:"", title: "", text:"", isSelected: false, postType: PostType.politic};
+    private _post: PostObj = {id:-1, date:"", title: "", text:"", isSelected: false, postType: PostType.politic};
+    get post() {
+      return this._post;
+    }
+    @Input() set post(value){
+      this._post = value;
+      this.cdr.markForCheck();
+    };
     @Output() saveNewPostEvent: EventEmitter<PostObj> = new EventEmitter<PostObj>();
     @Output() closePopupEvent: EventEmitter<void> = new EventEmitter();
-    
+
+    constructor(private cdr: ChangeDetectorRef) {}
 
     savePostHandler() {
       this.saveNewPostEvent.emit(this.post);

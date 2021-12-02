@@ -1,7 +1,7 @@
 <div *ngIf="isVisible" class="b-popup">
     <div class="b-popup-content">
         <div><h3 class="headerStyle">{{titleDialog}}</h3><button class="buttonStyle" (click)="closeDialogHandler()" >X</button></div>
-        <ng-content></ng-content>  
+        <ng-content ngProjectAs="[app-single-post-detail]" (closePopupEvent)="closePopupHandler()"></ng-content>  
     </div>
 </div>
 

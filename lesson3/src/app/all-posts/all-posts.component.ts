@@ -7,7 +7,7 @@ import { SinglePostDetailComponent } from './single-post-detail/single-post-deta
   selector: 'app-all-posts',
   templateUrl: './all-posts.component.html',
   styleUrls: ['./all-posts.component.css'],
-  //changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AllPostsComponent {
 
@@ -69,6 +69,7 @@ export class AllPostsComponent {
       postType: PostType.politic,
     },
   ]
+
   //editPost!:PostObj; Через свойство не работает, если есть вложенный компонент
   titleDialog!:string;
   @ViewChild("popupPostDetailWindow") popupPostDetailWindow!: HeaderPostDetailComponent;
@@ -114,6 +115,11 @@ export class AllPostsComponent {
       findPost.title = post.title;
       findPost.text = post.text;
       findPost.isSelected = post.isSelected;
+      findPost.postType = post.postType;
+      this.posts = this.posts.map(e => {
+        if (e.id == post.id) return {...e}
+        else return e;
+      });
     }
     else {
       let maxIndex = -1;
@@ -135,8 +141,8 @@ export class AllPostsComponent {
 
   editPostHandler(post:PostObj) {
     this.postDetailContent.post = post;
-    this.popupPostDetailWindow.show(true);
     this.titleDialog = "Изменить новость";
+    this.popupPostDetailWindow.show(true);
   }
 
   rightClickHandler(event:any):boolean {
@@ -147,19 +153,21 @@ export class AllPostsComponent {
 
     this.contextMenuX=event.clientX;
     this.contextMenuY=event.clientY + scrollTop;
-    this.isVisibleContextMenu=true;
+    this.isVisibleContextMenu = true;
     return false;
   }
 
   disableContextMenuHandler(){
-    this.isVisibleContextMenu= false;
+    this.isVisibleContextMenu = false;
   }
 
   selectAllPostsHandler() {
-    this.posts.forEach(e => {
+    this.posts = this.posts.map(e => {
       if (!e.isSelected) {
-        e.isSelected = true;
-      }
+        e.isSelected= true;
+        return {...e}
+    }
+      else return e;
     });
     this.isActiveDeletePostBtn = true;
     this.disableContextMenuHandler();
