@@ -1,1 +1,8 @@
-<div><h3 class="headerStyle">{{titleDialog}}</h3><button class="buttonStyle" (click)="closeDialog()">X</button></div>
+<div *ngIf="isVisible" class="b-popup">
+    <div class="b-popup-content">
+        <div><h3 class="headerStyle">{{titleDialog}}</h3><button class="buttonStyle" (click)="closeDialogHandler()" >X</button></div>
+        <ng-content></ng-content>  
+    </div>
+</div>
+
+

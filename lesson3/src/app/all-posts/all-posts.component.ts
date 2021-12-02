@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component, Input, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
+import { HeaderPostDetailComponent } from './header-post-detail/header-post-detail.component';
 import { PostObj, PostType } from './post-types';
 import { SinglePostDetailComponent } from './single-post-detail/single-post-detail.component';
 
@@ -68,9 +69,10 @@ export class AllPostsComponent {
       postType: PostType.politic,
     },
   ]
-  editPost!:PostObj;
+  //editPost!:PostObj; Через свойство не работает, если есть вложенный компонент
   titleDialog!:string;
-  @ViewChild("popupPostDetailWindow") popupPostDetailWindow!: SinglePostDetailComponent;
+  @ViewChild("popupPostDetailWindow") popupPostDetailWindow!: HeaderPostDetailComponent;
+  @ViewChild("postDetailContent") postDetailContent!:SinglePostDetailComponent;
   isVisibleContextMenu: boolean = false;
   contextMenuX = 0;
   contextMenuY = 0;
@@ -99,8 +101,9 @@ export class AllPostsComponent {
   }
 
   addNewPostHandler() {
-    this.popupPostDetailWindow.isVisible = true;
-    this.editPost = {id:-1, date:"", title:"", text:"", isSelected:false, postType:PostType.politic};
+    this.popupPostDetailWindow.show(true);
+    let editPost = {id:-1, date:"", title:"", text:"", isSelected:false, postType:PostType.politic};
+    this.postDetailContent.post = editPost;
     this.titleDialog = "Добавить новость";
   }
 
@@ -123,23 +126,29 @@ export class AllPostsComponent {
       post.id = maxIndex;
       this.posts.push(post);
     }
-    this.popupPostDetailWindow.isVisible = false;
+    this.popupPostDetailWindow.show(false);
   }
 
   closePopupPostDetailsHandler() {
-    this.popupPostDetailWindow.isVisible = false;
+    this.popupPostDetailWindow.show(false);
   }
 
   editPostHandler(post:PostObj) {
-    this.popupPostDetailWindow.isVisible = true;
-    this.editPost = post;
+    this.postDetailContent.post = post;
+    this.popupPostDetailWindow.show(true);
     this.titleDialog = "Изменить новость";
   }
 
-  rightClickHandler(event:any) {
-    this.contextMenuX=event.clientX
-    this.contextMenuY=event.clientY
+  rightClickHandler(event:any):boolean {
+    var html = document.documentElement;
+    var body = document.body;
+
+    var scrollTop = html.scrollTop || body && body.scrollTop || 0;
+
+    this.contextMenuX=event.clientX;
+    this.contextMenuY=event.clientY + scrollTop;
     this.isVisibleContextMenu=true;
+    return false;
   }
 
   disableContextMenuHandler(){

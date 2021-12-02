@@ -9,11 +9,10 @@ export class SinglePostDetailComponent {
     @Input() post: PostObj = {id:-1, date:"", title: "", text:"", isSelected: false, postType: PostType.politic};
     @Output() saveNewPostEvent: EventEmitter<PostObj> = new EventEmitter<PostObj>();
     @Output() closePopupEvent: EventEmitter<void> = new EventEmitter();
-    isVisible:boolean = false;
+    
 
-    savePostHandler(datePost: string, titlePost: string, textPost:string) {
-      let post = {id:this.post.id, date:datePost, title:titlePost, text: textPost, isSelected:this.post.isSelected, postType: this.post.postType};
-      this.saveNewPostEvent.emit(post);
+    savePostHandler() {
+      this.saveNewPostEvent.emit(this.post);
     }
 
     cancelSavePostHandler(){
@@ -27,4 +26,8 @@ export class SinglePostDetailComponent {
     selectPostType(postType:string) {
       this.post.postType = postType as PostType;
     }
+
+    changeDate = (value:string) => {this.post.date = value;}
+    changeTitle = (value:string) => {this.post.title = value;}
+    changeText = (value:string) => {this.post.text = value;}
 }

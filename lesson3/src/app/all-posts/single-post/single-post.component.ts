@@ -30,7 +30,13 @@ export class SinglePostComponent {
   }
 
   editPostHandler(){
-    this.editPostEvent.emit(this.post);
+    let post = {id: this.post.id, 
+      date: this.post.date, 
+      title: this.post.title, 
+      text: this.post.text, 
+      isSelected: this.post.isSelected, 
+      postType: this.post.postType};
+    this.editPostEvent.emit(post);
   }
 
 }

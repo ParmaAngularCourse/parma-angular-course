@@ -1,26 +1,22 @@
-<div *ngIf="isVisible" class="b-popup">
-    <div class="b-popup-content">
-        <ng-content></ng-content>
-        <ng-container *ngTemplateOutlet="inputsPostDetail; context: {post: post}"></ng-container>
-        
-    </div>
+<ng-container [ngTemplateOutlet]="inputsPostDetail" [ngTemplateOutletContext]="{value: post.date, type: 'datetime-local', lable:'Дата:', change:changeDate}"></ng-container>
+<ng-container [ngTemplateOutlet]="inputsPostDetail" [ngTemplateOutletContext]="{value: post.title, type: 'text', lable:'Заголовок:', change:changeTitle}"></ng-container>
+<ng-container [ngTemplateOutlet]="inputsPostDetail" [ngTemplateOutletContext]="{value: post.text, type: 'text', lable:'Текст:', change:changeText}"></ng-container>
+<ng-container [ngTemplateOutlet]="radioPostDetail" [ngTemplateOutletContext]="{postType: post.postType}"></ng-container>
+<div class="divButtonsStyle">
+    <button class="buttonStyle" (click)="savePostHandler()">Сохранить</button>
+    <button class="buttonStyle" (click)="cancelSavePostHandler()">Отмена</button>
 </div>
 
-<ng-template #inputsPostDetail let-post="post">
-    <label>Дата:</label>
-    <input #datePost class="inputStyle" type="datetime-local" [value]="post.date" />
-    <label>Заголовок:</label>
-    <input #titlePost class="inputStyle" type="text" [value]="post.title" />
-    <label>Текст:</label>
-    <input #textPost class="inputStyle" type="text" [value]="post.text" />
+<ng-template #inputsPostDetail let-value="value" let-typeInput="type" let-lableName="lable" let-change="change">
+    <label>{{lableName}}</label>
+    <input #input class="inputStyle" [type]="typeInput" [value]="value" (change)="change(input.value)" />
+</ng-template>
+
+<ng-template #radioPostDetail let-postType="postType">
     <label>Тип:</label>
-    <div><input type="radio" name="typePost" (click)="selectPostType('politic')" [checked]="post.postType+''=='politic'" /><span style="border: 0px;background-color: green;border-radius: 3px;color: white;">политика</span></div>
-    <div><input type="radio" name="typePost" (click)="selectPostType('tourism')" [checked]="post.postType+''=='tourism'" /><span style="border: 0px;background-color: darkcyan;border-radius: 3px;color: white;">туризм</span></div>
-    <div><input type="radio" name="typePost" (click)="selectPostType('economic')" [checked]="post.postType+''=='economic'" /><span style="border: 0px;background-color: coral;border-radius: 3px;color: white;">экономика</span></div>
-    <div><input type="radio" name="typePost" (click)="selectPostType('science')"  [checked]="post.postType+''=='science'" /><span style="border: 0px;background-color: royalblue;border-radius: 3px;color: white;">наука</span></div>
-    <div><input type="radio" name="typePost" (click)="selectPostType('internet')" [checked]="post.postType+''=='internet'" /><span style="border: 0px;background-color: gray;border-radius: 3px;color: white;">интернет</span></div>
-    <div class="divButtonsStyle">
-        <button class="buttonStyle" (click)="savePostHandler(datePost.value, titlePost.value, textPost.value)">Сохранить</button>
-        <button class="buttonStyle" (click)="cancelSavePostHandler()">Отмена</button>
-    </div>
+    <div><input type="radio" name="typePost" (click)="selectPostType('politic')" [checked]="postType+''==='politic'" /><span style="border: 0px;background-color: green;border-radius: 3px;color: white;">политика</span></div>
+    <div><input type="radio" name="typePost" (click)="selectPostType('tourism')" [checked]="postType+''==='tourism'" /><span style="border: 0px;background-color: darkcyan;border-radius: 3px;color: white;">туризм</span></div>
+    <div><input type="radio" name="typePost" (click)="selectPostType('economic')" [checked]="postType+''==='economic'" /><span style="border: 0px;background-color: coral;border-radius: 3px;color: white;">экономика</span></div>
+    <div><input type="radio" name="typePost" (click)="selectPostType('science')"  [checked]="postType+''==='science'" /><span style="border: 0px;background-color: royalblue;border-radius: 3px;color: white;">наука</span></div>
+    <div><input type="radio" name="typePost" (click)="selectPostType('internet')" [checked]="postType+''==='internet'" /><span style="border: 0px;background-color: gray;border-radius: 3px;color: white;">интернет</span></div>
 </ng-template>

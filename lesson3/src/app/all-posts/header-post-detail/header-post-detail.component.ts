@@ -1,4 +1,5 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { PostObj } from '../post-types';
 
 @Component({
   selector: 'app-header-post-detail',
@@ -7,9 +8,14 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 })
 export class HeaderPostDetailComponent {
   @Input() titleDialog:string = "Наименование заголовка";
-  @Output() CloseDialogHeader: EventEmitter<void> = new EventEmitter();
+  @Output() CloseDialogHeaderEvent: EventEmitter<void> = new EventEmitter();
+  private _isVisible: boolean = false;
+  get isVisible():boolean  { return this._isVisible;}
 
-  closeDialog() {
-    this.CloseDialogHeader.emit();
+  closeDialogHandler() {
+    this.CloseDialogHeaderEvent.emit();
+  }
+  show(isShow:boolean) {
+    this._isVisible = isShow;
   }
 }
