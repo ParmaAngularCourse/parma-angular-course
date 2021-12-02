@@ -73,6 +73,10 @@ export class NewsListComponent implements OnInit {
     this.openEditForm(this.generateEmptyNews());
   }
 
+  hasSelectedNews() {
+    return this.allNews.some(item => item.selected);
+  }
+  
   removeSelectedNews() {
     this.allNews = this.allNews.filter(item => !item.selected);
   }
