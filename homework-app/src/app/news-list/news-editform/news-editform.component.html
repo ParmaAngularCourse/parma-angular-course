@@ -1,30 +1,45 @@
-<div class="edit-form">
-    <div class="field">
-        <div>
-            <label for="date">Дата</label>
+<div class="modal" *ngIf='showEditForm'>
+    <div class="edit-form">
+        <ng-content></ng-content>
+        <ng-container *ngTemplateOutlet="dateFieldTemplate; context: { label: 'Дата', date: news.date, changeMethod: dateChanged.bind(this) }"></ng-container>
+        <ng-container *ngTemplateOutlet="textFieldTemplate; context: { label: 'Заголовок', text: news.title, changeMethod: titleChanged.bind(this) }"></ng-container>
+        <ng-container *ngTemplateOutlet="textFieldTemplate; context: { label: 'Текст', text: news.text, changeMethod: textChanged.bind(this) }"></ng-container>
+        <ng-container *ngTemplateOutlet="radioFieldTemplate; context: { label: 'Тип', items: getNewsTypeValues(), selected: news.type, changeMethod: typeChanged.bind(this) }"></ng-container>
+        <div class="news-actions">
+            <button class="news-button" (click)="save()">Сохранить</button>
+            <button class="news-button" (click)="close()">Отмена</button>
         </div>
-        <div>
-            <input type="date" id="date" [value]="news.date.toLocaleDateString('ru-Ru').split('.').reverse( ).join( '-' )" #newsDate>
-        </div>
-    </div>
-    <div class="field">
-        <div>
-            <label for="title">Заголовок</label>
-        </div>
-        <div>
-            <textarea id="title" class="text-field" [value]="news.title" #newsTitle></textarea>
-        </div>
-    </div>
-    <div class="field">
-        <div>
-            <label for="text">Текст</label>
-        </div>
-        <div>
-            <textarea id="text" class="text-field" [value]="news.text" #newsText></textarea>
-        </div>
-    </div>
-    <div class="news-actions">
-        <button class="news-button" (click)="save(newsDate.value, newsTitle.value, newsText.value)">Сохранить</button>
-        <button class="news-button" (click)="close(news)">Отмена</button>
     </div>
 </div>
+
+<ng-template #dateFieldTemplate let-labelText="label" let-date="date" let-changeMethod="changeMethod">
+    <div class="field">
+        <div>
+            <label for="date">{{labelText}}</label>
+        </div>
+        <div>
+            <input type="datetime-local" id="date" [value]="getDateString(date)" #newsDate (change)="changeMethod(newsDate.value)">
+        </div>
+    </div>
+</ng-template>
+<ng-template #textFieldTemplate let-labelText="label" let-text="text" let-changeMethod="changeMethod">
+    <div class="field">
+        <div>
+            <label for="text">{{labelText}}</label>
+        </div>
+        <div>
+            <textarea id="text" class="text-field" [value]="text" #newsText (change)="changeMethod(newsText.value)"></textarea>
+        </div>
+    </div>
+</ng-template>
+<ng-template #radioFieldTemplate let-labelText="label" let-items="items" let-selected="selected" let-changeMethod="changeMethod">
+    <div class="field">
+        <div>
+            <label for="text">{{labelText}}</label>
+        </div>
+        <div *ngFor="let item of items">
+            <input type="radio" id="choice" name="choice" [value]="item" [checked]="item == selected" #newsType (change)="changeMethod(newsType.value)">
+            <label for="choice" [ngStyle]="{'background-color':getColorByNewsType(item)}">{{item}}</label>
+        </div>
+    </div>
+</ng-template>

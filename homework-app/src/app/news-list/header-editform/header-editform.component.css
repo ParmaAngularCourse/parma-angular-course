@@ -1,0 +1,15 @@
+.header {
+    text-align: center;
+}
+.headerTitle {
+    margin: 0 auto;
+    display: inline-block;
+}
+.headerCloseBtn {
+    float: right;
+    display: inline-block;
+}
+.closeBtn {
+    background-color: inherit;
+    border: 0;
+}
