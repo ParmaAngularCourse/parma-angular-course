@@ -6,6 +6,10 @@ import { NewsComponent } from './news/news.component';
 import { NewsItemComponent } from './news/news-item/news-item.component';
 import { NewsItemModalComponent } from './news/news-item-modal/news-item-modal.component';
 import { ContextMenuComponent } from './news/context-menu/context-menu.component';
+import { CapitalizePipe } from './news/capitalize.pipe';
+import { MinitagsPipe } from './news/minitags.pipe';
+import { ColorizedLabelDirective } from './news/colorized-label.directive';
+import { PermissionDirective } from './news/permission.directive';
 
 @NgModule({
   declarations: [
@@ -13,7 +17,11 @@ import { ContextMenuComponent } from './news/context-menu/context-menu.component
     NewsComponent,
     NewsItemComponent,
     NewsItemModalComponent,
-    ContextMenuComponent
+    ContextMenuComponent,
+    CapitalizePipe,
+    MinitagsPipe,
+    ColorizedLabelDirective,
+    PermissionDirective
   ],
   imports: [
     BrowserModule,

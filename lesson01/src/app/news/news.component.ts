@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, Component, OnInit, QueryList, ViewChild, ViewChildren} from '@angular/core';
-import {NewsItemModel} from "./news-types";
+import {NewsItemModel, NewsTag, TagsList, Permissions, Permission} from "./news-types";
 import {NewsItemModalComponent} from "./news-item-modal/news-item-modal.component";
 import {ContextMenuComponent} from "./context-menu/context-menu.component";
 import {NewsItemComponent} from "./news-item/news-item.component";
@@ -7,14 +7,14 @@ import {NewsItemComponent} from "./news-item/news-item.component";
 @Component({
   selector: 'app-news',
   templateUrl: './news.component.html',
-  styleUrls: ['./news.component.css']/*,
-  changeDetection: ChangeDetectionStrategy.OnPush*/
+  styleUrls: ['./news.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NewsComponent implements OnInit {
 
   news: NewsItemModel[] = [
     new NewsItemModel(1, new Date(2021, 0, 1, 0, 0, 1),
-      "Новость #1", "Текст новости #1", "politic"),
+      "новость #1", "Текст новости #1", "politic"),
     new NewsItemModel(2, new Date(2021, 1, 1, 0, 0, 2),
       "Новость #2", "Текст новости #2","internet"),
     new NewsItemModel(3, new Date(2021, 2, 1, 0, 0, 3),
@@ -22,13 +22,8 @@ export class NewsComponent implements OnInit {
     new NewsItemModel(4, new Date(2021, 3, 1, 0, 0, 4),
       "Новость #4", "Текст новости #4", "tourism")
   ];
-  tagsList: {tag:string, text:string}[] = [
-    { tag: "politic", text: "Политика" },
-    { tag: "tourism", text: "Туризм" },
-    { tag: "economy", text: "Экономика" },
-    { tag: "science", text: "Наука" },
-    { tag: "internet", text: "Интернет" }
-  ];
+  tagsList: NewsTag[] = TagsList;
+  perms: Permission[] = Permissions;
 
   @ViewChild('modalComponent') modal! : NewsItemModalComponent;
   editedItem!: NewsItemModel;

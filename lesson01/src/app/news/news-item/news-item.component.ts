@@ -7,7 +7,7 @@ import {
   OnInit,
   Output
 } from '@angular/core';
-import {NewsItemModel} from "../news-types";
+import {NewsItemModel, NewsTag, TagsList} from "../news-types";
 import {ChangeDetection} from "@angular/cli/lib/config/workspace-schema";
 
 @Component({
@@ -19,6 +19,8 @@ import {ChangeDetection} from "@angular/cli/lib/config/workspace-schema";
 export class NewsItemComponent implements OnInit {
 
   isActive: boolean = false;
+  tagsList: NewsTag[] = TagsList;
+  tag: NewsTag | undefined;
 
   @Input() newsItem!: NewsItemModel;
   @Output() removeItem: EventEmitter<number> = new EventEmitter<number>();
@@ -28,6 +30,7 @@ export class NewsItemComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.tag = this.tagsList.find(p => p.tag == this.newsItem.tag);
   }
 
   checkboxChange($event: Event){
