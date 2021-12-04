@@ -1,5 +1,5 @@
-<div class="news_modal_back"></div>
-<div class="news_modal_window">
+<div *ngIf="isVisible" class="news_modal_back"></div>
+<div *ngIf="isVisible" class="news_modal_window">
     <div class="news_modal_title">
         <ng-content select="news_content_title"></ng-content>
         <button (click)="cancelAction()">X</button>

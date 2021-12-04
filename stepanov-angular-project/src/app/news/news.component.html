@@ -1,6 +1,6 @@
 <div>
     <button class="news_list_changing" (click)="addNewItem()">Добавить</button>
-    <app-news-maker *ngIf="isVisibleModalDialog" (onCancelAction)="isVisibleModalDialog=false" (onAddAction)="saveNewItem()">
+    <app-news-maker #newsMaker (onCancelAction)="closeNewsMakerModalWindow()" (onAddAction)="saveNewItem()">
         <ng-container ngProjectAs="news_content_title">
             <label>{{edit_item.id == null ? 'Добавить новость' : 'Изменить новость'}}</label>
         </ng-container>

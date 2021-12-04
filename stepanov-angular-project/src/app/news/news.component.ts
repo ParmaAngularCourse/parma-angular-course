@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { NewsMakerComponent } from './news-maker/news-maker.component';
 import { NewsPart, NewsType } from './news-types';
 
 @Component({
@@ -7,8 +8,6 @@ import { NewsPart, NewsType } from './news-types';
   styleUrls: ['./news.component.scss']
 })
 export class NewsComponent implements OnInit {
-
-  public isVisibleModalDialog: boolean = false;
 
   public items: NewsPart[];
 
@@ -26,7 +25,10 @@ export class NewsComponent implements OnInit {
     ]
   }
 
+  @ViewChild('newsMaker') newsModalComponent!: NewsMakerComponent;
   ngOnInit(): void {
+    // как мне кажется - костыль, приходится при ините заполнять edit_item, т.к. инициализируется компонент через ViewChild
+    this.edit_item = new NewsPart(null, new Date(), '', '', NewsType.Internet);
   }
 
   deleteNewsItem($event: number) {
@@ -36,12 +38,20 @@ export class NewsComponent implements OnInit {
 
   editNewsItem($event: NewsPart) {
     this.edit_item = new NewsPart($event.id, $event.date, $event.title, $event.text, $event.type);
-    this.isVisibleModalDialog = true;
+    this.showNewsMakerModalWindow();
   }
 
   addNewItem() {
     this.edit_item = new NewsPart(null, new Date(), '', '', NewsType.Politics);
-    this.isVisibleModalDialog = true;
+    this.showNewsMakerModalWindow()
+  }
+
+  showNewsMakerModalWindow() {
+    this.newsModalComponent.setVisibility(true);
+  }
+
+  closeNewsMakerModalWindow() {
+    this.newsModalComponent.setVisibility(false);
   }
 
   saveNewItem() {

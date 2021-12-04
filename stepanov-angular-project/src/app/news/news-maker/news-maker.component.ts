@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
 @Component({
   selector: 'app-news-maker',
@@ -7,6 +7,7 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NewsMakerComponent implements OnInit {
+  public isVisible: boolean = false;
 
   @Output()
   onCancelAction: EventEmitter<null> = new EventEmitter();
@@ -14,7 +15,7 @@ export class NewsMakerComponent implements OnInit {
   @Output()
   onAddAction: EventEmitter<null> = new EventEmitter();
 
-  constructor() { }
+  constructor(private cd: ChangeDetectorRef) { }
 
   ngOnInit(): void {
   }
@@ -26,5 +27,10 @@ export class NewsMakerComponent implements OnInit {
   addAction() {
     this.onAddAction.emit();
     this.onCancelAction.emit();
+  }
+
+  setVisibility(isVisible: boolean) {
+    this.isVisible = isVisible;
+    this.cd.markForCheck();
   }
 }
