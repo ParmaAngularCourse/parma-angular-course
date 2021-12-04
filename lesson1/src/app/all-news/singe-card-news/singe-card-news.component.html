@@ -1,0 +1,17 @@
+<div>
+    <app-news-post-modal-window *ngIf="isOpenedModal" class="modal-window" [news_post]="single_post" (cancel)="onCloseModal()"
+        (saveNews)="onAddNewsPost($event)"></app-news-post-modal-window>
+
+
+    <div class="card" [ngClass]="{'selected-card ':single_post.isSelected}" *ngIf="!isOpenedModal">
+        <input type="checkbox" value="{{single_post.isSelected}}" (click)='onChange()'>
+        <label>{{single_post.title}}</label>
+        <p>{{single_post.text}}</p>
+        <br>
+        <p>{{single_post.uploadDate | date}}</p>
+        <div>
+            <button type="button" (click)="onOpenModal()">Редактировать</button>
+            <button (click)="onDeletePost()" type="button" [disabled]="!single_post.isSelected">Удалить</button>
+        </div>
+    </div>
+</div>

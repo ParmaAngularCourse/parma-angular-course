@@ -1,0 +1,12 @@
+<div>
+
+    <app-news-post-modal-window *ngIf="isOpenedModal" class="modal-window" (cancel)="onCloseModal()"
+        (saveNews)="onAddNewsPost($event)"></app-news-post-modal-window>
+    <div *ngIf="!isOpenedModal">
+        <button (click)="onOpenModal()">Добавить</button>
+
+        <app-singe-card-news *ngFor="let item of news" [single_post_data]="item" (deletePost)="onDeletePost($event)">
+        </app-singe-card-news>
+    </div>
+
+</div>

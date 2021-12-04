@@ -2,16 +2,16 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppComponent } from './app.component';
-import { CardComponent } from './card/card.component';
-import { MyIfDirective } from './../myDirectives/myNgIf'
-import { MyForDirective } from './../myDirectives/myNgFor'
+import { AllNewsComponent } from './all-news/all-news.component';
+import { SingeCardNewsComponent } from './all-news/singe-card-news/singe-card-news.component';
+import { NewsPostModalWindowComponent } from './news-post-modal-window/news-post-modal-window.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    CardComponent,
-    MyIfDirective,
-    MyForDirective
+    AllNewsComponent,
+    SingeCardNewsComponent,
+    NewsPostModalWindowComponent
   ],
   imports: [
     BrowserModule
