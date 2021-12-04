@@ -1,0 +1,8 @@
+<div id ="all">
+<button id="addButton" (click)="addClick()">Добавить</button>
+<app-news (editNewsEvent)="onEditNews($event)" (deleteNewsEvent)="onDeleteNews($event)" *ngFor="let item of items" [news]="item"></app-news>
+<div id="editform" >
+
+ 
+<app-edit-form (saveNews)="createNews($event)" (updateNews)="updateNews($event)" (closeForm)="closeForm()" *ngIf="isFormVisible" [itemToEdit]="itemToEdit" [isEdit]="isEdit"></app-edit-form>
+</div>

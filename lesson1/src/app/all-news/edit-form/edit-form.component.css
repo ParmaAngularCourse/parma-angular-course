@@ -1,0 +1,19 @@
+#editform{
+    position: fixed;
+    width: 100;
+    height: 100;
+    right: 50%;
+    background-color: whitesmoke;
+    border: 1px;
+    border-color: gray;
+    border-width: 3px;
+    border-style:solid;
+}
+.backdrop{
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    background:rgba(0, 0, 0, 0.39);
+}

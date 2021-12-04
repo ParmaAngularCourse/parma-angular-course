@@ -1,0 +1,16 @@
+<div class="border" [ngClass] = "{isChecked:news.isChecked}">
+    <table >
+        <tr>
+            <th><input (click)="check(news)" type="checkbox"></th>
+            <th><p>{{news.header}}</p></th>
+        </tr>
+        <tr>
+            <th></th>
+            <th>{{news.dateTime}}</th>
+        </tr>
+        <tr>
+            <th><button class="button" (click)="editNews(news)">Редактировать</button></th>
+            <th><button [disabled]="!news.isChecked" (click)="deleteNews(news)" class="button">Удалить</button></th>
+        </tr>
+    </table>
+</div>

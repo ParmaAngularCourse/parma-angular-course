@@ -1,0 +1,10 @@
+<div class="backdrop">
+<div id="editform">
+<p>Заголовок</p>
+<input #header type="text" [value] ="itemToEdit?.header">
+<p>Дата</p>
+<input #date type="datetime" [value] = "itemToEdit?.dateTime">
+<button (click) = "isEdit? update(header.value, date.value) : save(header.value, date.value)">Сохранить</button>
+<button (click) = "close()">Закрыть</button>
+</div>
+</div>
