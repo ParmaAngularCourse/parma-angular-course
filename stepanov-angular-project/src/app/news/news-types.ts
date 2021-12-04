@@ -20,7 +20,7 @@ export class NewsPart implements INewsPart {
         this.localDateStr = this.createDateLocal();
     }
 
-    private createDateLocal() : string {
+    public createDateLocal() : string {
         let newDate = new Date();
         let offsetMinutes = newDate.getTimezoneOffset();
 

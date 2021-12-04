@@ -5,26 +5,66 @@
             <label>{{edit_item.id == null ? 'Добавить новость' : 'Изменить новость'}}</label>
         </ng-container>
         <ng-container ngProjectAs="news-content-body">
-            <div>
-                <label class="news_modal_label">Дата:</label>
-                <p><input type="datetime-local" class="news_modal_input" [value]="edit_item.localDateStr" (input)="edit_item.date=tryParseDate($event)"></p>
-            </div>
-            <div>
-                <label class="news_modal_label">Заголовок:</label>
-                <p><input type="text" class="news_modal_input" [value]="edit_item.title" (input)="edit_item.title=onTextChanged($event)" placeholder="Введите заголовок новости"></p>
-            </div>
-            <div>
-                <label class="news_modal_label">Текст:</label>
-                <p><input type="text" class="news_modal_input" [value]="edit_item.text" (input)="edit_item.text=onTextChanged($event)" placeholder="Введите текст новости"></p>
-            </div>
-            <!--https://stackoverflow.com/questions/38554562/how-can-i-use-ngfor-to-iterate-over-typescript-enum-as-an-array-of-strings-->
-            <div>
-                <div *ngFor="let item of newsTypeValues | keyvalue">
-                    <input type="radio" [id]="item.key" name="newsTypeName" [checked]="edit_item.type==item.value" (change)="onNewsTypeInputChange(item.value)">
-                    <label [for]="item.key">{{item.value}}</label>
-                </div>
-            </div>
+            <ng-container *ngTemplateOutlet="inputContainer; context: 
+            {
+                labelClass: 'news-modal-label',
+                type: 'datetime-local',
+                caption: 'Дата:',
+                inputClass: 'news_modal_input',
+                value: edit_item.localDateStr,
+                inputChange: tryParseDate.bind(this),
+                placeholder: 'Введите дату новости'
+            }"></ng-container> 
+            <ng-container *ngTemplateOutlet="inputContainer; context: 
+            {
+                labelClass: 'news-modal-label',
+                type: 'text',
+                caption: 'Заголовок:',
+                inputClass: 'news_modal_input',
+                value: edit_item.title,
+                inputChange: onTitleChanged.bind(this),
+                placeholder: 'Введите заголовок новости'
+            }"></ng-container>
+            <ng-container *ngTemplateOutlet="inputContainer; context: 
+            {
+                labelClass: 'news-modal-label',
+                type: 'text',
+                caption: 'Текст:',
+                inputClass: 'news_modal_input',
+                value: edit_item.text,
+                inputChange: onTextChanged.bind(this),
+                placeholder: 'Введите текст новости'
+            }"></ng-container>
+            <ng-container *ngTemplateOutlet="inputTypeContainer; context: 
+            {
+                labelClass: 'news-modal-label',
+                type: 'radio',
+                caption: 'Тип:',
+                value: edit_item.type,
+                inputChange: onNewsTypeInputChange.bind(this) 
+            }">
+            </ng-container>
         </ng-container>
     </app-news-maker>
 </div>
 <app-news-item *ngFor="let item of items" [data_item]="item" (onEditNews)="editNewsItem($event)" (onDeleteNews)="deleteNewsItem($event)"></app-news-item>
+
+<ng-template #inputContainer let-labelClass="labelClass" let-inputClass="inputClass" let-type="type" 
+                            let-caption="caption" let-value="value" let-inputChange="inputChange" let-placeholder="placeholder">
+    <div>
+        <label class="{{labelClass}}">{{caption}}</label>
+        <p><input #inputControl class="{{inputClass}}" type="{{type}}" [value]="value" (input)="inputChange(inputControl.value)" placeholder="{{placeholder}}"></p>
+    </div>
+</ng-template>
+
+<ng-template #inputTypeContainer let-labelClass="labelClass" let-type="type" let-caption="caption"
+                             let-value="value" let-inputChange="inputChange">
+    <!--https://stackoverflow.com/questions/38554562/how-can-i-use-ngfor-to-iterate-over-typescript-enum-as-an-array-of-strings-->
+    <label class="{{labelClass}}">{{caption}}</label>
+    <div>
+        <div *ngFor="let item of newsTypeValues | keyvalue">
+            <input type="{{type}}" [id]="item.key" name="newsTypeName" [checked]="value==item.value" (change)="inputChange(item.value)">
+            <label [for]="item.key">{{item.value}}</label>
+        </div>
+    </div>
+</ng-template>

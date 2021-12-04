@@ -65,17 +65,21 @@ export class NewsComponent implements OnInit {
     return maxId;
   }
 
-  onTextChanged($event: Event) {
-    var input = $event.target as HTMLInputElement;
-    return input.value;
+  onTextChanged($event: string) {
+    this.edit_item.text = $event;
   }
 
-  tryParseDate($event: Event) {
-    var input = $event.target as HTMLDataElement;
-    if (input.value) {
-        return new Date(input.value);
+  onTitleChanged($event: string) {
+    this.edit_item.title = $event;
+  }
+
+  tryParseDate($event: string) {
+    if ($event) {
+        this.edit_item.date = new Date($event);
+    } else {
+        this.edit_item.date = new Date();
     }
-    return new Date();
+    this.edit_item.localDateStr = this.edit_item.createDateLocal();
   }
 
   onNewsTypeInputChange(value: string) {
