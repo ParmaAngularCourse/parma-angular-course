@@ -1,8 +1,8 @@
 <div>
 
-    <app-news-post-modal-window *ngIf="isOpenedModal" class="modal-window" (cancel)="onCloseModal()"
+    <app-news-post-modal-window *ngIf="isOpenedModalCommon" class="modal-window" (cancel)="onCloseModal()"
         (saveNews)="onAddNewsPost($event)"></app-news-post-modal-window>
-    <div *ngIf="!isOpenedModal">
+    <div [ngClass]="{'disabled':isOpenedModalCommon||isOpenedModalChild}">
         <button (click)="onOpenModal()">Добавить</button>
 
         <app-singe-card-news *ngFor="let item of news" [single_post_data]="item" (deletePost)="onDeletePost($event)">
