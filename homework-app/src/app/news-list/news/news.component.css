@@ -3,6 +3,9 @@
     vertical-align: top;
     margin-right: 10px;
 }
+.infoColumn {
+    width: -webkit-fill-available;
+}
 .newsItem {
     border: solid 1px;
     padding: 5px;
@@ -15,6 +18,12 @@
 }
 .selectedNews {
     background-color: lightgrey;
+}
+.dateDiv {
+    display: inline-block;
+}
+.newsTypeDiv {
+    float: right;
 }
 
 .news-button {
