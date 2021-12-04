@@ -1,4 +1,6 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { NewsContextMenuComponent } from './news-context-menu/news-context-menu.component';
+import { NewsItemComponent } from './news-item/news-item.component';
 import { NewsMakerComponent } from './news-maker/news-maker.component';
 import { NewsPart, NewsType } from './news-types';
 
@@ -26,6 +28,8 @@ export class NewsComponent implements OnInit {
   }
 
   @ViewChild('newsMaker') newsModalComponent!: NewsMakerComponent;
+  @ViewChild('contextMenu') contextMenuComponent!: NewsContextMenuComponent;
+  @ViewChildren('newsItems') newsItems!: QueryList<NewsItemComponent>
   ngOnInit(): void {
     // как мне кажется - костыль, приходится при ините заполнять edit_item, т.к. инициализируется компонент через ViewChild
     this.edit_item = new NewsPart(null, new Date(), '', '', NewsType.Internet);
@@ -94,5 +98,14 @@ export class NewsComponent implements OnInit {
 
   onNewsTypeInputChange(value: string) {
     this.edit_item.type = value as NewsType;
+  }
+
+  selectAllNewsItems($event: Event) {
+    this.newsItems.forEach(item => item.onSelectChanged(true));        
+  }
+
+  showContextMenu($event: MouseEvent) {
+    $event.preventDefault();
+    this.contextMenuComponent.showMenu({top: $event.clientY, left: $event.clientX});
   }
 }

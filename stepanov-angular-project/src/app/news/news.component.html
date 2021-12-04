@@ -47,7 +47,13 @@
         </ng-container>
     </app-news-maker>
 </div>
-<app-news-item *ngFor="let item of items" [data_item]="item" (onEditNews)="editNewsItem($event)" (onDeleteNews)="deleteNewsItem($event)"></app-news-item>
+<app-news-item #newsItems *ngFor="let item of items"
+                [data_item]="item"
+                (onEditNews)="editNewsItem($event)" 
+                (onDeleteNews)="deleteNewsItem($event)"
+                (contextmenu)="showContextMenu($event)"
+                >
+</app-news-item>
 
 <ng-template #inputContainer let-labelClass="labelClass" let-inputClass="inputClass" let-type="type" 
                             let-caption="caption" let-value="value" let-inputChange="inputChange" let-placeholder="placeholder">
@@ -68,3 +74,5 @@
         </div>
     </div>
 </ng-template>
+
+<app-news-context-menu #contextMenu (onSelectAllItems)="selectAllNewsItems($event)"></app-news-context-menu> 

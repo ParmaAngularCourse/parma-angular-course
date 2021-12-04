@@ -1,0 +1,22 @@
+.contextMenuOut {
+    top: 0px;
+    left: 0px;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: lightgrey;
+    opacity: 0.9;
+}
+
+.mainMenu {
+    position: absolute;
+    width: auto;
+    height: auto;
+    text-align: center;
+    border: 1px solid black;
+}
+
+button {
+    height: 80px;
+    width: 200px;
+}
