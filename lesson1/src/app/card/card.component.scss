@@ -1,0 +1,26 @@
+$blue: #3f5f69;
+$brown: #b0938f;
+$black: #000000;
+
+$margin: 16px;
+
+p{
+    word-break: break-all;
+
+    clip: {
+        overflow: hidden;
+    };
+}
+.card {
+    padding: $margin / 2;
+    margin: $margin;
+    background-color:  $blue;
+    border-color: $black;
+}
+
+.selected-card {
+    padding: $margin / 2;
+    margin: $margin;
+    background-color:  $brown;
+    border-color: $black;
+}
