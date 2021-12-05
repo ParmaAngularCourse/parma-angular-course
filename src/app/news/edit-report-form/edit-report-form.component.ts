@@ -1,6 +1,6 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { Report } from '../news-types';
+import { Report, NewsType } from '../news-types';
 
 @Component({
   selector: 'app-edit-report-form',
@@ -8,7 +8,7 @@ import { Report } from '../news-types';
   styleUrls: ['./edit-report-form.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class EditReportFormComponent implements OnInit {
+export class EditReportFormComponent {
 
   @Output() saveReport: EventEmitter<Report> = new EventEmitter();
   @Input() report!: Report;
@@ -16,7 +16,7 @@ export class EditReportFormComponent implements OnInit {
   editReportForm!: FormGroup;
 
   constructor(private fb: FormBuilder) { }
-  ngOnInit() { this.initForm(); }
+  ngOnChanges() { this.initForm(); }
 
   initForm() {
     this.editReportForm = this.fb.group(this.report);
@@ -25,4 +25,6 @@ export class EditReportFormComponent implements OnInit {
   submit() {
     this.saveReport.emit(this.editReportForm.value);
   }
+
+  newsTypeEnum = NewsType;
 }
