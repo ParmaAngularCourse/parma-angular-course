@@ -1,6 +1,8 @@
-<div class="panel"> 
-    <div class="news" [style.backgroundColor]="item.checked?'gray':'white'" *ngFor="let item of newsItems">
-        <div>{{item.dt}}</div>
-        <input type="checkbox" (click)="selectNews(item.id)">{{item.name}}
-    </div>
+<div id="openModal" class="modalDialog" *ngIf = modalVisible>
+    <app-edit-news (closeModal)=closeModal($event) [single_news_data]="selectNews"></app-edit-news>
+</div>
+<div class="news-list" [style.height.px]= newsItems.length*160+60> 
+    <div class="btn" (click)=showModal(emptyNews)>Добавить</div>
+    <app-single-news (openModal)=showModal($event) (deleteItem)=deleteItem($event) [single_news_data]="item" *ngFor="let item of newsItems">
+    </app-single-news>
 </div>
