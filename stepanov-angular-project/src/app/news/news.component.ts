@@ -17,6 +17,8 @@ export class NewsComponent implements OnInit {
 
   public newsTypeValues: typeof NewsType = NewsType;
 
+  public isAnyItemSelected: boolean = false;
+
   constructor() 
   {
     this.items = 
@@ -107,5 +109,19 @@ export class NewsComponent implements OnInit {
   showContextMenu($event: MouseEvent) {
     $event.preventDefault();
     this.contextMenuComponent.showMenu({top: $event.clientY, left: $event.clientX});
+  }
+
+  onSelectItem($event: NewsPart) {
+    this.isAnyItemSelected = this.items.filter(item => item.isChecked).length > 0;
+  }
+
+  deleteItems() {
+    if (this.isAnyItemSelected) {
+      this.items
+          .filter(item => item.isChecked)
+          .forEach(item => this.deleteNewsItem(item.id!));
+    }
+    
+    this.isAnyItemSelected = false;
   }
 }

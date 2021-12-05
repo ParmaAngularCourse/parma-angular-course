@@ -18,6 +18,9 @@ export class NewsItemComponent implements OnInit {
   @Output()
   onEditNews: EventEmitter<NewsPart> = new EventEmitter();
 
+  @Output()
+  onCheckedChanged: EventEmitter<NewsPart> = new EventEmitter();
+
   constructor(private cdr: ChangeDetectorRef) { }
 
   ngOnInit(): void {
@@ -26,10 +29,11 @@ export class NewsItemComponent implements OnInit {
   onUserChecked(item: NewsPart, $event: Event) {
     var isChecked = ($event.target as HTMLInputElement).checked;
     item.isChecked = isChecked;
+    this.onCheckedChanged.emit(item);
   }
 
   onDeleteNewsItem(newsItemId: number | null) {
-    if (newsItemId) {
+    if (newsItemId != null) {
        this.onDeleteNews.emit(newsItemId);
     }
   }
@@ -40,6 +44,7 @@ export class NewsItemComponent implements OnInit {
 
   onSelectChanged(isChecked: boolean) {
     this.news_item.isChecked = isChecked;
+    this.onCheckedChanged.emit(this.news_item);
     this.cdr.markForCheck();
   }
 }

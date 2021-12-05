@@ -1,5 +1,6 @@
 <div>
-    <button class="news_list_changing" (click)="addNewItem()">Добавить</button>
+    <button (click)="addNewItem()">Добавить</button>
+    <button (click)="deleteItems()" [disabled]="!isAnyItemSelected">Удалить</button>
     <app-news-maker #newsMaker (onCancelAction)="closeNewsMakerModalWindow()" (onAddAction)="saveNewItem()">
         <ng-container ngProjectAs="news_content_title">
             <label>{{edit_item.id == null ? 'Добавить новость' : 'Изменить новость'}}</label>
@@ -52,6 +53,7 @@
                 (onEditNews)="editNewsItem($event)" 
                 (onDeleteNews)="deleteNewsItem($event)"
                 (contextmenu)="showContextMenu($event)"
+                (onCheckedChanged)="onSelectItem($event)"
                 >
 </app-news-item>
 

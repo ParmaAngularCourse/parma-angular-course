@@ -1,4 +1,4 @@
-.news_list_changing {
+button {
     font-weight: bold;
     font-size: 10px;
     height: 40px;
@@ -8,6 +8,10 @@
     color: white;
     margin-right: 5px;
     text-align: center;
+}
+
+button:disabled {
+    background-color: lightgrey;
 }
 
 .news_modal_label {
