@@ -17,23 +17,3 @@
 }
 
 
-button {
-    background-color:steelblue;
-    border-radius: 5px 5px;
-    margin: 3px;
-    border: 0px;
-    height: 25px;
-    font-weight: bold;
-    color: white;
-    transition-duration: 0.4s;
-}
-
-button:hover {
-    background-color: lightblue; /* Green */
-    color: steelblue;
-  }
-
-button:disabled {
-    background-color: lightgray;
-    color: black;
-}
