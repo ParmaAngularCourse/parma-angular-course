@@ -48,20 +48,17 @@ export class NewsComponent implements OnInit {
 
   public closeModal($event: newsType){
     console.log("close modal");
-    if ($event.id != 0)
+    if ($event.id < this.newsItems.length+1)
     {
-      if ($event.id < this.newsItems.length+1)
-      {
-        this.newsItems[$event.id-1] =  (JSON.parse(JSON.stringify($event)));
-      }
-      else
-      {
-        var news: newsType =  (JSON.parse(JSON.stringify($event)));
-        this.newsItems.push(news);
-        this.emptyNews.id = 0;
-      }
-      
+      this.newsItems[$event.id-1] =  (JSON.parse(JSON.stringify($event)));
     }
+    else
+    {
+      var news: newsType =  (JSON.parse(JSON.stringify($event)));
+      this.newsItems.push(news);
+      this.emptyNews.id = 0;
+    }
+      
     this.modalVisible = false;
   }
 

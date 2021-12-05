@@ -26,7 +26,6 @@ export class EditNewsComponent implements OnInit {
   }
 
   clickCancel(){
-    this.news.id = 0;
     this.closeModal.emit(this.news);
   }
 }
