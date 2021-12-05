@@ -2,6 +2,11 @@
   margin-right: 10px;
 }
 
-::ng-deep .checked button {
-  background: none !important;
+.header {
+  font-weight: bold;
+}
+
+.news-type {
+  margin-left: auto;
+  margin-bottom: auto;
 }

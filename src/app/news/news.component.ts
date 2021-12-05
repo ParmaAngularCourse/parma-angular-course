@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
 import { ModalComponent } from '../modal/modal.component';
 import { NewsType, Report } from './news-types';
+import { Role } from './roles';
 
 @Component({
   selector: 'app-news',
@@ -45,7 +46,8 @@ export class NewsComponent {
   modalData!: Report;
   modalHeader!: string;
   isContextMenuVisible = false;
-  contextMenuPosition: { left: number, top: number; } = { left: 0, top: 0};
+  contextMenuPosition: { left: number, top: number; } = { left: 0, top: 0 };
+  roleEnum = Role;
 
   clickAddButton() {
     this.modalIndex = this.news.length;

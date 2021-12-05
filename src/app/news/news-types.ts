@@ -13,3 +13,11 @@ export enum NewsType {
   Science = "Наука",
   Internet = "Интернет"
 }
+
+export const newsTypeColors = new Map<string, string | "black">([
+  [NewsType.Economy, 'purple'],
+  [NewsType.Politics, 'orange'],
+  [NewsType.Internet, 'deeppink'],
+  [NewsType.Tourism, 'plum'],
+  [NewsType.Science, 'hotpink']
+]);

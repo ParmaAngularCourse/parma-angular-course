@@ -8,6 +8,11 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ReportComponent } from './news/report/report.component';
 import { EditReportFormComponent } from './news/edit-report-form/edit-report-form.component';
 import { ModalComponent } from './modal/modal.component';
+import { NewsTypeStyleDirective } from './news-type-style.directive';
+import { RightsDirective } from './rights.directive';
+import { UpperCaseNamePipePipe } from './upper-case-name-pipe.pipe';
+import { NewsTypePipePipe } from './news-type-pipe.pipe';
+import { TooltipDirective } from './tooltip.directive';
 
 @NgModule({
   declarations: [
@@ -15,7 +20,12 @@ import { ModalComponent } from './modal/modal.component';
     NewsComponent,
     ReportComponent,
     EditReportFormComponent,
-    ModalComponent
+    ModalComponent,
+    NewsTypeStyleDirective,
+    RightsDirective,
+    UpperCaseNamePipePipe,
+    NewsTypePipePipe,
+    TooltipDirective
   ],
   imports: [
     BrowserModule,
