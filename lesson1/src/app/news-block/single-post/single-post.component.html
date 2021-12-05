@@ -3,6 +3,6 @@
         <input type="checkbox"  [checked]="single_post.checked" #checkbox
             (change)="selectNewsItem(checkbox.checked)"> {{single_post.date}} 
         <p>{{single_post.title}}</p>
-        <button (click)="onEditItem(single_post.id)">Редактировать</button>
-        <button [disabled]="!single_post.checked" (click)="onDeleteItem(single_post.id)">Удалить</button>
+        <button (click)="onEditItem()">Редактировать</button>
+        <button [disabled]="!single_post.checked" (click)="onDeleteItem()">Удалить</button>
     </div>

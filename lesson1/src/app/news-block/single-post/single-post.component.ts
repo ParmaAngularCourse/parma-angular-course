@@ -22,13 +22,13 @@ export class SinglePostComponent implements OnInit {
     this.single_post.checked = checked;
   }
 
-  onDeleteItem(id:number)
+  onDeleteItem()
   {
-    this.deleteItem.emit(id);
+    this.deleteItem.emit(this.single_post.id);
   }
 
-  onEditItem(id:number)
+  onEditItem()
   {
-    this.editItem.emit(id);
+    this.editItem.emit(this.single_post.id);
   }
 }
