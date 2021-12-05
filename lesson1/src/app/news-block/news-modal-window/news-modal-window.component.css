@@ -1,3 +1,5 @@
+@import url('../../news-button.css');
+
 .modalWindow {
     border: 1px solid black;  
     padding: 20px;

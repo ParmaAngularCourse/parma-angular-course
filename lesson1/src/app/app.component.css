@@ -1,4 +1,4 @@
-::ng-deep button {
+:host ::ng-deep button {
     background-color:steelblue;
     border-radius: 5px 5px;
     margin: 3px;
@@ -9,12 +9,12 @@
     transition-duration: 0.4s;
 }
 
-::ng-deep button:hover {
+:host ::ng-deep button:hover {
     background-color: lightblue; /* Green */
     color: steelblue;
   }
 
-::ng-deep button:disabled {
+:host ::ng-deep button:disabled {
     background-color: lightgray;
     color: black;
 }
