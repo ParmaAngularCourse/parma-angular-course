@@ -1,10 +1,11 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { NewsBlock } from 'src/app/post-types';
 
 @Component({
   selector: 'app-single-post',
   templateUrl: './single-post.component.html',
-  styleUrls: ['./single-post.component.css']
+  styleUrls: ['./single-post.component.css'],
+ changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SinglePostComponent implements OnInit {
 
@@ -30,5 +31,9 @@ export class SinglePostComponent implements OnInit {
   onEditItem()
   {
     this.editItem.emit(this.single_post.id);
+  }
+
+  ngDoCheck(){
+    console.log("single-post "+ this.single_post.id);
   }
 }

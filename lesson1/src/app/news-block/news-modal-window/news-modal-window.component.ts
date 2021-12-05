@@ -1,10 +1,11 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { NewsBlock } from 'src/app/post-types';
 
 @Component({
   selector: 'app-news-modal-window',
   templateUrl: './news-modal-window.component.html',
-  styleUrls: ['./news-modal-window.component.css']
+  styleUrls: ['./news-modal-window.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NewsModalWindowComponent implements OnInit {
 
@@ -33,5 +34,9 @@ export class NewsModalWindowComponent implements OnInit {
 
   clickCancelButton() {
     this.cancel.emit(null);
+  }
+
+  ngDoCheck(){
+    console.log("new-modal");
   }
 }

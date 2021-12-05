@@ -2,8 +2,8 @@
 
 .modalWindow {
     border: 1px solid black;  
-    padding: 20px;
     width: fit-content;
+    padding: 20px;
     height: auto; 
     z-index: 10;
     position: absolute;
@@ -13,6 +13,7 @@
     background-color: white;
     box-shadow: 2px 2px 3px #999;
     -moz-box-shadow: 2px 2px 3px #999;
+    overflow: hidden;
    }
    
 .modalWindow p {
@@ -26,10 +27,11 @@
 .bigShadow {
     z-index: 5;
     background: lightgray;
-    width: 100%;
     min-height: 100%;
+    min-width: 100%;
     position: absolute;
     top: 0;
+    right: 0;
     opacity: 0.5;
     overflow: hidden;
 }
