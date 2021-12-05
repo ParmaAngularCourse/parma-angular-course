@@ -1,0 +1,54 @@
+.modalWindow {
+    border: 1px solid black;  
+    padding: 20px;
+    width: fit-content;
+    height: auto; 
+    z-index: 10;
+    position: absolute;
+    left:50%;
+    top:50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    box-shadow: 2px 2px 3px #999;
+    -moz-box-shadow: 2px 2px 3px #999;
+   }
+   
+   .modalWindow p {
+       margin: 5px 0px;
+   }
+   
+   .modalWindow div {
+       margin: 10px 0px 0px 0px;
+   }
+   
+   .bigShadow {
+       z-index: 5;
+       background: lightgray;
+       width: 100%;
+       min-height: 100%;
+       position: absolute;
+       top: 0;
+       opacity: 0.5;
+       overflow: hidden;
+   }
+   
+   button {
+    background-color:steelblue;
+    border-radius: 5px 5px;
+    margin: 3px;
+    border: 0px;
+    height: 25px;
+    font-weight: bold;
+    color: white;
+    transition-duration: 0.4s;
+}
+
+button:hover {
+    background-color: lightblue; /* Green */
+    color: steelblue;
+  }
+
+button:disabled {
+    background-color: lightgray;
+    color: black;
+}
