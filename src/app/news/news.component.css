@@ -2,6 +2,8 @@
   padding: 30px;
   background-color: ghostwhite;
   margin: 10px auto;
+  display: flex;
+  align-items: center;
 }
 
 .checked {

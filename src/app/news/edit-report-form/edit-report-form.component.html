@@ -1,0 +1,13 @@
+<form [formGroup]="editReportForm" (ngSubmit)="submit()" novalidate>
+  <div id="myModal" class="modal">
+    <div class="modal-content">
+      <label for="header">Заголовок: </label>
+      <input id="header" type="text" formControlName="header" value="report.header"><br /><br />
+      <label for="body">Новость: </label>
+      <input id="body" type="text" formControlName="body" value="report.body"><br /><br />
+      <label for="timestamp">На момент времени: </label>
+      <input id="timestamp" type="text" formControlName="timestamp" value="report.timestamp"><br /><br />
+      <button type="submit">Coхранить</button>
+    </div>
+  </div>
+ </form>

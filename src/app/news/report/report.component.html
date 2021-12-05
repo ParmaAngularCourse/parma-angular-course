@@ -1,0 +1,8 @@
+<input [(ngModel)]="report.isChecked" type="checkbox">
+<div>
+  <p style="font-weight:bold">{{report.header}}</p>
+  <p>{{report.body}}</p>
+  <p>На момент времени: {{report.timestamp}}</p>
+  <button (click)="clickEditButton()">Редактировать</button>
+  <button (click)="clickDeleteButton()" [disabled]="!report.isChecked">Удалить</button>
+</div>
