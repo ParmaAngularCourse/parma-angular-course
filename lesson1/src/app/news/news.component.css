@@ -4,7 +4,7 @@
 .news-list {
     margin: 50px auto;
     width: 500px;
-    /*height: 680px;*/
+    height: auto;
     border: 1px solid #000;
 }
 
