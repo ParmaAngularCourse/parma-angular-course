@@ -1,4 +1,4 @@
-<button (click)="clickAddButton()" class="addButton newsButton" #addNews>Добавить</button>
+<button (click)="clickAddButton()" class="addButton newsButton">Добавить</button>
 <app-single-post *ngFor="let item of newsList" [single_post]="item" 
     (deleteItem)="onDeleteItem($event)" (editItem)="onEditItem($event)"></app-single-post>
 
