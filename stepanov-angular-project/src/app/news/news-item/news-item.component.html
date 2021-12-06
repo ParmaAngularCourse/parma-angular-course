@@ -1,4 +1,7 @@
-<div [ngClass]="{activeState: news_item.isChecked, disabledState: !news_item.isChecked}">
+<div class="mainDiv" [ngClass]="{activeState: news_item.isChecked, disabledState: !news_item.isChecked}">
+    <div class="newsType">{{news_item.type | newsShowType}}
+        <span class="tooltiptext">{{news_item.type}}</span>
+    </div>
     <input #newsCheck type="checkbox" (change)="onUserChecked(news_item, $event)" [checked]="news_item.isChecked">
     <label for="newsCheck">{{ news_item.date | date: 'dd.MM.yyyy HH:mm:ss'}}</label>
     <p><label>{{ (news_item.title | newsTitleCapitalLetter) }}</label></p>

@@ -7,6 +7,7 @@ import { NewsItemComponent } from './news/news-item/news-item.component';
 import { NewsMakerComponent } from './news/news-maker/news-maker.component';
 import { NewsContextMenuComponent } from './news/news-context-menu/news-context-menu.component';
 import { NewsTitleCapitalLetterPipe } from './news/pipes/news-title-capital-letter.pipe';
+import { NewsShowTypePipe } from './news/pipes/news-show-type.pipe';
 
 @NgModule({
   declarations: [
@@ -15,7 +16,8 @@ import { NewsTitleCapitalLetterPipe } from './news/pipes/news-title-capital-lett
     NewsItemComponent,
     NewsMakerComponent,
     NewsContextMenuComponent,
-    NewsTitleCapitalLetterPipe
+    NewsTitleCapitalLetterPipe,
+    NewsShowTypePipe
   ],
   imports: [
     BrowserModule
