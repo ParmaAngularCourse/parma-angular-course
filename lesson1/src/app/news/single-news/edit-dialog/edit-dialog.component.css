@@ -1,0 +1,9 @@
+.newsEtitor input {
+    margin: 10px;
+}
+
+.newsEtitor {
+    margin: 10px 0;
+    width: fit-content;
+    box-shadow: gray 1px 1px 3px;
+ }

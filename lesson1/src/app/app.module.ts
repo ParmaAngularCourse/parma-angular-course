@@ -5,13 +5,17 @@ import { AppComponent } from './app.component';
 import { HeaderComponent } from './header/header.component';
 import { FooterComponent } from './footer/footer.component';
 import { NewsComponent } from './news/news.component';
+import { SingleNewsComponent } from './news/single-news/single-news.component';
+import { EditDialogComponent } from './news/single-news/edit-dialog/edit-dialog.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     HeaderComponent,
     FooterComponent,
-    NewsComponent
+    NewsComponent,
+    SingleNewsComponent,
+    EditDialogComponent
   ],
   imports: [
     BrowserModule

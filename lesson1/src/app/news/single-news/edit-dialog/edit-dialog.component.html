@@ -1,0 +1,6 @@
+<fieldset class="newsEtitor" ><figcaption>Редактирование новости</figcaption>
+    <input type="date" placeholder="Дата" #newsDate>
+    <br><input type="text" placeholder="Заголовок" #newsCaption>
+    <br><input type="text" placeholder="Текст" #newsText>
+    <br><button (click)="clickSaveNewsButton(newsDate.value, newsCaption.value, newsText.value)"> Сохранить</button>
+</fieldset>

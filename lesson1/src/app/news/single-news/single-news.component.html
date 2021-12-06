@@ -1,0 +1,13 @@
+<div [class.default_style]="!single_news.checked"
+[class.another_style]="single_news.checked" >
+    <label><input type="checkbox" [checked]="single_news.checked" #ourCheckbox
+        (click)="setCheckedNews(ourCheckbox.checked, single_news)" >
+
+ {{single_news.id}}) {{single_news.news.date | date:'dd.MM.yyyy'}}
+ <strong> {{single_news.news.caption}} </strong>
+</label>
+<p>{{single_news.news.text}} </p>
+<ng-content select=".app-edit-dialog" (saveNews)="onSaveNews($event)" ></ng-content>
+<button [disabled]="!single_news.checked" (click)="onDeleteNews()"> Удалить </button>
+ </div>
+
