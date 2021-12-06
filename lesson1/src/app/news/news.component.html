@@ -1,0 +1,9 @@
+<div *ngFor="let item of informationList">
+ 
+        <div style="background-color: {{item.style_color}};" >
+        <input type='checkbox' (change)="onCheckboxChange($event, item)"/>
+        <label >{{item.date}}</label>
+        <p >{{item.title}}</p>
+        </div>
+
+    </div> 
