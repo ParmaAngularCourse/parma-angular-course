@@ -1,6 +1,7 @@
-<fieldset class="newsEtitor" ><figcaption>Редактирование новости</figcaption>
-    <input type="date" placeholder="Дата" #newsDate>
-    <br><input type="text" placeholder="Заголовок" #newsCaption>
-    <br><input type="text" placeholder="Текст" #newsText>
+<fieldset class="newsEtitor" ><figcaption><ng-content></ng-content></figcaption>
+     Дата:<br> <input type="date" #newsDate value={{newsDetails?.date}}>
+    <br>Заголовок:<br><input type="text"  #newsCaption value={{newsDetails?.caption}}>
+    <br>Текст:<br><textarea #newsText value={{newsDetails?.text}}></textarea>
     <br><button (click)="clickSaveNewsButton(newsDate.value, newsCaption.value, newsText.value)"> Сохранить</button>
+    <button (click)="clickCloseButton()">Отмена</button>
 </fieldset>

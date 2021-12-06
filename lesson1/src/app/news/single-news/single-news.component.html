@@ -7,7 +7,12 @@
  <strong> {{single_news.news.caption}} </strong>
 </label>
 <p>{{single_news.news.text}} </p>
-<ng-content select=".app-edit-dialog" (saveNews)="onSaveNews($event)" ></ng-content>
+<app-edit-dialog *ngIf="isEdisNewsShowed" 
+    (saveNews)="onSaveNews($event)"
+    (closeEditDialog)="isEdisNewsShowed=false"
+    [news_details]="single_news.news">Редактирование {{single_news.id}} новости</app-edit-dialog>
+
+<button (click)="isEdisNewsShowed=true"> Редактировать </button>
 <button [disabled]="!single_news.checked" (click)="onDeleteNews()"> Удалить </button>
  </div>
 

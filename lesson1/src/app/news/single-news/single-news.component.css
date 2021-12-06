@@ -14,6 +14,8 @@
     border-radius: 10px;
 }
 
-.default_style p, .another_style p {
+.default_style p, .another_style p{
     padding-left: 25px;
 }
+
+button {margin-left: 10px;}

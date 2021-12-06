@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { NewsItem, NewsObj } from './news-types';
 
 @Component({
   selector: 'app-news',
   templateUrl: './news.component.html',
-  styleUrls: ['./news.component.css']
+  styleUrls: ['./news.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NewsComponent implements OnInit {
 
@@ -32,6 +33,8 @@ export class NewsComponent implements OnInit {
     }}    
 ];
 
+  public isNewNewsShowed: boolean = false;
+
   constructor() { }
 
   ngOnInit(): void {
@@ -53,6 +56,10 @@ export class NewsComponent implements OnInit {
 
   onDeleteNews(id: number){
     this.ourNews = this.ourNews.filter(n=> n.id != id);
+  }
+
+  ngDoCheck(){
+    console.log("app-news");
   }
 
 }

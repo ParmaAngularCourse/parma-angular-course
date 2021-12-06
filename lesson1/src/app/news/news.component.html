@@ -1,10 +1,13 @@
 
  <h2>Новости</h2> 
- <button >Добавить новость</button>
- <app-edit-dialog (saveNews)="onAddNews($event)"></app-edit-dialog>
+ <button (click)="this.isNewNewsShowed=true">Добавить новость</button>
+   
+  <app-edit-dialog *ngIf="isNewNewsShowed" 
+      (saveNews)="onAddNews($event)"
+      (closeEditDialog)="isNewNewsShowed=false">Добавление новости</app-edit-dialog>
 
   <app-single-news *ngFor="let item of ourNews" [single_news_data]="item" 
-      (saveNews)="onSaveNews($event, item.id)"
+      (saveNews)="onSaveNews($event, item.id)"      
       (deleteNews)="onDeleteNews(item.id)"></app-single-news> 
   
   
