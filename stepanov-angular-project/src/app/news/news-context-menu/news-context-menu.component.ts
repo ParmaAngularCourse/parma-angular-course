@@ -1,9 +1,10 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, OnInit, Output } from '@angular/core';
 
 @Component({
   selector: 'app-news-context-menu',
   templateUrl: './news-context-menu.component.html',
-  styleUrls: ['./news-context-menu.component.scss']
+  styleUrls: ['./news-context-menu.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NewsContextMenuComponent implements OnInit {
   public isVisible: boolean = false;
@@ -12,7 +13,7 @@ export class NewsContextMenuComponent implements OnInit {
   @Output()
   onSelectAllItems: EventEmitter<Event> = new EventEmitter();
   
-  constructor() { }
+  constructor(private cdr: ChangeDetectorRef) { }
 
   ngOnInit(): void {
   }
@@ -20,6 +21,7 @@ export class NewsContextMenuComponent implements OnInit {
   showMenu(position: {top: number, left: number}) {
     this.position = position;
     this.isVisible = true;
+    this.cdr.markForCheck();
   }
 
   selectAllItems() {
@@ -32,6 +34,7 @@ export class NewsContextMenuComponent implements OnInit {
   }
 
   private HideMenu() {
-    this.isVisible = false;    
+    this.isVisible = false; 
+    this.cdr.markForCheck();   
   }
 }

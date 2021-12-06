@@ -1,4 +1,6 @@
-<div *ngIf="isVisible" class="contextMenuOut" (click)="selectMenuOut()"></div>
-<div *ngIf="isVisible" class="mainMenu" [style.top.px]="position.top" [style.left.px]="position.left">
-    <button (click)="selectAllItems()">Отметить все</button>
-</div>
+<ng-container *ngIf="isVisible">
+    <div class="contextMenuOut" (click)="selectMenuOut()"></div>
+        <div class="mainMenu" [style.top.px]="position.top" [style.left.px]="position.left">
+        <button (click)="selectAllItems()">Отметить все</button>
+    </div>
+</ng-container>

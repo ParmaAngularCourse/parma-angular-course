@@ -3,7 +3,7 @@
     <button (click)="deleteItems()" [disabled]="!isAnyItemSelected">Удалить</button>
     <app-news-maker #newsMaker (onCancelAction)="closeNewsMakerModalWindow()" (onAddAction)="saveNewItem()">
         <ng-container ngProjectAs="news_content_title">
-            <label>{{edit_item.id == null ? 'Добавить новость' : 'Изменить новость'}}</label>
+            <label>{{edit_item?.id == null ? 'Добавить новость' : 'Изменить новость'}}</label>
         </ng-container>
         <ng-container ngProjectAs="news-content-body">
             <ng-container *ngTemplateOutlet="inputContainer; context: 
@@ -12,7 +12,7 @@
                 type: 'datetime-local',
                 caption: 'Дата:',
                 inputClass: 'news_modal_input',
-                value: edit_item.localDateStr,
+                value: edit_item?.localDateStr,
                 inputChange: tryParseDate.bind(this),
                 placeholder: 'Введите дату новости'
             }"></ng-container> 
@@ -22,7 +22,7 @@
                 type: 'text',
                 caption: 'Заголовок:',
                 inputClass: 'news_modal_input',
-                value: edit_item.title,
+                value: edit_item?.title,
                 inputChange: onTitleChanged.bind(this),
                 placeholder: 'Введите заголовок новости'
             }"></ng-container>
@@ -32,7 +32,7 @@
                 type: 'text',
                 caption: 'Текст:',
                 inputClass: 'news_modal_input',
-                value: edit_item.text,
+                value: edit_item?.text,
                 inputChange: onTextChanged.bind(this),
                 placeholder: 'Введите текст новости'
             }"></ng-container>
@@ -41,7 +41,7 @@
                 labelClass: 'news-modal-label',
                 type: 'radio',
                 caption: 'Тип:',
-                value: edit_item.type,
+                value: edit_item?.type,
                 inputChange: onNewsTypeInputChange.bind(this) 
             }">
             </ng-container>

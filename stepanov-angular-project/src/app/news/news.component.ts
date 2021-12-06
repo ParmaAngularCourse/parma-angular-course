@@ -33,8 +33,6 @@ export class NewsComponent implements OnInit {
   @ViewChild('contextMenu') contextMenuComponent!: NewsContextMenuComponent;
   @ViewChildren('newsItems') newsItems!: QueryList<NewsItemComponent>
   ngOnInit(): void {
-    // как мне кажется - костыль, приходится при ините заполнять edit_item, т.к. инициализируется компонент через ViewChild
-    this.edit_item = new NewsPart(null, new Date(), '', '', NewsType.Internet);
   }
 
   deleteNewsItem($event: number) {
