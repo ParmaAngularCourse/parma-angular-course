@@ -1,1 +1,21 @@
 /* You can add global styles to this file, and also import other style files */
+.newsButton {
+    background-color:steelblue;
+    border-radius: 5px 5px;
+    margin: 3px;
+    border: 0px;
+    height: 25px;
+    font-weight: bold;
+    color: white;
+    transition-duration: 0.4s;
+}
+
+.newsButton:hover {
+    background-color: lightblue; /* Green */
+    color: steelblue;
+  }
+
+  .newsButton:disabled {
+    background-color: lightgray;
+    color: black;
+}
