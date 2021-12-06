@@ -9,3 +9,17 @@ button {
     margin-right: 5px;
     text-align: center;
 }
+
+button:disabled {
+    background-color: lightgrey;
+}
+
+.news_modal_label {
+    text-align: left;
+}
+
+.news_modal_input {
+    height: 25px;
+    width: 220px;
+    border-radius: 8px;
+}

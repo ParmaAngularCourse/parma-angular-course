@@ -1,5 +1,5 @@
 <div [ngClass]="{activeState: news_item.isChecked, disabledState: !news_item.isChecked}">
-    <input #newsCheck type="checkbox" (change)="onUserChecked(news_item, $event)">
+    <input #newsCheck type="checkbox" (change)="onUserChecked(news_item, $event)" [checked]="news_item.isChecked">
     <label for="newsCheck">{{ news_item.date | date: 'dd.MM.yyyy HH:mm:ss'}}</label>
     <p><label>{{ news_item.title }}</label></p>
     <p><label>{{ news_item.text }}</label></p>

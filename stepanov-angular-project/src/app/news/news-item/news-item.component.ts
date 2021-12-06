@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { NewsPart } from '../news-types';
 
 @Component({
@@ -18,7 +18,10 @@ export class NewsItemComponent implements OnInit {
   @Output()
   onEditNews: EventEmitter<NewsPart> = new EventEmitter();
 
-  constructor() { }
+  @Output()
+  onCheckedChanged: EventEmitter<NewsPart> = new EventEmitter();
+
+  constructor(private cdr: ChangeDetectorRef) { }
 
   ngOnInit(): void {
   }
@@ -26,15 +29,22 @@ export class NewsItemComponent implements OnInit {
   onUserChecked(item: NewsPart, $event: Event) {
     var isChecked = ($event.target as HTMLInputElement).checked;
     item.isChecked = isChecked;
+    this.onCheckedChanged.emit(item);
   }
 
   onDeleteNewsItem(newsItemId: number | null) {
-    if (newsItemId) {
+    if (newsItemId != null) {
        this.onDeleteNews.emit(newsItemId);
     }
   }
 
   onEditNewsItem() {
     this.onEditNews.emit(this.news_item);
+  }
+
+  onSelectChanged(isChecked: boolean) {
+    this.news_item.isChecked = isChecked;
+    this.onCheckedChanged.emit(this.news_item);
+    this.cdr.markForCheck();
   }
 }

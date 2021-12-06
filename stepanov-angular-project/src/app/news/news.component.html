@@ -1,5 +1,80 @@
 <div>
     <button (click)="addNewItem()">Добавить</button>
-    <app-news-maker *ngIf="isVisibleModalDialog" [news_item]="edit_item" (onCancelAction)="isVisibleModalDialog=false" (onAddAction)="saveNewItem($event)"></app-news-maker>
+    <button (click)="deleteItems()" [disabled]="!isAnyItemSelected">Удалить</button>
+    <app-news-maker #newsMaker (onCancelAction)="closeNewsMakerModalWindow()" (onAddAction)="saveNewItem()">
+        <ng-container ngProjectAs="news_content_title">
+            <label>{{edit_item?.id == null ? 'Добавить новость' : 'Изменить новость'}}</label>
+        </ng-container>
+        <ng-container ngProjectAs="news-content-body">
+            <ng-container *ngTemplateOutlet="inputContainer; context: 
+            {
+                labelClass: 'news-modal-label',
+                type: 'datetime-local',
+                caption: 'Дата:',
+                inputClass: 'news_modal_input',
+                value: edit_item?.localDateStr,
+                inputChange: tryParseDate.bind(this),
+                placeholder: 'Введите дату новости'
+            }"></ng-container> 
+            <ng-container *ngTemplateOutlet="inputContainer; context: 
+            {
+                labelClass: 'news-modal-label',
+                type: 'text',
+                caption: 'Заголовок:',
+                inputClass: 'news_modal_input',
+                value: edit_item?.title,
+                inputChange: onTitleChanged.bind(this),
+                placeholder: 'Введите заголовок новости'
+            }"></ng-container>
+            <ng-container *ngTemplateOutlet="inputContainer; context: 
+            {
+                labelClass: 'news-modal-label',
+                type: 'text',
+                caption: 'Текст:',
+                inputClass: 'news_modal_input',
+                value: edit_item?.text,
+                inputChange: onTextChanged.bind(this),
+                placeholder: 'Введите текст новости'
+            }"></ng-container>
+            <ng-container *ngTemplateOutlet="inputTypeContainer; context: 
+            {
+                labelClass: 'news-modal-label',
+                type: 'radio',
+                caption: 'Тип:',
+                value: edit_item?.type,
+                inputChange: onNewsTypeInputChange.bind(this) 
+            }">
+            </ng-container>
+        </ng-container>
+    </app-news-maker>
 </div>
-<app-news-item *ngFor="let item of items" [data_item]="item" (onEditNews)="editNewsItem($event)" (onDeleteNews)="deleteNewsItem($event)"></app-news-item>
+<app-news-item #newsItems *ngFor="let item of items"
+                [data_item]="item"
+                (onEditNews)="editNewsItem($event)" 
+                (onDeleteNews)="deleteNewsItem($event)"
+                (contextmenu)="showContextMenu($event)"
+                (onCheckedChanged)="onSelectItem($event)"
+                >
+</app-news-item>
+
+<ng-template #inputContainer let-labelClass="labelClass" let-inputClass="inputClass" let-type="type" 
+                            let-caption="caption" let-value="value" let-inputChange="inputChange" let-placeholder="placeholder">
+    <div>
+        <label class="{{labelClass}}">{{caption}}</label>
+        <p><input #inputControl class="{{inputClass}}" type="{{type}}" [value]="value" (input)="inputChange(inputControl.value)" placeholder="{{placeholder}}"></p>
+    </div>
+</ng-template>
+
+<ng-template #inputTypeContainer let-labelClass="labelClass" let-type="type" let-caption="caption"
+                             let-value="value" let-inputChange="inputChange">
+    <!--https://stackoverflow.com/questions/38554562/how-can-i-use-ngfor-to-iterate-over-typescript-enum-as-an-array-of-strings-->
+    <label class="{{labelClass}}">{{caption}}</label>
+    <div>
+        <div *ngFor="let item of newsTypeValues | keyvalue">
+            <input type="{{type}}" [id]="item.key" name="newsTypeName" [checked]="value==item.value" (change)="inputChange(item.value)">
+            <label [for]="item.key">{{item.value}}</label>
+        </div>
+    </div>
+</ng-template>
+
+<app-news-context-menu #contextMenu (onSelectAllItems)="selectAllNewsItems($event)"></app-news-context-menu> 
