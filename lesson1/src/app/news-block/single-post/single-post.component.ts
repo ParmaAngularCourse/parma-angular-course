@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { NewsBlock } from 'src/app/post-types';
 
 @Component({
@@ -7,16 +7,11 @@ import { NewsBlock } from 'src/app/post-types';
   styleUrls: ['./single-post.component.css'],
  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SinglePostComponent implements OnInit {
+export class SinglePostComponent {
 
-  @Input("single_post_data") single_post!: NewsBlock;
-  @Output() deleteItem : EventEmitter<number> = new EventEmitter();
-  @Output() editItem : EventEmitter<number> = new EventEmitter();
-
-  constructor() { }
-
-  ngOnInit(): void {
-  }
+  @Input() single_post!: NewsBlock;
+  @Output() deleteItem = new EventEmitter<number>();
+  @Output() editItem = new EventEmitter<number>();
 
   selectNewsItem (checked : boolean) 
   {         

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { NewsBlock } from 'src/app/post-types';
 
 @Component({
@@ -7,16 +7,11 @@ import { NewsBlock } from 'src/app/post-types';
   styleUrls: ['./news-modal-window.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class NewsModalWindowComponent implements OnInit {
-
-  constructor() { }
+export class NewsModalWindowComponent {
 
   @Input() newsPost!: NewsBlock;
-  @Output() saveItem: EventEmitter<NewsBlock> = new EventEmitter();
-  @Output() cancel: EventEmitter<any> = new EventEmitter();
-
-  ngOnInit(): void {
-  }
+  @Output() saveItem = new EventEmitter<NewsBlock>();
+  @Output() cancel = new EventEmitter<void>();
 
   clickSaveButton(date: string, title: string, text: string) {
     if (this.newsPost)
@@ -33,7 +28,7 @@ export class NewsModalWindowComponent implements OnInit {
   }
 
   clickCancelButton() {
-    this.cancel.emit(null);
+    this.cancel.emit();
   }
 
   ngDoCheck(){

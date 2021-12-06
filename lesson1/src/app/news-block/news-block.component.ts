@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { NewsBlock } from '../post-types';
 
 type MyNewsListType = Array<NewsBlock>;
@@ -8,11 +8,8 @@ type MyNewsListType = Array<NewsBlock>;
   templateUrl: './news-block.component.html',
   styleUrls: ['./news-block.component.css']  
 })
-export class NewsBlockComponent implements OnInit {
+export class NewsBlockComponent {
   
-  ngOnInit(): void {
-  }
-
   public newsList: NewsBlock[] = [
     {id: 1, date: "01.01.2021 10:00", title: "Новость 1", text: "1", checked: false},
     {id: 2, date: "02.01.2021 10:00", title: "Новость 2", text: "2", checked: false},
@@ -41,11 +38,11 @@ export class NewsBlockComponent implements OnInit {
     //var changedItem = this.newsList.find(item => item.id == savedItem.id);
     if (savedItem.id != 0)
     {
-      this.newsList = this.newsList.map(item => { if (item.id == savedItem.id) return {...savedItem}; else return item});
+      this.newsList = this.newsList.map(item => { if (item.id === savedItem.id) return {...savedItem}; else return item});
     }
     else 
     {
-      var newId = Math.max(...this.newsList.map(item => item.id)) + 1;
+      let newId = Math.max(...this.newsList.map(item => item.id)) + 1;
       savedItem.id = newId;
       this.newsList.push(savedItem);
     }
@@ -59,16 +56,16 @@ export class NewsBlockComponent implements OnInit {
 
   onDeleteItem(id:number)
   {
-    var deletingItem = this.newsList.find(item => item.id == id);
+    let deletingItem = this.newsList.find(item => item.id === id);
     if (deletingItem) {
-      var index = this.newsList.indexOf(deletingItem);
+      let index = this.newsList.indexOf(deletingItem);
       this.newsList.splice(index, 1);
     }
   }
 
   onEditItem(id:number)
   {
-    var editingItem = this.newsList.find(item => item.id == id);
+    let editingItem = this.newsList.find(item => item.id === id);
     if (editingItem)
       this.newPost = editingItem;
     this.showModalWindow();

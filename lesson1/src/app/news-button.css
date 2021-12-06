@@ -1,4 +1,4 @@
-button {
+.newsButton {
     background-color:steelblue;
     border-radius: 5px 5px;
     margin: 3px;
@@ -9,12 +9,12 @@ button {
     transition-duration: 0.4s;
 }
 
-button:hover {
+.newsButton:hover {
     background-color: lightblue; /* Green */
     color: steelblue;
   }
 
-button:disabled {
+  .newsButton:disabled {
     background-color: lightgray;
     color: black;
 }

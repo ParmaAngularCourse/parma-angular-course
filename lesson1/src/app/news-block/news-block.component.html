@@ -1,5 +1,5 @@
-<button (click)="clickAddButton()" class="addButton" #addNews>Добавить</button>
-<app-single-post *ngFor="let item of newsList" [single_post_data]="item" 
+<button (click)="clickAddButton()" class="addButton newsButton" #addNews>Добавить</button>
+<app-single-post *ngFor="let item of newsList" [single_post]="item" 
     (deleteItem)="onDeleteItem($event)" (editItem)="onEditItem($event)"></app-single-post>
 
 <app-news-modal-window *ngIf="modalWindowDisplayed" [newsPost]="newPost" (saveItem)="onSaveItem($event)" 
