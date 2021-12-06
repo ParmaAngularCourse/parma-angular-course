@@ -1,7 +1,8 @@
 <fieldset class="newsEtitor" ><figcaption><ng-content></ng-content></figcaption>
-     Дата:<br> <input type="date" #newsDate value={{newsDetails?.date}}>
-    <br>Заголовок:<br><input type="text"  #newsCaption value={{newsDetails?.caption}}>
-    <br>Текст:<br><textarea #newsText value={{newsDetails?.text}}></textarea>
+     Дата:<br> <input type="datetime-local" #newsDate [value]="newsDetails?.date?.toISOString()?.replace('Z','')">
+     
+    <br>Заголовок:<br><input type="text"  #newsCaption [value]="newsDetails?.caption">
+    <br>Текст:<br><textarea #newsText [value]="newsDetails?.text"></textarea>
     <br><button (click)="clickSaveNewsButton(newsDate.value, newsCaption.value, newsText.value)"> Сохранить</button>
     <button (click)="clickCloseButton()">Отмена</button>
 </fieldset>
