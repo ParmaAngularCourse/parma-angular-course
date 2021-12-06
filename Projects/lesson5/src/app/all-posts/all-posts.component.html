@@ -1,0 +1,1 @@
+<app-single-post *ngFor="let item of posts" (addComment)="onAddComment($event, item.id)" [sinle_post_data]="item" style="border: 1px solid green; display: inline-block; margin: 10px;"></app-single-post>
