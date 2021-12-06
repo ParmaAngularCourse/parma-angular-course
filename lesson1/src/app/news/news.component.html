@@ -1,5 +1,5 @@
 <div id="openModal" class="modalDialog" *ngIf = modalVisible>
-    <app-edit-news (closeModal)=closeModal($event) [single_news_data]="selectNews"></app-edit-news>
+    <app-edit-news (closeModal)=closeModal($event) (cancelModal)=cancelModal() [single_news_data]="selectNews"></app-edit-news>
 </div>
 <div class="news-list"> 
     <div class="btn" (click)=showModal(emptyNews)>Добавить</div>

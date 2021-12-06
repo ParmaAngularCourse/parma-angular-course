@@ -10,7 +10,7 @@ export class EditNewsComponent implements OnInit {
 
   @Input("single_news_data") news! : newsType;
   @Output() closeModal: EventEmitter<newsType> = new EventEmitter();
-  
+  @Output() cancelModal: EventEmitter<void> = new EventEmitter();
   constructor() { }
 
   ngOnInit(): void {
@@ -26,6 +26,6 @@ export class EditNewsComponent implements OnInit {
   }
 
   clickCancel(){
-    this.closeModal.emit(this.news);
+    this.cancelModal.emit();
   }
 }

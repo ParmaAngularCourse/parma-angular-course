@@ -9,7 +9,6 @@ import { newsType } from './news-types';
 })
 export class NewsComponent implements OnInit {
 
-  @Output() openModal: EventEmitter<newsType> = new EventEmitter();
   public modalVisible : boolean = false;
   public emptyNews: newsType = {
     id: 0,
@@ -70,6 +69,10 @@ export class NewsComponent implements OnInit {
         this.newsItems[i].id = i+1;
       }
     }
+  }
+
+  public cancelModal(){
+    this.modalVisible = false;
   }
 
   public newsItems: newsType[] = [
