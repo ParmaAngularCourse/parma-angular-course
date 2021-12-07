@@ -1,0 +1,10 @@
+<button class="buttonStyle" (click)="addNewPostHandler()">Добавить</button>
+<button class="buttonStyle" [disabled] ="!isActiveDeletePostBtn" (click)="deletePostsHandler()">Удалить</button>
+<app-single-post *ngFor="let item of posts" [post]="item" (deletePostEvent)="deletePostHandler($event)" 
+(editPostEvent)="editPostHandler($event)" (contextmenu)="rightClickHandler($event)" 
+(click)="disableContextMenuHandler()" (selectPostEvent)="selectPostHandler($event)">
+</app-single-post>
+<app-header-post-detail #popupPostDetailWindow (CloseDialogHeaderEvent)="closePopupPostDetailsHandler()" [titleDialog]="titleDialog" >
+    <app-single-post-detail #postDetailContent (saveNewPostEvent)="saveNewPostHandler($event)" (closePopupEvent)="closePopupPostDetailsHandler()"></app-single-post-detail>
+</app-header-post-detail>
+<app-context-menu *ngIf="isVisibleContextMenu" [x]="contextMenuX" [y]="contextMenuY" (selectAllItems)="selectAllPostsHandler()"></app-context-menu>
