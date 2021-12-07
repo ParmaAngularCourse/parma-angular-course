@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
 import { HeaderPostDetailComponent } from './header-post-detail/header-post-detail.component';
 import { PostObj, PostType } from './post-types';
 import { SinglePostDetailComponent } from './single-post-detail/single-post-detail.component';
+import { PermissionUser, user1, user2, UserType } from './users';
 
 @Component({
   selector: 'app-all-posts',
@@ -15,7 +16,7 @@ export class AllPostsComponent {
     {
       id: 0,
       date: "2021-01-01T08:09",
-      title: "Post 1",
+      title: "post 1",
       text:"Text Post 1",
       isSelected: false,
       postType: PostType.economic,
@@ -23,7 +24,7 @@ export class AllPostsComponent {
     {
       id: 1,
       date: "2021-01-01T10:16",
-      title: "Post 2",
+      title: "post 2",
       text:"Text Post 2",
       isSelected: false,
       postType: PostType.internet,
@@ -31,7 +32,7 @@ export class AllPostsComponent {
     {
       id: 2,
       date: "2021-01-02T11:18",
-      title: "Post 3",
+      title: "post 3",
       text:"Text Post 3",
       isSelected: false,
       postType: PostType.politic,
@@ -39,15 +40,15 @@ export class AllPostsComponent {
     {
       id: 3,
       date: "2021-01-03T14:16",
-      title: "Post 4",
-      text:"Text Post 5",
+      title: "post 4",
+      text:"Text post 4",
       isSelected: false,
       postType: PostType.tourism,
     },
     {
       id: 4,
       date: "2021-01-04T10:16",
-      title: "Post 5",
+      title: "post 5",
       text:"Text Post 5",
       isSelected: false,
       postType: PostType.internet,
@@ -55,7 +56,7 @@ export class AllPostsComponent {
     {
       id: 5,
       date: "2021-01-06T16:16",
-      title: "Post 6",
+      title: "post 6",
       text:"Text Post 6",
       isSelected: false,
       postType: PostType.science,
@@ -63,7 +64,7 @@ export class AllPostsComponent {
     {
       id: 6,
       date: "2021-01-07T17:16",
-      title: "Post 7",
+      title: "post 7",
       text:"Text Post 7",
       isSelected: false,
       postType: PostType.politic,
@@ -78,6 +79,10 @@ export class AllPostsComponent {
   contextMenuX = 0;
   contextMenuY = 0;
   isActiveDeletePostBtn: boolean = false;
+
+  isShowDeleteButton: boolean = true;
+
+  user: UserType = user2;
 
   ngDoCheck() {
     console.log('all-posts');

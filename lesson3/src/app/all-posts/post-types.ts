@@ -8,9 +8,9 @@ export type PostObj = {
 }
 
 export enum PostType {
-    politic = "politic",
-    tourism = "tourism",
-    economic = "economic",
-    science = "science",
-    internet = "science"
+    politic = 'politic',
+    tourism = 'tourism',
+    economic = 'economic',
+    science = 'science',
+    internet = 'internet'
 }

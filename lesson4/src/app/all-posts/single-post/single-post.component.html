@@ -3,11 +3,15 @@
         <input #checkbox type="checkbox" [checked]="post.isSelected" (change)="selectedPostHandler(checkbox.checked, post)"/>
     </div>
     <div class="postStyle">
-        <p>{{post.date}}</p>
-        <p>Заголовок: {{post.title}}</p>
+        <p class="dateStyle">{{post.date}}</p>
+        <p class="titleStyle">Заголовок: {{post.title}}</p>
+    </div>
+    <div class="postTypeStyle" [appPostTypeSyles]="post.postType" title="{{post.postType | postTypePipe}}">
+        <p class="typeStyle">{{post.postType | postTypePipe:0}}</p>
     </div>
     <div class="divButtonStyle">
         <button class="buttonStyle" (click)="editPostHandler()" >Редактировать</button>
-        <button class="buttonStyle" [disabled]="!post.isSelected" (click)="deletePostHandler()">Удалить</button>
+        <button *appPostPermission="isShowDeleteButton" class="buttonStyle" [disabled]="!post.isSelected" (click)="deletePostHandler()">Удалить</button>
     </div>
 </div>
+

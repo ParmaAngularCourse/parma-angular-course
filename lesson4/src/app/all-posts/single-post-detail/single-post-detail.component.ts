@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angular/core';
 import { PostObj, PostType } from '../post-types';
+import { PermissionUser, user1, user2, UserType } from '../users';
 @Component({
   selector: 'app-single-post-detail',
   templateUrl: './single-post-detail.component.html',
@@ -17,6 +18,11 @@ export class SinglePostDetailComponent {
     };
     @Output() saveNewPostEvent: EventEmitter<PostObj> = new EventEmitter<PostObj>();
     @Output() closePopupEvent: EventEmitter<void> = new EventEmitter();
+
+    PostType: PostType = PostType.politic;
+
+    @Input() user!: UserType;
+    get isShowSaveButton(): boolean { return this.user.permissions.includes(PermissionUser.save); }
 
     constructor(private cdr: ChangeDetectorRef) {}
 

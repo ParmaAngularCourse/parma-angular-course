@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angular/core';
 import { PostObj } from '../post-types';
+import { PermissionUser, user1, user2, UserType } from '../users';
 
 @Component({
   selector: 'app-single-post',
@@ -16,6 +17,10 @@ export class SinglePostComponent {
   get post():PostObj {
     return this._post;
   }
+
+  @Input() user!: UserType;
+
+  get isShowDeleteButton():boolean { return this.user.permissions.includes(PermissionUser.delete); }
 
   @Output() deletePostEvent: EventEmitter<PostObj> = new EventEmitter();
   @Output() editPostEvent: EventEmitter<PostObj> = new EventEmitter();

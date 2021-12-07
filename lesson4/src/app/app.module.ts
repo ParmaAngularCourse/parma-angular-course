@@ -7,6 +7,10 @@ import { SinglePostDetailComponent } from './all-posts/single-post-detail/single
 import { SinglePostComponent } from './all-posts/single-post/single-post.component';
 
 import { AppComponent } from './app.component';
+import { PostTitleCasePipePipe } from './post-title-case-pipe.pipe';
+import { PostTypePipePipe } from './post-type-pipe.pipe';
+import { PostTypeSylesDirective } from './post-type-syles.directive';
+import { PostPermissionDirective } from './post-permission.directive';
 
 @NgModule({
   declarations: [
@@ -15,10 +19,14 @@ import { AppComponent } from './app.component';
     SinglePostComponent,
     SinglePostDetailComponent,
     HeaderPostDetailComponent,
-    ContextMenuComponent
+    ContextMenuComponent,
+    PostTitleCasePipePipe,
+    PostTypePipePipe,
+    PostTypeSylesDirective,
+    PostPermissionDirective
   ],
   imports: [
-    BrowserModule
+    BrowserModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
