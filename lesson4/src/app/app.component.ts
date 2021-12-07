@@ -6,9 +6,5 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'lesson3';
-
-  ngDoCheck() {
-    console.log('root');
-  }
+  title = 'lesson4';
 }

@@ -1,12 +1,9 @@
 {
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
-  "cli": {
-    "analytics": "991911c4-6a21-4f7e-ad57-f04b0a4a0b11"
-  },
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "lesson3": {
+    "lesson4": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:application": {
@@ -41,7 +38,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/lesson3",
+            "outputPath": "dist/lesson4",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -92,10 +89,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "lesson3:build:production"
+              "browserTarget": "lesson4:build:production"
             },
             "development": {
-              "browserTarget": "lesson3:build:development"
+              "browserTarget": "lesson4:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -103,7 +100,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "lesson3:build"
+            "browserTarget": "lesson4:build"
           }
         },
         "test": {
@@ -126,5 +123,5 @@
       }
     }
   },
-  "defaultProject": "lesson3"
+  "defaultProject": "lesson4"
 }
