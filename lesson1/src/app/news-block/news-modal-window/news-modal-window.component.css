@@ -1,0 +1,37 @@
+.modalWindow {
+    border: 1px solid black;  
+    width: fit-content;
+    padding: 20px;
+    height: auto; 
+    z-index: 10;
+    position: absolute;
+    left:50%;
+    top:50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    box-shadow: 2px 2px 3px #999;
+    -moz-box-shadow: 2px 2px 3px #999;
+    overflow: hidden;
+   }
+   
+.modalWindow p {
+    margin: 5px 0px;
+}
+
+.modalWindow div {
+    margin: 10px 0px 0px 0px;
+}
+
+.bigShadow {
+    z-index: 5;
+    background: lightgray;
+    min-height: 100%;
+    min-width: 100%;
+    position: absolute;
+    top: 0;
+    right: 0;
+    opacity: 0.5;
+    overflow: hidden;
+}
+   
+   

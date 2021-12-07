@@ -1,0 +1,19 @@
+.noteclassic{    
+    width: 80%;
+    border-radius: 10px 10px;
+    padding: 20px 20px 20px 80px;
+    box-shadow: 2px 2px 3px #999;
+    -moz-box-shadow: 2px 2px 3px #999;
+    /*IE min-height hack*/
+    height:auto;
+    border: 1px solid #999999;
+    text-align: justify;
+    margin: 20px;
+    background-color: white;
+}
+
+.noteclassic_checked{
+    background-color: lightgray;
+}
+
+

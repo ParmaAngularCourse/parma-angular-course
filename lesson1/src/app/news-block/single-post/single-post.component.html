@@ -1,0 +1,8 @@
+ 
+    <div [class.noteclassic_checked]="single_post.checked" class="noteclassic" > 
+        <input type="checkbox"  [checked]="single_post.checked" #checkbox
+            (change)="selectNewsItem(checkbox.checked)"> {{single_post.date}} 
+        <p>{{single_post.title}}</p>
+        <button class="newsButton" (click)="onEditItem()">Редактировать</button>
+        <button class="newsButton" [disabled]="!single_post.checked" (click)="onDeleteItem()">Удалить</button>
+    </div>
