@@ -38,7 +38,10 @@ export class NewsBlockComponent {
     //var changedItem = this.newsList.find(item => item.id == savedItem.id);
     if (savedItem.id != 0)
     {
-      this.newsList = this.newsList.map(item => { if (item.id === savedItem.id) return {...savedItem}; else return item});
+      this.newsList = this.newsList.map(item => 
+        { 
+          return (item.id === savedItem.id) ? {...savedItem} : item;
+        });
     }
     else 
     {

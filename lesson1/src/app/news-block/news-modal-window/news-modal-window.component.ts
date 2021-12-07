@@ -13,17 +13,10 @@ export class NewsModalWindowComponent {
   @Output() saveItem = new EventEmitter<NewsBlock>();
   @Output() cancel = new EventEmitter<void>();
 
-  clickSaveButton(date: string, title: string, text: string) {
-    if (this.newsPost)
-    {
-      this.newsPost.date = date;
-      this.newsPost.title = title;
-      this.newsPost.text = text;
-    }
-    else
-    {
-      this.newsPost = {id: 0, date: date, title: title, text: text, checked: false};
-    }
+  clickSaveButton(date: string, title: string, text: string) {    
+    this.newsPost.date = date;
+    this.newsPost.title = title;
+    this.newsPost.text = text;
     this.saveItem.emit(this.newsPost);
   }
 
