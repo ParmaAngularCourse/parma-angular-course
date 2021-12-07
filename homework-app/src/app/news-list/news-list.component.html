@@ -1,7 +1,7 @@
 <div (click)="hideContextMenu()">
     <div class='newsList' (contextmenu)="openContextMenu($event)">
         <button class="news-list-button" (click)="openAddNewsDialog()">Добавить</button>
-        <button class="news-list-button" [disabled]="!hasSelectedNews()" (click)="removeSelectedNews()">Удалить</button>
+        <button class="news-list-button" [disabled]="!hasSelectedNews()" (click)="removeSelectedNews()" *showByRoles>Удалить</button>
         <app-news *ngFor='let news of allNews' [newsItem]='news' (removeNews)='onRemoveNews($event)' (editNews)='openEditNewsDialog($event)'></app-news>
     </div>
     <app-news-editform [initialNews]='newsToEdit' (saveNews)='onSaveNews($event)' (closeNews)='onCloseEditForm($event)'>

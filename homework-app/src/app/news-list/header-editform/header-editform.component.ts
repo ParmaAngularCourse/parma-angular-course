@@ -1,9 +1,10 @@
-import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, Input, ChangeDetectionStrategy } from '@angular/core';
 
 @Component({
   selector: 'app-header-editform',
   templateUrl: './header-editform.component.html',
-  styleUrls: ['./header-editform.component.css']
+  styleUrls: ['./header-editform.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HeaderEditformComponent implements OnInit {
 

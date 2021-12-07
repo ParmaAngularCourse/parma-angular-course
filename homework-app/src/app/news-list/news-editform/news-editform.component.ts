@@ -19,14 +19,6 @@ export class NewsEditformComponent implements OnInit, OnChanges {
   private textFieldValue: string = "";
   private typeFieldValue: NewsType = NewsType.Politics;
 
-  private newsTypeColors = new Map<NewsType, string>([
-    [NewsType.Politics, "lightgreen"],
-    [NewsType.Tourism, "lightblue"],
-    [NewsType.Economics, "yellow"],
-    [NewsType.Science, "aqua"],
-    [NewsType.Internet, "lightgrey"]
-  ]);
-
   constructor(private cdr: ChangeDetectorRef) { 
   }
 
@@ -55,10 +47,6 @@ export class NewsEditformComponent implements OnInit, OnChanges {
 
   getDateString(date: Date) : string {
     return (new Date(date.getTime() - date.getTimezoneOffset() * 60000).toISOString()).slice(0, -8)
-  }
-
-  getColorByNewsType(type: NewsType) : string {
-    return this.newsTypeColors.get(type) ?? '';
   }
 
   getNewsTypeValues() {

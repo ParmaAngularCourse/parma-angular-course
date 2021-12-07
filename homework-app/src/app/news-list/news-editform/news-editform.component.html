@@ -6,7 +6,7 @@
         <ng-container *ngTemplateOutlet="textFieldTemplate; context: { label: 'Текст', text: news.text, changeMethod: textChanged.bind(this) }"></ng-container>
         <ng-container *ngTemplateOutlet="radioFieldTemplate; context: { label: 'Тип', items: getNewsTypeValues(), selected: news.type, changeMethod: typeChanged.bind(this) }"></ng-container>
         <div class="news-actions">
-            <button class="news-button" (click)="save()">Сохранить</button>
+            <button class="news-button" (click)="save()" *showByRoles>Сохранить</button>
             <button class="news-button" (click)="close()">Отмена</button>
         </div>
     </div>
@@ -38,8 +38,8 @@
             <label for="text">{{labelText}}</label>
         </div>
         <div *ngFor="let item of items">
-            <input type="radio" id="choice" name="choice" [value]="item" [checked]="item == selected" #newsType (change)="changeMethod(newsType.value)">
-            <label for="choice" [ngStyle]="{'background-color':getColorByNewsType(item)}">{{item}}</label>
+            <input type="radio" id="choice" class="radio-field" name="choice" [value]="item" [checked]="item == selected" #newsType (change)="changeMethod(newsType.value)">
+            <label for="choice" [newsTypeStyles]="item">{{item}}</label>
         </div>
     </div>
 </ng-template>

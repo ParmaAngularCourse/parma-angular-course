@@ -7,6 +7,10 @@ import { NewsListComponent } from './news-list/news-list.component';
 import { NewsEditformComponent } from './news-list/news-editform/news-editform.component';
 import { HeaderEditformComponent } from './news-list/header-editform/header-editform.component';
 import { ContextMenuComponent } from './news-list/context-menu/context-menu.component';
+import { ShowByRolesDirective } from './show-by-roles.directive';
+import { NewsTypeStylesDirective } from './news-type-styles.directive';
+import { NewsTitlePipe } from './news-title.pipe';
+import { NewsTypeBadgePipe } from './news-type-badge.pipe';
 
 @NgModule({
   declarations: [
@@ -15,7 +19,11 @@ import { ContextMenuComponent } from './news-list/context-menu/context-menu.comp
     NewsListComponent,
     NewsEditformComponent,
     HeaderEditformComponent,
-    ContextMenuComponent
+    ContextMenuComponent,
+    ShowByRolesDirective,
+    NewsTypeStylesDirective,
+    NewsTitlePipe,
+    NewsTypeBadgePipe
   ],
   imports: [
     BrowserModule
