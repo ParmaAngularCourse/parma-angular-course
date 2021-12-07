@@ -1,5 +1,5 @@
-<div [class.default_style]="!single_news.checked"
-[class.another_style]="single_news.checked" >
+<div [class]="{default_style: !single_news.checked, another_style: single_news.checked }">
+
     <label><input type="checkbox" [checked]="single_news.checked" #ourCheckbox
         (click)="setCheckedNews(ourCheckbox.checked, single_news)" >
 
@@ -10,7 +10,7 @@
 <app-edit-dialog *ngIf="isEdisNewsShowed" 
     (saveNews)="onSaveNews($event)"
     (closeEditDialog)="isEdisNewsShowed=false"
-    [news_details]="single_news.news">Редактирование {{single_news.id}} новости</app-edit-dialog>
+    [newsDetails]="single_news.news">Редактирование {{single_news.id}} новости</app-edit-dialog>
 
 <button (click)="isEdisNewsShowed=true"> Редактировать </button>
 <button [disabled]="!single_news.checked" (click)="onDeleteNews()"> Удалить </button>

@@ -10,7 +10,7 @@ import { NewsObj } from '../../news-types';
 })
 export class EditDialogComponent implements OnInit {
 
-  @Input("news_details")newsDetails!: NewsObj;
+  @Input()newsDetails!: NewsObj;
   @Output() saveNews = new EventEmitter<NewsObj> ();
   @Output() closeEditDialog = new EventEmitter();
   constructor() { }

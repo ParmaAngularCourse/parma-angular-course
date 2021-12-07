@@ -10,7 +10,7 @@ import { NewsItem, NewsObj } from '../news-types';
 })
 export class SingleNewsComponent implements OnInit {
 
-@Input("single_news_data")single_news!: NewsItem ;
+@Input()single_news!: NewsItem ;
 @Output() saveNews = new EventEmitter<NewsObj> ();
 @Output() deleteNews = new EventEmitter();
 

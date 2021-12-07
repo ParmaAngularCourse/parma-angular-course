@@ -1,5 +1,5 @@
-<fieldset class="newsEtitor" ><figcaption><ng-content></ng-content></figcaption>
-     Дата:<br> <input type="datetime-local" #newsDate [value]="newsDetails?.date?.toISOString()?.replace('Z','')">
+<fieldset class="newsEtitor" ><legend><ng-content></ng-content></legend>
+     Дата:<br> <input type="date" #newsDate [valueAsDate]="newsDetails?.date">
      
     <br>Заголовок:<br><input type="text"  #newsCaption [value]="newsDetails?.caption">
     <br>Текст:<br><textarea #newsText [value]="newsDetails?.text"></textarea>
