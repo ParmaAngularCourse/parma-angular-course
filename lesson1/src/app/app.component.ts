@@ -7,4 +7,7 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'lesson1';
+  ngDoCheck(){
+    console.log("root");
+  }
 }

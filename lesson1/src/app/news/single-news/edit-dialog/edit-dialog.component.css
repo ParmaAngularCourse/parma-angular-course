@@ -1,0 +1,27 @@
+.newsEtitor input, .newsEtitor textarea {
+    margin: 10px;
+    min-width: 500px;
+    max-width: 500px;
+}
+
+.newsEtitor textarea {
+    height: 5em;
+}
+
+.newsEtitor {
+    margin: 10px 0;
+    width: fit-content;
+    box-shadow: gray 1px 1px 3px;
+
+    position: absolute;
+    left: 50%;
+    margin-left: -25%;
+    margin-top: -5%;
+    background-color: cornsilk;
+ }
+
+ .newsEtitor legend {
+    text-align: center;
+    font-size: larger;
+    font-weight: bold;
+ }

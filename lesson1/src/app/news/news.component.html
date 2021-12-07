@@ -1,15 +1,14 @@
 
-<fieldset> <figcaption>Новости</figcaption> 
+ <h2>Новости</h2> 
+ <button (click)="isNewNewsShowed=true">Добавить новость</button>
+   
+  <app-edit-dialog *ngIf="isNewNewsShowed" 
+      (saveNews)="onAddNews($event)"
+      (closeEditDialog)="isNewNewsShowed=false">Добавление новости</app-edit-dialog>
 
-<p *ngFor="let newsItem of ourNews"
-    [class.default_style]="!newsItem.checked"
-    [class.another_style]="newsItem.checked" >
+  <app-single-news *ngFor="let item of ourNews" [single_news]="item" 
+      (saveNews)="onSaveNews($event, item.id)"      
+      (deleteNews)="onDeleteNews(item.id)"></app-single-news> 
+  
+  
 
-    <label><input type="checkbox" [checked]="newsItem.checked" 
-            (click)="setCheckedNews($event, newsItem)" >
-         {{newsItem.date | date:'dd.MM.yyyy - h:mm'}}
-    </label>
-    <br>{{newsItem.caption}} 
-   {{newsItem.checked}} 
-</p>
-</fieldset>

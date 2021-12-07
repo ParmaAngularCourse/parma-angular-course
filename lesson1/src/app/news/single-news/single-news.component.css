@@ -1,0 +1,21 @@
+.default_style {   
+    background-color: transparent;
+}
+
+.another_style {
+    background-color: rgb(230, 244, 248);
+}
+
+.default_style, .another_style {
+    border: black 1px solid;
+    margin: 20px;
+    padding: 5px;
+    max-width: 800px;
+    border-radius: 10px;
+}
+
+.default_style p, .another_style p{
+    padding-left: 25px;
+}
+
+button {margin-left: 10px;}

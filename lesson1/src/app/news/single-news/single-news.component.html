@@ -1,0 +1,18 @@
+<div [class]="{default_style: !single_news.checked, another_style: single_news.checked }">
+
+    <label><input type="checkbox" [checked]="single_news.checked" #ourCheckbox
+        (click)="setCheckedNews(ourCheckbox.checked, single_news)" >
+
+ {{single_news.id}}) {{single_news.news.date | date:'dd.MM.yyyy'}}
+ <strong> {{single_news.news.caption}} </strong>
+</label>
+<p>{{single_news.news.text}} </p>
+<app-edit-dialog *ngIf="isEdisNewsShowed" 
+    (saveNews)="onSaveNews($event)"
+    (closeEditDialog)="isEdisNewsShowed=false"
+    [newsDetails]="single_news.news">Редактирование {{single_news.id}} новости</app-edit-dialog>
+
+<button (click)="isEdisNewsShowed=true"> Редактировать </button>
+<button [disabled]="!single_news.checked" (click)="onDeleteNews()"> Удалить </button>
+ </div>
+

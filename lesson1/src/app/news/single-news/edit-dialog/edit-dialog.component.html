@@ -1,0 +1,8 @@
+<fieldset class="newsEtitor" ><legend><ng-content></ng-content></legend>
+     Дата:<br> <input type="date" #newsDate [valueAsDate]="newsDetails?.date">
+     
+    <br>Заголовок:<br><input type="text"  #newsCaption [value]="newsDetails?.caption">
+    <br>Текст:<br><textarea #newsText [value]="newsDetails?.text"></textarea>
+    <br><button (click)="clickSaveNewsButton(newsDate.value, newsCaption.value, newsText.value)"> Сохранить</button>
+    <button (click)="clickCloseButton()">Отмена</button>
+</fieldset>
