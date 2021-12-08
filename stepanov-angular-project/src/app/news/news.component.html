@@ -72,7 +72,7 @@
     <div>
         <div *ngFor="let item of newsTypeValues | keyvalue">
             <input type="{{type}}" [id]="item.key" name="newsTypeName" [checked]="value==item.value" (change)="inputChange(item.value)">
-            <label [for]="item.key">{{item.value}}</label>
+            <label [for]="item.key" [appNewsBackColor]="item.value">{{item.value}}</label>
         </div>
     </div>
 </ng-template>
