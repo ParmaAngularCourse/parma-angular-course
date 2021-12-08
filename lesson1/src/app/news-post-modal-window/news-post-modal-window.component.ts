@@ -16,11 +16,12 @@ export class NewsPostModalWindowComponent {
   @Output() cancel = new EventEmitter<void>();
   constructor() { }
 
-  onEditSave(date: string, title: string, text: string) {
-    const editedNewsPost = this.newsPost ?? new NewsPost();
-    editedNewsPost.title = title;
-    editedNewsPost.text = text;
-    editedNewsPost.uploadDate = new Date(date);
+  onEditSave( date: string, title: string, text: string) {
+    const editedNewsPost = new NewsPost();
+    editedNewsPost.id = this.newsPost?.id ?? -1;
+    editedNewsPost.title =  title;
+    editedNewsPost.text =  text;
+    editedNewsPost.uploadDate =  new Date(date);
     editedNewsPost.isSelected = false;
     this.cancel.emit();
     this.saveNews.emit(editedNewsPost);

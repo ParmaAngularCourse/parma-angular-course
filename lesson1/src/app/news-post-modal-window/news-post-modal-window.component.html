@@ -1,16 +1,18 @@
 <div class="modal-window" *ngIf="isOpen">
     <div>
+        <input [hidden]="true" #id [value]="newsPost?.id">
         <label for="postDate">Дата</label>
-        <input id ="postDate" #date type="date" [valueAsDate]="newsPost?.uploadDate">
+        <input id="postDate" #date type="date" [valueAsDate]="newsPost?.uploadDate">
 
         <label for="title">Заголовок</label>
-        <input id ="title"  #title type="text" [value]="newsPost?.title">
+        <input id="title" #title type="text" [value]="newsPost?.title">
 
-        <label for="text" >Текст</label>
-        <input id ="text" #text type="text" [value]="newsPost?.text">
+        <label for="text">Текст</label>
+        <input id="text" #text type="text" [value]="newsPost?.text">
     </div>
     <div>
-        <input class="button" type="button" (click)="onEditSave(date.value, title.value, text.value)" value="Сохранить"/>
-        <input class="button" type="button" (click)="onCancel()"value="Отмена"/>
+        <input class="button" type="button" (click)="onEditSave( date.value, title.value, text.value)"
+            value="Сохранить" />
+        <input class="button" type="button" (click)="onCancel()" value="Отмена" />
     </div>
 </div>
