@@ -1,3 +1,3 @@
-export class comment_single {
-    commentText : String = "";
+export class comment {
+    commentText : string = "";
 }

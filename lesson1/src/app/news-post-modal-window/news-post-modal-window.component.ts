@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { news_single } from 'src/models/news-single';
+import { NewsPost } from 'src/models/news-single';
 
 @Component({
   selector: 'app-news-post-modal-window',
@@ -9,25 +9,26 @@ import { news_single } from 'src/models/news-single';
 })
 export class NewsPostModalWindowComponent {
 
-  @Input("news_post") news_post: news_single | undefined;
+  @Input() newsPost: NewsPost | null | undefined;
+  @Input() isOpen = false;
 
-  @Output() saveNews: EventEmitter<news_single> = new EventEmitter<news_single>();
-  @Output() cancel = new EventEmitter();
+  @Output() saveNews = new EventEmitter<NewsPost>();
+  @Output() cancel = new EventEmitter<void>();
   constructor() { }
 
   onEditSave(date: string, title: string, text: string) {
-    const edited_news_post = this.news_post ?? new news_single();
-    edited_news_post.title = title;
-    edited_news_post.text = text;
-    edited_news_post.uploadDate = new Date(date);
-    edited_news_post.isSelected = false;
-    this.saveNews.emit(edited_news_post);
+    const editedNewsPost = this.newsPost ?? new NewsPost();
+    editedNewsPost.title = title;
+    editedNewsPost.text = text;
+    editedNewsPost.uploadDate = new Date(date);
+    editedNewsPost.isSelected = false;
     this.cancel.emit();
-
+    this.saveNews.emit(editedNewsPost);
+    this.isOpen = false;
   }
 
   onCancel() {
+    this.isOpen = false;
     this.cancel.emit();
   }
-  
 }

@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { NewsService } from 'src/services/newsService';
-import { news_single } from '../../models/news-single';
-import { NewsPostModalWindowComponent } from '../news-post-modal-window/news-post-modal-window.component'
+import { NewsPost } from '../../models/news-single';
 @Component({
   selector: 'app-all-news',
   templateUrl: './all-news.component.html',
@@ -10,29 +9,39 @@ import { NewsPostModalWindowComponent } from '../news-post-modal-window/news-pos
 })
 export class AllNewsComponent {
 
-  public news: Array<news_single> = new NewsService().GetNews();
+  public news: NewsPost[] = new NewsService().GetNews();
   public isOpenedModalCommon: boolean = false;
-  public isOpenedModalChild: boolean = false;
+  public postToEdit: NewsPost | undefined | null = new NewsPost();
   constructor() { }
 
-  onDeletePost($event: number) {
-    this.news = this.news.filter(item => item.id != $event);
+  onDeletePost(postId: number) {
+    this.news = this.news.filter(item => item.id != postId);
+  }
+
+  onEditPost(postId: number) {
+    this.postToEdit = this.news.find(x => x.id == postId) ?? null;
+    this.onOpenModal();
   }
 
   onOpenModal() {
     this.isOpenedModalCommon = true;
   }
 
-  onOpenChildModal() {
-    this.isOpenedModalChild = true;
-  }
-
   onCloseModal() {
     this.isOpenedModalCommon = false;
-    this.isOpenedModalChild = false;
+    this.postToEdit = new NewsPost();
   }
 
-  onAddNewsPost($event: news_single) {
-    this.news.push($event);
+  onAddNewsPost(newsPost: NewsPost) {
+    const existedPostIndex = this.news.findIndex(x => x.id == newsPost.id);
+    if (existedPostIndex > -1) {
+      this.news[existedPostIndex] = newsPost;
+     }
+    else {
+      newsPost.id = this.news.length + 1;
+      this.news.push(newsPost);
+    }
+    
+    this.onCloseModal();
   }
 }

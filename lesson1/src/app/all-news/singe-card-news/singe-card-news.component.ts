@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
-import { news_single } from 'src/models/news-single';
-import { NewsService } from 'src/services/newsService';
+import { NewsPost } from 'src/models/news-single';
 
 @Component({
   selector: 'app-singe-card-news',
@@ -10,34 +9,26 @@ import { NewsService } from 'src/services/newsService';
 })
 export class SingeCardNewsComponent {
 
-  @Input("single_post_data") single_post!: news_single
-  @Output() deletePost: EventEmitter<number> = new EventEmitter<number>();
-  @Output() editModalOpened = new EventEmitter();
-  @Output() editModalClosed = new EventEmitter();
-
-  public isOpenedModal: boolean = false;
+  @Input() singlePost!: NewsPost
+  @Output() deletePost =  new EventEmitter<number>();
+  @Output() editPost = new EventEmitter<number>();
 
   constructor() { }
 
 
-  onChange(): any {
-    this.single_post.isSelected = !this.single_post.isSelected;
+  onSelect() {
+    this.singlePost.isSelected = !this.singlePost.isSelected;
   }
 
   onDeletePost() {
-    this.deletePost.emit(this.single_post.id);
+    this.deletePost.emit(this.singlePost.id);
   }
 
-  onOpenModal() {
-    this.isOpenedModal = true;
-    this.editModalOpened.emit();
+  onAddNewsPost($event: NewsPost) {
+    this.singlePost = $event;
   }
 
-  onCloseModal() {
-    this.isOpenedModal = false;
-  }
-
-  onAddNewsPost($event: news_single) {
-    this.single_post = $event;
+  onEdit(){
+    this.editPost.emit(this.singlePost.id);
   }
 }

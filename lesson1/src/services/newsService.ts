@@ -1,10 +1,10 @@
-import { news_single } from "src/models/news-single";
+import { NewsPost } from "src/models/news-single";
 
 export class NewsService {
 
     // Мок сервиса, отдающего новости
-    public GetNews(): Array<news_single> {
-        const news = Array<news_single>();
+    public GetNews(): Array<NewsPost> {
+        const news = Array<NewsPost>();
         for (let index = 0; index < 4; index++) {
             news.push({
                 id: index,

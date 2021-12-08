@@ -1,11 +1,12 @@
 <div>
 
-    <app-news-post-modal-window *ngIf="isOpenedModalCommon" class="modal-window" (cancel)="onCloseModal()"
-        (saveNews)="onAddNewsPost($event)"></app-news-post-modal-window>
-    <div [ngClass]="{'disabled':isOpenedModalCommon||isOpenedModalChild}">
+    <app-news-post-modal-window (cancel)="onCloseModal()" (saveNews)="onAddNewsPost($event)" 
+    [isOpen]="isOpenedModalCommon" [newsPost]="postToEdit">
+    </app-news-post-modal-window>
+    <div [ngClass]="{'disabled':isOpenedModalCommon}">
         <button (click)="onOpenModal()">Добавить</button>
 
-        <app-singe-card-news *ngFor="let item of news" [single_post_data]="item" (deletePost)="onDeletePost($event)">
+        <app-singe-card-news *ngFor="let item of news" [singlePost]="item" (deletePost)="onDeletePost($event)" (editPost)="onEditPost($event)">
         </app-singe-card-news>
     </div>
 
