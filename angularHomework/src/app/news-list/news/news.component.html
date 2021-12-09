@@ -1,4 +1,4 @@
-<div class="news" [style.background-color]="news.isChecked ? 'lightgrey' : 'white'">
+<div class="news" [style.background-color]="news.isChecked ? 'lightgrey' : 'white'" [style.border-color]=>
     <input type="checkbox" id="checkbox" [checked]="news.isChecked" (change)="onChange()">
     <label>{{news.title}}</label>
     <p>{{news.dateTime}}</p>

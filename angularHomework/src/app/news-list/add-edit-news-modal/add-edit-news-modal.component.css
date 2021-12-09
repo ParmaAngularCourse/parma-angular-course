@@ -27,3 +27,8 @@ button {
     border-radius: 5px;
     cursor:pointer;
   }
+
+  .close-button {
+      float:right;
+      cursor:pointer;
+  }
