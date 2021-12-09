@@ -6,7 +6,7 @@ import {
   ViewChild,
   ViewChildren
 } from '@angular/core';
-import {NewsItemModel, NewsTag, Permissions, Permission} from "./news-types";
+import {NewsItemModel, NewsTag} from "./news-types";
 import {NewsItemModalComponent} from "./news-item-modal/news-item-modal.component";
 import {ContextMenuComponent} from "./context-menu/context-menu.component";
 import {NewsItemComponent} from "./news-item/news-item.component";
@@ -15,6 +15,7 @@ import {TagsListService} from "./services/tags-list.service";
 import {HttpErrorResponse} from "@angular/common/http";
 import {Subject} from "rxjs";
 import {takeUntil} from "rxjs/operators";
+import {Permission, PermissionService} from './services/permission.service';
 
 @Component({
   selector: 'app-news',
@@ -26,7 +27,7 @@ export class NewsComponent implements OnInit, OnDestroy {
 
   news: NewsItemModel[] = [];
   tagsList: NewsTag[] = [];
-  perms: Permission[] = Permissions;
+  perms: Permission[] = [];
   private ngUnsubscribe$: Subject<number>;
 
   @ViewChild('modalComponent') modal! : NewsItemModalComponent;
@@ -41,8 +42,10 @@ export class NewsComponent implements OnInit, OnDestroy {
 
   constructor(private _newsService: NewsService,
               private _tagsListService: TagsListService,
+              private _permService: PermissionService,
               private _cd: ChangeDetectorRef) {
     this.ngUnsubscribe$ = new Subject();
+    this.perms = this._permService.getPermissions();
 
     this._tagsListService.getTagsList()
       .pipe(

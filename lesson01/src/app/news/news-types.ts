@@ -28,14 +28,3 @@ export class NewsTag {
               public color: string) {
   }
 }
-
-export class Permission {
-  constructor(public action: string,
-              public enable: boolean) {
-  }
-}
-
-export const Permissions: Permission[] = [
-  new Permission("deleteItem", true),
-  new Permission("edit", true)
-];

@@ -1,5 +1,5 @@
 import {Directive, Input, TemplateRef, ViewContainerRef} from '@angular/core';
-import {Permission} from "./news-types";
+import { Permission } from './services/permission.service';
 
 @Directive({
   selector: '[appPermission], appPermission'

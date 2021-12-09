@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, OnInit, Output} from '@angular/core';
-import {Permission, Permissions} from "../news-types";
+import {Permission, PermissionService} from "../services/permission.service";
 
 @Component({
   selector: 'app-news-item-modal',
@@ -11,9 +11,12 @@ export class NewsItemModalComponent implements OnInit {
 
   @Output() save : EventEmitter<void> = new EventEmitter<void>();
   isVisible: boolean = false;
-  perms: Permission[] = Permissions;
+  perms: Permission[] = [];
 
-  constructor(public cd : ChangeDetectorRef) { }
+  constructor(private _permService : PermissionService,
+              public cd : ChangeDetectorRef) {
+    this.perms = this._permService.getPermissions();
+  }
 
   ngOnInit(): void {
   }
