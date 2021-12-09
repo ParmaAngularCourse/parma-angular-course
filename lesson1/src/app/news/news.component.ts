@@ -26,55 +26,6 @@ export class NewsComponent implements OnInit {
     checked: false
   }
 
-  constructor() { }
-
-  ngOnInit(): void {
-
-  }
-
-  public showModal($event: newsType){
-    this.modalVisible = true;
-    
-    if ($event.id == 0)
-    {
-      $event.dt = new Date().toLocaleString();
-      $event.id = this.newsItems.length+1;
-    }
-    this.selectNews = $event;
-
-    console.log(this.modalVisible);
-  }
-
-  public closeModal($event: newsType){
-    console.log("close modal");
-    if ($event.id < this.newsItems.length+1)
-    {
-      this.newsItems[$event.id-1] =  (JSON.parse(JSON.stringify($event)));
-    }
-    else
-    {
-      var news: newsType =  (JSON.parse(JSON.stringify($event)));
-      this.newsItems.push(news);
-      this.emptyNews.id = 0;
-    }
-      
-    this.modalVisible = false;
-  }
-
-  public deleteItem(id: number){
-    if (this.newsItems[id-1].checked)
-    {
-      this.newsItems.splice(id-1, 1);
-      for (let i=0; i<this.newsItems.length; i++){
-        this.newsItems[i].id = i+1;
-      }
-    }
-  }
-
-  public cancelModal(){
-    this.modalVisible = false;
-  }
-
   public newsItems: newsType[] = [
     {
       id: 1, 
@@ -105,6 +56,55 @@ export class NewsComponent implements OnInit {
       checked: false
     }
   ]
+
+  constructor() { }
+
+  ngOnInit(): void {
+
+  }
+
+  public showModal($event: newsType){
+    this.modalVisible = true;
+    
+    if ($event.id == 0)
+    {
+      $event.dt = new Date().toLocaleString();
+      $event.id = this.newsItems.length+1;
+    }
+    this.selectNews = $event;
+
+    console.log(this.modalVisible);
+  }
+
+  public closeModal($event: newsType){
+    console.log("close modal");
+    if ($event.id < this.newsItems.length+1)
+    {
+      this.newsItems[$event.id-1] =  (JSON.parse(JSON.stringify($event)));
+    }
+    else
+    {
+      let news: newsType =  (JSON.parse(JSON.stringify($event)));
+      this.newsItems.push(news);
+      this.emptyNews.id = 0;
+    }
+      
+    this.modalVisible = false;
+  }
+
+  public deleteItem(id: number){
+    if (this.newsItems[id-1].checked)
+    {
+      this.newsItems.splice(id-1, 1);
+      for (let i=0; i<this.newsItems.length; i++){
+        this.newsItems[i].id = i+1;
+      }
+    }
+  }
+
+  public cancelModal(){
+    this.modalVisible = false;
+  }
  
 }
 
