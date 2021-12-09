@@ -1,8 +1,20 @@
-import {ChangeDetectionStrategy, Component, OnInit, QueryList, ViewChild, ViewChildren} from '@angular/core';
-import {NewsItemModel, NewsTag, TagsList, Permissions, Permission} from "./news-types";
+import {
+  ChangeDetectionStrategy, ChangeDetectorRef,
+  Component, OnDestroy,
+  OnInit,
+  QueryList,
+  ViewChild,
+  ViewChildren
+} from '@angular/core';
+import {NewsItemModel, NewsTag, Permissions, Permission} from "./news-types";
 import {NewsItemModalComponent} from "./news-item-modal/news-item-modal.component";
 import {ContextMenuComponent} from "./context-menu/context-menu.component";
 import {NewsItemComponent} from "./news-item/news-item.component";
+import {NewsService} from "./services/news.service";
+import {TagsListService} from "./services/tags-list.service";
+import {HttpErrorResponse} from "@angular/common/http";
+import {Subject} from "rxjs";
+import {takeUntil} from "rxjs/operators";
 
 @Component({
   selector: 'app-news',
@@ -10,20 +22,12 @@ import {NewsItemComponent} from "./news-item/news-item.component";
   styleUrls: ['./news.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class NewsComponent implements OnInit {
+export class NewsComponent implements OnInit, OnDestroy {
 
-  news: NewsItemModel[] = [
-    new NewsItemModel(1, new Date(2021, 0, 1, 0, 0, 1),
-      "новость #1", "Текст новости #1", "politic"),
-    new NewsItemModel(2, new Date(2021, 1, 1, 0, 0, 2),
-      "Новость #2", "Текст новости #2","internet"),
-    new NewsItemModel(3, new Date(2021, 2, 1, 0, 0, 3),
-      "Новость #3", "Текст новости #3", "science"),
-    new NewsItemModel(4, new Date(2021, 3, 1, 0, 0, 4),
-      "Новость #4", "Текст новости #4", "tourism")
-  ];
-  tagsList: NewsTag[] = TagsList;
+  news: NewsItemModel[] = [];
+  tagsList: NewsTag[] = [];
   perms: Permission[] = Permissions;
+  private ngUnsubscribe$: Subject<number>;
 
   @ViewChild('modalComponent') modal! : NewsItemModalComponent;
   editedItem!: NewsItemModel;
@@ -35,19 +39,38 @@ export class NewsComponent implements OnInit {
     return this.selectedItemsIds.length > 0;
   }
 
-  constructor() {
+  constructor(private _newsService: NewsService,
+              private _tagsListService: TagsListService,
+              private _cd: ChangeDetectorRef) {
+    this.ngUnsubscribe$ = new Subject();
+
+    this._tagsListService.getTagsList()
+      .pipe(
+        takeUntil(this.ngUnsubscribe$)
+      )
+      .subscribe(
+      (data) => {this.tagsList = data;},
+      (error: HttpErrorResponse) => {
+        console.log(error.status + " " + error.message)
+      }
+    );
   }
 
   ngOnInit(): void {
     this.editedItem = new NewsItemModel(-1, new Date(), "" , "", "");
-  }
-
-  onRemoveItem($event: number) {
-    let index = this.news.findIndex(p => p.id == $event);
-    if(index > -1) {
-      this.news.splice(index, 1);
-      this.selectedItemsIds = this.selectedItemsIds.filter(p => p != $event);
-    }
+    this._newsService.getNews()
+      .pipe(
+        takeUntil(this.ngUnsubscribe$)
+      )
+      .subscribe(
+      (data) => {
+        this.news = data;
+        this._cd.detectChanges();
+      },
+      (error: HttpErrorResponse) => {
+        console.log(error.status + " " + error.message)
+      }
+    );
   }
 
   onEditItem($event: NewsItemModel) {
@@ -76,17 +99,42 @@ export class NewsComponent implements OnInit {
     this.editedItem.tag = value;
   }
 
+  onRemoveItem($event: number) {
+    this._newsService.removeNewsItem($event)
+      .pipe(
+        takeUntil(this.ngUnsubscribe$)
+      )
+      .subscribe(
+        _ => {
+          this.selectedItemsIds = this.selectedItemsIds.filter(p => p != $event);
+        },
+        (error: HttpErrorResponse) => {
+          console.log(error.status + " " + error.message)
+        }
+      );
+  }
+
   onSaveModal() {
     if(this.editedItem.id > 0) {
-      let index = this.news.findIndex(p => p.id == this.editedItem.id);
-      this.news[index] = this.editedItem;
+      this._newsService.editNewsItem(this.editedItem)
+        .pipe(
+          takeUntil(this.ngUnsubscribe$)
+        )
+        .subscribe(_ => {},
+          (error: HttpErrorResponse) => {
+            console.log(error.status + " " + error.message)
+          }
+        );
     } else {
-      let maxId = this.news
-        .map((v) => { return v.id;})
-        .sort()[this.news.length - 1];
-      maxId = maxId == undefined ? 1 : maxId;
-      this.editedItem.id = maxId + 1;
-      this.news.push(this.editedItem);
+      this._newsService.addNewsItem(this.editedItem)
+        .pipe(
+          takeUntil(this.ngUnsubscribe$)
+        )
+        .subscribe(_ => {},
+          (error: HttpErrorResponse) => {
+            console.log(error.status + " " + error.message)
+          }
+        );
     }
   }
 
@@ -120,5 +168,10 @@ export class NewsComponent implements OnInit {
     } else {
       this.selectedItemsIds = this.selectedItemsIds.filter(p => p != $event.id);
     }
+  }
+
+  ngOnDestroy() {
+    this.ngUnsubscribe$.next();
+    this.ngUnsubscribe$.complete();
   }
 }

@@ -10,6 +10,7 @@ import { CapitalizePipe } from './news/capitalize.pipe';
 import { MinitagsPipe } from './news/minitags.pipe';
 import { ColorizedLabelDirective } from './news/colorized-label.directive';
 import { PermissionDirective } from './news/permission.directive';
+import {HttpClientModule} from "@angular/common/http";
 
 @NgModule({
   declarations: [
@@ -24,7 +25,7 @@ import { PermissionDirective } from './news/permission.directive';
     PermissionDirective
   ],
   imports: [
-    BrowserModule,
+    BrowserModule, HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]

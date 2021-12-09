@@ -28,7 +28,7 @@ export class NewsItemModalComponent implements OnInit {
   }
 
   saveItem() {
-    this.save.emit();
     this.isVisible = false;
+    this.save.emit();
   }
 }

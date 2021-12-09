@@ -7,7 +7,8 @@ import {
   OnInit,
   Output
 } from '@angular/core';
-import {NewsItemModel, NewsTag, TagsList} from "../news-types";
+import {NewsItemModel, NewsTag} from "../news-types";
+import {TagsListService} from "../services/tags-list.service";
 
 @Component({
   selector: 'app-news-item',
@@ -18,18 +19,26 @@ import {NewsItemModel, NewsTag, TagsList} from "../news-types";
 export class NewsItemComponent implements OnInit {
 
   isActive: boolean = false;
-  tagsList: NewsTag[] = TagsList;
+  tagsList: NewsTag[] = [];
   tag: NewsTag | undefined;
 
   @Input() newsItem!: NewsItemModel;
   @Output() removeItem: EventEmitter<number> = new EventEmitter<number>();
   @Output() editItem: EventEmitter<NewsItemModel> = new EventEmitter<NewsItemModel>();
   @Output() itemSelected: EventEmitter<{ id: number, isSelected: boolean}> = new EventEmitter<{ id: number, isSelected: boolean}>();
-  constructor(public cd: ChangeDetectorRef) {
+  constructor(public cd: ChangeDetectorRef,
+              private _tagListService: TagsListService) {
   }
 
   ngOnInit(): void {
-    this.tag = this.tagsList.find(p => p.tag == this.newsItem.tag);
+    this._tagListService.getTagsList().subscribe(
+      (data) => {
+        this.tagsList = data;
+        this.tag = this.tagsList.find(p => p.tag == this.newsItem.tag);
+        this.cd.detectChanges()
+      },
+      (error) => {console.log(error)}
+    );
   }
 
   checkboxChange($event: Event){
