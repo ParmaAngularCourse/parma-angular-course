@@ -1,0 +1,11 @@
+<div class="news" [style.backgroundColor]="single_news.checked?'lightgray':'white'">
+    <div>
+        <input type="checkbox" [checked]=single_news.checked (click)="selectNews(single_news)">{{single_news.dt}}
+    </div>
+    <div>{{single_news.title}}</div>
+    <div class="btn-line">
+        <div class="btn" (click)=editNews(single_news)>Редактировать</div>
+        <div [class]="single_news.checked?'btn':'btn_disable'" (click)=deleteNews(single_news.id) [style.backgroundColor]="single_news.checked?'#2C78C0':'lightgray'">Удалить</div>
+    </div>
+</div>
+
