@@ -8,7 +8,6 @@ import {
   Output
 } from '@angular/core';
 import {NewsItemModel, NewsTag, TagsList} from "../news-types";
-import {ChangeDetection} from "@angular/cli/lib/config/workspace-schema";
 
 @Component({
   selector: 'app-news-item',

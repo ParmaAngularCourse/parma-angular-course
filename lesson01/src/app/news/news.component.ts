@@ -30,7 +30,6 @@ export class NewsComponent implements OnInit {
 
   @ViewChild('contextMenuComponent') menuComponent! : ContextMenuComponent;
   @ViewChildren(NewsItemComponent) newsItemComponents!: QueryList<NewsItemComponent>;
-//  isSomeItemSelected: boolean = false;
   selectedItemsIds: number[] = [];
   get isSomeItemSelected(): boolean {
     return this.selectedItemsIds.length > 0;
@@ -122,20 +121,4 @@ export class NewsComponent implements OnInit {
       this.selectedItemsIds = this.selectedItemsIds.filter(p => p != $event.id);
     }
   }
-
-  // onDeleteSelected() {
-  //   let selectedItemsIds = this.newsItemComponents
-  //     .filter(p => p.isActive)
-  //     .map(a => a.newsItem.id);
-  //
-  //   selectedItemsIds.forEach(id => {
-  //     this.onRemoveItem(id);
-  //   });
-  //   this.isSomeItemSelected = false;
-  // }
-
-  // onItemSelected($event: {id:number, isSelected: boolean}) {
-  //   this.isSomeItemSelected = this.newsItemComponents
-  //     .filter(p => p.isActive).length > 0;
-  // }
 }
