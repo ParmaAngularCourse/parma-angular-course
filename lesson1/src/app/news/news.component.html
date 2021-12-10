@@ -1,14 +1,24 @@
 
  <h2>Новости</h2> 
- <button (click)="isNewNewsShowed=true">Добавить новость</button>
+ <button (click)="onShowAddNewsDialog()">Добавить новость</button>
    
+<!-- Реализация 1.
+
   <app-edit-dialog *ngIf="isNewNewsShowed" 
       (saveNews)="onAddNews($event)"
-      (closeEditDialog)="isNewNewsShowed=false">Добавление новости</app-edit-dialog>
+      (closeEditDialog)="isNewNewsShowed=false">{{ editDialogCaption  }} </app-edit-dialog>
 
   <app-single-news *ngFor="let item of ourNews" [single_news]="item" 
       (saveNews)="onSaveNews($event, item.id)"      
-      (deleteNews)="onDeleteNews(item.id)"></app-single-news> 
-  
+      (deleteNews)="onDeleteNews(item.id)"
+      (editNews)="onEditNews(item.id)"></app-single-news> 
+   -->
   
 
+
+   <app-popup-dialog *ngIf="isNewNewsShowed" (closeEditDialog)="isNewNewsShowed=false" [NewsElement]="editDialogNewsItem">
+        {{ editDialogCaption  }}
+   </app-popup-dialog>
+
+   <app-single-news *ngFor="let item of ourNews" [single_news]="item" 
+   (editNews)="onEditNews(item.id)"></app-single-news> 

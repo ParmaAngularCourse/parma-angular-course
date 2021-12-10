@@ -12,7 +12,9 @@
     (closeEditDialog)="isEdisNewsShowed=false"
     [newsDetails]="single_news.news">Редактирование {{single_news.id}} новости</app-edit-dialog>
 
-<button (click)="isEdisNewsShowed=true"> Редактировать </button>
+
+<button (click)="isEdisNewsShowed=true"> Редактировать (независимое окно) </button>
+<button (click)="onEditNews()"> Редактировать </button>
 <button [disabled]="!single_news.checked" (click)="onDeleteNews()"> Удалить </button>
  </div>
 

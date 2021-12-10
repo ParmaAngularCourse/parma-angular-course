@@ -13,6 +13,7 @@ export class SingleNewsComponent implements OnInit {
 @Input()single_news!: NewsItem ;
 @Output() saveNews = new EventEmitter<NewsObj> ();
 @Output() deleteNews = new EventEmitter();
+@Output() editNews =  new EventEmitter();
 
 public isEdisNewsShowed: boolean = false;
 
@@ -31,6 +32,10 @@ public isEdisNewsShowed: boolean = false;
 
   onDeleteNews(){
     this.deleteNews.emit();
+  }
+
+  onEditNews(){
+    this.editNews.emit();
   }
 
   ngDoCheck(){

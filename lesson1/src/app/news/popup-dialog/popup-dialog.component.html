@@ -1,0 +1,23 @@
+<fieldset class="newsEtitor" >
+    <legend><ng-content></ng-content>
+         <span class="closeIcon" (click)="onClickCloseButton()" title="Закрыть"> × </span>
+     </legend>
+    
+<ng-container *ngTemplateOutlet="mytemp; context: {inpType: 'date', inpValue: NewsElement.news.date, inpCaption: 'Дата'}"></ng-container>
+<ng-container *ngTemplateOutlet="mytemp; context: {inpType: 'text', inpValue: NewsElement.news.caption, inpCaption: 'Заголовок'}"></ng-container>
+<ng-container *ngTemplateOutlet="mytemp; context: {inpType: 'textarea', inpValue: NewsElement.news.text,  inpCaption: 'Текст'}"></ng-container>
+
+ <div>Тут будут кнопки</div>
+</fieldset>
+
+
+<ng-template #mytemp  let-inputType="inpType" let-inputValue="inpValue" let-inputCaption="inpCaption" >    
+    <div>
+        {{inputCaption}}
+    </div>
+    
+    <input *ngIf="inputType=='date'" type="date" [valueAsDate]="inputValue">
+    <input *ngIf="inputType=='text'" type="text" [value]="inputValue">
+    <textarea *ngIf="inputType=='textarea'" [value]="inputValue"> </textarea>     
+
+</ng-template>

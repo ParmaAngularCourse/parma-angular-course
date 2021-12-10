@@ -4,8 +4,16 @@ export type NewsItem =  {
     checked: boolean 
   }
 
-  export type NewsObj = {
-    caption: string,
-    text: string,
-    date: Date
-  }
+export type NewsObj = {
+  caption: string,
+  text: string,
+  date: Date
+}
+
+enum Theme {
+    Politics = "Политика",
+    Tourism = "Туризм", 
+    Economics = "Экономика",
+    Science = "Наука",
+    Internet = "Интернет"
+} 

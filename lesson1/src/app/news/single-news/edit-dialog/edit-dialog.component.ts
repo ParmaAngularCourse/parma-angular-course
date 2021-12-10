@@ -18,14 +18,13 @@ export class EditDialogComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  clickSaveNewsButton(newsDate: string, newsCaption: string, newsText: string){
+  onClickSaveNewsButton(newsDate: string, newsCaption: string, newsText: string){
       this.saveNews.emit({ caption:  newsCaption, date: new Date(newsDate) , text: newsText });
   }
 
-  clickCloseButton(){
+  onClickCloseButton(){
     this.closeEditDialog.emit();
   }
-
 
   ngDoCheck(){
     console.log("app-edit-dialog");

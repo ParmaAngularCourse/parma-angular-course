@@ -34,8 +34,11 @@ export class NewsComponent implements OnInit {
 ];
 
   public isNewNewsShowed: boolean = false;
-
-  constructor() { }
+  public editDialogCaption: string = "";
+  public editDialogNewsItem: NewsItem = this.getEmptyNews();
+  
+  constructor() {
+   }
 
   ngOnInit(): void {
   }
@@ -56,6 +59,23 @@ export class NewsComponent implements OnInit {
 
   onDeleteNews(id: number){
     this.ourNews = this.ourNews.filter(n=> n.id != id);
+  }
+
+  onEditNews(id: number){
+    var editedNews =  this.ourNews.find(n=> n.id == id) ;
+    this.editDialogCaption = `Редактирование ${editedNews?.id} новости`;
+    this.editDialogNewsItem = editedNews ?? this.getEmptyNews();
+    this.isNewNewsShowed = true;
+  } 
+
+  onShowAddNewsDialog(){
+    this.editDialogCaption = "Добавление новости"
+    this.isNewNewsShowed = true;
+    this.editDialogNewsItem =  this.getEmptyNews();
+  }
+
+  getEmptyNews(): NewsItem{
+    return {id: 0, news: {  caption: "", text: "", date: new Date() },  checked: false };
   }
 
   ngDoCheck(){
