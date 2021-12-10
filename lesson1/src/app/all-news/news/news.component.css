@@ -4,7 +4,11 @@
     border-width: 3px;
     border-style: solid;
     width: 7cm;
-    height: 2cm;
+    height: 3cm;
+}
+
+.button {
+    background-color:cornflowerblue;
 }
 
 .isChecked{
