@@ -1,6 +1,6 @@
 <div>
     <button (click)="addNewItem()">Добавить</button>
-    <button (click)="deleteItems()" [disabled]="!isAnyItemSelected">Удалить</button>
+    <button *appNewsUserRoleRestriction (click)="deleteItems()" [disabled]="!isAnyItemSelected">Удалить</button>
     <app-news-maker #newsMaker (onCancelAction)="closeNewsMakerModalWindow()" (onAddAction)="saveNewItem()">
         <ng-container ngProjectAs="news_content_title">
             <label>{{edit_item?.id == null ? 'Добавить новость' : 'Изменить новость'}}</label>
@@ -72,7 +72,7 @@
     <div>
         <div *ngFor="let item of newsTypeValues | keyvalue">
             <input type="{{type}}" [id]="item.key" name="newsTypeName" [checked]="value==item.value" (change)="inputChange(item.value)">
-            <label [for]="item.key">{{item.value}}</label>
+            <label [for]="item.key" [appNewsBackColor]="item.value">{{item.value}}</label>
         </div>
     </div>
 </ng-template>

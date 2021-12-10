@@ -1,4 +1,4 @@
-div {
+.mainDiv {
     width: 400px;
     height: auto;
     outline: 2px solid black;
@@ -29,3 +29,27 @@ button:disabled {
 .disabledState {
     background-color: white;
 }
+
+.newsType {
+    margin-top: 3px;
+    margin-right: 3px;
+    float: right;
+}
+
+.newsType .tooltiptext {
+    visibility: hidden;
+    width: auto;
+    color: black;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+    position: absolute;
+    z-index: 1;
+    opacity: 0.9;
+    background: khaki;
+    margin-left: 4px;
+  }
+  
+  .newsType:hover .tooltiptext {
+    visibility: visible;
+  }
