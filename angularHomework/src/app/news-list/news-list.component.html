@@ -1,0 +1,5 @@
+<button (click)=OnClickAddButton()>Добавить</button>
+<app-news *ngFor="let item of news" [news_data]="item" (deleteNews)="OnDeleteNews($event)" (editNews)="OnEditNews($event)"></app-news>
+<app-add-edit-news-modal (closeWindow)="OnCancelModal()">
+    <app-edit-news-modal-content [news_data]="selectedNews" (cancel)="OnCancelModal()" (saveNews)="OnSaveNews($event)"></app-edit-news-modal-content>
+</app-add-edit-news-modal>

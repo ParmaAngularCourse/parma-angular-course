@@ -1,0 +1,29 @@
+.modal {
+    display: block;
+    z-index: 1;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.4);
+}
+
+.modal-content {
+    background-color: white;
+    border: solid;
+    margin: 15% auto;
+    padding: 1em;
+    width: 20%;
+}
+
+button {
+    color: white;
+    border: none;
+    background-color: dodgerblue;
+    margin: 0.2em;
+    padding: 1em 0.5em;
+    border-radius: 5px;
+    cursor:pointer;
+  }
