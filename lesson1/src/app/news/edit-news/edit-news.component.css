@@ -6,6 +6,10 @@
     border: 1px solid #000;
 }
 
+.title{
+    text-align: center;
+}
+
 .btn {
     margin: 20px 0px 20px 30px;
     width: 100px;

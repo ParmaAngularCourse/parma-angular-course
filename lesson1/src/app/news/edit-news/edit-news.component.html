@@ -1,4 +1,7 @@
 <div class="edit-news modalDialog" id="openModal">
+    <div class="title">
+        <ng-content></ng-content>
+    </div>
     <div>
         <p>Дата</p>
         <p><input #date type="datetime" autofocus maxlength="18" size="18" value={{news.dt}}></p>

@@ -26,6 +26,8 @@ export class NewsComponent implements OnInit {
     checked: false
   }
 
+  public title!: string;
+
   public newsItems: newsType[] = [
     {
       id: 1, 
@@ -70,6 +72,10 @@ export class NewsComponent implements OnInit {
     {
       $event.dt = new Date().toLocaleString();
       $event.id = this.newsItems.length+1;
+      this.title = "Добавить новость";
+    }
+    else{
+      this.title = "Изменить новость";
     }
     this.selectNews = $event;
 
