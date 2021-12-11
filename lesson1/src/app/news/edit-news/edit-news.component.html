@@ -4,7 +4,7 @@
     </div>
     <div>
         <p>Дата</p>
-        <p><input #date type="datetime" autofocus maxlength="18" size="18" value={{news.dt}}></p>
+        <p><input #date type="datetime" autofocus maxlength="18" size="18" value={{news.dt.toLocaleString()}}></p>
     </div>
     <div>
         <p>Заголовок</p>

@@ -17,6 +17,7 @@ export class SingleNewsComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
+    console.log(this.single_news.dt);
   }
 
   selectNews(item: newsType)

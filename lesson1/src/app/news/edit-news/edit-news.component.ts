@@ -18,7 +18,7 @@ export class EditNewsComponent implements OnInit {
 
   clickSave(date:string, title:string, text: string){
     console.log("save modal");
-    this.news.dt = date;
+    this.news.dt = new Date(date);
     this.news.title = title;
     this.news.text = text;
     

@@ -12,7 +12,7 @@ export class NewsComponent implements OnInit {
   public modalVisible : boolean = false;
   public emptyNews: newsType = {
     id: 0,
-    dt: "", 
+    dt: new Date(), 
     title: "",
     text: "",
     checked: false
@@ -20,7 +20,7 @@ export class NewsComponent implements OnInit {
 
   public selectNews: newsType = {
     id: 0,
-    dt: "", 
+    dt: new Date(), 
     title: "",
     text: "",
     checked: false
@@ -31,28 +31,28 @@ export class NewsComponent implements OnInit {
   public newsItems: newsType[] = [
     {
       id: 1, 
-      dt: "20.11.2021 10:20", 
+      dt: new Date('2021-11-20T10:20'), 
       title: "«Газпром» может прекратить поставки газа в Молдавию за долги", 
       text: "«Газпром» может прекратить поставки газа в Молдавию за долги - полный текст новости", 
       checked: false
     },
     {
       id: 2, 
-      dt: "21.11.2021 11:10", 
+      dt: new Date('2021-11-21T11:10'), 
       title: "Роскомнадзор потребовал от 13 компаний открыть представительства в России", 
       text: "Роскомнадзор потребовал от 13 компаний открыть представительства в России - полный текст новости", 
       checked: false
     },
     {
       id: 3, 
-      dt: "22.11.2021 14:30", 
+      dt: new Date('2021-11-22T14:30'), 
       title: "Исследования детской вакцины от COVID-19 начнутся после одобрения препарата для подростков",  
       text: "Исследования детской вакцины от COVID-19 начнутся после одобрения препарата для подростков - полный текст новости", 
       checked: false
     },
     {
       id: 4, 
-      dt: "22.11.2021 18:20", 
+      dt: new Date('2021-11-22T18:20'), 
       title: "В Югре ввели режим самоизоляции для непривитых жителей четырех муниципалитетов",  
       text: "В Югре ввели режим самоизоляции для непривитых жителей четырех муниципалитетов - полный текст новости", 
       checked: false
@@ -70,7 +70,7 @@ export class NewsComponent implements OnInit {
     
     if ($event.id == 0)
     {
-      $event.dt = new Date().toLocaleString();
+      $event.dt = new Date();
       $event.id = this.newsItems.length+1;
       this.title = "Добавить новость";
     }

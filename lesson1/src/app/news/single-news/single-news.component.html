@@ -1,6 +1,6 @@
 <div class="news" [style.backgroundColor]="single_news.checked?'lightgray':'white'">
     <div>
-        <input type="checkbox" [checked]=single_news.checked (click)="selectNews(single_news)">{{single_news.dt}}
+        <input type="checkbox" [checked]=single_news.checked (click)="selectNews(single_news)">{{single_news.dt.toLocaleString()}}
     </div>
     <div>{{single_news.title}}</div>
     <div class="btn-line">

@@ -1,6 +1,6 @@
 export type  newsType = {
     id: number,
-    dt: string,
+    dt: Date,
     title: string;
     text: string,
     checked: boolean
