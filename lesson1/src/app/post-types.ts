@@ -1,7 +1,13 @@
 export type NewsBlock = {
     id: number;
-    date: string;
+    date: Date;
     title: string;
     text: string;
-    checked: boolean
+    checked: boolean;
+    newsType: NewsType;
+}
+
+export type NewsType = { 
+    id: number;
+    name: string;
 }

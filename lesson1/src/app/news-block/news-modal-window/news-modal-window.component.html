@@ -1,13 +1,10 @@
-<div class="bigShadow"></div>
-<div class="modalWindow">
-    <p>Дата</p>
-    <input #dateInput type="text" value="{{newsPost?.date ?? ''}}" />
-    <p>Заголовок</p>
-    <input #titleInput type="text" value="{{newsPost?.title}}" />
-    <p>Текст</p>
-    <input #textInput type="text" value="{{newsPost?.text}}" />
-    <div>
-        <button class="newsButton" (click)="clickSaveButton(dateInput.value, titleInput.value, textInput.value)">Сохранить</button>
-        <button class="newsButton" (click)="clickCancelButton()">Отмена</button>
-    </div>    
-</div>
+<ng-container *ngIf="windowShown">
+    <div class="bigShadow"></div>
+    <div class="modalWindow">
+        <ng-content select=".modalWindowHeader"></ng-content>
+        <div class="modalWindowContent">
+            <ng-content select="ng-container"></ng-content>
+             
+        </div>
+    </div>
+</ng-container>

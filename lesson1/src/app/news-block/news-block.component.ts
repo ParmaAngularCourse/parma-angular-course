@@ -1,5 +1,9 @@
-import { Component } from '@angular/core';
-import { NewsBlock } from '../post-types';
+import { ChangeDetectorRef, Component, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import * as moment from 'moment';
+import { ContextMenuComponent } from '../context-menu/context-menu.component';
+import { NewsBlock, NewsType } from '../post-types';
+import { NewsModalWindowComponent } from './news-modal-window/news-modal-window.component';
+import { SinglePostComponent } from './single-post/single-post.component';
 
 type MyNewsListType = Array<NewsBlock>;
 
@@ -10,51 +14,50 @@ type MyNewsListType = Array<NewsBlock>;
 })
 export class NewsBlockComponent {
   
-  public newsList: NewsBlock[] = [
-    {id: 1, date: "01.01.2021 10:00", title: "Новость 1", text: "1", checked: false},
-    {id: 2, date: "02.01.2021 10:00", title: "Новость 2", text: "2", checked: false},
-    {id: 3, date: "03.01.2021 10:00", title: "Новость 3", text: "3", checked: false}
+  @ViewChild('newsModalWindowComponent') newsModalWindowComponent!: NewsModalWindowComponent;
+  @ViewChild('contextMenuComponent') contextMenuComponent!: ContextMenuComponent;
+  @ViewChildren(SinglePostComponent) postsList! : QueryList<SinglePostComponent>;
+
+  public newsTypes: NewsType[] = [
+    {id: 1, name: 'Политика'},
+    {id: 2, name: 'Туризм'},
+    {id: 3, name: 'Экономика'},
+    {id: 4, name: 'Наука'},
+    {id: 5, name: 'Интернет'}
   ];
 
-  public newPost : NewsBlock = {id:0, date:"",title:"",text:"",checked:false};
+  public newsList: NewsBlock[] = [
+    {id: 1, date: new Date("01.01.2021"), title: "Новость 1", text: "1", checked: false, newsType: {id: 2, name: 'Туризм'}},
+    {id: 2, date: new Date("02.01.2021"), title: "Новость 2", text: "2", checked: false, newsType: {id: 4, name: 'Наука'}},
+    {id: 3, date: new Date("03.01.2021"), title: "Новость 3", text: "3", checked: false, newsType: {id: 5, name: 'Интернет'}}
+  ];
+  public selectedTypeId: number = 0;
+
+  public selectedPost : NewsBlock = {id:0, date: new Date(),title:"",text:"",checked:false, newsType: {id: 0, name: ''}};
+  public dateMask: string = "00.00.0000";
+  public dateStr: string = "";
+  public showErrorText: boolean = false;
+  public hasSelectedItems: boolean = false;
   
-  public modalWindowDisplayed: boolean = false;
+  public modalWindowDisplayed: boolean = true;
 
-  showModalWindow() {
-    this.modalWindowDisplayed = true;
+  public mode: string = "Добавить новость";
+
+  constructor(private cd: ChangeDetectorRef){
+
   }
 
-  hideModalWindow() {
-    this.modalWindowDisplayed = false;
-  }
-
-  clickAddButton() {
-    this.newPost = {id:0, date:"",title:"",text:"",checked:false};
-    this.showModalWindow();
-  }
-
-  onSaveItem(savedItem: NewsBlock)
-  {    
-    //var changedItem = this.newsList.find(item => item.id == savedItem.id);
-    if (savedItem.id != 0)
-    {
-      this.newsList = this.newsList.map(item => 
-        { 
-          return (item.id === savedItem.id) ? {...savedItem} : item;
-        });
-    }
-    else 
-    {
-      let newId = Math.max(...this.newsList.map(item => item.id)) + 1;
-      savedItem.id = newId;
-      this.newsList.push(savedItem);
-    }
-    this.hideModalWindow();
+  onAddItem() {
+    this.selectedTypeId = 0;
+    this.selectedPost = {id:0, date: new Date(),title:"",text:"",checked:false, newsType: {id: 0, name: ''}};
+    this.dateStr = moment(this.selectedPost.date).format("DD.MM.YYYY");
+    this.mode = "Добавить новость";
+    this.newsModalWindowComponent.show();
   }
 
   onCancelEditing()
   {
-    this.hideModalWindow();
+    this.newsModalWindowComponent.hide();
   }
 
   onDeleteItem(id:number)
@@ -70,11 +73,69 @@ export class NewsBlockComponent {
   {
     let editingItem = this.newsList.find(item => item.id === id);
     if (editingItem)
-      this.newPost = editingItem;
-    this.showModalWindow();
+    {
+      this.selectedPost = editingItem;
+      this.dateStr = moment(this.selectedPost.date).format("DD.MM.YYYY");
+      this.selectedTypeId = editingItem.newsType.id;
+      this.mode = "Изменить новость";
+      this.newsModalWindowComponent.show();
+    }
+  }
+  
+  onSaveItem(date: string, title: string, text: string) {   
+    this.showErrorText = false;
+
+    let momentDate = moment(date, 'DD.MM.YYYY', true);
+    if (!momentDate.isValid()) {
+      this.showErrorText = true; 
+      return;
+    }
+
+    this.selectedPost.date = momentDate.toDate();
+    this.selectedPost.title = title;
+    this.selectedPost.text = text;
+    if (this.selectedTypeId === 0) {
+      this.showErrorText = true; 
+      return;
+    }
+
+    let selectedType = this.newsTypes.find(x=>x.id === this.selectedTypeId);
+    if (selectedType)
+      this.selectedPost.newsType = selectedType;
+
+    if (this.selectedPost.id != 0)
+    {
+       this.newsList = this.newsList.map(item => 
+         { 
+           return (item.id === this.selectedPost.id) ? {...this.selectedPost} : item;
+         });
+    }
+    else 
+    {
+      let newId = Math.max(...this.newsList.map(item => item.id)) + 1;
+      this.selectedPost.id = newId;
+      this.newsList.push(this.selectedPost);
+    }
+    this.newsModalWindowComponent.hide();
   }
 
-  ngDoCheck(){
-    console.log("news-block");
+  onRightClick(event: MouseEvent) {
+    event.preventDefault(); 
+    
+    this.contextMenuComponent.show({top: event.clientY, left: event.clientX});
   }
+
+  onCheckEverything() {
+    this.postsList.forEach(x => x.single_post.checked = true);
+    this.hasSelectedItems = true;
+  }
+
+  onDeleteChecked() {
+    this.newsList = this.newsList.filter(x=>x.checked === false);
+  }
+
+  onSelectionChanged() {
+    this.hasSelectedItems = this.postsList.some(x => x.single_post.checked === true);
+  }
+
 }
