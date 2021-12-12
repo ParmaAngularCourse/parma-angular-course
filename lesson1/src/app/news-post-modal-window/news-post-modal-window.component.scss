@@ -1,11 +1,18 @@
-.button{
+.button {
     margin: 16px;
 }
 .modal-window {
-    background-color:yellowgreen;
+    background-color: yellowgreen;
     position: absolute;
     margin-left: auto;
     margin-right: auto;
-    top: 25%;
-    left: 35%; 
+    top: 35%;
+    left: 35%;
 }
+.close.mat-button {
+    position: absolute;
+    float: right;
+    padding: 5px;
+    min-width: auto;
+}
+.flex-container { display: flex;}

@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
-import { NewsPost } from 'src/models/news-single';
+import { NewsPost } from 'src/models/NewsPost';
 
 @Component({
   selector: 'app-singe-card-news',
   templateUrl: './singe-card-news.component.html',
   styleUrls: ['./singe-card-news.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  //changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SingeCardNewsComponent {
 

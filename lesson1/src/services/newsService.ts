@@ -1,4 +1,5 @@
-import { NewsPost } from "src/models/news-single";
+import { NewsPost } from "src/models/NewsPost";
+import { NewsPostTag } from "src/models/NewsPostTag";
 
 export class NewsService {
 
@@ -6,15 +7,15 @@ export class NewsService {
     public GetNews(): Array<NewsPost> {
         const news = Array<NewsPost>();
         for (let index = 0; index < 4; index++) {
+            let date = this.randomDate(new Date("1920-01-01"));
             news.push({
                 id: index,
-                title: `Title: ${this.randomString(5)}`,
-                text: `Text: ${this.randomString(250)}`,
-                uploadDate: this.randomDate(new Date("1920-01-01")),
+                title: this.randomString(5),
+                text: this.randomString(100),
+                uploadDate: date,
                 isSelected: false,
-                comments : [{
-                    commentText : this.randomString(10)
-                }]
+                tag: NewsPostTag.science,
+                uploadLocalDate: this.toDateString(date)
             });
         }
         return news;
@@ -35,5 +36,12 @@ export class NewsService {
                 charactersLength));
         }
         return result;
+    }
+
+    private toDateString(date: Date | undefined): string {
+        return (date?.getFullYear().toString() + '-'
+            + ("0" + (date?.getMonth() ?? 0 + 1)).slice(-2) + '-'
+            + ("0" + (date?.getDate())).slice(-2))
+            + 'T' + date?.toTimeString().slice(0, 5);
     }
 }
