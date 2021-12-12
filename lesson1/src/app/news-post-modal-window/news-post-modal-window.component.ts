@@ -39,7 +39,7 @@ export class NewsPostModalWindowComponent {
   }
 
   onOpen(post: NewsPost | null | undefined) {
-    this.newsPost = post;
+    this.newsPost = null;
     this.isOpen = true;
   }
   onCancel() {
@@ -57,6 +57,7 @@ export class NewsPostModalWindowComponent {
     var timeParts = parts[3]?.split(':');
 
     // new Date(year, month [, day [, hours[, minutes[, seconds[, ms]]]]])
-    return new Date(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2]), Number(timeParts[0]), Number(timeParts[1]));     // Note: months are 0-based
+    return new Date(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2]), Number(timeParts[0]), Number(timeParts[1]));     
+    // Note: months are 0-based
   }
 }

@@ -27,11 +27,12 @@ export class AllNewsComponent {
 
   onEditPost(postId: number) {
     this.postToEdit = this.news.find(x => x.id == postId) ?? null;
-    this.modalComponent.onOpen(this.postToEdit);
+    this.modalComponent.onOpen(null);
   }
 
   onOpenModal() {
-    this.modalComponent.onOpen(new NewsPost());
+    this.postToEdit = null;
+    this.modalComponent.onOpen(null);
   }
 
 
