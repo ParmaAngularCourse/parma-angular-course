@@ -1,6 +1,6 @@
 import { isNgTemplate } from '@angular/compiler';
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { newsType } from './news-types';
+import { newsType, subjectType } from './news-types';
 
 @Component({
   selector: 'app-news',
@@ -15,6 +15,7 @@ export class NewsComponent implements OnInit {
     dt: new Date(), 
     title: "",
     text: "",
+    subject: subjectType.politics,
     checked: false
   }
 
@@ -23,6 +24,7 @@ export class NewsComponent implements OnInit {
     dt: new Date(), 
     title: "",
     text: "",
+    subject: subjectType.politics,
     checked: false
   }
 
@@ -34,6 +36,7 @@ export class NewsComponent implements OnInit {
       dt: new Date('2021-11-20T10:20'), 
       title: "«Газпром» может прекратить поставки газа в Молдавию за долги", 
       text: "«Газпром» может прекратить поставки газа в Молдавию за долги - полный текст новости", 
+      subject: subjectType.economy,
       checked: false
     },
     {
@@ -41,6 +44,7 @@ export class NewsComponent implements OnInit {
       dt: new Date('2021-11-21T11:10'), 
       title: "Роскомнадзор потребовал от 13 компаний открыть представительства в России", 
       text: "Роскомнадзор потребовал от 13 компаний открыть представительства в России - полный текст новости", 
+      subject: subjectType.internet,
       checked: false
     },
     {
@@ -48,6 +52,7 @@ export class NewsComponent implements OnInit {
       dt: new Date('2021-11-22T14:30'), 
       title: "Исследования детской вакцины от COVID-19 начнутся после одобрения препарата для подростков",  
       text: "Исследования детской вакцины от COVID-19 начнутся после одобрения препарата для подростков - полный текст новости", 
+      subject: subjectType.science,
       checked: false
     },
     {
@@ -55,6 +60,7 @@ export class NewsComponent implements OnInit {
       dt: new Date('2021-11-22T18:20'), 
       title: "В Югре ввели режим самоизоляции для непривитых жителей четырех муниципалитетов",  
       text: "В Югре ввели режим самоизоляции для непривитых жителей четырех муниципалитетов - полный текст новости", 
+      subject: subjectType.politics,
       checked: false
     }
   ]

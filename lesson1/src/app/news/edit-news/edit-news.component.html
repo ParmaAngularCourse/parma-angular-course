@@ -14,8 +14,15 @@
         <p>Текст</p>
         <p><input #text type="text" maxlength="200" size="40" autocomplete="off" value={{news.text}}></p>
     </div>
-    <div class="btn-line">
+    <div style="color: white;">
+        <p><input name="type" type="radio" value="politics" ><span style="background:green" >Политика</span></p>
+        <p><input name="type" type="radio" value="tourism"><span style="background:cyan">Туризм</span></p>
+        <p><input name="type" type="radio" value="economy"><span style="background:orange">Экономика</span></p>
+        <p><input name="type" type="radio" value="science"><span style="background:blue">Наука</span></p>
+        <p><input name="type" type="radio" value="internet"><span style="background:gray">Интернет</span></p>
+    </div>
+   <div class="btn-line">
         <div class="btn" (click)="clickSave(date.value, title.value, text.value)">Сохранить</div>
         <div class="btn" (click)=clickCancel()>Отмена</div>
     </div>
-</div>
+ </div>
