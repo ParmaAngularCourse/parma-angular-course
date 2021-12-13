@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit, Output } from '@angular/core';
 import { EventEmitter } from '@angular/core';
-import { NewsObj } from '../../news-types';
+import { NewsObj, Theme } from '../../news-types';
 
 @Component({
   selector: 'app-edit-dialog',
@@ -19,7 +19,7 @@ export class EditDialogComponent implements OnInit {
   }
 
   onClickSaveNewsButton(newsDate: string, newsCaption: string, newsText: string){
-      this.saveNews.emit({ caption:  newsCaption, date: new Date(newsDate) , text: newsText });
+      this.saveNews.emit({ caption:  newsCaption, date: new Date(newsDate) , text: newsText, theme: Theme.Unknown });
   }
 
   onClickCloseButton(){

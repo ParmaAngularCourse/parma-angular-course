@@ -14,6 +14,8 @@ export class PopupDialogComponent implements OnInit {
   constructor() { }
   ngOnInit(): void {  }
 
+  isVisible: boolean = false;
+
   @Input()NewsElement!: NewsItem ;
 
   @Output() closeEditDialog = new EventEmitter();
@@ -22,4 +24,11 @@ export class PopupDialogComponent implements OnInit {
     this.closeEditDialog.emit();
   }
 
+  show(){
+    this.isVisible = true;
+  }
+  
+  close(){
+    this.isVisible = false;    
+  }
 }

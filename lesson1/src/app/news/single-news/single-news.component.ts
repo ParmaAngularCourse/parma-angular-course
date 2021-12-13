@@ -12,8 +12,8 @@ export class SingleNewsComponent implements OnInit {
 
 @Input()single_news!: NewsItem ;
 @Output() saveNews = new EventEmitter<NewsObj> ();
-@Output() deleteNews = new EventEmitter();
 @Output() editNews =  new EventEmitter();
+@Output() markNews =  new EventEmitter();
 
 public isEdisNewsShowed: boolean = false;
 
@@ -24,14 +24,11 @@ public isEdisNewsShowed: boolean = false;
 
   setCheckedNews(isChecked : boolean , newsItem: NewsItem){
     newsItem.checked = isChecked;
+    this.markNews.emit();
   }
 
   onSaveNews(eventObj: NewsObj){
     this.saveNews.emit(eventObj);
-  }
-
-  onDeleteNews(){
-    this.deleteNews.emit();
   }
 
   onEditNews(){
