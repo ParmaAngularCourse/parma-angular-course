@@ -1,0 +1,6 @@
+<div class="modal" *ngIf="isModalVisible">
+  <div class="modal-content">
+    <div class="modal-header"><div class="modal-header-text"><ng-content select=".modal-header-text"></ng-content></div><button class="modal-close" (click)="hide()">x</button></div>
+    <div><ng-content></ng-content></div>
+  </div>
+</div>

@@ -1,3 +1,6 @@
-<button (click)="clickAddButton()">Добавить</button>
-<app-report (initReport)="initReport($event, i)" (deleteReport)="deleteReport(i)" class="news" *ngFor="let n of news; let i = index" [report]="n" [ngClass]="{checked:n.isChecked}"></app-report>
-<app-edit-report-form (saveReport)="saveReport($event)" [report]="modalData" *ngIf="isModalVisible"></app-edit-report-form>
+<div (contextmenu)="rightClick($event)">
+  <div class="context" *ngIf="isContextMenuVisible" [style.top.px]="contextMenuPosition.top" [style.left.px]="contextMenuPosition.left"><button (click)="clickCheckAllButton()">Отметить все</button></div>
+  <button (click)="clickAddButton()">Добавить</button><button (click)="clickDeleteButton()" [disabled]="noOneChecked()">Удалить</button>
+  <app-report (initReport)="initReport($event, i)" (deleteReport)="deleteReport(i)" class="news" *ngFor="let n of news; let i = index" [report]="n" [ngClass]="{checked:n.isChecked}"></app-report>
+  <app-modal #modal><div class="modal-header-text">{{modalHeader}}</div><app-edit-report-form (saveReport)="saveReport($event)" [report]="modalData" *ngIf="modal && modalData"></app-edit-report-form></app-modal>
+</div>

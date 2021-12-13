@@ -1,13 +1,21 @@
 <form [formGroup]="editReportForm" (ngSubmit)="submit()" novalidate>
-  <div id="myModal" class="modal">
-    <div class="modal-content">
-      <label for="header">Заголовок: </label>
-      <input id="header" type="text" formControlName="header" value="report.header"><br /><br />
-      <label for="body">Новость: </label>
-      <input id="body" type="text" formControlName="body" value="report.body"><br /><br />
-      <label for="timestamp">На момент времени: </label>
-      <input id="timestamp" type="text" formControlName="timestamp" value="report.timestamp"><br /><br />
-      <button type="submit">Coхранить</button>
+  <ng-container *ngTemplateOutlet="fieldTpl; context: { name: 'header', header: 'Заголовок', type: 'text' }"></ng-container>
+  <ng-container *ngTemplateOutlet="fieldTpl; context: { name: 'body', header: 'Новость', type: 'text' }"></ng-container>
+  <ng-container *ngTemplateOutlet="fieldTpl; context: { name: 'timestamp', header: 'На момент времени', type: 'date' }"></ng-container>
+  <ng-container *ngTemplateOutlet="fieldTpl; context: { name: 'type', header: 'Тип новости', type: 'radio', enum: newsTypeEnum }"></ng-container>
+  <ng-template #fieldTpl let-name="name" let-header="header" let-type="type" let-enum="enum">
+    <label for="{{name}}">{{header}}: </label>
+    <ng-container *ngTemplateOutlet="type=='radio' ? radioTpl : inputTpl; context: { name: name, header: header, type: type, enum: enum }">
+    </ng-container><br /><br />
+  </ng-template>
+  <ng-template #inputTpl let-name="name" let-type="type">
+    <input class="edit-input" id="header" type="{{type}}" formControlName="{{name}}" value="report.{{name}}">
+  </ng-template>
+  <ng-template #radioTpl let-name="name" let-enum="enum">
+    <div *ngFor="let item of enum | keyvalue">
+      <input id="enum_answer_{{item.key}}" name={{name}} type="radio" formControlName={{name}} value="{{item.value}}">
+      <label class="radio-label" for="enum_answer_{{item.key}}">{{item.value}} </label>
     </div>
-  </div>
- </form>
+  </ng-template>
+  <button type="submit">Coхранить</button>
+</form>

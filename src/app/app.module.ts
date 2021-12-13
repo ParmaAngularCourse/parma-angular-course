@@ -7,13 +7,15 @@ import { NewsComponent } from './news/news.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ReportComponent } from './news/report/report.component';
 import { EditReportFormComponent } from './news/edit-report-form/edit-report-form.component';
+import { ModalComponent } from './modal/modal.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     NewsComponent,
     ReportComponent,
-    EditReportFormComponent
+    EditReportFormComponent,
+    ModalComponent
   ],
   imports: [
     BrowserModule,
