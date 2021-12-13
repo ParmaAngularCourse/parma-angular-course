@@ -9,14 +9,7 @@ import { PermissionUser, user1, user2, UserType } from '../users';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SinglePostComponent {
-  private _post!: PostObj;
-  @Input() set post(value:PostObj) { 
-    this._post = value;
-    this.cdr.markForCheck();
-  }
-  get post():PostObj {
-    return this._post;
-  }
+  @Input() post!:PostObj;
 
   @Input() user!: UserType;
 
@@ -49,7 +42,8 @@ export class SinglePostComponent {
       title: this.post.title, 
       text: this.post.text, 
       isSelected: this.post.isSelected, 
-      postType: this.post.postType};
+      postType: this.post.postType
+    };
     this.editPostEvent.emit(post);
   }
 

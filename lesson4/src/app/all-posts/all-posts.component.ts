@@ -72,7 +72,7 @@ export class AllPostsComponent {
   ]
 
   //editPost!:PostObj; Через свойство не работает, если есть вложенный компонент
-  titleDialog!:string;
+  titleDialog:string = "";
   @ViewChild("popupPostDetailWindow") popupPostDetailWindow!: HeaderPostDetailComponent;
   @ViewChild("postDetailContent") postDetailContent!:SinglePostDetailComponent;
   isVisibleContextMenu: boolean = false;
@@ -82,25 +82,18 @@ export class AllPostsComponent {
 
   isShowDeleteButton: boolean = true;
 
-  user: UserType = user2;
+  user: UserType = user1;
 
   ngDoCheck() {
     console.log('all-posts');
   }
 
   deletePostsHandler() {
-    let postsDeleted: PostObj[] = [];
-    this.posts.forEach((e) => { 
-      if (!e.isSelected) {
-        postsDeleted.push(e);
-      }
-    });
-
-    this.posts = postsDeleted;
+    this.posts = this.posts.filter(e => !e.isSelected);
   }
 
   deletePostHandler(post:PostObj) {
-    const index = this.posts.findIndex((e) => e.id == post.id);
+    const index = this.posts.findIndex((e) => e.id === post.id);
     if (index > -1) {
       this.posts.splice(index, 1);
     }
@@ -114,7 +107,7 @@ export class AllPostsComponent {
   }
 
   saveNewPostHandler(post:PostObj) {
-    const findPost = this.posts.find((e) => e.id == post.id);
+    const findPost = this.posts.find((e) => e.id === post.id);
     if (findPost) {
       findPost.date = post.date;
       findPost.title = post.title;
@@ -122,7 +115,7 @@ export class AllPostsComponent {
       findPost.isSelected = post.isSelected;
       findPost.postType = post.postType;
       this.posts = this.posts.map(e => {
-        if (e.id == post.id) return {...e}
+        if (e.id === post.id) return {...e}
         else return e;
       });
     }
@@ -150,11 +143,11 @@ export class AllPostsComponent {
     this.popupPostDetailWindow.show(true);
   }
 
-  rightClickHandler(event:any):boolean {
-    var html = document.documentElement;
-    var body = document.body;
+  rightClickHandler(event:MouseEvent):boolean {
+    const html = document.documentElement;
+    const body = document.body;
 
-    var scrollTop = html.scrollTop || body && body.scrollTop || 0;
+    const scrollTop = html.scrollTop || body && body.scrollTop || 0;
 
     this.contextMenuX=event.clientX;
     this.contextMenuY=event.clientY + scrollTop;
@@ -179,17 +172,7 @@ export class AllPostsComponent {
   }
 
   selectPostHandler(post:PostObj) {
-    let findPost = this.posts.find(e => e.id == post.id);
-    if (findPost) {
-      findPost.isSelected = post.isSelected;
-    }
-    this.isActiveDeletePostBtn = false;
-    this.posts.forEach(e => {
-      if (e.isSelected) {
-        this.isActiveDeletePostBtn = true;
-        return;
-      }
-    });
+    this.isActiveDeletePostBtn = Boolean(this.posts.find(e => e.isSelected));
   }
 
 }
