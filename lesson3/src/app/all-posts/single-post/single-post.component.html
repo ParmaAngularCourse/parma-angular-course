@@ -1,0 +1,13 @@
+<div class="newsStyle" [class.grayBackground]="post.isSelected">
+    <div class="checkboxStyle">
+        <input #checkbox type="checkbox" [checked]="post.isSelected" (change)="selectedPostHandler(checkbox.checked, post)"/>
+    </div>
+    <div class="postStyle">
+        <div class="dateStyle">{{post.date | date: "dd.MM.yyyy"}}</div>
+        <div class="titleStyle">Заголовок: {{post.title}}</div>
+    </div>
+    <div class="divButtonStyle">
+        <button class="buttonStyle" (click)="editPostHandler()" >Редактировать</button>
+        <button class="buttonStyle" [disabled]="!post.isSelected" (click)="deletePostHandler()">Удалить</button>
+    </div>
+</div>

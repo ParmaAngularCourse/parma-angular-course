@@ -1,0 +1,68 @@
+.inputStyle {
+    border: 1px solid gray;
+    border-radius: 5px;
+    height: 16px;
+    padding: 5px;
+    width: 95%;
+    margin: auto 10px auto auto
+}
+
+.buttonStyle {
+    color: white;
+    background-color: dodgerblue;
+    margin: 10px;
+    padding: 6px;
+    border: 1px solid gray;
+    border-radius: 5px;
+    display: flex;
+}
+
+.buttonStyle:disabled {
+    color: white;
+    background-color: darkgrey;
+    border-radius: 5px;
+}
+
+.divButtonsStyle {
+    display: flex;
+    margin: 0px;
+    justify-content: right;
+}
+
+.radioBtnStyle {
+    border: 0px;
+    border-radius: 3px;
+    color: white;
+}
+
+.politicRadioStyle {
+    background-color: green;
+}
+
+.tourismRadioStyle {
+    border: 0px;
+    background-color: darkcyan;
+    border-radius: 3px;
+    color: white;
+}
+
+.economicRadioStyle{
+    border: 0px;
+    background-color: coral;
+    border-radius: 3px;
+    color: white;
+}
+
+.scienceRadioStyle {
+    border: 0px;
+    background-color: royalblue;
+    border-radius: 3px;
+    color: white;
+}
+
+.internetRadioStyle {
+    border: 0px;
+    background-color: gray;
+    border-radius: 3px;
+    color: white;
+}
