@@ -80,6 +80,7 @@
         (contextmenu)="onShowContextMenu($event)"
         (markNews)="onMarkNews()"
         (click)="onJustClick()"
+        (deleteNews)="onDeleteNews(item.id)"
    ></app-single-news> 
 
    <app-context-menu #contextMenuComponent (checkAll)="onContextCheckAll()"></app-context-menu>

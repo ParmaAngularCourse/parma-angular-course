@@ -81,8 +81,13 @@ export class NewsComponent implements OnInit {
     this.popupDialog.show();
   } 
 
-  onDeleteNews(){
-    this.ourNews = this.ourNews.filter(n=> !n.checked);
+
+  onDeleteNews(id?: number){
+    if (id !== undefined){
+      this.ourNews = this.ourNews.filter(n=> n.id != id);
+    } else {
+      this.ourNews = this.ourNews.filter(n=> !n.checked);
+    }
     this.CheckCheckoxes();
   }
 

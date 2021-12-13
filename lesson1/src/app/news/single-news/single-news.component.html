@@ -15,5 +15,6 @@
 
 <!-- <button (click)="isEdisNewsShowed=true"> Редактировать (независимое окно) </button> -->
 <button (click)="onEditNews()"> Редактировать </button>
+<button [disabled]="!single_news.checked" (click)="onDeleteNews()"> Удалить </button>
  </div>
 
