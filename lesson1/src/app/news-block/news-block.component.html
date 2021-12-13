@@ -13,30 +13,65 @@
         <button class="closeButton" (click)="onCancelEditing()">X</button>
     </div>
     <ng-container>
-        <!--<ng-container 
-            *ngTemplateOutlet="simpleTemplateInput; context: {inputCaption: 'Заголовок', inputValue: selectedPost?.title}">
-        </ng-container>-->
-        <p>Дата</p>
-        <input #dateInput type="text" [(ngModel)]="dateStr" [mask]="dateMask" [showMaskTyped]="true" />
-        <p>Заголовок</p>
-        <input #titleInput type="text" value="{{selectedPost?.title}}" />
-        <p>Текст</p>
-        <input #textInput type="text" value="{{selectedPost?.text}}" />
-        <p>Тип новости</p>    
-        <div *ngFor="let item of newsTypes">
-            <input type='radio' [(ngModel)]="selectedTypeId"  name="newsType" [id]="'newsType' + item.id"  
-                [value]="item.id" >
-            <label for="'newsType' + item.id">{{item.name}}</label>        
-        </div>
+        <ng-container 
+            [ngTemplateOutlet]="simpleTemplateInput" 
+            [ngTemplateOutletContext]="{
+                inputType: 'text',
+                inputCaption: 'Заголовок', 
+                inputValue: selectedPost?.title, 
+                inputArray: {},
+                onChange: onTitleChange.bind(this)
+            }">
+        </ng-container>
+        <ng-container 
+            [ngTemplateOutlet]="simpleTemplateInput" 
+            [ngTemplateOutletContext]="{
+                inputType: 'text',
+                inputCaption: 'Текст', 
+                inputValue: selectedPost?.text, 
+                inputArray: {},
+                onChange: onTextChange.bind(this)
+            }">
+        </ng-container>
+         <ng-container 
+                [ngTemplateOutlet]="simpleTemplateInput" 
+                [ngTemplateOutletContext]="{
+                    inputType: 'date',
+                    inputCaption: 'Дата', 
+                    inputValue: selectedPost.date, 
+                    inputArray: {},
+                    onChange: onDateChange.bind(this)
+                }">
+        </ng-container>
+        <ng-container 
+               [ngTemplateOutlet]="simpleTemplateInput" 
+               [ngTemplateOutletContext]="{
+                   inputType: 'radio',
+                   inputCaption: 'Тип новости', 
+                   inputValue: selectedPost.newsType.id, 
+                   inputArray: newsTypes,
+                   onChange: onRadioChange.bind(this)
+               }">
+       </ng-container>
 
         <p class="errorText" *ngIf="showErrorText">Не удалось сохранить. Проверьте, что все поля заполнены корректно</p>
         
-        <button class="newsButton" (click)="onSaveItem(dateInput.value, titleInput.value, textInput.value)">Сохранить</button>
+        <button class="newsButton" (click)="onSaveItem()">Сохранить</button>
         <button class="newsButton" (click)="onCancelEditing()">Отмена</button>               
     </ng-container>
 </app-news-modal-window>
 
-<ng-template #simpleTemplateInput let-inputCaption="inputCaption" let-inputValue="inputValue">
+<ng-template #simpleTemplateInput let-inputType="inputType" let-inputCaption="inputCaption" let-inputValue="inputValue" 
+    let-onChange="onChange" let-inputArray="inputArray" >
     <p>{{inputCaption}}</p>
-    <input type='text' [value]="inputValue" >
+    <input type='text' *ngIf="inputType==='text'" [value]="inputValue" #item (change)="onChange(item.value)" >
+    <input type='date' *ngIf="inputType==='date'" [ngModel]="inputValue | date:'yyyy-MM-dd'" 
+        #itemDate (change)="onChange(itemDate.value)" >
+    <div *ngIf="inputType==='radio'">
+        <ng-container  *ngFor="let i of inputArray">
+            <input type='radio' #radioItem (change)="onChange(radioItem.value)" name="newsType" [id]="'newsType' + i.id"  
+                [value]="i.id" >
+            <label for="'newsType' + item.id">{{i.name}}</label>  
+        </ng-container>        
+    </div>
 </ng-template>
