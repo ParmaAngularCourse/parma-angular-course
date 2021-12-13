@@ -4,7 +4,7 @@
 (editPostEvent)="editPostHandler($event)" (contextmenu)="rightClickHandler($event)" 
 (click)="disableContextMenuHandler()" (selectPostEvent)="selectPostHandler($event)">
 </app-single-post>
-<app-header-post-detail #popupPostDetailWindow (CloseDialogHeaderEvent)="closePopupPostDetailsHandler()" [titleDialog]="titleDialog" >
+<app-header-post-detail #popupPostDetailWindow (closeDialogHeaderEvent)="closePopupPostDetailsHandler()" [titleDialog]="titleDialog" >
     <app-single-post-detail #postDetailContent (saveNewPostEvent)="saveNewPostHandler($event)" (closePopupEvent)="closePopupPostDetailsHandler()"></app-single-post-detail>
 </app-header-post-detail>
 <app-context-menu *ngIf="isVisibleContextMenu" [x]="contextMenuX" [y]="contextMenuY" (selectAllItems)="selectAllPostsHandler()"></app-context-menu>
