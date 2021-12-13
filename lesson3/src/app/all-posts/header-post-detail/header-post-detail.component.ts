@@ -9,7 +9,7 @@ import { PostObj } from '../post-types';
 })
 export class HeaderPostDetailComponent {
   @Input() titleDialog:string = "Наименование заголовка";
-  @Output() CloseDialogHeaderEvent: EventEmitter<void> = new EventEmitter();
+  @Output() closeDialogHeaderEvent: EventEmitter<void> = new EventEmitter();
   @Output() closePopupEvent = new EventEmitter<void>();
   private _isVisible: boolean = false;
   get isVisible():boolean { 
@@ -19,7 +19,7 @@ export class HeaderPostDetailComponent {
   constructor(private cdr: ChangeDetectorRef) {}
 
   closeDialogHandler() {
-    this.CloseDialogHeaderEvent.emit();
+    this.closeDialogHeaderEvent.emit();
   }
   show(isShow:boolean) {
     this._isVisible = isShow;
