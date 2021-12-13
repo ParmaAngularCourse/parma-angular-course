@@ -67,38 +67,14 @@ export class NewsComponent implements OnInit, OnDestroy {
   }
 
   onRemoveItem($event: number) {
-    this._newsService.removeNewsItem($event)
-      .pipe(
-        takeUntil(this._ngUnsubscribe$)
-      )
-      .subscribe(_ => {},
-        (error: HttpErrorResponse) => {
-          console.log(error.status + " " + error.message)
-        }
-      );
+    this._newsService.removeNewsItem($event);
   }
 
   onSaveModal(editedItem: NewsItemModel) {
     if(editedItem.id > 0) {
-      this._newsService.editNewsItem(editedItem)
-        .pipe(
-          takeUntil(this._ngUnsubscribe$)
-        )
-        .subscribe(_ => {},
-          (error: HttpErrorResponse) => {
-            console.log(error.status + " " + error.message)
-          }
-        );
+      this._newsService.editNewsItem(editedItem);
     } else {
-      this._newsService.addNewsItem(editedItem)
-        .pipe(
-          takeUntil(this._ngUnsubscribe$)
-        )
-        .subscribe(_ => {},
-          (error: HttpErrorResponse) => {
-            console.log(error.status + " " + error.message)
-          }
-        );
+      this._newsService.addNewsItem(editedItem);
     }
   }
 

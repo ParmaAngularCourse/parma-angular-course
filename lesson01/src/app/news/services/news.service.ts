@@ -1,8 +1,9 @@
-import { Injectable } from '@angular/core';
+import {Injectable, OnDestroy} from '@angular/core';
 import {NewsItemModel} from "../news-types";
-import {AsyncSubject, BehaviorSubject, Observable} from "rxjs";
-import {HttpClient} from "@angular/common/http";
+import {BehaviorSubject, Observable, Subject} from "rxjs";
+import {HttpClient, HttpErrorResponse} from "@angular/common/http";
 import {map} from 'rxjs/internal/operators/map';
+import {takeUntil} from "rxjs/operators";
 
 type NewsItem = {
   id: number,
@@ -15,12 +16,15 @@ type NewsItem = {
 @Injectable({
   providedIn: 'root'
 })
-export class NewsService {
+export class NewsService implements OnDestroy {
 
   private _url: string = "http://localhost:3000/api/";
   private _newsSubject?: BehaviorSubject<NewsItemModel[]>;
+  private _ngUnsubscribe$: Subject<number>;
 
-  constructor(private _http: HttpClient) { }
+  constructor(private _http: HttpClient) {
+    this._ngUnsubscribe$ = new Subject<number>();
+  }
 
   public getNews() : Observable<NewsItemModel[]>{
     if(!this._newsSubject) {
@@ -30,7 +34,8 @@ export class NewsService {
         .pipe(
           map(item => item.map(i => {
             return new NewsItemModel(i.id, new Date(i.date), i.head, i.desc, i.tag);
-          }))
+          })),
+          takeUntil(this._ngUnsubscribe$)
         )
         .subscribe((value) => {
           this._newsSubject?.next(value);
@@ -39,20 +44,20 @@ export class NewsService {
     return this._newsSubject.asObservable();
   }
 
-  public removeNewsItem(id: number) {
-    let removeSubject = new AsyncSubject();
+  public removeNewsItem(id: number) : void {
     this._http.delete(this._url + "news/" + id)
-      .subscribe(
-        value => {
-          this.removeItemCompleted(id);
-          removeSubject?.next(value);
-          removeSubject?.complete();
-        }
-      );
-    return removeSubject.asObservable();
+      .pipe(
+        takeUntil(this._ngUnsubscribe$)
+      )
+      .subscribe({
+        complete: () =>
+          this.removeItemCompleted(id),
+        error: (error: HttpErrorResponse) =>
+          console.log(error.status + " " + error.message)
+      });
   }
 
-  private removeItemCompleted(id: number){
+  private removeItemCompleted(id: number) : void {
     if(this._newsSubject){
       let news: NewsItemModel[] = this._newsSubject.getValue();
       let index = news.findIndex(p => p.id == id);
@@ -63,20 +68,20 @@ export class NewsService {
     }
   }
 
-  public addNewsItem(item: NewsItemModel){
-    let addSubject = new AsyncSubject();
-    this._http.put(this._url + "news", item)
-      .subscribe(
-        value => {
-          this.addNewsItemComplete(item);
-          addSubject?.next(value);
-          addSubject?.complete();
-        }
+  public addNewsItem(item: NewsItemModel) : void {
+    this._http.put<NewsItemModel>(this._url + "news", item)
+      .pipe(
+        takeUntil(this._ngUnsubscribe$)
       )
-    return addSubject.asObservable();
+      .subscribe({
+        complete: () =>
+          this.addNewsItemComplete(item),
+        error: (error: HttpErrorResponse) =>
+          console.log(error.status + " " + error.message)
+      });
   }
 
-  private addNewsItemComplete(item: NewsItemModel){
+  private addNewsItemComplete(item: NewsItemModel) : void {
     if(this._newsSubject) {
       let news: NewsItemModel[] = this._newsSubject.getValue();
       let maxId = news
@@ -89,25 +94,30 @@ export class NewsService {
     }
   }
 
-  public editNewsItem(item: NewsItemModel){
-    let editSubject = new AsyncSubject();
-    this._http.post(this._url + "news", item)
-      .subscribe(
-        value => {
-          this.editNewsItemComplete(item);
-          editSubject?.next(value);
-          editSubject?.complete();
-        }
+  public editNewsItem(item: NewsItemModel) : void {
+    this._http.post<NewsItemModel>(this._url + "news", item)
+      .pipe(
+        takeUntil(this._ngUnsubscribe$)
       )
-    return editSubject.asObservable();
+      .subscribe({
+        complete: () =>
+          this.editNewsItemComplete(item),
+        error: (error: HttpErrorResponse) =>
+          console.log(error.status + " " + error.message)
+      });
   }
 
-  private editNewsItemComplete(item: NewsItemModel){
+  private editNewsItemComplete(item: NewsItemModel) : void {
     if(this._newsSubject) {
       let news: NewsItemModel[] = this._newsSubject.getValue();
       let index = news.findIndex(p => p.id == item.id);
       news[index] = item;
       this._newsSubject?.next(news);
     }
+  }
+
+  ngOnDestroy(): void {
+    this._ngUnsubscribe$.next();
+    this._ngUnsubscribe$.complete();
   }
 }
