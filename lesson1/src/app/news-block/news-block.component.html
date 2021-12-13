@@ -16,37 +16,30 @@
         <ng-container 
             [ngTemplateOutlet]="simpleTemplateInput" 
             [ngTemplateOutletContext]="{
-                inputType: 'text',
                 inputCaption: 'Заголовок', 
                 inputValue: selectedPost?.title, 
-                inputArray: {},
                 onChange: onTitleChange.bind(this)
             }">
         </ng-container>
         <ng-container 
             [ngTemplateOutlet]="simpleTemplateInput" 
             [ngTemplateOutletContext]="{
-                inputType: 'text',
                 inputCaption: 'Текст', 
                 inputValue: selectedPost?.text, 
-                inputArray: {},
                 onChange: onTextChange.bind(this)
             }">
         </ng-container>
          <ng-container 
-                [ngTemplateOutlet]="simpleTemplateInput" 
+                [ngTemplateOutlet]="dateTemplateInput" 
                 [ngTemplateOutletContext]="{
-                    inputType: 'date',
                     inputCaption: 'Дата', 
                     inputValue: selectedPost.date, 
-                    inputArray: {},
                     onChange: onDateChange.bind(this)
                 }">
         </ng-container>
         <ng-container 
-               [ngTemplateOutlet]="simpleTemplateInput" 
+               [ngTemplateOutlet]="radioButtonTemplateInput" 
                [ngTemplateOutletContext]="{
-                   inputType: 'radio',
                    inputCaption: 'Тип новости', 
                    inputValue: selectedPost.newsType.id, 
                    inputArray: newsTypes,
@@ -61,17 +54,24 @@
     </ng-container>
 </app-news-modal-window>
 
-<ng-template #simpleTemplateInput let-inputType="inputType" let-inputCaption="inputCaption" let-inputValue="inputValue" 
-    let-onChange="onChange" let-inputArray="inputArray" >
+<ng-template #simpleTemplateInput let-inputCaption="inputCaption" let-inputValue="inputValue" 
+    let-onChange="onChange" >
     <p>{{inputCaption}}</p>
-    <input type='text' *ngIf="inputType==='text'" [value]="inputValue" #item (change)="onChange(item.value)" >
-    <input type='date' *ngIf="inputType==='date'" [ngModel]="inputValue | date:'yyyy-MM-dd'" 
+    <input type='text' [value]="inputValue" #item (change)="onChange(item.value)" >
+</ng-template>
+
+<ng-template #dateTemplateInput let-inputCaption="inputCaption" let-inputValue="inputValue" 
+    let-onChange="onChange" >
+    <p>{{inputCaption}}</p>
+    <input type='date' [ngModel]="inputValue | date:'yyyy-MM-dd'" 
         #itemDate (change)="onChange(itemDate.value)" >
-    <div *ngIf="inputType==='radio'">
-        <ng-container  *ngFor="let i of inputArray">
-            <input type='radio' #radioItem (change)="onChange(radioItem.value)" name="newsType" [id]="'newsType' + i.id"  
-                [value]="i.id" >
-            <label for="'newsType' + item.id">{{i.name}}</label>  
-        </ng-container>        
-    </div>
+</ng-template>
+
+<ng-template #radioButtonTemplateInput let-inputCaption="inputCaption" let-inputValue="inputValue" 
+    let-onChange="onChange" let-inputArray="inputArray" >
+    <div  *ngFor="let i of inputArray">
+        <input type='radio' #radioItem (change)="onChange(radioItem.value)" name="newsType" [id]="'newsType' + i.id"  
+            [value]="i.id" >
+        <label for="'newsType' + item.id">{{i.name}}</label>  
+    </div>        
 </ng-template>
