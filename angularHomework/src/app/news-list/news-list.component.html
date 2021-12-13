@@ -1,30 +1,11 @@
 <div (contextmenu)="onContextMenu($event)" (click)="onClick()">
     <app-context-menu (selectAllNews)=onSelectAllNews()></app-context-menu>
     <button (click)=OnClickAddButton()>Добавить</button>
-    <button (click)=OnClickDeleteButton() [disabled]="!isAnyNewsChecked()">Удалить</button>
-    <app-news *ngFor="let item of news" [news_data]="item" (deleteNews)="OnDeleteNews($event)"
-        (editNews)="OnEditNews($event)"></app-news>
+    <button (click)=OnClickDeleteButton() [disabled]="!chechedNewsIds.length">Удалить</button>
+    <app-news *ngFor="let item of news" [isChecked]="chechedNewsIds.includes(item.id)" [news]="item" (deleteNews)="OnDeleteNews($event)"
+        (editNews)="OnEditNews($event)" (checkedNews)="onCheckedNews($event)"></app-news>
 
-    <app-add-edit-news-modal (cancel)="OnCancelModal()">
-        <span class="title">{{selectedNews ? "Изменить новость" : "Добавить новость"}}</span>
-        <p>Дата:</p>
-        <input #date type='datetime-local' [value]="selectedNews ? selectedNews.dateTime : ''">
-        <p>Заголовок:</p>
-        <input #title type='text' [value]="selectedNews ? selectedNews.title : ''">
-        <p>Текст:</p>
-        <input #text type='text' [value]="selectedNews?.text">
-        <div *ngFor="let item of newsTypes">
-            <input type='radio' [(ngModel)]="selectedTypeId" name="newsType" [id]="'newsType' + item.id"  [value]="item.id" >
-            <label for="'newsType' + item.id" [style.background-color]="item.color">{{item.text}}</label>        
-        </div>
-        <p><button (click)="clickSaveNews(date.value, title.value, text.value)">Сохранить</button>
-          <button (click)="OnCancelModal()">Отмена</button></p>
-    </app-add-edit-news-modal>
+    <app-modal (cancel)="onCancelModal()">
+        <app-news-modal-content [news]="selectedNews" (cancel)="onCancelModal()" (saveNews)="onSaveNews($event)"></app-news-modal-content>
+    </app-modal>
 </div>
-
-
-
-<ng-template>
-    <p></p>
-    <input type='' [value]=''>
-</ng-template>

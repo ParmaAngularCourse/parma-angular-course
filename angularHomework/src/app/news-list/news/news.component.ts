@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { News } from '../news-type';
+import { News } from '../../model/news-type';
 
 @Component({
   selector: 'app-news',
@@ -9,8 +9,10 @@ import { News } from '../news-type';
 })
 export class NewsComponent implements OnInit {
 
-  @Input("news_data") news!: News;
+  @Input() isChecked: boolean = false;
+  @Input() news!: News;
   @Output() deleteNews: EventEmitter<number> = new EventEmitter();
+  @Output() checkedNews: EventEmitter<number> = new EventEmitter();
   @Output() editNews: EventEmitter<number> = new EventEmitter();
 
   constructor() { }
@@ -19,7 +21,8 @@ export class NewsComponent implements OnInit {
   }
 
   onChange() {
-    this.news.isChecked = !this.news.isChecked;
+    this.isChecked = !this.isChecked;
+    this.checkedNews.emit(this.news.id);
   }
 
   clickDeleteButton() {

@@ -1,0 +1,9 @@
+button {
+    color: white;
+    border: none;
+    background-color: dodgerblue;
+    margin: 0.2em;
+    padding: 1em 0.5em;
+    border-radius: 5px;
+    cursor:pointer;
+  }

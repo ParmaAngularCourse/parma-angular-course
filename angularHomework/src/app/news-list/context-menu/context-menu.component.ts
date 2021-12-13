@@ -1,5 +1,5 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { Position } from '../news-type';
+import { Position } from '../../model/news-type';
 
 @Component({
   selector: 'app-context-menu',
