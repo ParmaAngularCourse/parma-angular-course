@@ -1,0 +1,74 @@
+.newsStyle{
+    border: 2px solid black;
+    margin-top: 2px;
+    width: 300px;
+    height: auto;
+    padding: 3px;
+    background-color: azure;
+    display: block;
+}
+
+.checkboxStyle{
+    display: inline-block;
+    width: 35px;
+}
+
+.postStyle {
+    display: inline-block;
+    width: 200px;
+    padding: 3px;
+}
+.dateStyle {
+    display: block;
+    width: 100%;
+}
+.titleStyle {
+    display: block;
+    width: 100%;
+}
+
+.checkboxStyle input{
+    align-self: center;
+    margin-right: 10px;
+}
+
+.grayBackground {
+    background-color: gray;
+}
+
+.buttonStyle {
+    color: white;
+    background-color: dodgerblue;
+    margin: 10px;
+    padding: 6px;
+    border: 1px solid gray;
+    border-radius: 5px;
+}
+
+.buttonStyle:disabled {
+    color: white;
+    background-color: darkgrey;
+    border-radius: 5px;
+}
+
+.divButtonStyle {
+    display: block;
+    margin-left: 30px;
+    justify-content: right;
+}
+
+.postTypeStyle {
+    position: relative;
+    display: inline-block;
+    left: 15px;
+    padding: 0px 0px;
+    margin: 3px;
+    vertical-align: top;
+    text-align: end;
+}
+
+.typeStyle {
+    display: inline-block;
+    margin: 0px;
+    padding: 0px;
+}

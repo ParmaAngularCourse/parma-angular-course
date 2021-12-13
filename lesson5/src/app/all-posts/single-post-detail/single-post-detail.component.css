@@ -1,0 +1,30 @@
+.inputStyle {
+    border: 1px solid gray;
+    border-radius: 5px;
+    height: 16px;
+    padding: 5px;
+    width: 95%;
+    margin: auto 10px auto auto
+}
+
+.buttonStyle {
+    color: white;
+    background-color: dodgerblue;
+    margin: 10px;
+    padding: 6px;
+    border: 1px solid gray;
+    border-radius: 5px;
+    display: flex;
+}
+
+.buttonStyle:disabled {
+    color: white;
+    background-color: darkgrey;
+    border-radius: 5px;
+}
+
+.divButtonsStyle {
+    display: flex;
+    margin: 0px;
+    justify-content: right;
+}

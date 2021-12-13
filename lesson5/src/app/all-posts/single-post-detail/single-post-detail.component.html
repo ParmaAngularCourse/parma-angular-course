@@ -1,0 +1,22 @@
+<ng-container [ngTemplateOutlet]="inputsPostDetail" [ngTemplateOutletContext]="{value: post.date, type: 'datetime-local', lable:'Дата:', change:changeDate}"></ng-container>
+<ng-container [ngTemplateOutlet]="inputsPostDetail" [ngTemplateOutletContext]="{value: post.title, type: 'text', lable:'Заголовок:', change:changeTitle}"></ng-container>
+<ng-container [ngTemplateOutlet]="inputsPostDetail" [ngTemplateOutletContext]="{value: post.text, type: 'text', lable:'Текст:', change:changeText}"></ng-container>
+<ng-container [ngTemplateOutlet]="radioPostDetail" [ngTemplateOutletContext]="{postType: post.postType}"></ng-container>
+<div class="divButtonsStyle">
+    <button *appPostPermission="isShowSaveButton" class="buttonStyle" (click)="savePostHandler()">Сохранить</button>
+    <button class="buttonStyle" (click)="cancelSavePostHandler()">Отмена</button>
+</div>
+
+<ng-template #inputsPostDetail let-value="value" let-typeInput="type" let-lableName="lable" let-change="change">
+    <label>{{lableName}}</label>
+    <input #input class="inputStyle" [type]="typeInput" [value]="value" (change)="change(input.value)" />
+</ng-template>
+
+<ng-template #radioPostDetail let-postType="postType">
+    <label>Тип:</label>
+    <div><input type="radio" name="typePost" (click)="selectPostType('politic')" [checked]="postType==='politic'" /><span [appPostTypeSyles]="'politic'" >{{'politic' | postTypePipe}}</span></div>
+    <div><input type="radio" name="typePost" (click)="selectPostType('tourism')" [checked]="postType==='tourism'" /><span [appPostTypeSyles]="'tourism'" >{{ 'tourism' | postTypePipe}}</span></div>
+    <div><input type="radio" name="typePost" (click)="selectPostType('economic')" [checked]="postType==='economic'" /><span [appPostTypeSyles]="'economic'" >{{ 'economic' | postTypePipe}}</span></div>
+    <div><input type="radio" name="typePost" (click)="selectPostType('science')" [checked]="postType==='science'" /><span [appPostTypeSyles]="'science'" >{{ 'science' | postTypePipe}}</span></div>
+    <div><input type="radio" name="typePost" (click)="selectPostType('internet')" [checked]="postType==='internet'" /><span [appPostTypeSyles]="'internet'" >{{'internet' | postTypePipe}}</span></div>
+</ng-template>
