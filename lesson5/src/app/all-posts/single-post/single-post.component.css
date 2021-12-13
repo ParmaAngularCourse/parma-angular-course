@@ -21,10 +21,12 @@
 .dateStyle {
     display: block;
     width: 100%;
+    margin: 10px;
 }
 .titleStyle {
     display: block;
     width: 100%;
+    margin: 10px;
 }
 
 .checkboxStyle input{

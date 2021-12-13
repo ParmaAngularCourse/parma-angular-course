@@ -120,24 +120,19 @@ export class PostsService {
     return this._posts;
   }
 
-  public deleteSelectedPosts(): PostObj[] {
-    let postsDeleted: PostObj[] = [];
-    this._posts.forEach((e) => { 
-      if (!e.isSelected) {
-        postsDeleted.push(e);
-      }
-    });
-
-    this._posts = postsDeleted;
-    return this._posts;
+  public deleteSelectedPosts() {
+    if (this.postSubject)
+    {
+      let currentValue = this.postSubject.getValue();
+      this.postSubject.next(currentValue.filter(e => !e.isSelected));
+    }
   }
 
-  public deletePost(post:PostObj): PostObj[] {
-    const index = this._posts.findIndex((e) => e.id == post.id);
-    if (index > -1) {
-      this._posts.splice(index, 1);
+  public deletePost(post:PostObj) {
+    if (this.postSubject)
+    {
+      let currentValue = this.postSubject.getValue();
+      this.postSubject.next(currentValue.filter(e => e.id !== post.id));
     }
-
-    return this._posts;
   }
 }

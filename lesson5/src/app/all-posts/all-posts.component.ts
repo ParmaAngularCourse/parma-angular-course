@@ -19,7 +19,7 @@ export class AllPostsComponent {
   public posts: PostObj[] = []
 
   //editPost!:PostObj; Через свойство не работает, если есть вложенный компонент
-  titleDialog!:string;
+  titleDialog:string = "";
   @ViewChild("popupPostDetailWindow") popupPostDetailWindow!: HeaderPostDetailComponent;
   @ViewChild("postDetailContent") postDetailContent!:SinglePostDetailComponent;
   isVisibleContextMenu: boolean = false;
@@ -37,14 +37,14 @@ export class AllPostsComponent {
     this.ngUnsubscribe$ = new Subject<void>();
     postService.getPosts().pipe(
       takeUntil(this.ngUnsubscribe$)
-    ).subscribe(
-      (data) => {
-        this.posts = data;
+    ).subscribe({
+      next: (v) => {
+        this.posts = v;
         this.cdr.markForCheck();
       },
-      (error: HttpErrorResponse) => {console.log(error.status + ' '+ error.message)},
-      () => console.info('complete')
-    );
+      error: (e) => {console.log(e.status + ' '+ e.message)},
+      complete: () => console.info('complete') 
+  });
     this.user = userInfoService.getUser();
   }
 
@@ -53,11 +53,11 @@ export class AllPostsComponent {
   }
 
   deletePostsHandler() {
-    this.posts = this.postService.deleteSelectedPosts();
+    this.postService.deleteSelectedPosts();
   }
 
   deletePostHandler(post:PostObj) {
-    this.posts = this.postService.deletePost(post);
+    this.postService.deletePost(post);
   }
 
   addNewPostHandler() {
@@ -82,11 +82,11 @@ export class AllPostsComponent {
     this.popupPostDetailWindow.show(true);
   }
 
-  rightClickHandler(event:any):boolean {
-    var html = document.documentElement;
-    var body = document.body;
+  rightClickHandler(event:MouseEvent):boolean {
+    const html = document.documentElement;
+    const body = document.body;
 
-    var scrollTop = html.scrollTop || body && body.scrollTop || 0;
+    const scrollTop = html.scrollTop || body && body.scrollTop || 0;
 
     this.contextMenuX=event.clientX;
     this.contextMenuY=event.clientY + scrollTop;
@@ -111,17 +111,12 @@ export class AllPostsComponent {
   }
 
   selectPostHandler(post:PostObj) {
-    let findPost = this.posts.find(e => e.id == post.id);
-    if (findPost) {
-      findPost.isSelected = post.isSelected;
-    }
-    this.isActiveDeletePostBtn = false;
-    this.posts.forEach(e => {
-      if (e.isSelected) {
-        this.isActiveDeletePostBtn = true;
-        return;
-      }
-    });
+    this.isActiveDeletePostBtn = Boolean(this.posts.find(e => e.isSelected));
+  }
+
+  ngOnDestroy() {
+    this.ngUnsubscribe$.unsubscribe();
+    this.ngUnsubscribe$.complete();
   }
 
 }

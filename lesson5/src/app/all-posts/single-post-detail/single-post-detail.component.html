@@ -1,15 +1,15 @@
-<ng-container [ngTemplateOutlet]="inputsPostDetail" [ngTemplateOutletContext]="{value: post.date, type: 'datetime-local', lable:'Дата:', change:changeDate}"></ng-container>
-<ng-container [ngTemplateOutlet]="inputsPostDetail" [ngTemplateOutletContext]="{value: post.title, type: 'text', lable:'Заголовок:', change:changeTitle}"></ng-container>
-<ng-container [ngTemplateOutlet]="inputsPostDetail" [ngTemplateOutletContext]="{value: post.text, type: 'text', lable:'Текст:', change:changeText}"></ng-container>
+<ng-container [ngTemplateOutlet]="inputsPostDetail" [ngTemplateOutletContext]="{value: post.date, type: 'datetime-local', lable:'Дата:', change:changeDate, idName:'datePostDetail'}"></ng-container>
+<ng-container [ngTemplateOutlet]="inputsPostDetail" [ngTemplateOutletContext]="{value: post.title, type: 'text', lable:'Заголовок:', change:changeTitle, idName:'titlePostDetail'}"></ng-container>
+<ng-container [ngTemplateOutlet]="inputsPostDetail" [ngTemplateOutletContext]="{value: post.text, type: 'text', lable:'Текст:', change:changeText, idName:'textPostDetail'}"></ng-container>
 <ng-container [ngTemplateOutlet]="radioPostDetail" [ngTemplateOutletContext]="{postType: post.postType}"></ng-container>
 <div class="divButtonsStyle">
     <button *appPostPermission="isShowSaveButton" class="buttonStyle" (click)="savePostHandler()">Сохранить</button>
     <button class="buttonStyle" (click)="cancelSavePostHandler()">Отмена</button>
 </div>
 
-<ng-template #inputsPostDetail let-value="value" let-typeInput="type" let-lableName="lable" let-change="change">
-    <label>{{lableName}}</label>
-    <input #input class="inputStyle" [type]="typeInput" [value]="value" (change)="change(input.value)" />
+<ng-template #inputsPostDetail let-value="value" let-typeInput="type" let-lableName="lable" let-change="change" let-id="idName">
+    <label [attr.for]="id">{{lableName}}</label>
+    <input [id]="id" #input class="inputStyle" [type]="typeInput" [value]="value" (change)="change(input.value)" />
 </ng-template>
 
 <ng-template #radioPostDetail let-postType="postType">

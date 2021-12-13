@@ -9,22 +9,16 @@ import { PermissionUser, UserType } from '../users';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SinglePostComponent {
-  private _post!: PostObj;
-  @Input() set post(value:PostObj) { 
-    this._post = value;
-    this.cdr.markForCheck();
-  }
-  get post():PostObj {
-    return this._post;
-  }
+
+  @Input() post!:PostObj;
 
   @Input() user!: UserType;
 
   get isShowDeleteButton():boolean { return this.user.permissions.includes(PermissionUser.delete); }
 
-  @Output() deletePostEvent: EventEmitter<PostObj> = new EventEmitter();
-  @Output() editPostEvent: EventEmitter<PostObj> = new EventEmitter();
-  @Output() selectPostEvent: EventEmitter<PostObj> = new EventEmitter();
+  @Output() deletePostEvent = new EventEmitter<PostObj>();
+  @Output() editPostEvent = new EventEmitter<PostObj>();
+  @Output() selectPostEvent = new EventEmitter<PostObj>();
 
   constructor(private cdr: ChangeDetectorRef) { }
 
@@ -44,12 +38,14 @@ export class SinglePostComponent {
   }
 
   editPostHandler(){
-    let post = {id: this.post.id, 
+    let post = {
+      id: this.post.id, 
       date: this.post.date, 
       title: this.post.title, 
       text: this.post.text, 
       isSelected: this.post.isSelected, 
-      postType: this.post.postType};
+      postType: this.post.postType
+    };
     this.editPostEvent.emit(post);
   }
 
