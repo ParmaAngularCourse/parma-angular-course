@@ -11,6 +11,7 @@ import { PostTitleCasePipePipe } from './post-title-case-pipe.pipe';
 import { PostTypePipePipe } from './post-type-pipe.pipe';
 import { PostTypeSylesDirective } from './post-type-syles.directive';
 import { PostPermissionDirective } from './post-permission.directive';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -27,6 +28,7 @@ import { PostPermissionDirective } from './post-permission.directive';
   ],
   imports: [
     BrowserModule,
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]

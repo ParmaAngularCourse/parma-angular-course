@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angular/core';
 import { PostObj } from '../post-types';
-import { PermissionUser, user1, user2, UserType } from '../users';
+import { PermissionUser, UserType } from '../users';
 
 @Component({
   selector: 'app-single-post',

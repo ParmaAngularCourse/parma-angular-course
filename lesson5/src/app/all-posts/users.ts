@@ -9,12 +9,3 @@ export enum PermissionUser {
     delete = 'delete'
 }
 
-export let user1: UserType = {
-    name: 'User1',
-    permissions:[ PermissionUser.view, PermissionUser.save, PermissionUser.delete]
-}
-
-export const user2: UserType = {
-    name: 'User2',
-    permissions:[ PermissionUser.view]
-}

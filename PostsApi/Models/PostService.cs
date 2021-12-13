@@ -30,6 +30,18 @@ namespace PostsApi.Models
             _posts.Add(post);
         }
 
+        public void UpdatePost(Post post)
+        {
+            var postUpdate = _posts.FirstOrDefault(e => e.Id == post.Id);
+            if (postUpdate != null)
+            {
+                postUpdate.Date = post.Date;
+                postUpdate.Title = post.Title;
+                postUpdate.Text = post.Text;
+                postUpdate.PostType = post.PostType;
+            }
+        }
+
         public void DeletePosts(int[] ids)
         {
             var deletePosts = _posts.Where(e => ids.Contains(e.Id)).ToList();

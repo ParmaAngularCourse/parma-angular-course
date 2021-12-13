@@ -28,6 +28,12 @@ namespace PostsApi.Controllers
         }
 
         [HttpPost]
+        public void UpdatePost(Post post)
+        {
+            _postService.UpdatePost(post);
+        }
+
+        [HttpPost]
         public void DeletePosts(int[] ids)
         {
             _postService.DeletePosts(ids);
