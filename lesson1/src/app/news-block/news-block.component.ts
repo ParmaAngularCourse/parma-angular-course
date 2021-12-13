@@ -74,7 +74,7 @@ export class NewsBlockComponent {
     let editingItem = this.newsList.find(item => item.id === id);
     if (editingItem)
     {
-      this.selectedPost = editingItem;
+      this.selectedPost = {...editingItem};
       this.dateStr = moment(this.selectedPost.date).format("DD.MM.YYYY");
       this.selectedTypeId = editingItem.newsType.id;
       this.mode = "Изменить новость";
@@ -82,32 +82,18 @@ export class NewsBlockComponent {
     }
   }
   
-  onSaveItem(date: string, title: string, text: string) {   
+  onSaveItem() {   
     this.showErrorText = false;
-
-    let momentDate = moment(date, 'DD.MM.YYYY', true);
-    if (!momentDate.isValid()) {
-      this.showErrorText = true; 
+    if (this.selectedPost.newsType.id == 0) {
+      this.showErrorText = true;
       return;
     }
-
-    this.selectedPost.date = momentDate.toDate();
-    this.selectedPost.title = title;
-    this.selectedPost.text = text;
-    if (this.selectedTypeId === 0) {
-      this.showErrorText = true; 
-      return;
-    }
-
-    let selectedType = this.newsTypes.find(x=>x.id === this.selectedTypeId);
-    if (selectedType)
-      this.selectedPost.newsType = selectedType;
 
     if (this.selectedPost.id != 0)
     {
        this.newsList = this.newsList.map(item => 
          { 
-           return (item.id === this.selectedPost.id) ? {...this.selectedPost} : item;
+           return (item.id === this.selectedPost.id) ? this.selectedPost : item;
          });
     }
     else 
@@ -136,6 +122,27 @@ export class NewsBlockComponent {
 
   onSelectionChanged() {
     this.hasSelectedItems = this.postsList.some(x => x.single_post.checked === true);
+  }
+
+  onDateChange(value: Date) {
+    this.selectedPost.date = value;
+  }
+  
+  onTitleChange(value: string) {
+    this.selectedPost.title = value;
+  }
+  
+  onTextChange(value: string) {
+    this.selectedPost.text = value;
+  }
+
+  onRadioChange(value:number) {
+    let selectedType = this.newsTypes.find(x=>x.id === value);
+    if (selectedType)
+      this.selectedPost.newsType = selectedType;
+    else {
+      this.selectedPost.newsType = {id: 0, name: ''};
+    }
   }
 
 }
