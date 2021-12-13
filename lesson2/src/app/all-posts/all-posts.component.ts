@@ -65,7 +65,7 @@ export class AllPostsComponent {
   editPost!:PostObj;
 
   deletePostHandler(post:PostObj) {
-    const index = this.posts.findIndex((e) => e.id == post.id);
+    const index = this.posts.findIndex((e) => e.id === post.id);
     if (index > -1) {
       this.posts.splice(index, 1);
     }
@@ -81,7 +81,7 @@ export class AllPostsComponent {
   }
 
   saveNewPostHandler(post:PostObj) {
-    const findPost = this.posts.find((e) => e.id == post.id);
+    const findPost = this.posts.find((e) => e.id === post.id);
     if (findPost) {
       findPost.date = post.date;
       findPost.title = post.title;

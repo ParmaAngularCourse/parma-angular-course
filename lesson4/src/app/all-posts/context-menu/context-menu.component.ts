@@ -7,7 +7,7 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from 
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ContextMenuComponent {
-  @Output() selectAllItems: EventEmitter<void> = new EventEmitter();
+  @Output() selectAllItems = new EventEmitter<void>();
   @Input() x = 0;
   @Input() y = 0;
 
