@@ -6,66 +6,14 @@
   (removeItem)="onRemoveItem($event)"
   (editItem)="onEditItem($event)"
   (contextmenu)="onContextMenu($event)"
-  (itemSelected)="onItemSelected($event)"
->
+  (itemSelectionChanged)="onItemSelectionChanged($event)">
 </app-news-item>
+
 <app-news-item-modal #modalComponent
-  (save)="onSaveModal()"
->
-  <ng-container ngProjectAs="modal-title">{{editedItem.id != -1 ? "Изменить новость" : "Добавить новость"}}</ng-container>
-  <ng-container ngProjectAs="modal-inner">
-    <ng-container [ngTemplateOutlet]="inputTemplate"
-                  [ngTemplateOutletContext]="{
-                    inputType: 'datetime-local',
-                    label: 'Дата',
-                    inputValue: editedItem.dateLocal,
-                    onChange: onDateChange.bind(this)
-                  }" >
-    </ng-container>
-    <ng-container [ngTemplateOutlet]="inputTemplate"
-                  [ngTemplateOutletContext]="{
-                    inputType: 'text',
-                    label: 'Заголовок',
-                    inputValue: editedItem.head,
-                    onChange: onHeadChange.bind(this)
-                  }" >
-    </ng-container>
-    <ng-container [ngTemplateOutlet]="inputTemplate"
-                  [ngTemplateOutletContext]="{
-                    inputType: 'text',
-                    label: 'Описание',
-                    inputValue: editedItem.desc,
-                    onChange: onDescChange.bind(this)
-                  }" >
-    </ng-container>
-    <ng-container [ngTemplateOutlet]="inputRadioTemplate"
-                  [ngTemplateOutletContext]="{
-                    label: 'Тип',
-                    inputValue: editedItem.tag,
-                    list: tagsList,
-                    onChange: onTagsChange.bind(this)
-                  }" >
-    </ng-container>
-  </ng-container>
+  (save)="onSaveModal($event)">
 </app-news-item-modal>
-
-<ng-template #inputTemplate let-inputType = "inputType" let-label = "label" let-inputValue = "inputValue" let-onChange = "onChange" >
-  <label>{{label}}:</label>
-  <input [type]="inputType" [value]="inputValue" #item (change)="onChange(item.value)" />
-</ng-template>
-
-<ng-template #inputRadioTemplate let-label = "label" let-list = "list" let-inputValue = "inputValue" let-onChange = "onChange">
-  <label>{{label}}:</label>
-  <ng-container *ngFor="let tagItem of list">
-    <div class="tags">
-      <input type="radio" [id]="tagItem.tag" name="tags" [value]="tagItem.tag"
-             [checked]="inputValue == tagItem.tag" #tag (change)="onChange(tag.value)" />
-      <label class="tags-label" [appColorizedLabel]="tagItem.color" [for]="tagItem.tag">{{tagItem.text}}</label>
-    </div>
-  </ng-container>
-</ng-template>
 
 <app-context-menu
   #contextMenuComponent
-  (selectAll)="onSelectAll()"
-></app-context-menu>
+  (selectAll)="onSelectAll()">
+</app-context-menu>

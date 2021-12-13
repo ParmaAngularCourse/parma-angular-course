@@ -12,7 +12,7 @@ export class Permission {
 export class PermissionService {
 
   private _permissions: Permission[] = [
-    new Permission("deleteItem", false),
+    new Permission("deleteItem", true),
     new Permission("edit", true)
   ];
 

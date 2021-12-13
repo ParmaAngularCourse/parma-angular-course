@@ -1,5 +1,18 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  OnDestroy,
+  OnInit,
+  Output
+} from '@angular/core';
 import {Permission, PermissionService} from "../services/permission.service";
+import {NewsItemModel, NewsTag} from "../news-types";
+import {takeUntil} from "rxjs/operators";
+import {HttpErrorResponse} from "@angular/common/http";
+import {TagsListService} from "../services/tags-list.service";
+import {Subject} from "rxjs";
 
 @Component({
   selector: 'app-news-item-modal',
@@ -7,21 +20,59 @@ import {Permission, PermissionService} from "../services/permission.service";
   styleUrls: ['./news-item-modal.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class NewsItemModalComponent implements OnInit {
+export class NewsItemModalComponent implements OnInit, OnDestroy {
 
-  @Output() save : EventEmitter<void> = new EventEmitter<void>();
+  tagsList: NewsTag[] = [];
+  editedItem!: NewsItemModel;
+
+  @Output() save : EventEmitter<NewsItemModel> = new EventEmitter<NewsItemModel>();
   isVisible: boolean = false;
   perms: Permission[] = [];
+  private ngUnsubscribe$: Subject<number>;
 
   constructor(private _permService : PermissionService,
+              private _tagsListService: TagsListService,
               public cd : ChangeDetectorRef) {
+    this.ngUnsubscribe$ = new Subject();
     this.perms = this._permService.getPermissions();
   }
 
   ngOnInit(): void {
+    this._tagsListService.getTagsList()
+      .pipe(
+        takeUntil(this.ngUnsubscribe$)
+      )
+      .subscribe(
+        (data) => {this.tagsList = data;},
+        (error: HttpErrorResponse) => {
+          console.log(error.status + " " + error.message)
+        }
+      );
   }
 
-  show() {
+  onDateChange(value: string) {
+    this.editedItem.date = new Date(value);
+  }
+
+  onHeadChange(value: string) {
+    this.editedItem.head = value;
+  }
+
+  onDescChange(value: string) {
+    this.editedItem.desc = value;
+  }
+
+  onTagsChange(value: string) {
+    this.editedItem.tag = value;
+  }
+
+  show(item?: NewsItemModel) {
+    if(item != undefined){
+      this.editedItem = new NewsItemModel(item.id, item.date, item.head, item.desc, item.tag);
+    } else {
+      this.editedItem = new NewsItemModel(-1, new Date(), "" , "", "");
+    }
+
     this.isVisible = true;
     this.cd.markForCheck();
   }
@@ -32,6 +83,11 @@ export class NewsItemModalComponent implements OnInit {
 
   saveItem() {
     this.isVisible = false;
-    this.save.emit();
+    this.save.emit(this.editedItem);
+  }
+
+  ngOnDestroy() {
+    this.ngUnsubscribe$.next();
+    this.ngUnsubscribe$.complete();
   }
 }

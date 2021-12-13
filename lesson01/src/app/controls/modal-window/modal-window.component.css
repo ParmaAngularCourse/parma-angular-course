@@ -1,0 +1,33 @@
+.sub {
+  opacity: 0.5;
+  background-color: lightgray;
+  width: 100%;
+  height: 100%;
+  position: absolute; top:0; left:0;
+}
+
+.modal{
+  position: absolute;
+  top: 100px;
+  left: 100px;
+  height: auto;
+  width: 300px;
+  border: 1px solid darkgray;
+  box-shadow: 1px 1px 5px 5px lightgray;
+  background-color: white;
+}
+
+.modal-inner {
+  margin: 10px;
+}
+
+.modal-header {
+  background-color: cyan;
+  padding: 10px;
+}
+
+.modal-header .close-icon {
+  float: right;
+  cursor: pointer;
+}
+

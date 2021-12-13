@@ -1,0 +1,12 @@
+<div class="sub"></div>
+<div class="modal">
+  <div class="modal-header">
+    <span>
+      <ng-content select="modal-title"></ng-content>
+    </span>
+    <span class="close-icon" (click)="close()">X</span>
+  </div>
+  <div class="modal-inner">
+    <ng-content select="modal-inner"></ng-content>
+  </div>
+</div>

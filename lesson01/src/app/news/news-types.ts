@@ -1,6 +1,7 @@
 export class NewsItemModel {
 
   private timeZoneMinutes : number = 0;
+  public selected: boolean = false;
 
   constructor(public id: number,
               public date: Date,

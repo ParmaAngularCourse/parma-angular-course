@@ -2,3 +2,7 @@
 body {
   font-family: Calibri, serif;
 }
+
+button {
+  margin-right: 5px;
+}
