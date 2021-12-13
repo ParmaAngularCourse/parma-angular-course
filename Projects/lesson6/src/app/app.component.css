@@ -1,0 +1,4 @@
+input.ng-invalid {border-color: red;}
+
+div.ng-invalid {background-color: red;}
+div.ng-valid {background-color: green;}

@@ -1,0 +1,9 @@
+<div style="margin: 5px">
+    <input type='text' [value]="controlValue?.name" (blur)="onBlur()" (input)="onNameChange($event)">
+</div>
+<div style="margin: 5px">
+    <input type='text' [value]="controlValue?.value" (blur)="onBlur()" (input)="onValueChange($event)">
+</div>                
+<div *ngIf="ngControl.control?.errors">
+{{ngControl.control?.errors | json}}
+</div>

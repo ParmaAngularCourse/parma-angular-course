@@ -1,0 +1,9 @@
+<input #nameField="ngModel" type='text' [disabled]="fieldDisabled" [(ngModel)]="user.firstName" 
+required minlength="5" [ngModelOptions]="{updateOn: 'blur'}" [appTemplateValidate]="'Петров'">
+
+<div *ngIf="nameField.errors">
+    {{ nameField.errors | json }}
+</div>
+
+<p>Значение: {{formControlValue}}</p>
+<p>Статус: {{nameField.status}}</p>

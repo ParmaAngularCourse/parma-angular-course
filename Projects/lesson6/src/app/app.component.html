@@ -1,0 +1,38 @@
+<div [formGroup]="loginForm">
+    <div>
+        <input type='text' formControlName="firstName">
+    </div>
+    <div *ngIf="loginForm.get('firstName')?.errors">
+        {{ loginForm.get('firstName')?.errors | json }}
+    </div>
+
+    <div>
+        <input type='text' formControlName="password">
+    </div>
+    <div *ngIf="loginForm.get('password')?.errors">
+        {{ loginForm.get('password')?.errors | json }}
+    </div>
+
+    <ng-container formArrayName="records">
+        <ng-container *ngFor="let recordControl of recordList.controls; let i = index">
+            <app-one-record [formControlName]="i"></app-one-record>            
+            <div style="margin: 5px">
+                <button (click)="removeRecord(i)">Удалить</button>
+            </div>                               
+        </ng-container>
+
+    </ng-container>
+</div>
+
+<p>Статус формы: {{formStatus}}</p>
+
+<button style="margin: 5px" (click)="addRecord()">Добавить запись</button>
+
+<button style="margin: 5px" [disabled]="!loginForm.valid">Сохранить</button>
+<button style="margin: 5px" (click)="loginForm.reset()">Отменить</button>
+
+<button style="margin: 5px" (click)="loginForm.patchValue({firstName: 'Пётр Петров'})">Обновить частично</button>
+<button style="margin: 5px" (click)="loginForm.setValue({firstName: 'Пётр Петров', password: ''})">Обновить полностью</button>
+
+
+

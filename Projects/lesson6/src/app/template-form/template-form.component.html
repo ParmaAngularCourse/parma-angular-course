@@ -1,0 +1,28 @@
+<form #loginForm="ngForm" (ngSubmit)="onSubmitForm(loginForm)">
+    <div>
+        <div style="margin-top: 5px;">
+            <input #nameField="ngModel" name="nameField" type='text' [disabled]="fieldDisabled" [(ngModel)]="user.firstName" 
+            required minlength="5" [ngModelOptions]="{updateOn: 'blur'}" [appTemplateValidate]="'Петров'">
+        </div>
+
+        <div *ngIf="nameField.errors">
+            {{ nameField.errors | json }}
+        </div>
+        
+        <p>Значение: {{formControlValue}}</p>
+        <p>Статус: {{nameField.status}}</p>
+    </div>
+    <div>
+        <div style="margin-top: 5px;">
+            <input #passwordField="ngModel" name="passwordField" type='password' [(ngModel)]="user.password" required minlength="5">
+        </div>
+
+        <div *ngIf="passwordField.errors">
+            {{ passwordField.errors | json }}
+        </div>
+        
+        <p>Значение: {{user.password}}</p>
+        <p>Статус: {{passwordField.status}}</p>       
+    </div>    
+    <button style="margin: 5px;" type="submit" [disabled]="!loginForm.valid">Сохранить</button>
+</form>    
