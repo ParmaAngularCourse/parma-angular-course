@@ -136,8 +136,8 @@ export class NewsBlockComponent {
     this.selectedPost.text = value;
   }
 
-  onRadioChange(value:number) {
-    let selectedType = this.newsTypes.find(x=>x.id === value);
+  onRadioChange(value: string) {
+    let selectedType = this.newsTypes.find(x=>x.id === +value);
     if (selectedType)
       this.selectedPost.newsType = selectedType;
     else {
