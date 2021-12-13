@@ -26,7 +26,7 @@ export class NewsComponent implements OnInit, OnDestroy {
 
   news: NewsItemModel[] = [];
   perms: Permission[] = [];
-  private ngUnsubscribe$: Subject<number>;
+  private _ngUnsubscribe$: Subject<number>;
 
   @ViewChild('modalComponent') modal! : NewsItemModalComponent;
   @ViewChild('contextMenuComponent') menuComponent! : ContextMenuComponent;
@@ -38,14 +38,14 @@ export class NewsComponent implements OnInit, OnDestroy {
   constructor(private _newsService: NewsService,
               private _permService: PermissionService,
               private _cd: ChangeDetectorRef) {
-    this.ngUnsubscribe$ = new Subject();
+    this._ngUnsubscribe$ = new Subject();
     this.perms = this._permService.getPermissions();
   }
 
   ngOnInit(): void {
     this._newsService.getNews()
       .pipe(
-        takeUntil(this.ngUnsubscribe$)
+        takeUntil(this._ngUnsubscribe$)
       )
       .subscribe(
       (data) => {
@@ -69,7 +69,7 @@ export class NewsComponent implements OnInit, OnDestroy {
   onRemoveItem($event: number) {
     this._newsService.removeNewsItem($event)
       .pipe(
-        takeUntil(this.ngUnsubscribe$)
+        takeUntil(this._ngUnsubscribe$)
       )
       .subscribe(_ => {},
         (error: HttpErrorResponse) => {
@@ -82,7 +82,7 @@ export class NewsComponent implements OnInit, OnDestroy {
     if(editedItem.id > 0) {
       this._newsService.editNewsItem(editedItem)
         .pipe(
-          takeUntil(this.ngUnsubscribe$)
+          takeUntil(this._ngUnsubscribe$)
         )
         .subscribe(_ => {},
           (error: HttpErrorResponse) => {
@@ -92,7 +92,7 @@ export class NewsComponent implements OnInit, OnDestroy {
     } else {
       this._newsService.addNewsItem(editedItem)
         .pipe(
-          takeUntil(this.ngUnsubscribe$)
+          takeUntil(this._ngUnsubscribe$)
         )
         .subscribe(_ => {},
           (error: HttpErrorResponse) => {
@@ -123,14 +123,8 @@ export class NewsComponent implements OnInit, OnDestroy {
     });
   }
 
-  onItemSelectionChanged($event: {id:number, isSelected: boolean}) {
-    let item = this.news.find(p => p.id === $event.id);
-    if(item != undefined)
-      item.selected = $event.isSelected;
-  }
-
   ngOnDestroy() {
-    this.ngUnsubscribe$.next();
-    this.ngUnsubscribe$.complete();
+    this._ngUnsubscribe$.next();
+    this._ngUnsubscribe$.complete();
   }
 }

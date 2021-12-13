@@ -4,7 +4,7 @@
     <span>
       <ng-content select="modal-title"></ng-content>
     </span>
-    <span class="close-icon" (click)="close()">X</span>
+    <span class="close-icon" (click)="this.close()">X</span>
   </div>
   <div class="modal-inner">
     <ng-content select="modal-inner"></ng-content>

@@ -28,19 +28,19 @@ export class NewsItemModalComponent implements OnInit, OnDestroy {
   @Output() save : EventEmitter<NewsItemModel> = new EventEmitter<NewsItemModel>();
   isVisible: boolean = false;
   perms: Permission[] = [];
-  private ngUnsubscribe$: Subject<number>;
+  private _ngUnsubscribe$: Subject<number>;
 
   constructor(private _permService : PermissionService,
               private _tagsListService: TagsListService,
-              public cd : ChangeDetectorRef) {
-    this.ngUnsubscribe$ = new Subject();
+              private _cd : ChangeDetectorRef) {
+    this._ngUnsubscribe$ = new Subject();
     this.perms = this._permService.getPermissions();
   }
 
   ngOnInit(): void {
     this._tagsListService.getTagsList()
       .pipe(
-        takeUntil(this.ngUnsubscribe$)
+        takeUntil(this._ngUnsubscribe$)
       )
       .subscribe(
         (data) => {this.tagsList = data;},
@@ -69,12 +69,13 @@ export class NewsItemModalComponent implements OnInit, OnDestroy {
   show(item?: NewsItemModel) {
     if(item != undefined){
       this.editedItem = new NewsItemModel(item.id, item.date, item.head, item.desc, item.tag);
+      this.editedItem.selected = item.selected;
     } else {
       this.editedItem = new NewsItemModel(-1, new Date(), "" , "", "");
     }
 
     this.isVisible = true;
-    this.cd.markForCheck();
+    this._cd.markForCheck();
   }
 
   cancel() {
@@ -87,7 +88,7 @@ export class NewsItemModalComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.ngUnsubscribe$.next();
-    this.ngUnsubscribe$.complete();
+    this._ngUnsubscribe$.next();
+    this._ngUnsubscribe$.complete();
   }
 }

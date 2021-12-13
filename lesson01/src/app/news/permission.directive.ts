@@ -13,15 +13,15 @@ export class PermissionDirective {
   @Input() appPermissionAction!: string;
 
   constructor(
-    private tpl: TemplateRef<any>,
-    private vc: ViewContainerRef) { }
+    private _tpl: TemplateRef<any>,
+    private _vc: ViewContainerRef) { }
 
   ngOnInit(){
     let item = this.permissions.find(p => p.action == this.appPermissionAction && p.enable);
     if(item != undefined){
-      this.vc.createEmbeddedView(this.tpl);
+      this._vc.createEmbeddedView(this._tpl);
     } else {
-      this.vc.clear();
+      this._vc.clear();
     }
   }
 }

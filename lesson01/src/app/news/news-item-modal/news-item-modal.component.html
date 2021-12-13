@@ -1,43 +1,43 @@
 <app-modal-window
-  *ngIf="isVisible"
-  (modalClose)="cancel()"
+  *ngIf="this.isVisible"
+  (modalClose)="this.cancel()"
 >
-  <ng-container ngProjectAs="modal-title">{{editedItem.id != -1 ? "Изменить новость" : "Добавить новость"}}</ng-container>
+  <ng-container ngProjectAs="modal-title">{{this.editedItem.id != -1 ? "Изменить новость" : "Добавить новость"}}</ng-container>
   <ng-container ngProjectAs="modal-inner">
     <ng-container [ngTemplateOutlet]="inputTemplate"
                   [ngTemplateOutletContext]="{
                     inputType: 'datetime-local',
                     label: 'Дата',
-                    inputValue: editedItem.dateLocal,
-                    onChange: onDateChange.bind(this)
+                    inputValue: this.editedItem.dateLocal,
+                    onChange: this.onDateChange.bind(this)
                   }" >
     </ng-container>
     <ng-container [ngTemplateOutlet]="inputTemplate"
                   [ngTemplateOutletContext]="{
                     inputType: 'text',
                     label: 'Заголовок',
-                    inputValue: editedItem.head,
-                    onChange: onHeadChange.bind(this)
+                    inputValue: this.editedItem.head,
+                    onChange: this.onHeadChange.bind(this)
                   }" >
     </ng-container>
     <ng-container [ngTemplateOutlet]="inputTemplate"
                   [ngTemplateOutletContext]="{
                     inputType: 'text',
                     label: 'Описание',
-                    inputValue: editedItem.desc,
-                    onChange: onDescChange.bind(this)
+                    inputValue: this.editedItem.desc,
+                    onChange: this.onDescChange.bind(this)
                   }" >
     </ng-container>
     <ng-container [ngTemplateOutlet]="inputRadioTemplate"
                   [ngTemplateOutletContext]="{
                     label: 'Тип',
-                    inputValue: editedItem.tag,
-                    list: tagsList,
-                    onChange: onTagsChange.bind(this)
+                    inputValue: this.editedItem.tag,
+                    list: this.tagsList,
+                    onChange: this.onTagsChange.bind(this)
                   }" >
     </ng-container>
-    <button (click)="saveItem()" *appPermission="perms; action:'edit'">Сохранить</button>
-    <button (click)="cancel()">Отмена</button>
+    <button (click)="this.saveItem()" *appPermission="this.perms; action:'edit'">Сохранить</button>
+    <button (click)="this.cancel()">Отмена</button>
   </ng-container>
 </app-modal-window>
 
