@@ -10,6 +10,9 @@ import { CapitalizePipe } from './news/capitalize.pipe';
 import { MinitagsPipe } from './news/minitags.pipe';
 import { ColorizedLabelDirective } from './news/colorized-label.directive';
 import { PermissionDirective } from './news/permission.directive';
+import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
+import {AuthInterceptorService} from "./news/services/auth-interceptor.service";
+import { ModalWindowComponent } from './controls/modal-window/modal-window.component';
 
 @NgModule({
   declarations: [
@@ -21,12 +24,17 @@ import { PermissionDirective } from './news/permission.directive';
     CapitalizePipe,
     MinitagsPipe,
     ColorizedLabelDirective,
-    PermissionDirective
+    PermissionDirective,
+    ModalWindowComponent
   ],
   imports: [
-    BrowserModule,
+    BrowserModule, HttpClientModule
   ],
-  providers: [],
+  providers: [{
+    provide: HTTP_INTERCEPTORS,
+    useClass: AuthInterceptorService,
+    multi: true
+  }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

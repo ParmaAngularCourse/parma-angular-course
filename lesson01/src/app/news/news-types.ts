@@ -1,6 +1,7 @@
 export class NewsItemModel {
 
   private timeZoneMinutes : number = 0;
+  public selected: boolean = false;
 
   constructor(public id: number,
               public date: Date,
@@ -28,22 +29,3 @@ export class NewsTag {
               public color: string) {
   }
 }
-
-export const TagsList: NewsTag[] = [
-  new NewsTag("politic", "Политика", "#58B957"),
-  new NewsTag("tourism", "Туризм", "#55BFE0"),
-  new NewsTag("economy", "Экономика", "#EFAC43"),
-  new NewsTag("science", "Наука", "#3D8BCD"),
-  new NewsTag("internet", "Интернет", "#999999")
-];
-
-export class Permission {
-  constructor(public action: string,
-              public enable: boolean) {
-  }
-}
-
-export const Permissions: Permission[] = [
-  new Permission("deleteItem", true),
-  new Permission("edit", true)
-];

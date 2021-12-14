@@ -1,8 +1,8 @@
-<div class="news-item" [ngClass]="this.isActive ? 'active' : ''" >
-  <input type="checkbox" [checked]="this.isActive" (change)="checkboxChange($event)" />
+<div class="news-item" [ngClass]="this.newsItem.selected ? 'active' : ''" >
+  <input type="checkbox" [checked]="this.newsItem.selected" (change)="this.checkboxChange($event)" />
   <span class="tags-span" *ngIf="tag!=null" [title]="this.tag.text" [appColorizedLabel]="this.tag.color" >{{this.tag | minitags }}</span>
-  <div>{{newsItem.date | date:'dd.MM.yyyy HH:mm'}}</div>
-  <div>{{newsItem.head | capitalize}}</div>
-  <button (click)="edit()">Редактировать</button>
-  <button (click)="remove()" [disabled]="!this.isActive">Удалить</button>
+  <div>{{this.newsItem.date | date:'dd.MM.yyyy HH:mm'}}</div>
+  <div>{{this.newsItem.head | capitalize}}</div>
+  <button (click)="this.edit()">Редактировать</button>
+  <button (click)="this.remove()" [disabled]="!this.newsItem.selected">Удалить</button>
 </div>

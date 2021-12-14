@@ -1,8 +1,20 @@
-import {ChangeDetectionStrategy, Component, OnInit, QueryList, ViewChild, ViewChildren} from '@angular/core';
-import {NewsItemModel, NewsTag, TagsList, Permissions, Permission} from "./news-types";
+import {
+  ChangeDetectionStrategy, ChangeDetectorRef,
+  Component, OnDestroy,
+  OnInit,
+  QueryList,
+  ViewChild,
+  ViewChildren
+} from '@angular/core';
+import {NewsItemModel} from "./news-types";
 import {NewsItemModalComponent} from "./news-item-modal/news-item-modal.component";
 import {ContextMenuComponent} from "./context-menu/context-menu.component";
 import {NewsItemComponent} from "./news-item/news-item.component";
+import {NewsService} from "./services/news.service";
+import {HttpErrorResponse} from "@angular/common/http";
+import {Subject} from "rxjs";
+import {takeUntil} from "rxjs/operators";
+import {Permission, PermissionService} from './services/permission.service';
 
 @Component({
   selector: 'app-news',
@@ -10,84 +22,59 @@ import {NewsItemComponent} from "./news-item/news-item.component";
   styleUrls: ['./news.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class NewsComponent implements OnInit {
+export class NewsComponent implements OnInit, OnDestroy {
 
-  news: NewsItemModel[] = [
-    new NewsItemModel(1, new Date(2021, 0, 1, 0, 0, 1),
-      "новость #1", "Текст новости #1", "politic"),
-    new NewsItemModel(2, new Date(2021, 1, 1, 0, 0, 2),
-      "Новость #2", "Текст новости #2","internet"),
-    new NewsItemModel(3, new Date(2021, 2, 1, 0, 0, 3),
-      "Новость #3", "Текст новости #3", "science"),
-    new NewsItemModel(4, new Date(2021, 3, 1, 0, 0, 4),
-      "Новость #4", "Текст новости #4", "tourism")
-  ];
-  tagsList: NewsTag[] = TagsList;
-  perms: Permission[] = Permissions;
+  news: NewsItemModel[] = [];
+  perms: Permission[] = [];
+  private _ngUnsubscribe$: Subject<number>;
 
   @ViewChild('modalComponent') modal! : NewsItemModalComponent;
-  editedItem!: NewsItemModel;
-
   @ViewChild('contextMenuComponent') menuComponent! : ContextMenuComponent;
   @ViewChildren(NewsItemComponent) newsItemComponents!: QueryList<NewsItemComponent>;
-//  isSomeItemSelected: boolean = false;
-  selectedItemsIds: number[] = [];
   get isSomeItemSelected(): boolean {
-    return this.selectedItemsIds.length > 0;
+    return this.news.filter(p => p.selected).length > 0;
   }
 
-  constructor() {
+  constructor(private _newsService: NewsService,
+              private _permService: PermissionService,
+              private _cd: ChangeDetectorRef) {
+    this._ngUnsubscribe$ = new Subject();
+    this.perms = this._permService.getPermissions();
   }
 
   ngOnInit(): void {
-    this.editedItem = new NewsItemModel(-1, new Date(), "" , "", "");
-  }
-
-  onRemoveItem($event: number) {
-    let index = this.news.findIndex(p => p.id == $event);
-    if(index > -1) {
-      this.news.splice(index, 1);
-      this.selectedItemsIds = this.selectedItemsIds.filter(p => p != $event);
-    }
+    this._newsService.getNews()
+      .pipe(
+        takeUntil(this._ngUnsubscribe$)
+      )
+      .subscribe(
+      (data) => {
+        this.news = data;
+        this._cd.detectChanges();
+      },
+      (error: HttpErrorResponse) => {
+        console.log(error.status + " " + error.message)
+      }
+    );
   }
 
   onEditItem($event: NewsItemModel) {
-    this.editedItem = new NewsItemModel($event.id, $event.date, $event.head, $event.desc, $event.tag);
-    this.modal.show();
+    this.modal.show($event);
   }
 
   onAdd() {
-    this.editedItem = new NewsItemModel(-1, new Date(), "" , "", "");
     this.modal.show();
   }
 
-  onDateChange(value: string) {
-    this.editedItem.date = new Date(value);
+  onRemoveItem($event: number) {
+    this._newsService.removeNewsItem($event);
   }
 
-  onHeadChange(value: string) {
-    this.editedItem.head = value;
-  }
-
-  onDescChange(value: string) {
-    this.editedItem.desc = value;
-  }
-
-  onTagsChange(value: string) {
-    this.editedItem.tag = value;
-  }
-
-  onSaveModal() {
-    if(this.editedItem.id > 0) {
-      let index = this.news.findIndex(p => p.id == this.editedItem.id);
-      this.news[index] = this.editedItem;
+  onSaveModal(editedItem: NewsItemModel) {
+    if(editedItem.id > 0) {
+      this._newsService.editNewsItem(editedItem);
     } else {
-      let maxId = this.news
-        .map((v) => { return v.id;})
-        .sort()[this.news.length - 1];
-      maxId = maxId == undefined ? 1 : maxId;
-      this.editedItem.id = maxId + 1;
-      this.news.push(this.editedItem);
+      this._newsService.addNewsItem(editedItem);
     }
   }
 
@@ -106,36 +93,14 @@ export class NewsComponent implements OnInit {
   }
 
   onDeleteSelected() {
-    this.selectedItemsIds.forEach(id => {
-        this.onRemoveItem(id);
-      });
-    this.selectedItemsIds = [];
+    let selectedList = this.news.filter(p => p.selected);
+    selectedList.forEach(selectedItem => {
+      this.onRemoveItem(selectedItem.id);
+    });
   }
 
-  onItemSelected($event: {id:number, isSelected: boolean}) {
-    if($event.isSelected)
-    {
-      if(!this.selectedItemsIds.includes($event.id)){
-        this.selectedItemsIds.push($event.id);
-      }
-    } else {
-      this.selectedItemsIds = this.selectedItemsIds.filter(p => p != $event.id);
-    }
+  ngOnDestroy() {
+    this._ngUnsubscribe$.next();
+    this._ngUnsubscribe$.complete();
   }
-
-  // onDeleteSelected() {
-  //   let selectedItemsIds = this.newsItemComponents
-  //     .filter(p => p.isActive)
-  //     .map(a => a.newsItem.id);
-  //
-  //   selectedItemsIds.forEach(id => {
-  //     this.onRemoveItem(id);
-  //   });
-  //   this.isSomeItemSelected = false;
-  // }
-
-  // onItemSelected($event: {id:number, isSelected: boolean}) {
-  //   this.isSomeItemSelected = this.newsItemComponents
-  //     .filter(p => p.isActive).length > 0;
-  // }
 }

@@ -21,7 +21,7 @@ export class ContextMenuComponent implements OnInit {
     this.position = point;
   }
 
-  onSelectItem($event: MouseEvent) {
+  onSelectItem() {
     this.selectAll.emit();
     this.isVisible = false;
   }
