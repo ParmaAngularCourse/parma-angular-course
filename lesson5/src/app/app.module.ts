@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { LOCALE_ID, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AllPostsComponent } from './all-posts/all-posts.component';
 import { ContextMenuComponent } from './all-posts/context-menu/context-menu.component';
@@ -11,7 +11,8 @@ import { PostTitleCasePipePipe } from './post-title-case-pipe.pipe';
 import { PostTypePipePipe } from './post-type-pipe.pipe';
 import { PostTypeSylesDirective } from './post-type-syles.directive';
 import { PostPermissionDirective } from './post-permission.directive';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { HttpInterseptorService } from './http-interseptor.service';
 
 @NgModule({
   declarations: [
@@ -30,7 +31,13 @@ import { HttpClientModule } from '@angular/common/http';
     BrowserModule,
     HttpClientModule
   ],
-  providers: [],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: HttpInterseptorService,
+      multi: true
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

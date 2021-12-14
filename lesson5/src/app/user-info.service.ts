@@ -1,23 +1,38 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Pipe } from '@angular/core';
+import { AsyncSubject, first, map, Observable, single, BehaviorSubject } from 'rxjs';
 import { UserType, PermissionUser } from './all-posts/users';
+import { HttpClient } from '@angular/common/http';
+
+type dateUserType = {
+  name: string,
+  permissions: PermissionUser[]
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserInfoService {
 
-  private user1: UserType = {
-    name: 'User1',
-    permissions:[ PermissionUser.view, PermissionUser.save, PermissionUser.delete]
-  }
+  private userSubject: BehaviorSubject<UserType>;
+  constructor(private httpClient: HttpClient) {
+    this.userSubject = new BehaviorSubject<UserType>({name: "", permissions:[]});
+   }
 
-  private user2: UserType = {
-      name: 'User2',
-      permissions:[ PermissionUser.view]
-  }
-  constructor() { }
+  public getUser(): Observable<UserType> {
+    this.httpClient.get<dateUserType>("/UserInfo/GetUserInfo")
+    .pipe(
+      map(item => this.mapToUserType(item))
+    )
+    .subscribe((data) => this.userSubject.next(data));
 
-  public getUser(): UserType {
-    return this.user1;
+    return this.userSubject.asObservable();
+  }
+  private mapToUserType(item: dateUserType): UserType {
+
+    let result = {
+      name: item.name,
+      permissions: [...item.permissions]
+    } as UserType;
+    return result;
   }
 }

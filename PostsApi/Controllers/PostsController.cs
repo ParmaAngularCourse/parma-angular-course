@@ -22,9 +22,9 @@ namespace PostsApi.Controllers
         }
 
         [HttpPost]
-        public void AddPost(Post post)
+        public int AddPost(Post post)
         {
-            _postService.AddPost(post);
+            return _postService.AddPost(post);
         }
 
         [HttpPost]

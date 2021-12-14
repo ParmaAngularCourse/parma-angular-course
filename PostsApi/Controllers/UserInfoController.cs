@@ -4,7 +4,7 @@ using PostsApi.Models;
 namespace PostsApi.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("[controller]/[action]")]
     public class UserInfoController:ControllerBase
     {
         private UserInfo[] _userInfo;
@@ -27,6 +27,12 @@ namespace PostsApi.Controllers
         public UserInfo[] GetUserInfos()
         {
             return _userInfo;
+        }
+
+        [HttpGet]
+        public UserInfo GetUserInfo()
+        {
+            return _userInfo[0];
         }
     }
 }

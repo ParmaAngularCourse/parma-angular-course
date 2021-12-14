@@ -25,9 +25,17 @@ namespace PostsApi.Models
             return _posts.ToArray();
         }
 
-        public void AddPost(Post post)
+        public int AddPost(Post post)
         {
+            var maxValue = -1;
+            if (post.Id== -1)
+            {
+                maxValue = _posts.Max(e => e.Id);
+                maxValue += 1;
+                post.Id = maxValue;
+            }
             _posts.Add(post);
+            return maxValue;
         }
 
         public void UpdatePost(Post post)

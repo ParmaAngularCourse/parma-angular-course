@@ -1,6 +1,6 @@
 export type UserType = {
     name: string,
-    permissions: Array<PermissionUser>
+    permissions: PermissionUser[]
 }
 
 export enum PermissionUser {

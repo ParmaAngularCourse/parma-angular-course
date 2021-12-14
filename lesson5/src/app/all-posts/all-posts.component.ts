@@ -6,7 +6,6 @@ import { SinglePostDetailComponent } from './single-post-detail/single-post-deta
 import { UserType } from './users';
 import { UserInfoService } from '../user-info.service';
 import { Subject, takeUntil } from 'rxjs';
-import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-all-posts',
@@ -29,23 +28,34 @@ export class AllPostsComponent {
 
   isShowDeleteButton: boolean = true;
 
-  user: UserType;
+  user: UserType = {name: "", permissions: []};
 
   private ngUnsubscribe$!: Subject<void>;
 
   constructor(private postService: PostsService, private userInfoService: UserInfoService, private cdr: ChangeDetectorRef) {
     this.ngUnsubscribe$ = new Subject<void>();
-    postService.getPosts().pipe(
+    this.postService.getPosts().pipe(
       takeUntil(this.ngUnsubscribe$)
     ).subscribe({
-      next: (v) => {
-        this.posts = v;
+      next: (data) => {
+        this.posts = data;
         this.cdr.markForCheck();
       },
-      error: (e) => {console.log(e.status + ' '+ e.message)},
-      complete: () => console.info('complete') 
+      error: (e) => { console.log(e.status + ' '+ e.message); },
+      complete: () => { console.info('complete getPosts all-post component'); } 
   });
-    this.user = userInfoService.getUser();
+    this.userInfoService.getUser()
+    .pipe(
+      takeUntil(this.ngUnsubscribe$)
+    )
+    .subscribe({
+      next: (data) => {
+        this.user = data;
+        this.cdr.markForCheck();
+      },
+      error: (e) => { console.log(e.status + ' '+ e.message); },
+      complete: () => { console.info('complete get user all-post component'); }
+    });
   }
 
   ngDoCheck() {
@@ -53,7 +63,7 @@ export class AllPostsComponent {
   }
 
   deletePostsHandler() {
-    this.postService.deleteSelectedPosts();
+    this.postService.deleteSelectedPosts(this.posts);
   }
 
   deletePostHandler(post:PostObj) {
@@ -68,7 +78,14 @@ export class AllPostsComponent {
   }
 
   saveNewPostHandler(post:PostObj) {
-    this.posts = this.postService.saveNewPost(post);
+    let findIndex = this.posts.findIndex(e => e.id === post.id);
+    if (findIndex > -1){
+      this.postService.updatePost(post, findIndex);
+      //this.posts[findIndex] = post; Нужно ли здесь оптимизировать при редктировании? Сложно потом сопровождать.
+    }
+    else {
+      this.postService.addPost(post);
+    }
     this.popupPostDetailWindow.show(false);
   }
 
