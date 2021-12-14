@@ -1,9 +1,7 @@
 import { Component } from '@angular/core';
 import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { of } from 'rxjs';
-import { Observable } from 'rxjs/internal/Observable';
-import { filter } from 'rxjs/internal/operators/filter';
-import { delay } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { delay, filter } from 'rxjs/operators';
 
 type errorValidate = {
   notOneValidator: {message: string}

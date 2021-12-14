@@ -1,14 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { EMPTY, from, Observable, of } from 'rxjs';
-import { interval } from 'rxjs/internal/observable/interval';
-import { throwError } from 'rxjs/internal/observable/throwError';
-import { zip } from 'rxjs/internal/observable/zip';
-import { concatMap } from 'rxjs/internal/operators/concatMap';
-import { delay } from 'rxjs/internal/operators/delay';
-import { map } from 'rxjs/internal/operators/map';
-import { mergeAll } from 'rxjs/internal/operators/mergeAll';
-import { mergeMap } from 'rxjs/internal/operators/mergeMap';
-import { bufferCount, catchError, concatAll, exhaustMap, finalize, retry, retryWhen, switchMap, tap, timeout } from 'rxjs/operators';
+import { EMPTY, from, interval, Observable, of, throwError, zip } from 'rxjs';
+import { bufferCount, catchError, concatAll, concatMap, delay, exhaustMap, finalize, map, mergeAll, mergeMap, retry, retryWhen, switchMap, tap, timeout } from 'rxjs/operators';
 
 @Component({
   selector: 'app-rxjs',

@@ -1,8 +1,7 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
-import { fromEvent, Observable, Subscription } from 'rxjs';
+import { EMPTY, fromEvent, Observable, Subscription } from 'rxjs';
 import { ObjUser } from './types';
 import { debounceTime, delay, map } from 'rxjs/operators';
-import { EMPTY } from 'rxjs/internal/observable/empty';
 
 @Component({
   selector: 'app-root',

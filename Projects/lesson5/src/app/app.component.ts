@@ -1,11 +1,6 @@
 import { Component } from '@angular/core';
-import { Observable } from 'rxjs/internal/Observable';
-import { from } from 'rxjs/internal/observable/from';
-import { filter } from 'rxjs/internal/operators/filter';
-import { first } from 'rxjs/internal/operators/first';
-import { single } from 'rxjs/internal/operators/single';
-import { tap } from 'rxjs/internal/operators/tap';
-import { distinctUntilChanged, take, takeLast, takeWhile } from 'rxjs/operators';
+import { from, Observable } from 'rxjs';
+import { distinctUntilChanged, take, takeLast, takeWhile, filter, first, single, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
