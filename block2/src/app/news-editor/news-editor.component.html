@@ -44,12 +44,12 @@
                     inputValue: newsType,
                     inputOnChange: onChangeNewsType.bind(this),
                     inputDataSource: radioDataSource,
-                    backColor: ['brown', 'green', 'skyblue', 'orange', 'navy', 'gray']
+                    initBackColorFunc: getNewsTypeColor.bind(this)
                 }">
                 </ng-container>  
             </ul>
             <div>
-                <button class="control-button" (click)="saveForm()">Сохранить</button>
+                <button *appCheckAccess = "'Save'" class="control-button" (click)="saveForm()">Сохранить</button>
                 <button class="control-button" (click)="closeForm()">Отмена</button>
             </div>        
         </div>
@@ -71,13 +71,13 @@
     </li>
 </ng-template>
 
-<ng-template #inputRadioTemplate let-inputCaption = "inputCaption" let-inputValue = "inputValue" let-inputDataSource = "inputDataSource" let-backColor="backColor" let-inputOnChange = "inputOnChange"> 
+<ng-template #inputRadioTemplate let-inputCaption = "inputCaption" let-inputValue = "inputValue" let-inputDataSource = "inputDataSource" let-backColor="initBackColorFunc" let-inputOnChange = "inputOnChange"> 
     <li class="input-data-group">              
         <label class ="input-data-label">{{inputCaption}}:</label><br> 
         <ul id="input-type-block" *ngFor="let item of inputDataSource | keyvalue; let i = index">
             <li>
                 <input #inputControl type="radio" id="item.key" [value]="item.value" (change)="inputOnChange(inputControl.value)" [checked]="item.value == inputValue">
-                <label for="item.key" class="type-label" [style.background-color] ="backColor[i]">{{item.value}}</label>
+                <label for="item.key" class="type-label" [appNewsTypeColor]="backColor(item.key)">{{item.value}}</label>
             </li>
         </ul>
     </li>

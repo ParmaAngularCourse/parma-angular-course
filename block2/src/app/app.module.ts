@@ -6,6 +6,12 @@ import { NewsBlockComponent } from './news-list/news-block/news-block.component'
 import { NewsListComponent } from './news-list/news-list.component';
 import { NewsEditorComponent } from './news-editor/news-editor.component';
 import { NewsContextMenuComponent } from './news-context-menu/news-context-menu.component';
+import { FirstLetterUppercasePipe } from './pipes/first-letter-uppercase.pipe';
+import { GetFirstLetterPipe } from './pipes/get-first-letter.pipe';
+import { GetNewsColorPipe } from './pipes/get-news-color.pipe';
+import { NewsStylesDirective } from './Directives/news-styles.directive';
+import { NewsTypeColorDirective } from './Directives/news-type-color.directive';
+import { CheckAccessDirective } from './Directives/check-access.directive';
 
 @NgModule({
   declarations: [
@@ -13,7 +19,13 @@ import { NewsContextMenuComponent } from './news-context-menu/news-context-menu.
     NewsBlockComponent,
     NewsListComponent,
     NewsEditorComponent,
-    NewsContextMenuComponent
+    NewsContextMenuComponent,
+    FirstLetterUppercasePipe,
+    GetFirstLetterPipe,
+    GetNewsColorPipe,
+    NewsStylesDirective,
+    NewsTypeColorDirective,
+    CheckAccessDirective
   ],
   imports: [
     BrowserModule

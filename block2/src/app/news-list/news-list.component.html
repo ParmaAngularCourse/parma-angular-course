@@ -1,6 +1,6 @@
 <div>
     <button class="control-button" (click)="onAddNews()">Добавить</button>
-    <button class="control-button" (click)="onDeleteAllSelectedNews()" [disabled]="!enableDeleteButton">Удалить</button>
+    <button *appCheckAccess = "'Delete'" class="control-button" (click)="onDeleteAllSelectedNews()" [disabled]="!enableDeleteButton">Удалить</button>
     <app-news-editor #newsEditForm (saveEditForm)="onSaveNews($event)">
         <ng-container><h2>{{editFormCaption}}</h2></ng-container>
     </app-news-editor>

@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { INewsData } from 'src/model/INewsData';
 import { TypeNews } from 'src/model/TypeNews';
+import { TypeNewsColorDictionary } from 'src/model/TypeNewsColorDictionary';
 
 @Component({
   selector: 'app-news-editor',
@@ -17,6 +18,7 @@ export class NewsEditorComponent implements OnInit {
   public newsBody:string = "Текст";
   public newsType:TypeNews = TypeNews.Type0_None;
   public radioDataSource: typeof TypeNews = TypeNews;
+  public newsTypeColorDict: typeof TypeNewsColorDictionary = TypeNewsColorDictionary;
   public isVisible: boolean = false; 
 
   ngOnInit(): void { 
@@ -79,6 +81,11 @@ export class NewsEditorComponent implements OnInit {
 
   onChangeNewsType(value:TypeNews){
     this.newsType = value;
+  }
+
+  getNewsTypeColor(value:keyof typeof TypeNews):string{
+    var typeNews = TypeNews[value];
+    return TypeNewsColorDictionary.get(typeNews) ?? "";
   }
 
   ngDoCheck(){
