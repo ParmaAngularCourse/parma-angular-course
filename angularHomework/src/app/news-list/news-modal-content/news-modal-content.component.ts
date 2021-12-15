@@ -13,7 +13,15 @@ export class NewsModalContentComponent implements OnInit {
 
   public newNews: News | undefined;
   
-  @Input() news: News | undefined;
+  public title: string = '';
+  private _news: News | undefined;
+
+  @Input()
+  get news(): News | undefined { return this._news}
+  set news(_news: News | undefined) {
+    this._news = _news;
+    this.title = this._news && this._news.id != 0 ? "Изменить новость" : "Добавить новость";
+  }
 
   @Output() saveNews: EventEmitter<News> = new EventEmitter();
   @Output() cancel = new EventEmitter();
@@ -21,7 +29,6 @@ export class NewsModalContentComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
-    console.log("init");
   }
 
   ngOnChanges() {

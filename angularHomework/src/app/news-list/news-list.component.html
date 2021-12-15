@@ -1,5 +1,5 @@
 <div (contextmenu)="onContextMenu($event)" (click)="onClick()">
-    <app-context-menu (selectAllNews)=onSelectAllNews()></app-context-menu>
+    <app-context-menu (selectAll)=onSelectAllNews()></app-context-menu>
     <button (click)=OnClickAddButton()>Добавить</button>
     <button (click)=OnClickDeleteButton() [disabled]="!chechedNewsIds.length">Удалить</button>
     <app-news *ngFor="let item of news" [isChecked]="chechedNewsIds.includes(item.id)" [news]="item" (deleteNews)="OnDeleteNews($event)"

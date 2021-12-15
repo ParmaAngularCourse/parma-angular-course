@@ -22,7 +22,7 @@ export class ModalComponent implements OnInit {
   }
 
   open(){
-    this.cdr.markForCheck(); //question
+    this.cdr.markForCheck();
     this.isOpen = true;
   }
 

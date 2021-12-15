@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnInit, ViewChild } from '@angular/core';
 import { ModalComponent } from '../shared/modal/modal.component';
-import { ContextMenuComponent } from './context-menu/context-menu.component';
+import { ContextMenuComponent } from '../shared/context-menu/context-menu.component';
 import { News, NewsTypeObjectEnum } from '../model/news-type';
 
 @Component({
@@ -34,6 +34,11 @@ export class NewsListComponent implements OnInit {
     const index = this.news.findIndex(item => item.id === $event);
     if (index > -1) {
       this.news.splice(index, 1);
+    }
+
+    const checkedIndex = this.chechedNewsIds.findIndex(id => id === $event);
+    if (checkedIndex > -1) {
+      this.chechedNewsIds.splice(index, 1);
     }
   }
 
@@ -74,6 +79,7 @@ export class NewsListComponent implements OnInit {
 
   OnClickDeleteButton() {
     this.news = this.news.filter(item => !this.chechedNewsIds.includes(item.id));
+    this.chechedNewsIds = [];
   }
 
   onSelectAllNews() {
