@@ -9,7 +9,7 @@ namespace Parma.NewsApplication.Web.Controllers
     [Route("api/[controller]")]
     [Produces(MediaTypeNames.Application.Json)]
     [Consumes(MediaTypeNames.Application.Json)]
-    public class NewsController : ControllerBase
+    public sealed class NewsController : ControllerBase
     {
         private readonly NewsRepository _repository;
 

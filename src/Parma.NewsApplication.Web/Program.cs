@@ -1,5 +1,6 @@
 global using System;
 using Parma.NewsApplication.Web.Repositories;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,9 +8,17 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddSingleton<NewsRepository>();
 
 builder.Services
+    .AddCors(options =>
+    {
+        options.AddDefaultPolicy(x => x
+            .AllowAnyMethod()
+            .AllowAnyOrigin()
+            .AllowAnyHeader());
+    })
     .AddControllers()
     .AddJsonOptions(x =>
     {
+        x.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
         x.JsonSerializerOptions.PropertyNamingPolicy = null;
     });
 
@@ -25,6 +34,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseCors();
 
 app.UseAuthorization();
 

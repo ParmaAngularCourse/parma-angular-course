@@ -10,6 +10,8 @@ import { NewsTitleCapitalLetterPipe } from './news/pipes/news-title-capital-lett
 import { NewsShowTypePipe } from './news/pipes/news-show-type.pipe';
 import { NewsBackColorDirective } from './news/directives/news-back-color.directive';
 import { NewsUserRoleRestrictionDirective } from './news/directives/news-user-role-restriction.directive';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { HttpInterceptorService } from './services/http-interceptor.service';
 
 @NgModule({
   declarations: [
@@ -24,9 +26,13 @@ import { NewsUserRoleRestrictionDirective } from './news/directives/news-user-ro
     NewsUserRoleRestrictionDirective
   ],
   imports: [
-    BrowserModule
+    BrowserModule, HttpClientModule
   ],
-  providers: [],
+  providers: [{
+    provide: HTTP_INTERCEPTORS,
+    useClass: HttpInterceptorService,
+    multi: true
+  }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

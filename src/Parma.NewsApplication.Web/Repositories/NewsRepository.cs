@@ -26,7 +26,7 @@ namespace Parma.NewsApplication.Web.Repositories
             var changedItem = Items.FirstOrDefault(x => x.Id == item.Id);
             if (changedItem != null)
             {
-                changedItem = item;
+                Items[Items.IndexOf(changedItem)] = item;
             }
         }
 

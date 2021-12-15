@@ -8,7 +8,7 @@
         <div class="news_modal_body">
             <ng-content select="news-content-body"></ng-content>
             <div>
-                <button *appNewsUserRoleRestriction class="news_modal_button" (click)="addAction()">Сохранить</button>
+                <button *appNewsUserRoleRestriction="this.curUserRights" class="news_modal_button" (click)="addAction()">Сохранить</button>
                 <button class="news_modal_button" (click)="cancelAction()">Отмена</button>
             </div>
         </div>
