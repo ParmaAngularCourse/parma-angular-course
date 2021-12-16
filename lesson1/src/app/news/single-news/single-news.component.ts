@@ -10,9 +10,11 @@ import { NewsItem, NewsObj } from '../news-types';
 })
 export class SingleNewsComponent implements OnInit {
 
-@Input()single_news!: NewsItem ;
+@Input()singleNews!: NewsItem ;
 @Output() saveNews = new EventEmitter<NewsObj> ();
+@Output() editNews =  new EventEmitter();
 @Output() deleteNews = new EventEmitter();
+@Output() markNews =  new EventEmitter();
 
 public isEdisNewsShowed: boolean = false;
 
@@ -23,6 +25,7 @@ public isEdisNewsShowed: boolean = false;
 
   setCheckedNews(isChecked : boolean , newsItem: NewsItem){
     newsItem.checked = isChecked;
+    this.markNews.emit();
   }
 
   onSaveNews(eventObj: NewsObj){
@@ -33,8 +36,12 @@ public isEdisNewsShowed: boolean = false;
     this.deleteNews.emit();
   }
 
+  onEditNews(){
+    this.editNews.emit();
+  }
+
   ngDoCheck(){
-    console.log("app-single-news" + this.single_news.id);
+    console.log("app-single-news" + this.singleNews.id);
   }
 
 }

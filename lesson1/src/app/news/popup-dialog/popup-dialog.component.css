@@ -14,7 +14,8 @@
     box-shadow: gray 1px 1px 3px;
     position: absolute;
     margin:  auto 30%;
-    background-color: cornsilk;
+    background-color:ghostwhite;
+    border-radius: 5px;
  }
 
  .newsEtitor legend {

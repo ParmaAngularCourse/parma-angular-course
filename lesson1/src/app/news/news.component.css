@@ -1,0 +1,34 @@
+.closeIcon {
+    cursor: pointer;
+    background-color: #ffdfdf;
+    border: 1px #ef8888 solid;
+    color: darkred;
+    margin-left: 10px;
+    padding: 0 4px;
+ }
+
+
+ .dialogInput {
+    margin: 10px;
+    min-width: 500px;
+    max-width: 500px;
+ }
+
+ textarea.dialogInput {
+    height: 5em;
+}
+
+.buttonContainer {
+    width: 100%;
+}
+
+.buttonContainer button{
+    margin: 0 10px;
+}
+
+.radio_Politics {background-color: honeydew;}
+.radio_Tourism {background-color: khaki;}
+.radio_Economics {background-color: lightpink;}
+.radio_Science {background-color: mediumslateblue;}
+.radio_Internet {background-color: steelblue;}
+

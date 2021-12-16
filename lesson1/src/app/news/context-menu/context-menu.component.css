@@ -1,0 +1,16 @@
+.menuContainer {
+    border: 1px solid #663434;
+    background-color: lightgrey;
+    box-shadow: darkgrey 1px 2px 5px;
+}
+
+
+.menuItem {
+    border: 1px solid darkgrey;
+    padding: 5px;
+    cursor: pointer;
+}
+
+.menuItem:hover {
+    background-color: ghostwhite;
+}

@@ -1,14 +1,85 @@
-
  <h2>Новости</h2> 
- <button (click)="isNewNewsShowed=true">Добавить новость</button>
-   
-  <app-edit-dialog *ngIf="isNewNewsShowed" 
-      (saveNews)="onAddNews($event)"
-      (closeEditDialog)="isNewNewsShowed=false">Добавление новости</app-edit-dialog>
+ <button (click)="onShowAddNewsDialog()">Добавить новость</button>
+ <button (click)="onDeleteNews()" [disabled]="!isDeleteButtonAvailable"> Удалить </button>
 
-  <app-single-news *ngFor="let item of ourNews" [single_news]="item" 
-      (saveNews)="onSaveNews($event, item.id)"      
-      (deleteNews)="onDeleteNews(item.id)"></app-single-news> 
-  
-  
+<!-- содержимое popup  -->
+
+   <app-popup-dialog #popupDialog>
+      
+        <legend>  {{ editDialogCaption  }}
+            <span class="closeIcon" (click)="onClickClosePopupButton()" title="Закрыть"> × </span>
+        </legend>
+       
+        <ng-container *ngTemplateOutlet="dataInpTemplate; context: {inpValue: editDialogNewsItem.news.date
+                , inpCaption: 'Дата', fieldName: 'date'}"></ng-container>
+        <ng-container *ngTemplateOutlet="textInpTemplate; context: {inpValue: editDialogNewsItem.news.caption
+                , inpCaption: 'Заголовок', fieldName:'caption'}"></ng-container>
+        <ng-container *ngTemplateOutlet="textareaTemplate; context: {inpValue: editDialogNewsItem.news.text
+                , inpCaption: 'Текст', fieldName: 'text'}"></ng-container>
+        
+        <ng-container *ngTemplateOutlet="radioTemplate; context: {currentValue: editDialogNewsItem.news.theme,
+             name: 'newsTheme', caption: 'Тип:'}"></ng-container>    
+
+        <ng-container *ngTemplateOutlet="buttonTemplate; context: {buttons: 
+                [{text: 'Сохранить', action: onClickSavePopupButton}
+                ,{ text: 'Отмена', action: onClickClosePopupButton }]}"></ng-container>    
+
+   </app-popup-dialog>
+
+
+   <ng-template #dataInpTemplate let-inputValue="inpValue" let-inputCaption="inpCaption" let-field="fieldName" >    
+        <div>
+            {{inputCaption}}
+        </div>
+        <input type="date" [valueAsDate]="inputValue" class="dialogInput" (change)="onDialogInpChange($event, field)" >     
+   </ng-template>
+
+   <ng-template #textInpTemplate let-inputValue="inpValue" let-inputCaption="inpCaption" let-field="fieldName" >    
+        <div>
+            {{inputCaption}}
+        </div>
+        <input type="text" [value]="inputValue"  (change)="onDialogInpChange($event, field)" class="dialogInput">     
+   </ng-template>
+
+   <ng-template #textareaTemplate let-inputValue="inpValue" let-inputCaption="inpCaption" let-field="fieldName">    
+        <div>
+            {{inputCaption}}
+        </div>
+        <textarea [value]="inputValue" class="dialogInput"
+                 (change)="onDialogInpChange($event, field)"> </textarea>     
+   </ng-template>
+
+
+   <ng-template #buttonTemplate let-buttons="buttons">    
+        <div class="buttonContainer">
+            <button  [style.width.%]="100 / (buttons.length + 1)" 
+                *ngFor="let button of buttons" (click)="button.action()"> {{button.text}} </button>
+        </div>
+    </ng-template>
+
+
+    <ng-template #radioTemplate let-caption="caption" let-currentValue="currentValue" let-name="name">
+      <div> 
+        {{caption}}
+        <div *ngFor="let enum of ThemeEnum | keyvalue" >            
+            <label class="radio_{{enum.key}}">
+                 <input type="radio" name="name" [value]="enum.key" (click)="onRadioButChange(enum.value)"
+                     [checked]="currentValue == enum.value"> {{enum.value}} 
+             </label>            
+        </div>
+    </div>
+    </ng-template>
+
+<!-- / содержимое popup  -->
+
+
+   <app-single-news *ngFor="let item of ourNews" [singleNews]="item" 
+        (editNews)="onEditNews(item.id)"
+        (contextmenu)="onShowContextMenu($event)"
+        (markNews)="onMarkNews()"
+        (click)="onJustClick()"
+        (deleteNews)="onDeleteNews(item.id)"
+   ></app-single-news> 
+
+   <app-context-menu #contextMenuComponent (checkAll)="onContextCheckAll()"></app-context-menu>
 
