@@ -1,3 +1,11 @@
-<button (click)=OnClickAddButton()>Добавить</button>
-<app-news *ngFor="let item of news" [news_data]="item" (deleteNews)="OnDeleteNews($event)" (editNews)="OnEditNews($event)"></app-news>
-<app-add-edit-news-modal [news_data]="selectedNews" *ngIf="isOpenModal" (cancel)="OnCancelModal()" (saveNews)="OnSaveNews($event)"></app-add-edit-news-modal>
+<div (contextmenu)="onContextMenu($event)" (click)="onClick()">
+    <app-context-menu (selectAll)=onSelectAllNews()></app-context-menu>
+    <button (click)=OnClickAddButton()>Добавить</button>
+    <button (click)=OnClickDeleteButton() [disabled]="!chechedNewsIds.length">Удалить</button>
+    <app-news *ngFor="let item of news" [isChecked]="chechedNewsIds.includes(item.id)" [news]="item" (deleteNews)="OnDeleteNews($event)"
+        (editNews)="OnEditNews($event)" (checkedNews)="onCheckedNews($event)"></app-news>
+
+    <app-modal (cancel)="onCancelModal()">
+        <app-news-modal-content [news]="selectedNews" (cancel)="onCancelModal()" (saveNews)="onSaveNews($event)"></app-news-modal-content>
+    </app-modal>
+</div>

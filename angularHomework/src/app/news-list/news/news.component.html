@@ -1,7 +1,7 @@
-<div class="news" [style.background-color]="news.isChecked ? 'lightgrey' : 'white'">
-    <input type="checkbox" id="checkbox" [checked]="news.isChecked" (change)="onChange()">
-    <label>{{news.title}}</label>
+<div class="news" [style.background-color]="isChecked ? 'lightgrey' : 'white'" [style.border-color]="news.newsType.color"> 
+    <input type="checkbox" id="checkbox" [checked]="isChecked" (change)="onChange()">
+    <label>{{news.title}}</label><span class="type" [style.color]="news.newsType.color">{{news.newsType.text}}</span>
     <p>{{news.dateTime}}</p>
     <p>{{news.text}}</p>
-    <button (click)=clickEditButton()>Редактировать</button><button [disabled]="!news.isChecked" (click)=clickDeleteButton()>Удалить</button>
+    <button (click)=clickEditButton()>Редактировать</button><button [disabled]="!isChecked" (click)=clickDeleteButton()>Удалить</button>
 </div>

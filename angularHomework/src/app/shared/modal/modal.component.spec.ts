@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AddEditNewsModalComponent } from './add-edit-news-modal.component';
+import { ModalComponent } from './modal.component';
 
 describe('AddEditNewsModalComponent', () => {
-  let component: AddEditNewsModalComponent;
-  let fixture: ComponentFixture<AddEditNewsModalComponent>;
+  let component: ModalComponent;
+  let fixture: ComponentFixture<ModalComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ AddEditNewsModalComponent ]
+      declarations: [ ModalComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(AddEditNewsModalComponent);
+    fixture = TestBed.createComponent(ModalComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

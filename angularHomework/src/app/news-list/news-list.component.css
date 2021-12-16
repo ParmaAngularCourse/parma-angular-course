@@ -5,4 +5,11 @@ button {
   margin: 0.2em 1em;
   padding: 1em 0.5em;
   border-radius: 5px;
+  cursor:pointer;
+}
+
+button:disabled,
+button[disabled]{
+  background-color: lightgray;
+  cursor: default;
 }
