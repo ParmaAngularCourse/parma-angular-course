@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 
 
-type information ={
+type Information =
+{
     date: string,
     title: string,
-    style_color: string
+    isCheck?: boolean,
 }
-
 
 
 @Component({
@@ -16,27 +16,23 @@ type information ={
 })
 export class NewsComponent implements OnInit {
 
-  public informationList: Array<information> = [
+  public informationList: Information[] = [
     {
       date: "1.1.1900", 
       title: "Новость 1", 
-      style_color: "white"
     },
 
     {
       date: "1.12.1900", 
       title: "Новость 2", 
-      style_color: "white"
     },
     {
       date: "1.1.2000", 
       title: "Новость 3", 
-      style_color: "white"
     },
     {
       date: "1.12.2000", 
       title: "Новость 4", 
-      style_color: "white"
     }    
   ];
 
@@ -44,22 +40,15 @@ export class NewsComponent implements OnInit {
 
   constructor() { }
 
-  ngOnInit(): void {
+  ngOnInit(): void 
+  {
   }
 
 
-  onCheckboxChange($event: Event, item: information){    
-    var checkboxItem = ($event.target as HTMLInputElement);
-    var isSelected =  checkboxItem.checked;
-    
-    if(isSelected)
-    {
-      item.style_color = "gray";
-    }
-    else
-    {
-      item.style_color  = "white";
-    }
-}
+  onCheckboxChange($event: Event, item: Information)
+  {    
+    let checkboxItem = ($event.target as HTMLInputElement);
+    item.isCheck =  checkboxItem.checked;
+  }
 
 }

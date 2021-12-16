@@ -1,7 +1,9 @@
-.color_white {
-    color: white;
+.background_uncheck
+{
+    background-color: white;
 }
 
-.color_gray{
-    color: gray;
+.background_check
+{
+    background-color: gray;
 }
