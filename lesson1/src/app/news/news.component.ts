@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, QueryLis
 import { ContextMenuComponent } from './context-menu/context-menu.component';
 import { NewsItem, NewsObj, Theme } from './news-types';
 import { PopupDialogComponent } from './popup-dialog/popup-dialog.component';
-import { SingleNewsComponent } from './single-news/single-news.component';
+
 
 @Component({
   selector: 'app-news',
@@ -10,7 +10,7 @@ import { SingleNewsComponent } from './single-news/single-news.component';
   styleUrls: ['./news.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class NewsComponent implements OnInit {
+export class NewsComponent {
 
   public ourNews: NewsItem[] =[
     { id: 1,
@@ -48,19 +48,9 @@ export class NewsComponent implements OnInit {
 
   @ViewChild('contextMenuComponent') menuComponent!: ContextMenuComponent;
   @ViewChild('popupDialog') popupDialog!: PopupDialogComponent;  
-  @ViewChildren(SingleNewsComponent) singleNewsComponent!: QueryList<SingleNewsComponent>;
-
-  @ViewChild('dataInpTemplate') dataInpTemplate!: TemplateRef<HTMLElement>;  
-  @ViewChild('textInpTemplate') textInpTemplate!: TemplateRef<HTMLElement>;  
-  @ViewChild('textareaTemplate') textareaTemplate!: TemplateRef<HTMLElement>;  
-  @ViewChild('radioTemplate') radioTemplate!: TemplateRef<HTMLElement>;  
-  
   
   constructor(private viewContainerRef: ViewContainerRef, private cdr: ChangeDetectorRef) { 
-      this.CheckCheckoxes();
-  }
-
-  ngOnInit(): void {
+      this.checkCheckboxes();
   }
  
   getEmptyNews(): NewsItem{
@@ -81,22 +71,21 @@ export class NewsComponent implements OnInit {
     this.popupDialog.show();
   } 
 
-
   onDeleteNews(id?: number){
     if (id !== undefined){
       this.ourNews = this.ourNews.filter(n=> n.id != id);
     } else {
       this.ourNews = this.ourNews.filter(n=> !n.checked);
     }
-    this.CheckCheckoxes();
+    this.checkCheckboxes();
   }
 
-  CheckCheckoxes(){
-      var isAnyChecked = this.ourNews.some((el)=> el.checked);
+  checkCheckboxes(){
+      let isAnyChecked = this.ourNews.some((el)=> el.checked);
       this.isDeleteButtonAvailable = isAnyChecked;
   }
 
-  onMarkNews =() => this.CheckCheckoxes();
+  onMarkNews =() => this.checkCheckboxes();
 
   onShowContextMenu(event: MouseEvent){    
     this.menuComponent.show({top: event.clientY , left: event.clientX});
@@ -109,17 +98,13 @@ export class NewsComponent implements OnInit {
 
 
   onClickSavePopupButton= ()=>{    
-    let currentNews = this.ourNews.find((el)=> el.id == this.editDialogNewsItem.id);
-    if (currentNews != null) {
-     //currentNews.news = this.unsavedNewsItem.news;  // Не обновляет 
-     //currentNews = {... currentNews, news: this.unsavedNewsItem.news}; // Не обновляет 
+    const currentNewsIndex= this.ourNews.findIndex((el)=> el.id === this.editDialogNewsItem.id);
 
-     this.ourNews = this.ourNews.map((newsEl)=>{
-          return {...newsEl, news: newsEl == currentNews ?  this.unsavedNewsItem.news : newsEl.news}
-        });    
-
+    if (currentNewsIndex > -1) { 
+        const currentNews = this.ourNews[currentNewsIndex];
+        this.ourNews[currentNewsIndex]  = {... currentNews, news: this.unsavedNewsItem.news };       
     } else {
-      var maxId = Math.max(... this.ourNews.map(n=> n.id), 0);
+      let maxId = Math.max(... this.ourNews.map(n=> n.id), 0);
       this.ourNews.push( { id: maxId +1, news: this.unsavedNewsItem.news, checked: false } );
     }
     this.onClickClosePopupButton();

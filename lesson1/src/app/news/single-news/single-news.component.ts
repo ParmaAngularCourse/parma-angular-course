@@ -10,7 +10,7 @@ import { NewsItem, NewsObj } from '../news-types';
 })
 export class SingleNewsComponent implements OnInit {
 
-@Input()single_news!: NewsItem ;
+@Input()singleNews!: NewsItem ;
 @Output() saveNews = new EventEmitter<NewsObj> ();
 @Output() editNews =  new EventEmitter();
 @Output() deleteNews = new EventEmitter();
@@ -41,7 +41,7 @@ public isEdisNewsShowed: boolean = false;
   }
 
   ngDoCheck(){
-    console.log("app-single-news" + this.single_news.id);
+    console.log("app-single-news" + this.singleNews.id);
   }
 
 }

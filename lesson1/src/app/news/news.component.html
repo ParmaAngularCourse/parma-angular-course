@@ -1,7 +1,6 @@
-
  <h2>Новости</h2> 
  <button (click)="onShowAddNewsDialog()">Добавить новость</button>
- <button (click)="onDeleteNews()" [disabled]="!isDeleteButtonAvailable" > Удалить </button>
+ <button (click)="onDeleteNews()" [disabled]="!isDeleteButtonAvailable"> Удалить </button>
 
 <!-- содержимое popup  -->
 
@@ -47,8 +46,7 @@
             {{inputCaption}}
         </div>
         <textarea [value]="inputValue" class="dialogInput"
-                 (change)="onDialogInpChange($event, field)"
-            > </textarea>     
+                 (change)="onDialogInpChange($event, field)"> </textarea>     
    </ng-template>
 
 
@@ -75,7 +73,7 @@
 <!-- / содержимое popup  -->
 
 
-   <app-single-news *ngFor="let item of ourNews" [single_news]="item" 
+   <app-single-news *ngFor="let item of ourNews" [singleNews]="item" 
         (editNews)="onEditNews(item.id)"
         (contextmenu)="onShowContextMenu($event)"
         (markNews)="onMarkNews()"
