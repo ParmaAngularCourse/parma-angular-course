@@ -129,12 +129,12 @@ export class NewsComponent {
       case 'text':
         this.unsavedNewsItem.news.text = newValue;
         break;
-        case 'caption':
-          this.unsavedNewsItem.news.caption = newValue;
-          break;
-          case 'date':
-            this.unsavedNewsItem.news.date = (event.currentTarget as HTMLInputElement).valueAsDate ?? new Date();
-          break;
+      case 'caption':
+        this.unsavedNewsItem.news.caption = newValue;
+        break;
+      case 'date':
+        this.unsavedNewsItem.news.date = (event.currentTarget as HTMLInputElement).valueAsDate ?? new Date();
+        break;
       }   
   }
 }

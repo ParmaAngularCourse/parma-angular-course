@@ -7,7 +7,7 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 })
 export class ContextMenuComponent implements OnInit {
 
-  @Output() checkAll = new EventEmitter();
+  @Output() checkAll = new EventEmitter<void>();
   constructor() { }
 
   ngOnInit(): void {
