@@ -19,3 +19,9 @@
 }
 
 button {margin-left: 10px;}
+
+.themeIcon {
+    float: right;
+    padding: 5px;
+    border-radius: 5px;
+}

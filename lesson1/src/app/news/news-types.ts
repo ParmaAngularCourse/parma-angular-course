@@ -13,13 +13,17 @@ export type NewsObj = {
 }
 
 export enum Theme {
-    Unknown = "¯\_(ツ)_/¯",
+    Unknown = "¯\\_(ツ)_/¯",
     Politics = "Политика",
     Tourism = "Туризм", 
     Economics = "Экономика",
     Science = "Наука",
     Internet = "Интернет"
 } 
+
+export function getThemeKey(value: string){
+  return Object.entries(Theme).find(([key, val]) => val === value)?.[0];
+}
 
 
 

@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, QueryLis
 import { ContextMenuComponent } from './context-menu/context-menu.component';
 import { NewsItem, NewsObj, Theme } from './news-types';
 import { PopupDialogComponent } from './popup-dialog/popup-dialog.component';
+import { AdThemeDirective } from './ad-theme.directive';
 
 
 @Component({

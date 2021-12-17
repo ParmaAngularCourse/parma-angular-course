@@ -6,6 +6,7 @@
  {{singleNews.id}}) {{singleNews.news.date | date:'dd.MM.yyyy'}}
  <strong> {{singleNews.news.caption}} </strong>
 </label>
+<div class="themeIcon" [appAdTheme]="singleNews.news.theme"> {{singleNews.news.theme}} </div>
 <p>{{singleNews.news.text}} </p>
 <app-edit-dialog *ngIf="isEdisNewsShowed" 
     (saveNews)="onSaveNews($event)"

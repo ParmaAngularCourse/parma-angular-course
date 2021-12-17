@@ -62,7 +62,7 @@
       <div> 
         {{caption}}
         <div *ngFor="let enum of ThemeEnum | keyvalue" >            
-            <label class="radio_{{enum.key}}">
+            <label [appAdTheme]="enum.key" >
                  <input type="radio" name="name" [value]="enum.key" (click)="onRadioButChange(enum.value)"
                      [checked]="currentValue == enum.value"> {{enum.value}} 
              </label>            
