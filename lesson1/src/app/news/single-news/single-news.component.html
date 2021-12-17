@@ -6,16 +6,16 @@
  {{singleNews.id}}) {{singleNews.news.date | date:'dd.MM.yyyy'}}
  <strong> {{singleNews.news.caption}} </strong>
 </label>
-<div class="themeIcon" [appAdTheme]="singleNews.news.theme"> {{singleNews.news.theme}} </div>
+<div class="themeIcon" [appAdTheme]="singleNews.news.theme" title="{{singleNews.news.theme}}"> {{singleNews.news.theme | themePipe}} </div>
 <p>{{singleNews.news.text}} </p>
-<app-edit-dialog *ngIf="isEdisNewsShowed" 
-    (saveNews)="onSaveNews($event)"
-    (closeEditDialog)="isEdisNewsShowed=false"
-    [newsDetails]="singleNews.news">Редактирование {{singleNews.id}} новости</app-edit-dialog>
-
 
 <!-- <button (click)="isEdisNewsShowed=true"> Редактировать (независимое окно) </button> -->
 <button (click)="onEditNews()"> Редактировать </button>
-<button [disabled]="!singleNews.checked" (click)="onDeleteNews()"> Удалить </button>
+<button [disabled]="!singleNews.checked" (click)="onDeleteNews()" *appSdRightsToChange="canDelete" > Удалить </button>
  </div>
 
+
+<!-- <app-edit-dialog *ngIf="isEdisNewsShowed"
+    (saveNews)="onSaveNews($event)"
+    (closeEditDialog)="isEdisNewsShowed=false"
+    [newsDetails]="singleNews.news">Редактирование {{singleNews.id}} новости</app-edit-dialog> -->

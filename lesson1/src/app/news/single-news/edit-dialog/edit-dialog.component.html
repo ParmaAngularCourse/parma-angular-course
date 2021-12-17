@@ -3,6 +3,6 @@
      
     <br>Заголовок:<br><input type="text"  #newsCaption [value]="newsDetails?.caption">
     <br>Текст:<br><textarea #newsText [value]="newsDetails?.text"></textarea>
-    <br><button (click)="onClickSaveNewsButton(newsDate.value, newsCaption.value, newsText.value)"> Сохранить</button>
-    <button (click)="onClickCloseButton()">Отмена</button>
+    <br><button *appSdRightsToChange="currentUser.Rights.CanSave" (click)="onClickSaveNewsButton(newsDate.value, newsCaption.value, newsText.value)"> Сохранить</button>
+    111 <button (click)="onClickCloseButton()">Отмена</button>
 </fieldset>

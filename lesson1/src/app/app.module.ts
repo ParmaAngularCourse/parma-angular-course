@@ -10,6 +10,8 @@ import { EditDialogComponent } from './news/single-news/edit-dialog/edit-dialog.
 import { PopupDialogComponent } from './news/popup-dialog/popup-dialog.component';
 import { ContextMenuComponent } from './news/context-menu/context-menu.component';
 import { AdThemeDirective } from './news/ad-theme.directive';
+import { SdRightsToChangeDirective } from './news/sd-rights-to-change.directive';
+import { ThemePipePipe } from './news/theme-pipe.pipe';
 
 @NgModule({
   declarations: [
@@ -21,7 +23,9 @@ import { AdThemeDirective } from './news/ad-theme.directive';
     EditDialogComponent,
     PopupDialogComponent,
     ContextMenuComponent,
-    AdThemeDirective
+    AdThemeDirective,
+    SdRightsToChangeDirective,
+    ThemePipePipe
   ],
   imports: [
     BrowserModule
