@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { newsType } from '../news-types';
+import { newsType, subjectType } from '../news-types';
 
 @Component({
   selector: 'app-edit-news',
@@ -16,11 +16,12 @@ export class EditNewsComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  clickSave(date:string, title:string, text: string){
+  clickSave(date:string, title:string, text: string, subject: string){
     console.log("save modal");
     this.news.dt = new Date(date);
     this.news.title = title;
     this.news.text = text;
+    this.news.subject = parseInt(subject);
     
     this.closeModal.emit(this.news);
   }
