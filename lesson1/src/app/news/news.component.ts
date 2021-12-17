@@ -1,65 +1,85 @@
-import { Component, OnInit } from '@angular/core';
-
-
-type information ={
-    date: string,
-    title: string,
-    style_color: string
-}
-
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { EditedDataObj, Information } from './news-types';
 
 
 @Component({
   selector: 'app-news',
   templateUrl: './news.component.html',
-  styleUrls: ['./news.component.css']
+  styleUrls: ['./news.component.css'], 
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NewsComponent implements OnInit {
 
-  public informationList: Array<information> = [
+  public isEditorOpen: boolean = false;
+  public editedPost!: Information;
+
+  public informationList: Information[] = [
     {
       date: "1.1.1900", 
       title: "Новость 1", 
-      style_color: "white"
     },
-
     {
       date: "1.12.1900", 
       title: "Новость 2", 
-      style_color: "white"
     },
     {
       date: "1.1.2000", 
       title: "Новость 3", 
-      style_color: "white"
     },
     {
       date: "1.12.2000", 
       title: "Новость 4", 
-      style_color: "white"
     }    
   ];
 
-
-
   constructor() { }
 
-  ngOnInit(): void {
+  ngOnInit(): void 
+  {
+  }
+
+  ngDoCheck(){
+    //console.log('news-component');
   }
 
 
-  onCheckboxChange($event: Event, item: information){    
-    var checkboxItem = ($event.target as HTMLInputElement);
-    var isSelected =  checkboxItem.checked;
-    
-    if(isSelected)
+  onEditPost($event: Information){    
+    this.isEditorOpen = true;
+    this.editedPost = $event;
+  }
+
+  onDeletePost($event: Information){    
+    this.informationList.splice(this.informationList.indexOf($event), 1);
+  }
+
+  onCheckPost($event: Information){    
+    $event.isCheck = !$event.isCheck;
+  }
+
+  onNewPost(){    
+    this.isEditorOpen = true;
+    this.editedPost = {date: "", title: "", text: "" };
+  }
+
+
+  onSavePost($event: Information){    
+
+    let currentPostIndex = this.informationList.indexOf($event);
+    if(currentPostIndex == -1)
     {
-      item.style_color = "gray";
+      this.informationList.push($event);
     }
-    else
-    {
-      item.style_color  = "white";
-    }
-}
+
+    this.isEditorOpen = false;
+  }
+
+  onCancelEditPost(){    
+    this.isEditorOpen = false;
+    this.editedPost = {date: "", title: "", text: "" };
+  } 
+
+
+
+
 
 }

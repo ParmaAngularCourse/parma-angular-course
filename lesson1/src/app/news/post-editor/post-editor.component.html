@@ -1,0 +1,17 @@
+<div style="width: 300px; border: 2px solid lightgray; margin-bottom: 10px; padding-left: 5px;">
+    
+    <div>Дата</div>
+    <input type='text' #date [value]="localData?.date"  (change)="dateChange(date.value)"/>
+    <div>Заголовок</div>
+    <input  type='text' #title [value]="localData?.title" (change)="titleChange(title.value)" />
+    <div>Текст</div>
+    <input type='text' #text  [value]="localData?.text" (change)="textChange(text.value)" />
+    
+    <div style="margin-bottom: 5px;">
+        <br>
+        <button style="display: inline-block;" (click)="clickPostEditorSaveButton(edit_post)">Сохранить</button>
+        <div style="width: 10px; display: inline-block;"></div>
+        <button style="display: inline-block; " (click)="clickPostEditorCancelButton()">Отмена</button>
+    </div>
+    
+</div>
