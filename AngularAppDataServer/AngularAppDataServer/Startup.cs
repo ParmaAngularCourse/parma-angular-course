@@ -31,10 +31,15 @@ namespace AngularAppDataServer
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(options => options.AddPolicy("ApiCorsPolicy", builder =>
+            {
+                builder.WithOrigins("http://localhost:4200").AllowAnyMethod().AllowAnyHeader();
+            }));
+
             services.AddControllers().AddNewtonsoftJson(options =>
             {
                 options.SerializerSettings.Converters.Add(new StringEnumConverter(
-                    new CamelCaseNamingStrategy()
+                    new DefaultNamingStrategy()
                     {
                         OverrideSpecifiedNames = false
                     }));
@@ -72,6 +77,8 @@ namespace AngularAppDataServer
             app.UseRouting();
 
             app.UseAuthorization();
+
+            app.UseCors("ApiCorsPolicy");
 
             app.UseEndpoints(endpoints =>
             {

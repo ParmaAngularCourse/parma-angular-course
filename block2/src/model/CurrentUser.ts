@@ -3,7 +3,7 @@ import { User } from "./User";
 
 export const CurrentUser:User = {
     Permissions: [
-        new Permission("Delete", false),
-        new Permission("Save", false)
+        new Permission("Delete", true),
+        new Permission("Save", true)
     ]
 }

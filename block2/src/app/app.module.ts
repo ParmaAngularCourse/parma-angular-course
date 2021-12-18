@@ -12,6 +12,7 @@ import { GetNewsColorPipe } from './pipes/get-news-color.pipe';
 import { NewsStylesDirective } from './Directives/news-styles.directive';
 import { NewsTypeColorDirective } from './Directives/news-type-color.directive';
 import { CheckAccessDirective } from './Directives/check-access.directive';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -28,7 +29,8 @@ import { CheckAccessDirective } from './Directives/check-access.directive';
     CheckAccessDirective
   ],
   imports: [
-    BrowserModule
+    BrowserModule,
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]
