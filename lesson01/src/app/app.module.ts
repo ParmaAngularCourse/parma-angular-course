@@ -13,6 +13,9 @@ import { PermissionDirective } from './news/permission.directive';
 import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import {AuthInterceptorService} from "./news/services/auth-interceptor.service";
 import { ModalWindowComponent } from './controls/modal-window/modal-window.component';
+import { NewsItemModalReactiveComponent } from './news/news-item-modal-reactive/news-item-modal-reactive.component';
+import {ReactiveFormsModule} from "@angular/forms";
+import { TagsSelectorComponent } from './news/tags-selector/tags-selector.component';
 
 @NgModule({
   declarations: [
@@ -25,10 +28,12 @@ import { ModalWindowComponent } from './controls/modal-window/modal-window.compo
     MinitagsPipe,
     ColorizedLabelDirective,
     PermissionDirective,
-    ModalWindowComponent
+    ModalWindowComponent,
+    NewsItemModalReactiveComponent,
+    TagsSelectorComponent
   ],
   imports: [
-    BrowserModule, HttpClientModule
+    BrowserModule, HttpClientModule, ReactiveFormsModule
   ],
   providers: [{
     provide: HTTP_INTERCEPTORS,

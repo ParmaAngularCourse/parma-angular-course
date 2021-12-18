@@ -7,7 +7,6 @@ import {
   ViewChildren
 } from '@angular/core';
 import {NewsItemModel} from "./news-types";
-import {NewsItemModalComponent} from "./news-item-modal/news-item-modal.component";
 import {ContextMenuComponent} from "./context-menu/context-menu.component";
 import {NewsItemComponent} from "./news-item/news-item.component";
 import {NewsService} from "./services/news.service";
@@ -15,6 +14,7 @@ import {HttpErrorResponse} from "@angular/common/http";
 import {Subject} from "rxjs";
 import {takeUntil} from "rxjs/operators";
 import {Permission, PermissionService} from './services/permission.service';
+import {NewsItemModalReactiveComponent} from "./news-item-modal-reactive/news-item-modal-reactive.component";
 
 @Component({
   selector: 'app-news',
@@ -28,7 +28,7 @@ export class NewsComponent implements OnInit, OnDestroy {
   perms: Permission[] = [];
   private _ngUnsubscribe$: Subject<number>;
 
-  @ViewChild('modalComponent') modal! : NewsItemModalComponent;
+  @ViewChild('modalComponent') modal! : NewsItemModalReactiveComponent;
   @ViewChild('contextMenuComponent') menuComponent! : ContextMenuComponent;
   @ViewChildren(NewsItemComponent) newsItemComponents!: QueryList<NewsItemComponent>;
   get isSomeItemSelected(): boolean {
