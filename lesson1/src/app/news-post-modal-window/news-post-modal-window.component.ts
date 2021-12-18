@@ -10,54 +10,56 @@ import { NewsPostTag } from 'src/models/NewsPostTag';
 })
 export class NewsPostModalWindowComponent {
 
-  @Input() newsPost: NewsPost | null | undefined;
+  @Input()
+  newsPost!: NewsPost | null;
   @Input() isOpen = false;
+  @Input() operationTitle = "";
 
   @Output() saveNews = new EventEmitter<NewsPost>();
   @Output() cancel = new EventEmitter<void>();
-  public _date!: string;
 
-  selectedTag: NewsPostTag | undefined;
   newsTags = Object.values(NewsPostTag).filter(x => x != NewsPostTag.noTag);
-  constructor() {
-    this.selectedTag = this.newsPost?.tag;
-  }
-  @ViewChild('modalInput_title') titleInput: ElementRef | undefined;
-  @ViewChild('title') textInput: ElementRef | undefined;
+
+  private editedText = "";
+  private editedTitle = "";
+  private editedDate: Date | null = null;
+  private editedTag = NewsPostTag.noTag;
 
   onEditSave() {
-    const editedNewsPost = new NewsPost();
-    editedNewsPost.id = this.newsPost?.id ?? -1;
-    editedNewsPost.title = this.titleInput?.nativeElement.value;
-    editedNewsPost.text = this.textInput?.nativeElement.value;
-    editedNewsPost.uploadDate = this.parseDateString(this._date);
-    editedNewsPost.isSelected = false;
-    editedNewsPost.tag = this.selectedTag ?? NewsPostTag.noTag;
-    this.cancel.emit();
+    const currentEditablePost = new NewsPost();
+    currentEditablePost.id = this.newsPost?.id??-1;
+    currentEditablePost.title = this.editedTitle === ""? this.newsPost?.title ??"": this.editedTitle;
+    currentEditablePost.text = this.editedText === ""? this.newsPost?.text ??"" : this.editedText;
+    currentEditablePost.uploadDate = this.editedDate === null? this.newsPost!.uploadDate : this.editedDate;
+    currentEditablePost.tag = this.editedTag === NewsPostTag.noTag? this.newsPost!.tag : this.editedTag;
+    
+    const editedNewsPost = new NewsPost(currentEditablePost);
     this.saveNews.emit(editedNewsPost);
-    this.isOpen = false;
+    this.onCancel();
   }
 
-  onOpen(post: NewsPost | null | undefined) {
-    this.newsPost = null;
-    this.isOpen = true;
-  }
   onCancel() {
     this.isOpen = false;
     this.newsPost = null;
     this.cancel.emit();
   }
 
-  private parseDateString(date: string): Date {
+  onTextInputChanged = (value: string) => {
+    this.editedText = value;
+    console.log(value);
+  };
 
-    if(date == undefined) return new Date();
-    console.log(date);
-    date = date?.replace('T', '-');
-    var parts = date?.split('-');
-    var timeParts = parts[3]?.split(':');
+  onTitleInputChanged = (value: string) => {
+    this.editedTitle = value;
+  };
 
-    // new Date(year, month [, day [, hours[, minutes[, seconds[, ms]]]]])
-    return new Date(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2]), Number(timeParts[0]), Number(timeParts[1]));     
-    // Note: months are 0-based
+  onRadioChange(index: number) {
+    this.editedTag = this.newsTags[index]
   }
+
+  onDateInputChanged = (value: Date) => {
+    this.editedDate = value;
+  };
+
+
 }

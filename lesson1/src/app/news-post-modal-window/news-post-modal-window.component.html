@@ -1,26 +1,22 @@
-<div class="modal-window" *ngIf="isOpen">
-
-    <div mat-dialog-title class="flex-title-container">
-        <ng-content select=".header"></ng-content>
-
-        <input type="button" class="close" mat-button (click)="onCancel()" value="X">
-    </div>
+<div class="post-modal-window">
+    <span>{{operationTitle}}</span>
     <div>
-        <input [hidden]="true" #id [value]="newsPost?.id">
-
-        <ng-container [ngTemplateOutlet]="inputPost" #date
-            [ngTemplateOutletContext]="{label:'Дата', type:'datetime-local', val:newsPost?.uploadLocalDate , id: 'date'}">
+        <ng-container [ngTemplateOutlet]="inputPost" #date [ngTemplateOutletContext]="{label:'Дата',
+             type:'datetime-local', 
+             val:newsPost?.uploadLocalDate,
+            id: 'date', action:onDateInputChanged}">
         </ng-container>
 
         <ng-container [ngTemplateOutlet]="inputPost" #title
-            [ngTemplateOutletContext]="{label:'Заголовок', type:'text', val:newsPost?.title??'title', id: 'title'}">
+            [ngTemplateOutletContext]="{label:'Заголовок', type:'text', val:newsPost?.title??'title', id: 'title', action:onTitleInputChanged}">
         </ng-container>
 
         <ng-container [ngTemplateOutlet]="inputPost" #text
-            [ngTemplateOutletContext]="{label:'Текст', type:'text', val:newsPost?.text??'text' , id: 'text'}">
+            [ngTemplateOutletContext]="{label:'Текст', type:'text', val:newsPost?.text??'text' , id: 'text', action:onTextInputChanged}">
         </ng-container>
 
-        <ng-container [ngTemplateOutlet]="radioPostTag" [ngTemplateOutletContext]="{enum:newsTags}"></ng-container>
+        <ng-container [ngTemplateOutlet]="radioPostTag" [ngTemplateOutletContext]="{enum:newsTags, val:newsPost?.tag, name:'radioTag'}"></ng-container>
+
     </div>
     <div>
         <input class="button" type="button" (click)="onEditSave()" value="Сохранить" />
@@ -29,14 +25,18 @@
 </div>
 
 
-<ng-template #radioPostTag let-enum="enum">
-    <div *ngFor="let item of enum | keyvalue">
-        <input #radio type="radio" [value]="item" [(ngModel)]="selectedTag">
+<ng-template #radioPostTag let-enum="enum" let-val="val" let-name="name">
+    <div *ngFor="let item of enum| keyvalue; let i = index ">
+        <input [id]="name" name="name" type="radio"
+         [value]="item" 
+         [checked]="item.value === val"
+         (change)="onRadioChange(i)"
+         >
         <label for="radio">{{item.value}}</label>
     </div>
 </ng-template>
 
-<ng-template #inputPost let-label='label' let-type='type' let-val='val' let-id='id'>
-    <label for="modalInput">{{label}}</label>
-    <input [type]='type' [value]='val' id="modalInput_{{id}}">
+<ng-template #inputPost let-label='label' let-type='type' let-val='val' let-id='id' let-action='action'>
+    <label for="input">{{label}}</label>
+    <input [type]='type' #input id="input" [value]='val' (change)=action(input.value)>
 </ng-template>

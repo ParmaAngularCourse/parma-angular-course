@@ -1,5 +1,5 @@
 <div>
-    <div class="card" [ngClass]="{'selected-card ':singlePost?.isSelected??false}">
+    <div class="card" [ngClass]="{'selected-card ':singlePost.isSelected}">
         <input type="checkbox" [value]="singlePost.isSelected" (click)='onSelect()'>
         <span>Text: {{singlePost.title}}</span>
         <br>
@@ -7,7 +7,7 @@
         <br>
         <span>Tag: {{singlePost.tag}}</span>
         <br>
-        <span>Date: {{singlePost.uploadDate | date}}</span>
+        <span>Date: {{singlePost.uploadDate | date:'medium'}}</span>
         <div>
             <input class=".button" type="button" (click)="onEdit()" value="Редактировать" />
             <input class=".button" type="button" (click)="onDeletePost()" [disabled]="!singlePost.isSelected" value="Удалить"/>

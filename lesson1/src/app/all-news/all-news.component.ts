@@ -1,7 +1,8 @@
 import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
+import { flatMap } from 'rxjs';
 import { NewsService } from 'src/services/newsService';
 import { NewsPost } from '../../models/NewsPost';
-import { NewsPostModalWindowComponent } from '../news-post-modal-window/news-post-modal-window.component';
+import { ModalCommonComponent } from '../modal-common/modal-common.component';
 @Component({
   selector: 'app-all-news',
   templateUrl: './all-news.component.html',
@@ -10,14 +11,15 @@ import { NewsPostModalWindowComponent } from '../news-post-modal-window/news-pos
 })
 export class AllNewsComponent {
 
-  public news: NewsPost[] = new NewsService().GetNews();
-  public postToEdit: NewsPost | undefined | null = new NewsPost();
-  @ViewChild(NewsPostModalWindowComponent) public modalComponent!: NewsPostModalWindowComponent;
 
+  @ViewChild(ModalCommonComponent) public modalComponent!: ModalCommonComponent;
 
+  isModalOpen: boolean = false;
   contextmenu = false;
   contextmenuX = 0;
   contextmenuY = 0;
+  news: NewsPost[] = new NewsService().GetNews();
+  postToEdit: NewsPost = new NewsPost();
 
   constructor() { }
 
@@ -26,18 +28,19 @@ export class AllNewsComponent {
   }
 
   onEditPost(postId: number) {
-    this.postToEdit = this.news.find(x => x.id == postId) ?? null;
-    this.modalComponent.onOpen(null);
+    this.postToEdit = this.news.find(x => x.id === postId) ?? new NewsPost();
+    this.modalComponent.Open();
   }
 
   onOpenModal() {
-    this.postToEdit = null;
-    this.modalComponent.onOpen(null);
+    this.modalComponent.Open();
+  }
+  onCloseModal() {
+    this.modalComponent.Close();
   }
 
-
   onAddNewsPost(newsPost: NewsPost) {
-    const existedPostIndex = this.news.findIndex(x => x.id == newsPost.id);
+    const existedPostIndex = this.news.findIndex(x => x.id === newsPost.id);
     if (existedPostIndex > -1) {
       this.news[existedPostIndex] = newsPost;
     }
@@ -45,11 +48,10 @@ export class AllNewsComponent {
       newsPost.id = this.news.length + 1;
       this.news.push(newsPost);
     }
-
   }
 
   onDeleteSelected() {
-    this.news = this.news.filter(item => item.isSelected == false);
+    this.news = this.news.filter(item => item.isSelected === false);
   }
 
   isAnyToDelete(): boolean {
@@ -57,7 +59,6 @@ export class AllNewsComponent {
   }
 
   onRightClick(event: MouseEvent) {
-    event.preventDefault();
     this.contextmenuX = event.clientX
     this.contextmenuY = event.clientY
     this.contextmenu = true;
@@ -72,5 +73,8 @@ export class AllNewsComponent {
     this.news = this.news.map(x => { x = new NewsPost(x); x.isSelected = true; return x; });
   }
 
-}
+  getTitle(): string {
+    return this.postToEdit.id === -1 ? 'Добавление' : 'Редактирование'
+  }
 
+}
