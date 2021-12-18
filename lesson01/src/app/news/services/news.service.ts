@@ -1,7 +1,7 @@
 import {Injectable, OnDestroy} from '@angular/core';
 import {NewsItemModel} from "../news-types";
 import {BehaviorSubject, Observable, Subject} from "rxjs";
-import {HttpClient, HttpErrorResponse} from "@angular/common/http";
+import {HttpClient, HttpErrorResponse, HttpParams} from "@angular/common/http";
 import {map} from 'rxjs/internal/operators/map';
 import {takeUntil} from "rxjs/operators";
 
@@ -21,16 +21,22 @@ export class NewsService implements OnDestroy {
   private _url: string = "http://localhost:3000/api/";
   private _newsSubject?: BehaviorSubject<NewsItemModel[]>;
   private _ngUnsubscribe$: Subject<number>;
+  private _subjectDictionary : { subject: BehaviorSubject<NewsItemModel[]>, searchVal : string }[] = [];
 
   constructor(private _http: HttpClient) {
     this._ngUnsubscribe$ = new Subject<number>();
   }
 
-  public getNews() : Observable<NewsItemModel[]>{
+  public getNews(searchVal: string) : Observable<NewsItemModel[]>{
+    this._newsSubject = this._subjectDictionary.find(p => p.searchVal === searchVal)?.subject;
+
     if(!this._newsSubject) {
       this._newsSubject = new BehaviorSubject<NewsItemModel[]>([]);
+      let _params = new HttpParams().set('s', searchVal);
 
-      this._http.get<NewsItem[]>(this._url + "news")
+      this._http.get<NewsItem[]>(this._url + "news", {
+        params: _params
+      })
         .pipe(
           map(item => item.map(i => {
             return new NewsItemModel(i.id, new Date(i.date), i.head, i.desc, i.tag);
@@ -39,6 +45,11 @@ export class NewsService implements OnDestroy {
         )
         .subscribe((value) => {
           this._newsSubject?.next(value);
+      });
+
+      this._subjectDictionary.push({
+        subject : this._newsSubject,
+        searchVal : searchVal
       });
     }
     return this._newsSubject.asObservable();

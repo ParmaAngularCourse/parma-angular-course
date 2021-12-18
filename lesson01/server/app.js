@@ -3,25 +3,25 @@ const express = require("express");
 const data = [{
     "id": 1,
     "date": "2020-12-31T19:00:01.000Z",
-    "head": "новость #1",
+    "head": "новость первая #1",
     "desc": "Текст новости #1",
     "tag": "politic"
   }, {
     "id": 2,
     "date": "2021-01-31T19:00:02.000Z",
-    "head": "Новость #2",
+    "head": "Новость вторая #2",
     "desc": "Текст новости #2",
     "tag": "internet"
   }, {
     "id": 3,
     "date": "2021-02-28T19:00:03.000Z",
-    "head": "Новость #3",
+    "head": "Новость третья #3",
     "desc": "Текст новости #3",
     "tag": "science"
   }, {
     "id": 4,
     "date": "2021-03-31T19:00:04.000Z",
-    "head": "Новость #4",
+    "head": "Новость четвертая #4",
     "desc": "Текст новости #4",
     "tag": "tourism"
   }];
@@ -50,8 +50,16 @@ app.get("/api/tags", (req, res) => {
 
 app.get("/api/news", (req, res) => {
   console.log("====get=>");
-  console.log("all");
-  res.json(data);
+
+  let searchString = req.query?.s ?? "";
+  if(searchString.length === 0){
+    console.log("all");
+    res.json(data);
+  } else {
+    console.log("searchString:>" + searchString + "<");
+    let filteredData = data.filter(p => p.head.indexOf(searchString, 0) > -1)
+    res.json(filteredData);
+  }
 });
 
 app.delete("/api/news/:id", (req, res) => {

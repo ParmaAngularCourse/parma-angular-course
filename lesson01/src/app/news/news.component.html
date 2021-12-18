@@ -1,3 +1,7 @@
+<div style="margin-bottom: 5px">
+  <input #search type="text" placeholder="Поиск" style="width: auto" />
+</div>
+
 <button (click)="this.onAdd()">Добавить</button>
 <button (click)="this.onDeleteSelected()" [disabled]="!this.isSomeItemSelected" *appPermission="this.perms; action: 'deleteItem'" >Удалить</button>
 <app-news-item
