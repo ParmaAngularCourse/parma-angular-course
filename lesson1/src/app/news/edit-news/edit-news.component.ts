@@ -11,9 +11,17 @@ export class EditNewsComponent implements OnInit {
   @Input("single_news_data") news! : newsType;
   @Output() closeModal: EventEmitter<newsType> = new EventEmitter();
   @Output() cancelModal: EventEmitter<void> = new EventEmitter();
+
+  isVisible : boolean = false;
   constructor() { }
 
   ngOnInit(): void {
+    console.log('init edit-news');
+  }
+
+  show(){
+    console.log('show edit-news');
+    this.isVisible = true;
   }
 
   clickSave(date:string, title:string, text: string){
@@ -27,11 +35,12 @@ export class EditNewsComponent implements OnInit {
     this.news.text = text;
     let radiobtn = <HTMLInputElement>document.querySelector('input[name="subject"]:checked');
     this.news.subject = parseInt(radiobtn!.value);
-
+    this.isVisible = false;
     this.closeModal.emit(this.news);
   }
 
   clickCancel(){
+    this.isVisible = false;
     this.cancelModal.emit();
   }
 }

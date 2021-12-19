@@ -4,6 +4,13 @@
     width: 350px;
     height: auto;
     border: 1px solid #000;
+    position: absolute;
+    top: 50px;
+    left: 250px;
+    z-index: 99999;
+	-webkit-transition: opacity 400ms ease-in;
+	transition: opacity 400ms ease-in;
+	display: block;
 }
 
 .title{

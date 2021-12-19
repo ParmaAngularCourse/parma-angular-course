@@ -1,5 +1,6 @@
 import { isNgTemplate } from '@angular/compiler';
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
+import { EditNewsComponent } from './edit-news/edit-news.component';
 import { newsType, subjectType } from './news-types';
 
 @Component({
@@ -9,7 +10,6 @@ import { newsType, subjectType } from './news-types';
 })
 export class NewsComponent implements OnInit {
 
-  public modalVisible : boolean = false;
   public emptyNews: newsType = {
     id: 0,
     dt: new Date(), 
@@ -67,13 +67,14 @@ export class NewsComponent implements OnInit {
 
   constructor() { }
 
+  @ViewChild('modalWindow') editNews!: EditNewsComponent;
+
   ngOnInit(): void {
 
   }
 
   public showModal($event: newsType){
-    this.modalVisible = true;
-    
+    console.log('showModal');
     if ($event.id == 0)
     {
       $event.dt = new Date();
@@ -84,8 +85,7 @@ export class NewsComponent implements OnInit {
       this.title = "Изменить новость";
     }
     this.selectNews = $event;
-
-    console.log(this.modalVisible);
+    this.editNews.show();
   }
 
   public closeModal($event: newsType){
@@ -102,7 +102,6 @@ export class NewsComponent implements OnInit {
       this.emptyNews.id = 0;
     }
       
-    this.modalVisible = false;
   }
 
   public deleteItem(id: number){
@@ -116,7 +115,6 @@ export class NewsComponent implements OnInit {
   }
 
   public cancelModal(){
-    this.modalVisible = false;
   }
  
 }
