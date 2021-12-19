@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { EditedDataObj, Information } from './news-types';
+import { Information } from './news-types';
 
 
 @Component({
