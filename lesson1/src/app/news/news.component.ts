@@ -98,6 +98,7 @@ export class NewsComponent implements OnInit {
     else
     {
       let news: newsType =  (JSON.parse(JSON.stringify($event)));
+      news.dt = $event.dt;
       this.newsItems.push(news);
       this.emptyNews.id = 0;
     }
