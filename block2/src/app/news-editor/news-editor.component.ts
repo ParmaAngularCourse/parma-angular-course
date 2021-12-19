@@ -13,7 +13,7 @@ export class NewsEditorComponent implements OnInit {
   @Output() public saveEditForm: EventEmitter<INewsData> = new EventEmitter(); 
   public currentNews: INewsData | undefined;   
   public id:number = -1;
-  public newsDate:Date = new Date; 
+  public newsDate:Date|null = null; 
   public newsTitle:string = "Заголовок";
   public newsBody:string = "Текст";
   public newsType:TypeNews = TypeNews.Type0_None;
@@ -31,7 +31,7 @@ export class NewsEditorComponent implements OnInit {
   saveForm() {
     this.saveEditForm.emit({
       id: this.id,
-      date: this.newsDate,
+      date: this.newsDate ?? new Date(),
       title: this.newsTitle,
       body: this.newsBody,
       type: this.newsType
@@ -68,7 +68,7 @@ export class NewsEditorComponent implements OnInit {
   }
 
   onChangeNewsDate(value:string){
-    this.newsDate = new Date(value);
+    this.newsDate = value ? new Date(value) : null;
   }
 
   onChangeNewsTitle(value:string){

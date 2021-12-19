@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
-import { EMPTY, Observable } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 import { INewsData } from 'src/model/INewsData';
 import { News } from 'src/model/News';
 import { NewsContextMenuComponent } from '../news-context-menu/news-context-menu.component';
@@ -18,18 +18,22 @@ export class NewsListComponent implements OnInit {
   @ViewChild('newsEditForm') newsEditForm!: NewsEditorComponent
   @ViewChild('contextMenu') newsContextMenu!: NewsContextMenuComponent
   @ViewChildren(NewsBlockComponent) childrenComponents!:QueryList<NewsBlockComponent>
-  //public newsArray: Observable<INewsData[]> = EMPTY;
   public newsArray:News[] = [];
   public editFormCaption: string = "";
   public enableDeleteButton:boolean = false;  
+  private unsubscriptionSubj!:Subject<void>
 
   constructor(private newsService:NewsService, private cd:ChangeDetectorRef)
   {
   }
 
   ngOnInit(): void {
-    //this.newsArray = this.newsService.getNewsList();
-    this.newsService.getNewsList().subscribe({
+    this.unsubscriptionSubj = new Subject();
+    this.newsService.getNewsList()
+    .pipe(
+      takeUntil(this.unsubscriptionSubj)
+    )
+    .subscribe({
       next: (data) => {
         this.newsArray = data;
         this.cd.markForCheck();
@@ -86,5 +90,10 @@ export class NewsListComponent implements OnInit {
       component.onDeleteNew();
     });
     this.enableDeleteButton = false;
+  }
+
+  ngOnDestroy(){
+    this.unsubscriptionSubj.next();
+    this.unsubscriptionSubj.complete();
   }
 }

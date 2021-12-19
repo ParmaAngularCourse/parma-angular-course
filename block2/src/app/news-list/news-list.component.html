@@ -5,7 +5,6 @@
         <ng-container><h2>{{editFormCaption}}</h2></ng-container>
     </app-news-editor>
 </div>
-<!--<div *ngFor="let newsItem of newsArray | async" (contextmenu)="onRightClick($event)"></div>-->
 <div class="news-block" *ngFor="let newsItem of newsArray" (contextmenu)="onRightClick($event)">
     <app-news-block (deleteNews)="onDeleteNews($event)" (editNews)="onEditNews($event)" (selectedNews) = "onSelectedNews($event)" [currentNews] = "newsItem"></app-news-block>
 </div>
