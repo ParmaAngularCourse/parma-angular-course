@@ -1,9 +1,9 @@
 <div (click)="disableContextMenu()" oncontextmenu="return false;">
 
 
-    <app-modal-common>
+    <app-modal-common [operationTitle]="getTitle()">
         <app-news-post-modal-window (saveNews)="onAddNewsPost($event)" [newsPost]="postToEdit" 
-        [operationTitle]="getTitle()" (cancel)="onCloseModal()">
+         (cancel)="onCloseModal()">
 
         </app-news-post-modal-window>
     </app-modal-common>

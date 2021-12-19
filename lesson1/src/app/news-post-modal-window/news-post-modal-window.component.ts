@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { NewsPost } from 'src/models/NewsPost';
 import { NewsPostTag } from 'src/models/NewsPostTag';
-
+import {toDateString} from '../../utils/DateUtils'
 @Component({
   selector: 'app-news-post-modal-window',
   templateUrl: './news-post-modal-window.component.html',
@@ -27,12 +27,11 @@ export class NewsPostModalWindowComponent {
 
   onEditSave() {
     const currentEditablePost = new NewsPost();
-    currentEditablePost.id = this.newsPost?.id??-1;
-    currentEditablePost.title = this.editedTitle === ""? this.newsPost?.title ??"": this.editedTitle;
-    currentEditablePost.text = this.editedText === ""? this.newsPost?.text ??"" : this.editedText;
-    currentEditablePost.uploadDate = this.editedDate === null? this.newsPost!.uploadDate : this.editedDate;
-    currentEditablePost.tag = this.editedTag === NewsPostTag.noTag? this.newsPost!.tag : this.editedTag;
-    
+    currentEditablePost.id = this.newsPost?.id ?? -1;
+    currentEditablePost.title = this.editedTitle === "" ? this.newsPost?.title ?? "" : this.editedTitle;
+    currentEditablePost.text = this.editedText === "" ? this.newsPost?.text ?? "" : this.editedText;
+    currentEditablePost.uploadDate = this.editedDate === null ? this.newsPost!.uploadDate : this.editedDate;
+    currentEditablePost.tag = this.editedTag === NewsPostTag.noTag ? this.newsPost!.tag : this.editedTag;
     const editedNewsPost = new NewsPost(currentEditablePost);
     this.saveNews.emit(editedNewsPost);
     this.onCancel();
@@ -53,11 +52,15 @@ export class NewsPostModalWindowComponent {
     this.editedTitle = value;
   };
 
-  onRadioChange(index: number) {
+  onRadioChange = (index: number) => {
     this.editedTag = this.newsTags[index]
   }
 
   onDateInputChanged = (value: Date) => {
-    this.editedDate = value;
+    this.editedDate = new Date(value);
   };
+
+  GetValueDate(){
+    return toDateString(this.newsPost?.uploadDate)
+  }
 }

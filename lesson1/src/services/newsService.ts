@@ -14,8 +14,7 @@ export class NewsService {
                 text: this.randomString(100),
                 uploadDate: date,
                 isSelected: false,
-                tag: NewsPostTag.economics,
-                uploadLocalDate: this.toDateString(date)
+                tag: NewsPostTag.economics
             });
         }
         return news;
@@ -36,12 +35,5 @@ export class NewsService {
                 charactersLength));
         }
         return result;
-    }
-
-    private toDateString(date: Date | undefined): string {
-        return (date?.getFullYear().toString() + '-'
-            + ("0" + (date?.getMonth() ?? 0 + 1)).slice(-2) + '-'
-            + ("0" + (date?.getDate())).slice(-2))
-            + 'T' + date?.toTimeString().slice(0, 5);
     }
 }

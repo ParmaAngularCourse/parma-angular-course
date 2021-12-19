@@ -7,6 +7,7 @@ import { Component, Input, OnInit } from '@angular/core';
 })
 export class ModalCommonComponent {
   @Input() isModalOpen!: boolean;
+  @Input() operationTitle!: string;
 
   Open() {
     this.isModalOpen = true;

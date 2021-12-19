@@ -1,5 +1,5 @@
 .overlay {
-    opacity: 0.8;
+    opacity: 0.9;
     background-color: #ccc;
     position: fixed;
     width: 100%;
@@ -10,32 +10,34 @@
     display: block;
 }
 
-.close{
-    cursor: pointer;
+.close {
     font-size: 24px;
-    margin-left: auto;
+    margin-right: 0;
+    cursor: pointer;
     float: right;
 }
-
+.header {
+    font-weight: bold;
+}
 .modal-window {
+    opacity: 1;
     width: 50%;
     height: 30%;
     position: absolute;
     top: 35%;
     left: 30%;
     align-items: center;
-    align-content: center; 
-    justify-content: center; 
+    align-content: center;
+    justify-content: center;
     background-color: teal;
 }
 
-.modal-window-menu{
+.modal-window-menu {
+    opacity: 1;
     background-color: slateblue;
-    overflow: auto;   
-    flex-wrap: wrap;
-    margin: 0 auto;
-    align-items: center;
-    display: flex;
-    width: 10%;
+    width: 100%;
     height: 10%;
+}
+.content{
+    opacity: 1;
 }

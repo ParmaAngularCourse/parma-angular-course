@@ -7,16 +7,14 @@ export class NewsPost {
     public title: string ;
     public text: string ;
     public uploadDate: Date;
-    public uploadLocalDate : string;
     public tag: NewsPostTag ;
 
-    constructor(element?: Partial<NewsPost>) {
+    constructor(element?: NewsPost | null) {
         this.id = element?.id ?? -1;
         this.isSelected = element?.isSelected ?? false;
         this.title = element?.title ?? "title";
         this.text = element?.text ?? "text";
         this.uploadDate = element?.uploadDate ?? new Date();
         this.tag = element?.tag ?? NewsPostTag.noTag;
-        this.uploadLocalDate = "";
     }
 }

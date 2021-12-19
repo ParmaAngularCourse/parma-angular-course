@@ -1,9 +1,8 @@
 <div class="post-modal-window">
-    <span>{{operationTitle}}</span>
     <div>
         <ng-container [ngTemplateOutlet]="inputPost" #date [ngTemplateOutletContext]="{label:'Дата',
              type:'datetime-local', 
-             val:newsPost?.uploadLocalDate,
+             val:GetValueDate(),
             id: 'date', action:onDateInputChanged}">
         </ng-container>
 
@@ -15,7 +14,8 @@
             [ngTemplateOutletContext]="{label:'Текст', type:'text', val:newsPost?.text??'text' , id: 'text', action:onTextInputChanged}">
         </ng-container>
 
-        <ng-container [ngTemplateOutlet]="radioPostTag" [ngTemplateOutletContext]="{enum:newsTags, val:newsPost?.tag, name:'radioTag'}"></ng-container>
+        <ng-container [ngTemplateOutlet]="radioPostTag"
+            [ngTemplateOutletContext]="{enum:newsTags, val:newsPost?.tag, name:'radioTag'}"></ng-container>
 
     </div>
     <div>
@@ -27,11 +27,8 @@
 
 <ng-template #radioPostTag let-enum="enum" let-val="val" let-name="name">
     <div *ngFor="let item of enum| keyvalue; let i = index ">
-        <input [id]="name" name="name" type="radio"
-         [value]="item" 
-         [checked]="item.value === val"
-         (change)="onRadioChange(i)"
-         >
+        <input [id]="name" name="name" type="radio" [value]="item" [checked]="item.value === val"
+            (change)="onRadioChange(i)">
         <label for="name">{{item.value}}</label>
     </div>
 </ng-template>
