@@ -1,8 +1,9 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { map, Observable } from 'rxjs';
+import { AsyncSubject, BehaviorSubject, map, Observable, ReplaySubject, tap } from 'rxjs';
 import { INewsData } from 'src/model/INewsData';
 import { News } from 'src/model/News';
+import { ServerResponse } from 'src/model/ServerResponse';
 import { TypeNews } from 'src/model/TypeNews';
 
 @Injectable({
@@ -18,41 +19,101 @@ export class NewsService {
     new News(5, new Date(1703,4,27), "Основан город Санкт-Петербург", "В день Святой Троицы, в устье реки Невы на Заячьем острове Петром I была заложена крепость. Именно этот день считается днём основания Санкт-Петербурга, который более 200 лет являлся столицей Российской империи. План будущей крепости начертил сам Пётр. Своё имя — «Санкт-Питербурх» — крепость получила в Петров день, когда здесь была заложена церковь Святых апостолов Петра и Павла. Это имя получил и возникший вокруг острова город. Апостол Пётр, по христианскому преданию, был хранителем ключей от рая, что также казалось русскому царю символичным, поскольку город, носящий имя его небесного покровителя, должен был стать «ключом от Балтийского моря».", TypeNews.Type2_Tourism)
   ];
 
-  constructor(private httpService:HttpClient) 
-  { 
+  private newsListSubject?:BehaviorSubject<INewsData[]>;
 
-  }
+  constructor(private httpService:HttpClient){}
 
   public getNewsList():Observable<INewsData[]>{
-    return this.httpService.get<INewsData[]>('https://localhost:44379/api/NewsData/GetNews')
-    .pipe(map(item=> item.map(sNews=>new News(sNews.id, sNews.date, sNews.title, sNews.body, TypeNews[sNews.type as string as keyof typeof TypeNews]))));
+    if(!this.newsListSubject){
+      this.newsListSubject = new BehaviorSubject<INewsData[]>([]);
+      this.httpService.get<ServerResponse<INewsData[]>>('https://localhost:44379/api/NewsData/GetNews')
+      .pipe()
+      .subscribe({
+        next: (response)=> { 
+          var newsList:News[] = [];
+          if (response.isSuccess === false) {
+            console.error(`Ошибка при получении данных c сервера: ${response.errorText}`)
+            //throw new TypeError(`Ошибка при получении данных сервера ${response.errorText}`)
+          }
+          else{
+            newsList = response?.data?.map(sNews=>new News(sNews.id,
+                                                       new Date(sNews.date),
+                                                       sNews.title,
+                                                       sNews.body,
+                                                       sNews.type)) ?? []
+          }
+          newsList = newsList.sort((newsF, newsS)=>newsS.date.getTime() - newsF.date.getTime());
+          this.newsListSubject?.next(newsList); 
+        },
+        error:(err)=> { console.error(`Ошибка при получении данных c сервера: ${err}`)}        
+      });
+    }
+
+    return this.newsListSubject.asObservable();
   }
 
   public addNews(news: INewsData){
-    var editNews = new News(news.id, news.date, news.title, news.body, news.type);
-    if(this.newsArray.length > 0){
-      var newsIndex = this.newsArray.findIndex(x=>x.id == editNews.id);
-      if(newsIndex > -1){
-        this.newsArray[newsIndex] = editNews;
+    if(this.newsListSubject){
+      var newsArray = this.newsListSubject?.value ?? [];
+      var editNews = new News(news.id, news.date, news.title, news.body, news.type);
+      if(newsArray.length > 0){
+        var newsIndex = newsArray.findIndex(x=>x.id == editNews.id);
+        if(newsIndex < 0){
+          var maxNewsId = Math.max.apply(Math, newsArray.map(function(n) { return n.id; }));
+          editNews.id = maxNewsId + 1;
+        }
       }
       else{
-        var maxNewsId = Math.max.apply(Math, this.newsArray.map(function(n) { return n.id; }));
-        editNews.id = maxNewsId + 1;
-        this.newsArray.push(editNews);      
+        editNews.id = 0;
       }
+      this.httpService.post<ServerResponse<void>>('https://localhost:44379/api/NewsData/AddNews',editNews)
+      .pipe()
+      .subscribe({
+        next: (response)=> {
+          if (response.isSuccess === false) {
+            console.error(`При попытке изменить список новостей возникла ошибка: ${response.errorText}`)            
+          }
+          else{            
+            var newsIndex = newsArray.findIndex(x=>x.id == editNews.id);
+            if(newsIndex > -1){
+              newsArray[newsIndex] = editNews;
+            }
+            else{
+              newsArray.push(editNews);      
+            }       
+            newsArray = newsArray.sort((newsF, newsS)=>newsS.date.getTime() - newsF.date.getTime());
+            this.newsListSubject?.next(newsArray);
+          }           
+        },
+        error:(err)=> { console.error(`При попытке изменить список новостей возникла ошибка: ${err}`)}        
+      });
     }
-    else{
-      editNews.id = 0;
-      this.newsArray.push(editNews); 
-    }
-
-    this.newsArray = this.newsArray.sort((newsF, newsS)=>newsS.date.getTime() - newsF.date.getTime());
-  }
+  }  
 
   public deleteNews(news:News){
-    var newsIndex = this.newsArray.indexOf(news, 0);
-    if (newsIndex > -1) {
-      this.newsArray.splice(newsIndex, 1);
-   }
+    if(this.newsListSubject){  
+      var params = new HttpParams().set('newsId',news.id)    
+      this.httpService.delete<ServerResponse<void>>('https://localhost:44379/api/NewsData/DeleteNews',{
+        params: params
+      })
+      .pipe()
+      .subscribe({
+        next: (response)=> {  
+          var newsArray = this.newsListSubject?.value ?? [];         
+          if (response.isSuccess === false) {
+            console.error(`При попытке удалить новость возникла ошибка: ${response.errorText}`)            
+          }
+          else{
+            var newsIndex = newsArray.indexOf(news, 0);
+            if (newsIndex > -1) {
+
+              newsArray.splice(newsIndex, 1);
+            }
+            this.newsListSubject?.next(newsArray);
+          }           
+        },
+        error:(err)=> { console.error(`При попытке удалить новость возникла ошибка: ${err}`)}        
+      });
+    }
   }
 }

@@ -11,16 +11,30 @@ namespace AngularAppDataServer.Controllers
     public class NewsDataController : ControllerBase
     {
         private readonly NewsDataService dataService;
+        private readonly ExecuteService executeService;
 
-        public NewsDataController(NewsDataService dataService)
+        public NewsDataController(NewsDataService dataService, ExecuteService executeService)
         {
             this.dataService = dataService;
+            this.executeService = executeService;
         }
 
         [HttpGet]
-        public async Task<IEnumerable<News>> GetNews()
+        public async Task<ServiceResponse<IEnumerable<News>>> GetNews()
         {
-            return await dataService.GetNewsData().ConfigureAwait(false);
+            return await executeService.TryExecute(() => dataService.GetNewsData());
+        }
+
+        [HttpPost]
+        public async Task<ServiceResponse<object>> AddNews(News news)
+        {
+            return await executeService.TryExecute(() => dataService.AddNews(news));
+        }
+
+        [HttpDelete]
+        public async Task<ServiceResponse<object>> DeleteNews(int newsId)
+        {
+            return await executeService.TryExecute(() => dataService.DeleteNews(newsId));
         }
     }
 }

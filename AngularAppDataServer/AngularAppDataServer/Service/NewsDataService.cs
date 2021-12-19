@@ -1,5 +1,6 @@
 ﻿using AngularAppDataServer.Models;
 using AngularAppDataServer.Repositories;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -17,6 +18,16 @@ namespace AngularAppDataServer.Service
         internal async Task<IEnumerable<News>> GetNewsData()
         {
             return await dataRepository.LoadNewsData().ConfigureAwait(false);
+        }
+
+        internal async Task AddNews(News news)
+        {
+            await dataRepository.AddNews(news).ConfigureAwait(false);
+        }
+
+        internal async Task DeleteNews(int newsId)
+        {
+            await dataRepository.DeleteNews(newsId).ConfigureAwait(false);
         }
     }
 }

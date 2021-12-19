@@ -1,12 +1,15 @@
 ﻿using AngularAppDataServer.Models;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace AngularAppDataServer.Repositories
 {
     public class NewsDataRepository
     {
+        static object locker = new object();
+
         private List<News> newsList = new List<News>
         {
             new News(1, new DateTime(1961,3,12), "Первый человек в космосе", "Советский космонавт Юрий Гагарин на космическом корабле «Восток-1» стартовал с космодрома «Байконур» и впервые в мире совершил орбитальный облёт планеты Земля. Полёт в околоземном космическом пространстве продлился 108 минут.", NewsType.Type4_Science),
@@ -16,7 +19,53 @@ namespace AngularAppDataServer.Repositories
             new News(5, new DateTime(1703,4,27), "Основан город Санкт-Петербург", "В день Святой Троицы, в устье реки Невы на Заячьем острове Петром I была заложена крепость. Именно этот день считается днём основания Санкт-Петербурга, который более 200 лет являлся столицей Российской империи. План будущей крепости начертил сам Пётр. Своё имя — «Санкт-Питербурх» — крепость получила в Петров день, когда здесь была заложена церковь Святых апостолов Петра и Павла. Это имя получил и возникший вокруг острова город. Апостол Пётр, по христианскому преданию, был хранителем ключей от рая, что также казалось русскому царю символичным, поскольку город, носящий имя его небесного покровителя, должен был стать «ключом от Балтийского моря».", NewsType.Type2_Tourism)
         };
 
-        
+        internal Task DeleteNews(int newsId)
+        {
+            lock (locker)
+            {
+                if (newsList.Any())
+                {
+
+                    var newsIdForDelete = newsList.FindIndex(x => x.Id == newsId);
+                    if (newsIdForDelete >= 0)
+                    {
+                        newsList.RemoveAt(newsIdForDelete);
+                    }
+
+                }
+            }
+
+            return Task.CompletedTask;
+        }
+
+        internal Task AddNews(News news)
+        {
+            if (news != null) 
+            {
+                lock (locker)
+                {
+                    if (newsList.Any())
+                    {
+                        var existingNewsIndex = newsList.FindIndex(x => x.Id == news.Id);
+                        if (existingNewsIndex >= 0)
+                        {
+                            newsList[existingNewsIndex] = news;
+                        }
+                        else
+                        {
+                            newsList.Add(news);
+                        }
+                    }
+                    else
+                    {
+                        newsList.Add(news);
+                    }
+                }
+            }
+
+            return Task.CompletedTask;
+        }
+
         internal Task<IEnumerable<News>> LoadNewsData()
         {
             return Task.FromResult((IEnumerable<News>)newsList);
