@@ -9,5 +9,4 @@ export class NewsTypePipePipe implements PipeTransform {
   transform(value: NewsType | null, ...args: unknown[]): unknown {
     return !value ? value : value[0];
   }
-
 }

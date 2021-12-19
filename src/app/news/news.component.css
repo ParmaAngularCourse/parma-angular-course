@@ -4,6 +4,26 @@
   margin: 10px auto;
   display: flex;
   align-items: center;
+  width: 300px;
+  height: 300px;
+}
+
+.wrapper {
+  display: flow-root;
+}
+
+.left {
+  float: left;
+}
+
+.right {
+  float: right;
+  margin-top: -370px;
+}
+
+.center {
+  margin-left: 370px;
+  margin-right: 370px;
 }
 
 .checked {
@@ -45,4 +65,11 @@
 
 .context {
   position: absolute;
+}
+
+.search {
+  display: flex;
+  width: 100%;
+  margin-bottom: 5px;
+  height: 30px;
 }

@@ -3,7 +3,8 @@ export type Report = {
   body: string,
   timestamp: string,
   isChecked: boolean,
-  type: NewsType | null
+  type: NewsType | null,
+  rowNum?: number
 }
 
 export enum NewsType {

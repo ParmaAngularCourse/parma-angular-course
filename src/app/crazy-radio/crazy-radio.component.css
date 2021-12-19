@@ -1,0 +1,16 @@
+.checked {
+  font-weight: bold;
+}
+
+  .checked svg path {
+    fill: deeppink;
+  }
+
+.crazy-radio:hover {
+  cursor: default;
+  text-decoration-line: underline;
+}
+
+.not-checked:hover svg path {
+  fill: pink;
+}

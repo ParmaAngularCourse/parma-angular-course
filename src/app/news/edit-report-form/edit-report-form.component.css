@@ -1,3 +1,8 @@
 .edit-input {
   width: 90%;
 }
+
+.error {
+  color: lightcoral;
+  width: 90%;
+}

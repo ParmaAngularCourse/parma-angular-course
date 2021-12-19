@@ -1,24 +1,34 @@
 import { Injectable } from '@angular/core';
 import { Report } from './news/news-types';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { BehaviorSubject } from 'rxjs';
+import { combineAll, concat, flatMap, map, mergeAll, toArray } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
 export class NewsService {
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {
+    this.http.get<Report[]>(this.newsGetApi).subscribe((x: any) => this.newsSubject?.next(x));
+  }
 
-  private newsSubject?: BehaviorSubject<Report[]>;
+  private newsSubject = new BehaviorSubject<Report[]>([]);
+  newsGetApi = "https://localhost:44360/News";
 
-  public getNews(): Observable<Report[]> {
-    if (!this.newsSubject) {
-      this.newsSubject = new BehaviorSubject<Report[]>([]);
-      this.http.get<Report[]>("https://localhost:44360/News").subscribe((x: any) => this.newsSubject?.next(x));
-    }
-    return this.newsSubject.asObservable();
+  public getNews(filter: string): Observable<Report[]> {
+    let rowNum = 1;
+    if (filter != "") this.http.get<Report[]>(this.newsGetApi, { params: { filter: filter } }).pipe(
+      mergeAll(),
+      map((x: Report) => {
+        x.rowNum = rowNum <= 3 ? rowNum++ : rowNum = 1;
+        console.log(x);
+        return (x);
+      }),
+      toArray()
+    ).subscribe((x: any) => this.newsSubject?.next(x));
+    return this.newsSubject;
   }
 
   public saveReport(report: Report, i: number) {

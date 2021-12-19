@@ -15,6 +15,7 @@ import { NewsTypePipePipe } from './news-type-pipe.pipe';
 import { TooltipDirective } from './tooltip.directive';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { HttpInterseptorService } from './http-interseptor.service';
+import { CrazyRadioComponent } from './crazy-radio/crazy-radio.component';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,8 @@ import { HttpInterseptorService } from './http-interseptor.service';
     RightsDirective,
     UpperCaseNamePipePipe,
     NewsTypePipePipe,
-    TooltipDirective
+    TooltipDirective,
+    CrazyRadioComponent
   ],
   imports: [
     BrowserModule,

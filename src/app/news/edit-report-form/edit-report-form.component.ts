@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Report, NewsType, newsTypeColors } from '../news-types';
 import { Role } from '../roles';
 
@@ -11,23 +11,25 @@ import { Role } from '../roles';
 })
 export class EditReportFormComponent {
 
+  constructor(private fb: FormBuilder) { }
+
   @Output() saveReport: EventEmitter<Report> = new EventEmitter();
   @Input() report!: Report;
 
-  editReportForm!: FormGroup;
   newsTypeColors = newsTypeColors;
+  newsTypeEnum = NewsType;
+  roleEnum = Role;
 
-  constructor(private fb: FormBuilder) { }
-  ngOnChanges() { this.initForm(); }
+  ngOnChanges() { this.editReportForm.patchValue(this.report); }
 
-  initForm() {
-    this.editReportForm = this.fb.group(this.report);
-  }
+  editReportForm: FormGroup = this.fb.group({
+    header: ["", Validators.required],
+    body: ["", [Validators.required, Validators.minLength(3)]],
+    timestamp: ["", Validators.required],
+    type: [null, Validators.required],
+  });
 
   submit() {
     this.saveReport.emit(this.editReportForm.value);
   }
-
-  newsTypeEnum = NewsType;
-  roleEnum = Role;
 }
