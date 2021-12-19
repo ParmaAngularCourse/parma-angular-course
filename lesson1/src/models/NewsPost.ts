@@ -10,7 +10,7 @@ export class NewsPost {
     public uploadLocalDate : string;
     public tag: NewsPostTag ;
 
-    constructor(element?: NewsPost) {
+    constructor(element?: Partial<NewsPost>) {
         this.id = element?.id ?? -1;
         this.isSelected = element?.isSelected ?? false;
         this.title = element?.title ?? "title";

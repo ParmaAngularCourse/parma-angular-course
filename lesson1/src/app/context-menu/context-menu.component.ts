@@ -7,7 +7,6 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 })
 export class ContextMenuComponent {
 
-  constructor() { }
   @Input() x = 0;
   @Input() y = 0;
 

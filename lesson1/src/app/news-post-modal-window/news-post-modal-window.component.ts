@@ -60,6 +60,4 @@ export class NewsPostModalWindowComponent {
   onDateInputChanged = (value: Date) => {
     this.editedDate = value;
   };
-
-
 }

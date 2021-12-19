@@ -1,6 +1,6 @@
 <div>
     <div class="card" [ngClass]="{'selected-card ':singlePost.isSelected}">
-        <input type="checkbox" [value]="singlePost.isSelected" (click)='onSelect()'>
+        <input type="checkbox" [value]="singlePost.isSelected" [checked]="singlePost.isSelected" (click)='onSelect()'>
         <span>Text: {{singlePost.title}}</span>
         <br>
         <span>Title: {{singlePost.text}}</span>

@@ -21,8 +21,6 @@ export class AllNewsComponent {
   news: NewsPost[] = new NewsService().GetNews();
   postToEdit: NewsPost = new NewsPost();
 
-  constructor() { }
-
   onDeletePost(postId: number) {
     this.news = this.news.filter(item => item.id != postId);
   }
