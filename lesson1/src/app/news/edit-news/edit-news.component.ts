@@ -16,13 +16,18 @@ export class EditNewsComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  clickSave(date:string, title:string, text: string, subject: string){
+  clickSave(date:string, title:string, text: string){
     console.log("save modal");
-    this.news.dt = new Date(date);
+    date = date.replace(', ','T');
+    let pattern = /(\d{2})\.(\d{2})\.(\d{4})/;
+    let dt = date.replace(pattern,'$3-$2-$1');
+    this.news.dt = new Date(dt);;
+    console.log(this.news.dt);
     this.news.title = title;
     this.news.text = text;
-    this.news.subject = parseInt(subject);
-    
+    let radiobtn = <HTMLInputElement>document.querySelector('input[name="subject"]:checked');
+    this.news.subject = parseInt(radiobtn!.value);
+
     this.closeModal.emit(this.news);
   }
 

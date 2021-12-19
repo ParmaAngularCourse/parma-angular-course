@@ -93,6 +93,7 @@ export class NewsComponent implements OnInit {
     if ($event.id < this.newsItems.length+1)
     {
       this.newsItems[$event.id-1] =  (JSON.parse(JSON.stringify($event)));
+      this.newsItems[$event.id-1].dt = $event.dt;
     }
     else
     {
