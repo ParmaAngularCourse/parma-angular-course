@@ -1,6 +1,6 @@
 <div (contextmenu)="onRightClick($event)">
     <button (click)="onAddItem()" class="addButton newsButton">Добавить</button> 
-    <button (click)="onDeleteChecked()" class="newsButton" [disabled]="!hasSelectedItems" >Удалить выделенные</button>
+    <button (click)="onDeleteChecked()" class="newsButton" [disabled]="!hasSelectedItems" *appRightsD >Удалить выделенные</button>
     <app-single-post *ngFor="let item of newsList" [single_post]="item" (selectionChanged)="onSelectionChanged()"
         (deleteItem)="onDeleteItem($event)" (editItem)="onEditItem($event)"></app-single-post>
 </div>
@@ -18,7 +18,7 @@
             [ngTemplateOutletContext]="{
                 inputCaption: 'Заголовок', 
                 inputValue: selectedPost?.title, 
-                onChange: onTitleChange.bind(this)
+                onChange: onTitleChange
             }">
         </ng-container>
         <ng-container 
@@ -49,29 +49,31 @@
 
         <p class="errorText" *ngIf="showErrorText">Не удалось сохранить. Проверьте, что все поля заполнены корректно</p>
         
-        <button class="newsButton" (click)="onSaveItem()">Сохранить</button>
+        <button class="newsButton" *appRightsD (click)="onSaveItem()">Сохранить</button>
         <button class="newsButton" (click)="onCancelEditing()">Отмена</button>               
     </ng-container>
 </app-news-modal-window>
 
 <ng-template #simpleTemplateInput let-inputCaption="inputCaption" let-inputValue="inputValue" 
     let-onChange="onChange" >
-    <p>{{inputCaption}}</p>
+    <label style="display: block;">{{inputCaption}}</label>
     <input type='text' [value]="inputValue" #item (change)="onChange(item.value)" >
 </ng-template>
 
 <ng-template #dateTemplateInput let-inputCaption="inputCaption" let-inputValue="inputValue" 
     let-onChange="onChange" >
-    <p>{{inputCaption}}</p>
-    <input type='date' [ngModel]="inputValue | date:'yyyy-MM-dd'" 
+    <label style="display: block;">{{inputCaption}}</label>
+    <input type='date' [valueAsDate]="inputValue"
         #itemDate (change)="onChange(itemDate.value)" >
 </ng-template>
 
 <ng-template #radioButtonTemplateInput let-inputCaption="inputCaption" let-inputValue="inputValue" 
     let-onChange="onChange" let-inputArray="inputArray" >
-    <div  *ngFor="let i of inputArray">
-        <input type='radio' #radioItem (change)="onChange(radioItem.value)" name="newsType" [id]="'newsType' + i.id"  
-            [value]="i.id" >
-        <label for="'newsType' + item.id">{{i.name}}</label>  
-    </div>        
+    <div style="margin-top: 5px; margin-bottom: 5px;">
+        <div  appBgnD="lightcyan" *ngFor="let i of inputArray">
+            <input type='radio' #radioItem (change)="onChange(radioItem.value)" name="newsType" [id]="'newsType' + i.id"  
+                [value]="i.id" [checked]="i.id === inputValue"  >
+            <label for="'newsType' + item.id">{{i.name}}</label>  
+        </div>        
+    </div>
 </ng-template>

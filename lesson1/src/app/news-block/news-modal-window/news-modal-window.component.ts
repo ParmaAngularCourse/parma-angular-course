@@ -1,7 +1,4 @@
-import { DatePipe } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angular/core';
-import * as moment from 'moment';
-import { NewsBlock } from 'src/app/post-types';
 
 @Component({
   selector: 'app-news-modal-window',
@@ -12,29 +9,25 @@ import { NewsBlock } from 'src/app/post-types';
 export class NewsModalWindowComponent {
 
 
-  public windowShown: boolean = false;
+  windowShown: boolean = false;
 
   constructor(private cd: ChangeDetectorRef)
   {
 
   }
 
-  ngDoCheck(){
+  ngDoCheck() {
     //console.log("new-modal");
-  }
-
-  ngAfterViewInit(): void {
-
   }
 
   show() {
     this.windowShown = true;
-    this.cd.markForCheck();
+    //this.cd.markForCheck();
   }
 
   hide() {
     this.windowShown = false;
-    this.cd.markForCheck();
+    //this.cd.markForCheck();
   }
 }
 
