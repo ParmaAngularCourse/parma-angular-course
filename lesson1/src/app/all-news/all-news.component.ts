@@ -30,7 +30,8 @@ export class AllNewsComponent {
     this.modalComponent.Open();
   }
 
-  onOpenModal() {
+  onAddPost() {
+    this.postToEdit = new NewsPost();
     this.modalComponent.Open();
   }
   onCloseModal() {

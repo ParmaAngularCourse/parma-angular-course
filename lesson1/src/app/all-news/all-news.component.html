@@ -9,7 +9,7 @@
     </app-modal-common>
 
     <div (contextmenu)="onRightClick($event)">
-        <button (click)="onOpenModal()">Добавить</button>
+        <button (click)="onAddPost()">Добавить</button>
         <button (click)="onDeleteSelected()" [disabled]="!isAnyToDelete()">Удалить выбранные</button>
 
         <app-singe-card-news *ngFor="let item of news" [singlePost]="item" (deletePost)="onDeletePost($event)"
