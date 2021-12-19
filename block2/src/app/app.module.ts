@@ -12,7 +12,8 @@ import { GetNewsColorPipe } from './pipes/get-news-color.pipe';
 import { NewsStylesDirective } from './Directives/news-styles.directive';
 import { NewsTypeColorDirective } from './Directives/news-type-color.directive';
 import { CheckAccessDirective } from './Directives/check-access.directive';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { AuthorizationService } from './service/authorization.service';
 
 @NgModule({
   declarations: [
@@ -32,7 +33,13 @@ import { HttpClientModule } from '@angular/common/http';
     BrowserModule,
     HttpClientModule
   ],
-  providers: [],
+  providers: [
+    {
+      provide:HTTP_INTERCEPTORS,
+      useClass: AuthorizationService,
+      multi: true
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { 

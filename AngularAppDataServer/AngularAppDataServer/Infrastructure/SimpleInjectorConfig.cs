@@ -1,4 +1,5 @@
-﻿using AngularAppDataServer.Repositories;
+﻿using AngularAppDataServer.Infrastructure;
+using AngularAppDataServer.Repositories;
 using AngularAppDataServer.Service;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
@@ -39,12 +40,14 @@ namespace Parma.Gasps.BackgroundJobShedulerService.Infrastructure
         private static void RegisterServises(Container container)
         {
             container.Register<NewsDataService, NewsDataService>(Lifestyle.Scoped);
-            container.Register<ExecuteService, ExecuteService>(Lifestyle.Scoped);            
+            container.Register<ExecuteService, ExecuteService>(Lifestyle.Scoped);
+            container.Register<AuthService, AuthService>(Lifestyle.Scoped);
         }
 
         private static void RegisterRepositories(Container container)
         {
             container.Register<NewsDataRepository, NewsDataRepository>(Lifestyle.Singleton);
+            container.Register<UsersRepository, UsersRepository>(Lifestyle.Singleton);
         }
     }
 }

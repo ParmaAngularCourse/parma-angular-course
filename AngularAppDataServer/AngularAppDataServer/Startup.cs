@@ -11,6 +11,8 @@ using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
 using Microsoft.AspNetCore.Localization;
 using System.Globalization;
+using AngularAppDataServer.Infrastructure;
+using System;
 
 namespace AngularAppDataServer
 {
@@ -47,9 +49,38 @@ namespace AngularAppDataServer
 
             _container.Options.DefaultScopedLifestyle = new AsyncScopedLifestyle();
             SimpleInjectorConfig.RegisterSimpleInjectorService(services, _container, _configuration);
-            services.AddSwaggerGen(c =>
+            /*services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "AngularAppDataServer", Version = "v1" });
+            });*/
+
+            services.AddSwaggerGen(config =>
+            {
+                config.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Version = "v1",
+                    Title = "AngularAppDataServer",
+                });
+
+                var securityLoginScheme = new OpenApiSecurityScheme
+                {
+                    In = ParameterLocation.Header,
+                    Description = "Учетные данные пользователя в формате Login||Password.",
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.ApiKey,
+                    Reference = new OpenApiReference
+                    {
+                        Type = ReferenceType.SecurityScheme,
+                        Id = "AngularAppDataServer",
+                    },
+                };
+
+                config.AddSecurityDefinition(securityLoginScheme.Reference.Id, securityLoginScheme);
+
+                config.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    { securityLoginScheme, Array.Empty<string>() },
+                });
             });
         }
 
@@ -77,6 +108,8 @@ namespace AngularAppDataServer
             app.UseRouting();
 
             app.UseAuthorization();
+
+            app.UseMiddleware<AuthenticationMiddleware>(_container);
 
             app.UseCors("ApiCorsPolicy");
 
