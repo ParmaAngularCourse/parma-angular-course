@@ -8,6 +8,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, In
 })
 export class NewsModalWindowComponent {
 
+  @Input() windowTitle: string = "";
 
   windowShown: boolean = false;
 

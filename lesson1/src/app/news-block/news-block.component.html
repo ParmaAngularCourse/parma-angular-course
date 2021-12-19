@@ -7,18 +7,14 @@
 
 <app-context-menu #contextMenuComponent (checkEverything)="onCheckEverything()"></app-context-menu>
 
-<app-news-modal-window #newsModalWindowComponent >
-    <div class="modalWindowHeader"  >
-        <span class="headerTitle">{{mode}}</span>
-        <button class="closeButton" (click)="onCancelEditing()">X</button>
-    </div>
+<app-news-modal-window #newsModalWindowComponent windowTitle="{{mode}}" >    
     <ng-container>
         <ng-container 
             [ngTemplateOutlet]="simpleTemplateInput" 
             [ngTemplateOutletContext]="{
                 inputCaption: 'Заголовок', 
                 inputValue: selectedPost?.title, 
-                onChange: onTitleChange
+                onChange: onTitleChange.bind(this)
             }">
         </ng-container>
         <ng-container 
@@ -56,20 +52,20 @@
 
 <ng-template #simpleTemplateInput let-inputCaption="inputCaption" let-inputValue="inputValue" 
     let-onChange="onChange" >
-    <label style="display: block;">{{inputCaption}}</label>
+    <label class="label_style">{{inputCaption}}</label>
     <input type='text' [value]="inputValue" #item (change)="onChange(item.value)" >
 </ng-template>
 
 <ng-template #dateTemplateInput let-inputCaption="inputCaption" let-inputValue="inputValue" 
     let-onChange="onChange" >
-    <label style="display: block;">{{inputCaption}}</label>
+    <label class="label_style">{{inputCaption}}</label>
     <input type='date' [valueAsDate]="inputValue"
         #itemDate (change)="onChange(itemDate.value)" >
 </ng-template>
 
 <ng-template #radioButtonTemplateInput let-inputCaption="inputCaption" let-inputValue="inputValue" 
     let-onChange="onChange" let-inputArray="inputArray" >
-    <div style="margin-top: 5px; margin-bottom: 5px;">
+    <div class="radio_buttons_block">
         <div  appBgnD="lightcyan" *ngFor="let i of inputArray">
             <input type='radio' #radioItem (change)="onChange(radioItem.value)" name="newsType" [id]="'newsType' + i.id"  
                 [value]="i.id" [checked]="i.id === inputValue"  >

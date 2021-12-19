@@ -2,3 +2,11 @@
     margin: 10px 0px 0px 50px;
 }
 
+.label_style {
+    display: block;
+}
+
+.radio_buttons_block {
+    margin-top: 5px; 
+    margin-bottom: 5px;
+}

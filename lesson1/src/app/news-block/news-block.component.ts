@@ -3,8 +3,6 @@ import { ContextMenuComponent } from '../context-menu/context-menu.component';
 import { NewsBlock, NewsType } from '../post-types';
 import { NewsModalWindowComponent } from './news-modal-window/news-modal-window.component';
 
-type MyNewsListType = Array<NewsBlock>;
-
 @Component({
   selector: 'app-news-block',
   templateUrl: './news-block.component.html',
@@ -116,7 +114,7 @@ export class NewsBlockComponent {
     this.selectedPost.date = value;
   }
   
-  onTitleChange = (value: string) => {
+  onTitleChange(value: string) {
     this.selectedPost.title = value;
   }
   

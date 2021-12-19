@@ -1,7 +1,10 @@
 <ng-container *ngIf="windowShown">
     <div class="bigShadow"></div>
     <div class="modalWindow">
-        <ng-content select=".modalWindowHeader"></ng-content>
+        <div class="modalWindowHeader"  >
+            <span class="headerTitle">{{windowTitle}}</span>
+            <button class="closeButton" (click)="hide()">X</button>
+        </div>
         <div class="modalWindowContent">
             <ng-content select="ng-container"></ng-content>
              
