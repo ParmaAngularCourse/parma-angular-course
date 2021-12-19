@@ -59,7 +59,7 @@
 <ng-template #dateTemplateInput let-inputCaption="inputCaption" let-inputValue="inputValue" 
     let-onChange="onChange" >
     <label class="label_style">{{inputCaption}}</label>
-    <input type='date' [valueAsDate]="inputValue"
+    <input type='date' [ngModel]="inputValue | date:'yyyy-MM-dd'" 
         #itemDate (change)="onChange(itemDate.value)" >
 </ng-template>
 

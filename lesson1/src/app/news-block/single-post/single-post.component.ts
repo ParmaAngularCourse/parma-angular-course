@@ -5,7 +5,7 @@ import { NewsBlock } from 'src/app/post-types';
   selector: 'app-single-post',
   templateUrl: './single-post.component.html',
   styleUrls: ['./single-post.component.css'],
-  //changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SinglePostComponent {
 

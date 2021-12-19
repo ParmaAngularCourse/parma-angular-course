@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { ContextMenuComponent } from '../context-menu/context-menu.component';
 import { NewsBlock, NewsType } from '../post-types';
 import { NewsModalWindowComponent } from './news-modal-window/news-modal-window.component';
@@ -6,7 +6,8 @@ import { NewsModalWindowComponent } from './news-modal-window/news-modal-window.
 @Component({
   selector: 'app-news-block',
   templateUrl: './news-block.component.html',
-  styleUrls: ['./news-block.component.css']  
+  styleUrls: ['./news-block.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush 
 })
 export class NewsBlockComponent {
   

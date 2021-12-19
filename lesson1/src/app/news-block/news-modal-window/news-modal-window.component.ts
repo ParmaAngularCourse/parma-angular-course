@@ -4,7 +4,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, In
   selector: 'app-news-modal-window',
   templateUrl: './news-modal-window.component.html',
   styleUrls: ['./news-modal-window.component.css'],
-  //changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NewsModalWindowComponent {
 
@@ -23,12 +23,12 @@ export class NewsModalWindowComponent {
 
   show() {
     this.windowShown = true;
-    //this.cd.markForCheck();
+    this.cd.markForCheck();
   }
 
   hide() {
     this.windowShown = false;
-    //this.cd.markForCheck();
+    this.cd.markForCheck();
   }
 }
 
