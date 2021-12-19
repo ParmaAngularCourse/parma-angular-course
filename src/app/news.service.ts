@@ -18,12 +18,11 @@ export class NewsService {
   newsGetApi = "https://localhost:44360/News";
 
   public getNews(filter: string): Observable<Report[]> {
-    let rowNum = 1;
+    let colNum = 1;
     if (filter != "") this.http.get<Report[]>(this.newsGetApi, { params: { filter: filter } }).pipe(
       mergeAll(),
       map((x: Report) => {
-        x.rowNum = rowNum <= 3 ? rowNum++ : rowNum = 1;
-        console.log(x);
+        x.colNum = colNum <= 3 ? colNum++ : colNum = 1;
         return (x);
       }),
       toArray()

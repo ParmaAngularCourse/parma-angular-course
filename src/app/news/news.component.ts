@@ -35,7 +35,7 @@ export class NewsComponent {
     type: null
   };
   modalIndex = -1;
-  modalData : Report = this.defaultReport;
+  modalData: Report = this.defaultReport;
   modalHeader!: string;
   isContextMenuVisible = false;
   contextMenuPosition: { left: number, top: number; } = { left: 0, top: 0 };
@@ -48,7 +48,7 @@ export class NewsComponent {
     ).subscribe((searchValue: string) => {
       if (searchValue != this.searchText) {
         this.searchText = searchValue;
-        this._newsService.getNews(searchValue).pipe(takeUntil(this.ngUnsubscribe$)).subscribe(((data: any) => { this.news = data; this.ref.markForCheck(); console.log(data); }), (error: HttpErrorResponse) => console.log(error));
+        this._newsService.getNews(searchValue).pipe(takeUntil(this.ngUnsubscribe$)).subscribe(((data: any) => { this.news = data; this.ref.markForCheck(); }), (error: HttpErrorResponse) => console.log(error));
       }
     });
   }
@@ -61,6 +61,12 @@ export class NewsComponent {
     this.modalIndex = this.news.length;
     this.modalHeader = "Добавить новость";
     this.modalData = Object.assign({}, this.defaultReport);
+    const counts = this.news.reduce((tally: Record<number, number>, x) => {
+      let i = x.colNum ?? 0;
+      if (i > 0) { tally[i] = (tally[i] || 0) + 1; }
+      return tally;
+    }, {1:0, 2:0, 3:0});
+    this.modalData.colNum = (Object.keys(counts) as unknown as Array<number>).find(key => counts[key] === Math.min(...(Object.values(counts) as unknown as Array<number>)));
     this.modal.show();
   }
 

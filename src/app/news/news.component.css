@@ -1,7 +1,7 @@
 .news {
   padding: 30px;
   background-color: ghostwhite;
-  margin: 10px auto;
+  margin: 10px;
   display: flex;
   align-items: center;
   width: 300px;
@@ -9,21 +9,19 @@
 }
 
 .wrapper {
-  display: flow-root;
+  display: grid;
 }
 
 .left {
-  float: left;
+  grid-column-start: 1;
 }
 
 .right {
-  float: right;
-  margin-top: -370px;
+  grid-column-start: 3;
 }
 
 .center {
-  margin-left: 370px;
-  margin-right: 370px;
+  grid-column-start: 2;
 }
 
 .checked {

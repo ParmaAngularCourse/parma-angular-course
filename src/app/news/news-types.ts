@@ -4,7 +4,7 @@ export type Report = {
   timestamp: string,
   isChecked: boolean,
   type: NewsType | null,
-  rowNum?: number
+  colNum?: number
 }
 
 export enum NewsType {
