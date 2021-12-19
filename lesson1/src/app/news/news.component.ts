@@ -1,10 +1,11 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, QueryList, TemplateRef, ViewChild, ViewChildren, ViewContainerRef } from '@angular/core';
 import { ContextMenuComponent } from './context-menu/context-menu.component';
-import { NewsItem, NewsObj, Theme } from './news-types';
+import { NewsItem, NewsContent, Theme } from './news-types';
 import { PopupDialogComponent } from './popup-dialog/popup-dialog.component';
 import { AdThemeDirective } from './ad-theme.directive';
 import { User } from './user-rights';
 import { NewsSourceService } from '../news-source.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 
 @Component({
@@ -32,16 +33,31 @@ export class NewsComponent {
          private cdr: ChangeDetectorRef,
          private _newsSourceService: NewsSourceService)
  { 
-    this.refreshNewsList();
+    //this.refreshNewsList();
       this.checkCheckboxes();     
+      // this._newsSourceService.getNews().subscribe({
+      //     complete: (data: NewsItem[]) => { 
+      //       this.ourNews = data;
+      //       return data;
+      //     } ,
+      //     error: (e: HttpErrorResponse) => {console.log(e.status + ' ' + e.message );}
+      //   });
+
+        this._newsSourceService.getNews().subscribe(
+          (data) => {
+            this.ourNews = data; 
+            console.log("Данные"+ data.length);               
+          },
+          (e: HttpErrorResponse) => console.log(e.status + ' ' + e.message )
+        );
   }
 
-  refreshNewsList(){
-    this.ourNews = this._newsSourceService.getNews();
-  }  
+  // refreshNewsList(){
+  //   this.ourNews = this._newsSourceService.getNews().pipe(el=> el);
+  // }  
  
   getEmptyNews(): NewsItem{
-    return {id: 0, news: {  caption: "", text: "", date: new Date(), theme: Theme.Unknown },  checked: false };
+    return {id: 0, content: {  caption: "", text: "", date: new Date(), theme: Theme.Unknown },  checked: false };
   } 
 
   onShowAddNewsDialog(){
@@ -54,13 +70,13 @@ export class NewsComponent {
     var editedNews =  this.ourNews.find(n=> n.id == id) ;
     this.editDialogCaption = `Редактирование ${editedNews?.id} новости`;
     this.editDialogNewsItem = editedNews ?? this.getEmptyNews();
-    this.unsavedNewsItem.news = {... this.editDialogNewsItem.news};
+    this.unsavedNewsItem.content = {... this.editDialogNewsItem.content};
     this.popupDialog.show();
   } 
 
   onDeleteNews(id?: number){
     this._newsSourceService.deleteNews(id);
-    this.refreshNewsList();
+    //this.refreshNewsList();
   }
 
   checkCheckboxes(){
@@ -83,12 +99,12 @@ export class NewsComponent {
     const currentNewsIndex= this.ourNews.findIndex((el)=> el.id === this.editDialogNewsItem.id);
 
     if (currentNewsIndex > -1) { 
-        this._newsSourceService.updateNewsItem(currentNewsIndex,this.unsavedNewsItem.news);            
+        this._newsSourceService.updateNewsItem(currentNewsIndex,this.unsavedNewsItem.content);            
     } else {
-        this._newsSourceService.addNews(this.unsavedNewsItem.news);
+        this._newsSourceService.addNews(this.unsavedNewsItem.content);
     }   
     this.onClickClosePopupButton();
-    this.refreshNewsList();
+    //this.refreshNewsList();
   }
 
 
@@ -101,20 +117,20 @@ export class NewsComponent {
   onJustClick=() => this.menuComponent.close();
 
   onRadioButChange(value: string){    
-    this.unsavedNewsItem.news.theme = value as Theme;
+    this.unsavedNewsItem.content.theme = value as Theme;
   }
 
   onDialogInpChange(event: Event, fieldName: string){
     let newValue = (event.currentTarget as HTMLInputElement).value;
     switch(fieldName){
       case 'text':
-        this.unsavedNewsItem.news.text = newValue;
+        this.unsavedNewsItem.content.text = newValue;
         break;
       case 'caption':
-        this.unsavedNewsItem.news.caption = newValue;
+        this.unsavedNewsItem.content.caption = newValue;
         break;
       case 'date':
-        this.unsavedNewsItem.news.date = (event.currentTarget as HTMLInputElement).valueAsDate ?? new Date();
+        this.unsavedNewsItem.content.date = (event.currentTarget as HTMLInputElement).valueAsDate ?? new Date();
         break;
       }   
   }

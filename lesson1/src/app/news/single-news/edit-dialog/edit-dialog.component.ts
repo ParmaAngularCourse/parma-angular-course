@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit, Output } from '@angular/core';
 import { EventEmitter } from '@angular/core';
-import { NewsObj, Theme } from '../../news-types';
+import { NewsContent, Theme } from '../../news-types';
 import { User } from '../../user-rights';
 
 @Component({
@@ -12,8 +12,8 @@ import { User } from '../../user-rights';
 export class EditDialogComponent implements OnInit {
 
   @Input()currentUser!: User;
-  @Input()newsDetails!: NewsObj;
-  @Output() saveNews = new EventEmitter<NewsObj> ();
+  @Input()newsDetails!: NewsContent;
+  @Output() saveNews = new EventEmitter<NewsContent> ();
   @Output() closeEditDialog = new EventEmitter();
   constructor() { }
 

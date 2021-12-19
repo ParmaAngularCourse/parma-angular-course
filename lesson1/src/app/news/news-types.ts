@@ -1,11 +1,10 @@
 export type NewsItem =  {
     id: number,
-    news: NewsObj,
+    content: NewsContent,
     checked: boolean, 
-  //  allThemes: []
   }
 
-export type NewsObj = {
+export type NewsContent = {
   caption: string,
   text: string,
   date: Date

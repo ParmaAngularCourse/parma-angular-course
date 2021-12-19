@@ -17,14 +17,14 @@
             <span class="closeIcon" (click)="onClickClosePopupButton()" title="Закрыть"> × </span>
         </legend>
        
-        <ng-container *ngTemplateOutlet="dataInpTemplate; context: {inpValue: editDialogNewsItem.news.date
+        <ng-container *ngTemplateOutlet="dataInpTemplate; context: {inpValue: editDialogNewsItem.content.date
                 , inpCaption: 'Дата', fieldName: 'date'}"></ng-container>
-        <ng-container *ngTemplateOutlet="textInpTemplate; context: {inpValue: editDialogNewsItem.news.caption
+        <ng-container *ngTemplateOutlet="textInpTemplate; context: {inpValue: editDialogNewsItem.content.caption
                 , inpCaption: 'Заголовок', fieldName:'caption'}"></ng-container>
-        <ng-container *ngTemplateOutlet="textareaTemplate; context: {inpValue: editDialogNewsItem.news.text
+        <ng-container *ngTemplateOutlet="textareaTemplate; context: {inpValue: editDialogNewsItem.content.text
                 , inpCaption: 'Текст', fieldName: 'text'}"></ng-container>
         
-        <ng-container *ngTemplateOutlet="radioTemplate; context: {currentValue: editDialogNewsItem.news.theme,
+        <ng-container *ngTemplateOutlet="radioTemplate; context: {currentValue: editDialogNewsItem.content.theme,
              name: 'newsTheme', caption: 'Тип:'}"></ng-container>    
 
         <ng-container *ngTemplateOutlet="buttonTemplate; context: {buttons: 

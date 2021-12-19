@@ -3,11 +3,11 @@
     <label><input type="checkbox" [checked]="singleNews.checked" #ourCheckbox
         (click)="setCheckedNews(ourCheckbox.checked, singleNews)" >
 
- {{singleNews.id}}) {{singleNews.news.date | date:'dd.MM.yyyy'}}
- <strong> {{singleNews.news.caption}} </strong>
+ {{singleNews.id}}) {{singleNews.content.date | date:'dd.MM.yyyy'}}
+ <strong> {{singleNews.content.caption | caption}} </strong>
 </label>
-<div class="themeIcon" [appAdTheme]="singleNews.news.theme" title="{{singleNews.news.theme}}"> {{singleNews.news.theme | themePipe}} </div>
-<p>{{singleNews.news.text}} </p>
+<div class="themeIcon" [appAdTheme]="singleNews.content.theme" title="{{singleNews.content.theme}}"> {{singleNews.content.theme | themePipe}} </div>
+<p>{{singleNews.content.text}} </p>
 
 <!-- <button (click)="isEdisNewsShowed=true"> Редактировать (независимое окно) </button> -->
 <button (click)="onEditNews()"> Редактировать </button>
