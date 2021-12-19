@@ -7,7 +7,7 @@
 
     <ng-container [formGroup]="this.newsItemFormGroup">
       <label>Дата:</label>
-      <input type='datetime-local' formControlName="dateField" #dt />
+      <input type='datetime-local' formControlName="dateField" />
       <div class="validation-error-message" *ngIf="this.dateField?.errors?.required && !this.dateField?.untouched">
         Поле обязательно для заполнения
       </div>
