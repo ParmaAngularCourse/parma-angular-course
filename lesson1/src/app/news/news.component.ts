@@ -4,6 +4,7 @@ import { NewsItem, NewsObj, Theme } from './news-types';
 import { PopupDialogComponent } from './popup-dialog/popup-dialog.component';
 import { AdThemeDirective } from './ad-theme.directive';
 import { User } from './user-rights';
+import { NewsSourceService } from '../news-source.service';
 
 
 @Component({
@@ -14,32 +15,7 @@ import { User } from './user-rights';
 })
 export class NewsComponent {
 
-  public ourNews: NewsItem[] =[
-    { id: 1,
-     checked : true,   
-     news: { 
-        date : new Date(2021, 12, 5),
-        caption: "Запуск ракеты Atlas V с военным спутником перенесён из-за утечки горючего в наземном хранилище", 
-        text: "По сообщениям сетевых источников, старт ракеты-носителя Atlas V со спутником Космических сил США, который должен был состояться сегодня, перенесён на сутки из-за утечки горючего в наземном хранилище. Об этом пишет информационное агентство ТАСС со ссылкой на данные пресс-службы американского консорциума United Launch Alliance (ULA).",
-        theme: Theme.Science
-      }},
-    { id: 2, 
-      checked : false, 
-      news: { 
-          date : new Date(2021, 12, 4),
-          caption: "Бюджетные видеокарты окончательно можно отправлять на пенсию? iGPU в мобильном APU Ryzen 6000 обходит GeForce GTX 1050 Ti", 
-          text: "Согласно первой утечке, неизвестный процессор этой линейки набирает в 3DMark Time Spy около 2700 баллов. И это внушительно для встроенного графического ядра. Для сравнения, Ryzen 7 5800U набирает около 1200-1300 баллов и даже настольный Ryzen 7 5700G может похвастаться лишь около 1700 баллами. То есть относительно прямого предшественника новинка AMD будет быстрее более чем вдвое! К слову, это уже результат уровня разогнанной GTX 1050 Ti.",
-          theme: Theme.Economics
-        }},
-    { id: 3,
-      checked : true, 
-      news: { 
-          date : new Date(2021, 12, 3),
-          caption: "Выбраны самые популярные смайлики в мире", 
-          text: "Консорциум Unicode опубликовал рейтинг самых популярных смайликов в 2021 году. В тройку лидеров входят «лицо со слезами радости», «красное сердце» и «катание по полу от смеха». Популярный смайлик «слегка улыбающееся лицо» даже не вошел в десятку, он оказался только на 28 месте.",
-          theme: Theme.Internet
-        }}    
-];
+  public ourNews: NewsItem[] = [];
 
   public editDialogCaption: string = "";
   public editDialogNewsItem: NewsItem = this.getEmptyNews();
@@ -52,9 +28,17 @@ export class NewsComponent {
   @ViewChild('contextMenuComponent') menuComponent!: ContextMenuComponent;
   @ViewChild('popupDialog') popupDialog!: PopupDialogComponent;  
   
-  constructor(private viewContainerRef: ViewContainerRef, private cdr: ChangeDetectorRef) { 
-      this.checkCheckboxes();
+  constructor(private viewContainerRef: ViewContainerRef,
+         private cdr: ChangeDetectorRef,
+         private _newsSourceService: NewsSourceService)
+ { 
+    this.refreshNewsList();
+      this.checkCheckboxes();     
   }
+
+  refreshNewsList(){
+    this.ourNews = this._newsSourceService.getNews();
+  }  
  
   getEmptyNews(): NewsItem{
     return {id: 0, news: {  caption: "", text: "", date: new Date(), theme: Theme.Unknown },  checked: false };
@@ -75,12 +59,8 @@ export class NewsComponent {
   } 
 
   onDeleteNews(id?: number){
-    if (id !== undefined){
-      this.ourNews = this.ourNews.filter(n=> n.id != id);
-    } else {
-      this.ourNews = this.ourNews.filter(n=> !n.checked);
-    }
-    this.checkCheckboxes();
+    this._newsSourceService.deleteNews(id);
+    this.refreshNewsList();
   }
 
   checkCheckboxes(){
@@ -99,18 +79,16 @@ export class NewsComponent {
     this.popupDialog.close(); 
   }  
 
-
   onClickSavePopupButton= ()=>{    
     const currentNewsIndex= this.ourNews.findIndex((el)=> el.id === this.editDialogNewsItem.id);
 
     if (currentNewsIndex > -1) { 
-        const currentNews = this.ourNews[currentNewsIndex];
-        this.ourNews[currentNewsIndex]  = {... currentNews, news: this.unsavedNewsItem.news };       
+        this._newsSourceService.updateNewsItem(currentNewsIndex,this.unsavedNewsItem.news);            
     } else {
-      let maxId = Math.max(... this.ourNews.map(n=> n.id), 0);
-      this.ourNews.push( { id: maxId +1, news: this.unsavedNewsItem.news, checked: false } );
-    }
+        this._newsSourceService.addNews(this.unsavedNewsItem.news);
+    }   
     this.onClickClosePopupButton();
+    this.refreshNewsList();
   }
 
 
