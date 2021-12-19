@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy } from '@angular/core';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { NewsItem, NewsObj } from '../news-types';
 
+
 @Component({
   selector: 'app-single-news',
   templateUrl: './single-news.component.html',
@@ -11,6 +12,7 @@ import { NewsItem, NewsObj } from '../news-types';
 export class SingleNewsComponent implements OnInit {
 
 @Input()singleNews!: NewsItem ;
+@Input()canDelete!: boolean;
 @Output() saveNews = new EventEmitter<NewsObj> ();
 @Output() editNews =  new EventEmitter();
 @Output() deleteNews = new EventEmitter();
@@ -38,10 +40,6 @@ public isEdisNewsShowed: boolean = false;
 
   onEditNews(){
     this.editNews.emit();
-  }
-
-  ngDoCheck(){
-    console.log("app-single-news" + this.singleNews.id);
   }
 
 }

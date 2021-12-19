@@ -1,6 +1,13 @@
  <h2>Новости</h2> 
  <button (click)="onShowAddNewsDialog()">Добавить новость</button>
- <button (click)="onDeleteNews()" [disabled]="!isDeleteButtonAvailable"> Удалить </button>
+ <button (click)="onDeleteNews()" *appSdRightsToChange="currentUser.Rights.CanDelete" [disabled]="!isDeleteButtonAvailable"> Удалить </button>
+
+ <div (click)="currentUser.Rights.CanDelete = !currentUser.Rights.CanDelete">
+    Кликни, чтоб изменить CanDelete = {{currentUser.Rights.CanDelete}}
+</div>
+ <div (click)="currentUser.Rights.CanSave = !currentUser.Rights.CanSave">
+    Кликни, чтоб изменить CanSave =  {{currentUser.Rights.CanSave}}
+</div>
 
 <!-- содержимое popup  -->
 
@@ -21,8 +28,8 @@
              name: 'newsTheme', caption: 'Тип:'}"></ng-container>    
 
         <ng-container *ngTemplateOutlet="buttonTemplate; context: {buttons: 
-                [{text: 'Сохранить', action: onClickSavePopupButton}
-                ,{ text: 'Отмена', action: onClickClosePopupButton }]}"></ng-container>    
+                [{text: 'Сохранить', action: onClickSavePopupButton, hasAccess: currentUser.Rights.CanSave}
+                ,{ text: 'Отмена', action: onClickClosePopupButton, hasAccess: true }]}"></ng-container>    
 
    </app-popup-dialog>
 
@@ -52,8 +59,11 @@
 
    <ng-template #buttonTemplate let-buttons="buttons">    
         <div class="buttonContainer">
-            <button  [style.width.%]="100 / (buttons.length + 1)" 
-                *ngFor="let button of buttons" (click)="button.action()"> {{button.text}} </button>
+            <ng-container *ngFor="let button of buttons" >           
+                <button  [style.width.%]="100 / (buttons.length + 1)"             
+                    *appSdRightsToChange="button.hasAccess"            
+                    (click)="button.action()"> {{button.text}}</button>          
+            </ng-container>
         </div>
     </ng-template>
 
@@ -62,7 +72,7 @@
       <div> 
         {{caption}}
         <div *ngFor="let enum of ThemeEnum | keyvalue" >            
-            <label class="radio_{{enum.key}}">
+            <label [appAdTheme]="enum.key" >
                  <input type="radio" name="name" [value]="enum.key" (click)="onRadioButChange(enum.value)"
                      [checked]="currentValue == enum.value"> {{enum.value}} 
              </label>            
@@ -73,7 +83,7 @@
 <!-- / содержимое popup  -->
 
 
-   <app-single-news *ngFor="let item of ourNews" [singleNews]="item" 
+   <app-single-news *ngFor="let item of ourNews" [singleNews]="item" [canDelete]="currentUser.Rights.CanDelete"
         (editNews)="onEditNews(item.id)"
         (contextmenu)="onShowContextMenu($event)"
         (markNews)="onMarkNews()"

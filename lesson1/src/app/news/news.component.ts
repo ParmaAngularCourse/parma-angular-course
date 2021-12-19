@@ -2,6 +2,8 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, QueryLis
 import { ContextMenuComponent } from './context-menu/context-menu.component';
 import { NewsItem, NewsObj, Theme } from './news-types';
 import { PopupDialogComponent } from './popup-dialog/popup-dialog.component';
+import { AdThemeDirective } from './ad-theme.directive';
+import { User } from './user-rights';
 
 
 @Component({
@@ -41,8 +43,9 @@ export class NewsComponent {
 
   public editDialogCaption: string = "";
   public editDialogNewsItem: NewsItem = this.getEmptyNews();
-  unsavedNewsItem: NewsItem = this.getEmptyNews();
+  public unsavedNewsItem: NewsItem = this.getEmptyNews();
   public isDeleteButtonAvailable = false; 
+  public currentUser: User = { Name: "Петр",Rights: {CanDelete: false, CanSave: false } };
 
   public ThemeEnum = Theme;
 
