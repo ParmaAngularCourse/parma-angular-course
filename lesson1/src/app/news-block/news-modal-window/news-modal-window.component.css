@@ -1,7 +1,6 @@
 .modalWindow {
     border: 1px solid black;  
     width: fit-content;
-    padding: 20px;
     height: auto; 
     z-index: 10;
     position: absolute;
@@ -14,12 +13,16 @@
     overflow: hidden;
    }
    
-.modalWindow p {
+.modalWindowContent {
+    padding: 10px 20px 20px 20px;
+   }
+
+.modalWindowContent p {
     margin: 5px 0px;
 }
 
-.modalWindow div {
-    margin: 10px 0px 0px 0px;
+.modalWindowContent .newsButton {
+    margin: 10px 5px 0px 0px;
 }
 
 .bigShadow {
@@ -33,5 +36,40 @@
     opacity: 0.5;
     overflow: hidden;
 }
-   
-   
+
+.modalWindowHeader {
+    background: steelblue;
+    height: 30px;
+}
+
+.closeButton {
+    border: 0px;
+    background: steelblue;
+    float: right;
+    position: relative;
+    height: 30px;
+    width: 30px;
+    font-weight: bold;
+    color: white;
+    transition-duration: 0.4s;
+}
+
+.closeButton:hover {
+    background-color: lightblue; /* Green */
+    color: steelblue;
+  }
+
+.headerTitle {
+    border: 0px;
+    float: left;
+    position: relative;
+    margin: 5px 0px 0px 10px;
+    /*padding: 5px 0px 0px 10px;*/
+    font-weight: bold;
+    color: white;
+}
+
+.errorText {
+    color: red;
+    width: 200px;
+}

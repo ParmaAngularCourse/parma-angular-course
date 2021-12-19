@@ -1,0 +1,5 @@
+.contextMenu {
+    background: whitesmoke;
+    border: 1-x solid lightgray;
+    position: absolute;
+}

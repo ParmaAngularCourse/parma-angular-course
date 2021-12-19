@@ -1,30 +1,40 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
+import { DatePipe } from '@angular/common';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angular/core';
+import * as moment from 'moment';
 import { NewsBlock } from 'src/app/post-types';
 
 @Component({
   selector: 'app-news-modal-window',
   templateUrl: './news-modal-window.component.html',
   styleUrls: ['./news-modal-window.component.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  //changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NewsModalWindowComponent {
 
-  @Input() newsPost!: NewsBlock;
-  @Output() saveItem = new EventEmitter<NewsBlock>();
-  @Output() cancel = new EventEmitter<void>();
 
-  clickSaveButton(date: string, title: string, text: string) {    
-    this.newsPost.date = date;
-    this.newsPost.title = title;
-    this.newsPost.text = text;
-    this.saveItem.emit(this.newsPost);
-  }
+  public windowShown: boolean = false;
 
-  clickCancelButton() {
-    this.cancel.emit();
+  constructor(private cd: ChangeDetectorRef)
+  {
+
   }
 
   ngDoCheck(){
-    console.log("new-modal");
+    //console.log("new-modal");
+  }
+
+  ngAfterViewInit(): void {
+
+  }
+
+  show() {
+    this.windowShown = true;
+    this.cd.markForCheck();
+  }
+
+  hide() {
+    this.windowShown = false;
+    this.cd.markForCheck();
   }
 }
+
