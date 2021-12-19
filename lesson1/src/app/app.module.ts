@@ -7,6 +7,10 @@ import { NewsBlockComponent } from './news-block/news-block.component';
 import { SinglePostComponent } from './news-block/single-post/single-post.component';
 import { NewsModalWindowComponent } from './news-block/news-modal-window/news-modal-window.component';
 import { ContextMenuComponent } from './context-menu/context-menu.component';
+import { TitlePipePipe } from './title-pipe.pipe';
+import { NewsTypePipePipe } from './news-type-pipe.pipe';
+import { BgnDDirective } from './bgn-d.directive';
+import { RightsDDirective } from './rights-d.directive';
 
 const maskConfig: Partial<IConfig> = {
   validation: true,
@@ -20,7 +24,11 @@ const maskConfig: Partial<IConfig> = {
     NewsBlockComponent,
     SinglePostComponent,
     NewsModalWindowComponent,
-    ContextMenuComponent
+    ContextMenuComponent,
+    TitlePipePipe,
+    NewsTypePipePipe,
+    BgnDDirective,
+    RightsDDirective
   ],
   imports: [
     NgxMaskModule.forRoot(maskConfig),

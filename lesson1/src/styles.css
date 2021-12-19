@@ -57,3 +57,8 @@
   color: red;
   width: 200px;
 }
+
+h1 {
+  color: rgb(36, 87, 128);
+  font-size: 18px;
+}
