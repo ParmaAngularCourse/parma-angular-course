@@ -40,35 +40,37 @@ export class NewsListComponent implements OnInit, OnDestroy {
     this._newsService.getNewsList().pipe(
       takeUntil(this.ngUnsubscribe$)
     ).subscribe(
-      (data => {
-        let selectedNewsIds = this.allNews.filter(n => n.selected).map(n => n.id);
-        this.allNews = data;
-        this.allNews.forEach((value: News) => {
-          if(selectedNewsIds.includes(value.id))
-            value.selected = true;
-        });
-        this.cdr.markForCheck();
-      }),
-      (error: HttpErrorResponse) => { console.log(`${error.status} ${error.message}`); }
+      { next: (data) => {
+          let selectedNewsIds = this.allNews.filter(n => n.selected).map(n => n.id);
+          this.allNews = data;
+          this.allNews.forEach((value: News) => {
+            if(selectedNewsIds.includes(value.id))
+              value.selected = true;
+          });
+          this.cdr.markForCheck();
+        },
+        error: (error: HttpErrorResponse) => { console.log(`${error.status} ${error.message}`); }
+      }
     );
   }
 
   onRemoveNews($event: number) {
-    this._newsService.removeNews($event)
-        .subscribe(response => this.getAllNews());
+    this._newsService.removeNews($event).pipe(
+      takeUntil(this.ngUnsubscribe$)
+    ).subscribe();
   }
 
   onSaveNews(newsToSave: News) {
     if(this.isEditMode) {
       this._newsService.updateNews(newsToSave).pipe(
         takeUntil(this.ngUnsubscribe$)
-      ).subscribe(response => this.getAllNews());
+      ).subscribe();
     }
     else {
       newsToSave.id = Math.max(...(this.allNews.map(el => el.id))) + 1;
       this._newsService.addNews(newsToSave).pipe(
         takeUntil(this.ngUnsubscribe$)
-      ).subscribe(response => this.getAllNews());
+      ).subscribe();
     }
     this.viewEditForm.closeWindow();
   }
@@ -91,7 +93,7 @@ export class NewsListComponent implements OnInit, OnDestroy {
       .map(item => this._newsService.removeNews(item.id));
     forkJoin(removeCalls).pipe(
       takeUntil(this.ngUnsubscribe$)
-    ).subscribe(response => this.getAllNews());
+    ).subscribe();
   }
 
   openEditNewsDialog(newsToEdit: News) {
