@@ -22,7 +22,7 @@ export class NewsComponent {
   public editDialogNewsItem: NewsItem = this.getEmptyNews();
   public unsavedNewsItem: NewsItem = this.getEmptyNews();
   public isDeleteButtonAvailable = false; 
-  public currentUser: User = { Name: "Петр",Rights: {CanDelete: false, CanSave: false } };
+  public currentUser: User = { Name: "Петр",Rights: {CanDelete: true, CanSave: true } };
 
   public ThemeEnum = Theme;
 
@@ -32,8 +32,7 @@ export class NewsComponent {
   constructor(private viewContainerRef: ViewContainerRef,
          private cdr: ChangeDetectorRef,
          private _newsSourceService: NewsSourceService)
- { 
-    //this.refreshNewsList();
+ {     
       this.checkCheckboxes();     
       // this._newsSourceService.getNews().subscribe({
       //     complete: (data: NewsItem[]) => { 
@@ -43,18 +42,30 @@ export class NewsComponent {
       //     error: (e: HttpErrorResponse) => {console.log(e.status + ' ' + e.message );}
       //   });
 
-        this._newsSourceService.getNews().subscribe(
-          (data) => {
-            this.ourNews = data; 
-            console.log("Данные"+ data.length);               
-          },
-          (e: HttpErrorResponse) => console.log(e.status + ' ' + e.message )
-        );
+      this._newsSourceService.getNews().subscribe(
+        (data) => {
+          this.ourNews = data; 
+          console.log("Данные "+ data.length);   
+          this.cdr.detectChanges();            
+        },
+        (e: HttpErrorResponse) => console.log(e.status + ' ' + e.message )
+      );
+
   }
 
-  // refreshNewsList(){
-  //   this.ourNews = this._newsSourceService.getNews().pipe(el=> el);
-  // }  
+  ngOnInit(){
+   
+  }
+
+   refreshNewsList(){
+     this._newsSourceService.getNews().subscribe((data: NewsItem[]) => {
+        this.ourNews = data;
+        console.log("refreshNews "+ data.length);   
+        this.cdr.detectChanges();    
+      }
+      );   
+      
+   }  
  
   getEmptyNews(): NewsItem{
     return {id: 0, content: {  caption: "", text: "", date: new Date(), theme: Theme.Unknown },  checked: false };
@@ -76,7 +87,7 @@ export class NewsComponent {
 
   onDeleteNews(id?: number){
     this._newsSourceService.deleteNews(id);
-    //this.refreshNewsList();
+    this.refreshNewsList();
   }
 
   checkCheckboxes(){
@@ -104,7 +115,8 @@ export class NewsComponent {
         this._newsSourceService.addNews(this.unsavedNewsItem.content);
     }   
     this.onClickClosePopupButton();
-    //this.refreshNewsList();
+    this.refreshNewsList();
+    this.cdr.detectChanges();  
   }
 
 
