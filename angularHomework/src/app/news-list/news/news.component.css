@@ -15,6 +15,24 @@ p {
 
 .type {
     float:right;
+    font-size: larger;
+    padding: 0.3em;
+}
+
+.type .tooltip {
+    visibility: hidden;
+    text-align: center;
+    position: absolute;
+    border:  solid 1px black;
+    border-radius: 6px;
+    z-index: 1;
+    transform: translateX(-110%);
+    background-color: white;
+    padding: 0.3em;
+}
+
+.type:hover .tooltip {
+    visibility: visible;
 }
 
 button {

@@ -1,4 +1,4 @@
-<span class="title">{{title}}</span>
+<span class="title">{{title | firstCapitalLetter}}</span>
 <ng-container
 *ngTemplateOutlet="newsInput; context: {name:'date', label: 'Дата:', type: 'datetime-local', value:news?.dateTime, isRadio: false}">
 </ng-container>
@@ -11,7 +11,7 @@
 <ng-container
 *ngTemplateOutlet="newsInput; context: {name:'newsType', label: 'Тип новости:', type: 'radio', value:news?.newsType, isRadio: true}">
 </ng-container>
-<p><button (click)="clickSaveNews()">Сохранить</button>
+<p><button (click)="clickSaveNews()" *appUserPermissions="{currUser: currUser, permission: 'allowSave'}">Сохранить</button>
     <button (click)="clickCancel()">Отмена</button>
 </p>
 
@@ -22,7 +22,7 @@
         <div *ngFor="let item of newsTypes">
             <input type='radio' name="name" [id]="'newsType' + item.id"
                 [value]="item.id" (change)="onChangeInput($event, name)" [checked]="news ? item.id === value.id : false">
-            <label for="'newsType' + item.id" [style.background-color]="item.color">{{item.text}}</label>
+            <label for="'newsType' + item.id" [appNewsTypeStyle]="item.color">{{item.text}}</label>
         </div>
     </ng-container>
 </ng-template>

@@ -7,6 +7,10 @@ import { ModalComponent } from './shared/modal/modal.component';
 import { ContextMenuComponent } from './shared/context-menu/context-menu.component';
 import { FormsModule } from '@angular/forms';
 import { NewsModalContentComponent } from './news-list/news-modal-content/news-modal-content.component';
+import { FirstCapitalLetterPipe } from './pipes/first-capital-letter.pipe';
+import { FirstLetterLowerPipe } from './pipes/first-letter-lower.pipe';
+import { NewsTypeStyleDirective } from './news-list/directives/news-type-style.directive';
+import { UserPermissionsDirective } from './directives/user-permissions.directive';
 
 @NgModule({
   declarations: [
@@ -15,7 +19,11 @@ import { NewsModalContentComponent } from './news-list/news-modal-content/news-m
     NewsComponent,
     ModalComponent,
     ContextMenuComponent,
-    NewsModalContentComponent
+    NewsModalContentComponent,
+    FirstCapitalLetterPipe,
+    FirstLetterLowerPipe,
+    NewsTypeStyleDirective,
+    UserPermissionsDirective
   ],
   imports: [
     BrowserModule,

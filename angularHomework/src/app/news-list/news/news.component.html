@@ -1,7 +1,9 @@
 <div class="news" [style.background-color]="isChecked ? 'lightgrey' : 'white'" [style.border-color]="news.newsType.color"> 
     <input type="checkbox" id="checkbox" [checked]="isChecked" (change)="onChange()">
-    <label>{{news.title}}</label><span class="type" [style.color]="news.newsType.color">{{news.newsType.text}}</span>
+    <label>{{news.title}}</label>
+    <div class="type" [appNewsTypeStyle]=news.newsType.color><span class="tooltip" [appNewsTypeStyle]=news.newsType.color>{{news.newsType.text}}</span>{{news.newsType.text | firstLetterLower}}</div>
     <p>{{news.dateTime}}</p>
     <p>{{news.text}}</p>
-    <button (click)=clickEditButton()>Редактировать</button><button [disabled]="!isChecked" (click)=clickDeleteButton()>Удалить</button>
+    <button (click)=clickEditButton()>Редактировать</button>
+    <button [disabled]="!isChecked" (click)=clickDeleteButton() *appUserPermissions="{currUser: currUser, permission: 'allowDelete'}">Удалить</button>
 </div>
