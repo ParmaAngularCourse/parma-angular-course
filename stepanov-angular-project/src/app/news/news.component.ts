@@ -1,4 +1,10 @@
-import { Component, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { Subject } from 'rxjs/internal/Subject';
+import { takeUntil } from 'rxjs/operators';
+import { AuthService } from '../services/auth.service';
+import { NewsService } from '../services/news.service';
+import { UserRights } from './i-user-types';
 import { NewsContextMenuComponent } from './news-context-menu/news-context-menu.component';
 import { NewsItemComponent } from './news-item/news-item.component';
 import { NewsMakerComponent } from './news-maker/news-maker.component';
@@ -7,37 +13,50 @@ import { NewsPart, NewsType } from './news-types';
 @Component({
   selector: 'app-news',
   templateUrl: './news.component.html',
-  styleUrls: ['./news.component.scss']
+  styleUrls: ['./news.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class NewsComponent implements OnInit {
+export class NewsComponent implements OnInit, OnDestroy {
 
-  public items: NewsPart[];
-
+  private readonly ngUnsubscribe$: Subject<number>;
+  public items!: NewsPart[];
   public edit_item!: NewsPart;
-
   public newsTypeValues: typeof NewsType = NewsType;
-
   public isAnyItemSelected: boolean = false;
+  public curUserRights!: UserRights;
 
-  constructor() 
+  constructor(private readonly newsService: NewsService,
+              private readonly authService: AuthService,
+              private readonly crd: ChangeDetectorRef) 
   {
-    this.items = 
-    [
-      new NewsPart(0, new Date(2020,1,20,10,52,30), 'Погода', 'В ближайшие дни ожидается мокрый дождь со снегом', NewsType.Internet),
-      new NewsPart(1, new Date(2021,2,12,8,19,56), 'Работа', 'Корпоративу на НГ - быть!', NewsType.Tourism),
-      new NewsPart(2, new Date(2022,3,16,20,11,9), '.NET', 'Вышел новый подкаст на тему ".net 6"', NewsType.Science)
-    ]
+    this.ngUnsubscribe$ = new Subject<number>();
+
+    newsService
+        .getAllNewsItems()
+        .pipe
+        (
+          takeUntil(this.ngUnsubscribe$)
+        )
+        .subscribe
+        (
+          items => {
+            this.items = items;
+            this.crd.markForCheck();
+          }, 
+          (error: HttpErrorResponse) => { console.log(error.status + ' ' + error.message); }
+        );
   }
 
   @ViewChild('newsMaker') newsModalComponent!: NewsMakerComponent;
   @ViewChild('contextMenu') contextMenuComponent!: NewsContextMenuComponent;
   @ViewChildren('newsItems') newsItems!: QueryList<NewsItemComponent>
   ngOnInit(): void {
+    let curUser = this.authService.getCurrentUser();
+    this.curUserRights = curUser.rights;
   }
 
   deleteNewsItem($event: number) {
-    var removingIndex = this.items.findIndex(item => item.id == $event);
-    this.items.splice(removingIndex, 1);
+    this.newsService.removeNewsItem($event);
   }
 
   editNewsItem($event: NewsPart) {
@@ -47,7 +66,7 @@ export class NewsComponent implements OnInit {
 
   addNewItem() {
     this.edit_item = new NewsPart(null, new Date(), '', '', NewsType.Politics);
-    this.showNewsMakerModalWindow()
+    this.showNewsMakerModalWindow();
   }
 
   showNewsMakerModalWindow() {
@@ -60,23 +79,10 @@ export class NewsComponent implements OnInit {
 
   saveNewItem() {
     if(this.edit_item.id == null) {
-      this.edit_item.id = this.findMaxId() + 1;
-      this.items.push(this.edit_item);
+      this.newsService.addNewsItem(this.edit_item);
     } else {
-      var foundItemIndex = this.items.findIndex(item => item.id == this.edit_item.id);
-      this.items[foundItemIndex] = this.edit_item;
+      this.newsService.editNewsItem(this.edit_item);
     }
-  }
-
-  findMaxId() : number {
-    var maxId = -1;
-    this.items.forEach(item => {
-      var currentId = item.id!;
-      if(currentId > maxId) {
-        maxId = currentId;
-      }
-    });
-    return maxId;
   }
 
   onTextChanged($event: string) {
@@ -101,7 +107,7 @@ export class NewsComponent implements OnInit {
   }
 
   selectAllNewsItems($event: Event) {
-    this.newsItems.forEach(item => item.onSelectChanged(true));        
+    this.newsItems.forEach(item => item.onSelectChanged(true));
   }
 
   showContextMenu($event: MouseEvent) {
@@ -121,5 +127,10 @@ export class NewsComponent implements OnInit {
     }
     
     this.isAnyItemSelected = false;
+  }
+
+  ngOnDestroy() {
+    this.ngUnsubscribe$.next(0);
+    this.ngUnsubscribe$.complete();
   }
 }

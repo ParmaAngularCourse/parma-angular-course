@@ -1,4 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { AuthService } from 'src/app/services/auth.service';
+import { UserRights } from '../i-user-types';
 
 @Component({
   selector: 'app-news-maker',
@@ -8,6 +10,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, In
 })
 export class NewsMakerComponent implements OnInit {
   public isVisible: boolean = false;
+  public curUserRights!: UserRights;
 
   @Output()
   onCancelAction: EventEmitter<null> = new EventEmitter();
@@ -15,9 +18,11 @@ export class NewsMakerComponent implements OnInit {
   @Output()
   onAddAction: EventEmitter<null> = new EventEmitter();
 
-  constructor(private cd: ChangeDetectorRef) { }
+  constructor(private readonly authService: AuthService, private cd: ChangeDetectorRef) { }
 
   ngOnInit(): void {
+    let curUser = this.authService.getCurrentUser();
+    this.curUserRights = curUser.rights;
   }
 
   cancelAction() {

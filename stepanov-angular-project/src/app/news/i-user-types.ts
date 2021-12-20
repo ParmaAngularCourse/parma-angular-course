@@ -10,18 +10,18 @@ interface IUserType {
     rights: UserRights;
 }
 
-class User implements IUserType {
+export class User implements IUserType {
     login: string;
     password: string;
     name: string;
     rights: UserRights;
+    token: string;
 
-    constructor(login: string, password: string, name: string, rights: UserRights) {
+    constructor(login: string, password: string, name: string, token: string, rights: UserRights) {
         this.login = login;
         this.password = password;
         this.name = name;
         this.rights = rights;
+        this.token = token;
     }
 }
-
-export const currentUser: User = new User('admin', 'test', 'empty', UserRights.Admin);
