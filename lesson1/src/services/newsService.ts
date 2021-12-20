@@ -1,5 +1,6 @@
 import { NewsPost } from "src/models/NewsPost";
 import { NewsPostTag } from "src/models/NewsPostTag";
+import { toDateString } from "src/utils/DateUtils";
 
 export class NewsService {
 
@@ -12,7 +13,7 @@ export class NewsService {
                 id: index,
                 title: this.randomString(5),
                 text: this.randomString(100),
-                uploadDate: date,
+                uploadDate: toDateString(date),
                 isSelected: false,
                 tag: NewsPostTag.economics
             });

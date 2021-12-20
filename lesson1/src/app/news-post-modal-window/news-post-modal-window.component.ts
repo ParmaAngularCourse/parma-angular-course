@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { NewsPost } from 'src/models/NewsPost';
 import { NewsPostTag } from 'src/models/NewsPostTag';
-import {toDateString} from '../../utils/DateUtils'
+import { toDateString } from '../../utils/DateUtils'
 @Component({
   selector: 'app-news-post-modal-window',
   templateUrl: './news-post-modal-window.component.html',
@@ -11,7 +11,7 @@ import {toDateString} from '../../utils/DateUtils'
 export class NewsPostModalWindowComponent {
 
   @Input()
-  newsPost!: NewsPost | null;
+  newsPost: NewsPost | null | undefined;
   @Input() isOpen = false;
   @Input() operationTitle = "";
 
@@ -22,7 +22,7 @@ export class NewsPostModalWindowComponent {
 
   private editedText = "";
   private editedTitle = "";
-  private editedDate: Date | null = null;
+  private editedDate!: string;
   private editedTag = NewsPostTag.noTag;
 
   onEditSave() {
@@ -30,9 +30,14 @@ export class NewsPostModalWindowComponent {
     currentEditablePost.id = this.newsPost?.id ?? -1;
     currentEditablePost.title = this.editedTitle === "" ? this.newsPost?.title ?? "" : this.editedTitle;
     currentEditablePost.text = this.editedText === "" ? this.newsPost?.text ?? "" : this.editedText;
-    currentEditablePost.uploadDate = this.editedDate === null ? this.newsPost!.uploadDate : this.editedDate;
-    currentEditablePost.tag = this.editedTag === NewsPostTag.noTag ? this.newsPost!.tag : this.editedTag;
+    currentEditablePost.uploadDate = this.editedDate === "" ? this.newsPost!.uploadDate : this.editedDate;
+    currentEditablePost.tag = this.editedTag === NewsPostTag.noTag ? NewsPostTag.noTag  : this.editedTag;
     const editedNewsPost = new NewsPost(currentEditablePost);
+    this.newsPost = null;
+    this. editedText = "";
+    this. editedTitle = "";
+    this. editedDate = "";
+    this. editedTag = NewsPostTag.noTag;
     this.saveNews.emit(editedNewsPost);
     this.onCancel();
   }
@@ -56,11 +61,7 @@ export class NewsPostModalWindowComponent {
     this.editedTag = this.newsTags[index]
   }
 
-  onDateInputChanged = (value: Date) => {
-    this.editedDate = new Date(value);
+  onDateInputChanged = (value: string) => {
+    this.editedDate = value;
   };
-
-  GetValueDate(){
-    return toDateString(this.newsPost?.uploadDate)
-  }
 }

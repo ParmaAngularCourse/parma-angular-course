@@ -2,7 +2,7 @@
     <div>
         <ng-container [ngTemplateOutlet]="inputPost" #date [ngTemplateOutletContext]="{label:'Дата',
              type:'datetime-local', 
-             val:GetValueDate(),
+             val:newsPost?.uploadDate,
             id: 'date', action:onDateInputChanged}">
         </ng-container>
 
