@@ -5,8 +5,8 @@
     <div>{{single_post.text}}</div>
     <br>
     <div style="margin-bottom: 5px;">
-        <button (click)="clickEditButton(single_post)" style="display: inline-block;">Редактировать</button>
+        <button (click)="clickEditButton(single_post)" style="display: inline-block;" class="blueButton">Редактировать</button>
         <div style="width: 10px; display: inline-block;"></div>
-        <button [disabled]="!single_post.isCheck? true : null" (click)="clickDeleteButton(single_post)" style="display: inline-block; ">Удалить</button>
+        <button [disabled]="!single_post.isCheck? true : null" (click)="clickDeleteButton(single_post)" style="display: inline-block; " class="blueButton">Удалить</button>
     </div>
 </div>

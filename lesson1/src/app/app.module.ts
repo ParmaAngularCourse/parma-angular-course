@@ -5,13 +5,15 @@ import { AppComponent } from './app.component';
 import { NewsComponent } from './news/news.component';
 import { SinglePostComponent } from './news/single-post/single-post.component';
 import { PostEditorComponent } from './news/post-editor/post-editor.component';
+import { ContextMenuComponent } from './news/context-menu/context-menu.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     NewsComponent,
     SinglePostComponent,
-    PostEditorComponent
+    PostEditorComponent,
+    ContextMenuComponent
   ],
   imports: [
     BrowserModule

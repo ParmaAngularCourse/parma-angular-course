@@ -1,38 +1,48 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { Information } from './news-types';
+import { ChangeDetectionStrategy, Component, OnInit, ViewChild } from '@angular/core';
+import { ContextMenuComponent } from './context-menu/context-menu.component';
+import { Information, NewsTypes } from './news-types';
+import { PostEditorComponent } from './post-editor/post-editor.component';
 
 
 @Component({
   selector: 'app-news',
   templateUrl: './news.component.html',
   styleUrls: ['./news.component.css'], 
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.Default
 })
 export class NewsComponent implements OnInit {
 
-  public isEditorOpen: boolean = false;
   public editedPost!: Information;
+  public editorTitle?: string;
 
   public informationList: Information[] = [
     {
-      date: "1.1.1900", 
+      date: "1900-01-01",
       title: "Новость 1", 
+      newsType: NewsTypes.Politic,
     },
     {
-      date: "1.12.1900", 
+      date: "1900-12-01",
       title: "Новость 2", 
+      newsType: NewsTypes.Travel,
     },
     {
-      date: "1.1.2000", 
+      date: "2000-01-01",
       title: "Новость 3", 
+      newsType: NewsTypes.Economic,
     },
     {
-      date: "1.12.2000", 
+      date: "2000-12-01",
       title: "Новость 4", 
+      newsType: NewsTypes.Since,
     }    
   ];
 
   constructor() { }
+
+@ViewChild('modalWindowPostEdit') modalWindowPost!: PostEditorComponent;
+@ViewChild('contextMenuNews') contextMenu!: ContextMenuComponent;
+
 
   ngOnInit(): void 
   {
@@ -43,9 +53,10 @@ export class NewsComponent implements OnInit {
   }
 
 
-  onEditPost($event: Information){    
-    this.isEditorOpen = true;
+  onEditPost($event: Information){   
+    this.editorTitle = "Редактировать новость"; 
     this.editedPost = $event;
+    this.modalWindowPost.show(true);
   }
 
   onDeletePost($event: Information){    
@@ -57,8 +68,9 @@ export class NewsComponent implements OnInit {
   }
 
   onNewPost(){    
-    this.isEditorOpen = true;
+    this.editorTitle = "Добавить новость";
     this.editedPost = {date: "", title: "", text: "" };
+    this.modalWindowPost.show(true);
   }
 
 
@@ -70,16 +82,32 @@ export class NewsComponent implements OnInit {
       this.informationList.push($event);
     }
 
-    this.isEditorOpen = false;
+    this.modalWindowPost.show(false);
   }
 
-  onCancelEditPost(){    
-    this.isEditorOpen = false;
-    this.editedPost = {date: "", title: "", text: "" };
+  onCancelEditPost(){   
+    this.modalWindowPost.show(false);
   } 
 
 
+  onCheckAll(){    
+    this.informationList.map(i=> i.isCheck = true);
+  }
 
+  onDeleteSelected(){
+    this.informationList = this.informationList.filter(i=> !i.isCheck)
+  }
+
+  getIsAnySelect(){
+    return this.informationList.filter(i=> i.isCheck).length > 0;
+  }
+
+
+  contextMenuShow($event: MouseEvent){
+
+    this.contextMenu.show({top: $event.clientY + 15, left: $event.clientX + 15});
+    return false;
+  }
 
 
 }

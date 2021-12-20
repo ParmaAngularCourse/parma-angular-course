@@ -3,8 +3,17 @@ export type Information = {
     title: string,
     text?: string,
     isCheck?: boolean,
+    newsType?: number
 }
 
 export type CommentObj = {
     commentText?: string,
 }
+
+export enum NewsTypes {
+    Politic = 1,
+    Travel,
+    Economic,
+    Since,
+    Internet,
+  }
