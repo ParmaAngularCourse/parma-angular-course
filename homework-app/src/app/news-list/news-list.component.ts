@@ -1,4 +1,7 @@
-import { ChangeDetectionStrategy, Component, OnInit, ViewChild } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { forkJoin, Subject, takeUntil } from 'rxjs';
+import { NewsService } from '../news.service';
 import { ContextMenuComponent } from './context-menu/context-menu.component';
 import { NewsEditformComponent } from './news-editform/news-editform.component';
 import { News, NewsType } from './news-types';
@@ -9,57 +12,65 @@ import { News, NewsType } from './news-types';
   styleUrls: ['./news-list.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class NewsListComponent implements OnInit {
+export class NewsListComponent implements OnInit, OnDestroy {
 
-  public allNews: News[] = [
-    {
-      id: 1,
-      date: new Date(2021,10,17),
-      title: 'В Бразилии обнаружены останки редкого вида беззубых динозавров',
-      text: 'Беззубые динозавры не так страшны, как те, что с зубами',
-      type: NewsType.Science,
-      selected: false
-    },
-    {
-      id: 2,
-      date: new Date(2021,10,18),
-      title: 'В Германии вырастили гриб со вкусом и ароматом земляники',
-      text: 'Планируются эксперименты с вареньем из грибов',
-      type: NewsType.Science,
-      selected: false
-    },
-    {
-      id: 3,
-      date: new Date(2021,10,19),
-      title: 'Трение человеческой кожи оказалось идеальным для щелчков пальцами',
-      text: 'Отличная кожа, повезло нам',
-      type: NewsType.Science,
-      selected: false
-    }
-  ];
+  public allNews: News[] = [];
   public newsToEdit: News = this.generateEmptyNews();
   public isEditMode: boolean = false;
 
   @ViewChild(NewsEditformComponent) private viewEditForm!: NewsEditformComponent;
   @ViewChild("contextMenuComponent") private viewContextMenu!: ContextMenuComponent;
 
-  constructor() { }
+  private ngUnsubscribe$: Subject<boolean>;
+
+  constructor(private _newsService: NewsService, private cdr: ChangeDetectorRef) {
+    this.ngUnsubscribe$ = new Subject();
+    this.getAllNews();
+  }
 
   ngOnInit(): void {
   }
 
+  ngOnDestroy(): void {
+      this.ngUnsubscribe$.next(true);
+      this.ngUnsubscribe$.complete();
+  }
+
+  getAllNews() {
+    this._newsService.getNewsList().pipe(
+      takeUntil(this.ngUnsubscribe$)
+    ).subscribe(
+      { next: (data) => {
+          let selectedNewsIds = this.allNews.filter(n => n.selected).map(n => n.id);
+          this.allNews = data;
+          this.allNews.forEach((value: News) => {
+            if(selectedNewsIds.includes(value.id))
+              value.selected = true;
+          });
+          this.cdr.markForCheck();
+        },
+        error: (error: HttpErrorResponse) => { console.log(`${error.status} ${error.message}`); }
+      }
+    );
+  }
+
   onRemoveNews($event: number) {
-    this.allNews = this.allNews.filter(item => item.id !== $event);
+    this._newsService.removeNews($event).pipe(
+      takeUntil(this.ngUnsubscribe$)
+    ).subscribe();
   }
 
   onSaveNews(newsToSave: News) {
     if(this.isEditMode) {
-      var replaceIndex = this.allNews.findIndex(item => item.id == newsToSave.id);
-      this.allNews[replaceIndex] = newsToSave;
+      this._newsService.updateNews(newsToSave).pipe(
+        takeUntil(this.ngUnsubscribe$)
+      ).subscribe();
     }
     else {
       newsToSave.id = Math.max(...(this.allNews.map(el => el.id))) + 1;
-      this.allNews.push(newsToSave);
+      this._newsService.addNews(newsToSave).pipe(
+        takeUntil(this.ngUnsubscribe$)
+      ).subscribe();
     }
     this.viewEditForm.closeWindow();
   }
@@ -78,7 +89,11 @@ export class NewsListComponent implements OnInit {
   }
   
   removeSelectedNews() {
-    this.allNews = this.allNews.filter(item => !item.selected);
+    let removeCalls: any[] = this.allNews.filter(item => item.selected)
+      .map(item => this._newsService.removeNews(item.id));
+    forkJoin(removeCalls).pipe(
+      takeUntil(this.ngUnsubscribe$)
+    ).subscribe();
   }
 
   openEditNewsDialog(newsToEdit: News) {
