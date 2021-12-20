@@ -1,6 +1,6 @@
 import {
   ChangeDetectionStrategy, ChangeDetectorRef,
-  Component, ElementRef, OnDestroy,
+  Component, OnDestroy,
   OnInit,
   QueryList,
   ViewChild,
@@ -12,10 +12,9 @@ import {NewsItemComponent} from "./news-item/news-item.component";
 import {NewsService} from "./services/news.service";
 import {HttpErrorResponse} from "@angular/common/http";
 import {Subject} from "rxjs";
-import {debounceTime, map, takeUntil} from "rxjs/operators";
+import {debounceTime, distinctUntilChanged, map, takeUntil} from "rxjs/operators";
 import {Permission, PermissionService} from './services/permission.service';
 import {NewsItemModalReactiveComponent} from "./news-item-modal-reactive/news-item-modal-reactive.component";
-import { fromEvent } from 'rxjs/internal/observable/fromEvent';
 
 @Component({
   selector: 'app-news',
@@ -30,10 +29,10 @@ export class NewsComponent implements OnInit, OnDestroy {
   newsTab3: NewsItemModel[] = [];
   perms: Permission[] = [];
   private readonly _ngUnsubscribe$: Subject<number>;
+  keyUp = new Subject<KeyboardEvent>();
 
   @ViewChild('modalComponent') modal! : NewsItemModalReactiveComponent;
   @ViewChild('contextMenuComponent') menuComponent! : ContextMenuComponent;
-  @ViewChild('search') searchComponent! : ElementRef<HTMLInputElement>;
   @ViewChildren(NewsItemComponent) newsItemComponents!: QueryList<NewsItemComponent>;
   get isSomeItemSelected(): boolean {
     return this.newsTab1.filter(p => p.selected).length > 0 ||
@@ -51,10 +50,11 @@ export class NewsComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.doSearch("");
 
-    fromEvent(this.searchComponent.nativeElement, 'keyup')
+    this.keyUp
       .pipe(
         debounceTime(600),
         map((event: any) => event.target.value),
+        distinctUntilChanged(),
         takeUntil(this._ngUnsubscribe$)
       )
       .subscribe({

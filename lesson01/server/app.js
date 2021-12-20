@@ -11,7 +11,7 @@ const data = [{
     "date": "2021-01-31T19:00:02.000Z",
     "head": "Новость вторая #2",
     "desc": "Текст новости #2",
-    "tag": "internet"
+    "tag": "tourism"
   }, {
     "id": 3,
     "date": "2021-02-28T19:00:03.000Z",
@@ -23,8 +23,14 @@ const data = [{
     "date": "2021-03-31T19:00:04.000Z",
     "head": "Новость четвертая #4",
     "desc": "Текст новости #4",
-    "tag": "tourism"
-  }];
+    "tag": "internet"
+  }, {
+  "id": 5,
+  "date": "2021-03-31T19:00:04.000Z",
+  "head": "Новость пятая #5",
+  "desc": "Текст новости #5",
+  "tag": "politic"
+}];
 
 
 const app = express();
@@ -57,7 +63,7 @@ app.get("/api/news", (req, res) => {
     res.json(data);
   } else {
     console.log("searchString:>" + searchString + "<");
-    let filteredData = data.filter(p => p.head.indexOf(searchString, 0) > -1)
+    let filteredData = data.filter(p => p.head.toUpperCase().indexOf(searchString.toUpperCase(), 0) > -1)
     res.json(filteredData);
   }
 });

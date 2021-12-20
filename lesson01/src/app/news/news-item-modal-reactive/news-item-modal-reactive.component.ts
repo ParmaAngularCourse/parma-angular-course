@@ -68,7 +68,6 @@ export class NewsItemModalReactiveComponent implements OnInit, OnDestroy {
     this._valueChangeSubscription = this.newsItemFormGroup.valueChanges
       .subscribe(
         (value => {
-          console.log(value);
           this.editedItem.date = new Date(value.dateField);
           this.editedItem.head = value.headField;
           this.editedItem.desc = value.descField;
