@@ -1,0 +1,8 @@
+{
+    "/api/*": {
+      "target": "https://jsonplaceholder.typicode.com",
+      "secure": false,
+      "pathRewrite": { "^/api": "" },
+      "changeOrigin": true
+    }
+}

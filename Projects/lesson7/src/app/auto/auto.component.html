@@ -1,0 +1,12 @@
+<div>
+    <div>
+      <a routerLink="automain" [queryParams]="{id: 10}" routerLinkActive="activeLinkClass">Главные новости авто</a>
+    </div>
+    <div>
+      <a [routerLink]="['autodtp/12', { param: 'param_value'}]" routerLinkActive="activeLinkClass" >Новости ДТП</a>
+    </div>  
+  </div>
+  
+<button (click)="goToDTP()">Переход на новость по ДТП</button>
+
+  <router-outlet></router-outlet>

@@ -1,0 +1,28 @@
+<div>
+  <div class="top-menu-element">
+    <a routerLink="main" routerLinkActive="activeLinkClass">Главная</a>
+  </div>
+  <div class="top-menu-element">
+    <a routerLink="auto" routerLinkActive="activeLinkClass" [routerLinkActiveOptions]="{exact: true}">Новости авто</a>
+  </div>  
+  <div class="top-menu-element">
+    <a [routerLink]="['real-estate']" routerLinkActive="activeLinkClass">Новости недвижимости</a>
+  </div>    
+  <div class="top-menu-element">
+    <a routerLink="ll-module" routerLinkActive="activeLinkClass">Ленивая загрука</a>
+  </div>      
+</div>
+
+<router-outlet></router-outlet>
+
+<div>
+  <a [routerLink]="[{outlets: {menu: 'popupmenu'}}]">Показать меню</a>
+</div>    
+<div>
+  <a [routerLink]="[{outlets: {menu: null}}]">Спрятатть меню</a>
+</div>    
+
+<router-outlet name="menu"></router-outlet>
+
+
+<p>main works! {{data}}</p>
