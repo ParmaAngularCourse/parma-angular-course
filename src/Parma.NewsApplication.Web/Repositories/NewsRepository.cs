@@ -11,6 +11,8 @@ namespace Parma.NewsApplication.Web.Repositories
             new NewsItem(2, ".NET", "Вышел новый подкаст на тему '.net 6'", new DateTime(2022, 3, 16, 20, 11, 9), NewsType.Science)
         };
 
+        private readonly object _locker = new object();
+
         public List<NewsItem> Get()
         {
             return Items;
@@ -44,10 +46,13 @@ namespace Parma.NewsApplication.Web.Repositories
 
         public void Delete(int id)
         {
-            var deletingItem = Items.FirstOrDefault(x => x.Id == id);
-            if (deletingItem != null)
+            lock (_locker)
             {
-                Items.Remove(deletingItem);
+                var deletingItem = Items.FirstOrDefault(x => x.Id == id);
+                if (deletingItem != null)
+                {
+                    Items.Remove(deletingItem);
+                }
             }
         }
     }

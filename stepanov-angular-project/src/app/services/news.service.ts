@@ -19,7 +19,7 @@ type NewsPartBackend = {
 })
 export class NewsService implements OnDestroy {
 
-  private readonly baseUrl: string = 'http://localhost:5285/api/News';
+  private readonly baseUrl: string = 'http://localhost:62499/api/News';
   private readonly ngUnsubscribe$: Subject<number>;
   private newsItemsSubject?: BehaviorSubject<NewsPart[]>;
 

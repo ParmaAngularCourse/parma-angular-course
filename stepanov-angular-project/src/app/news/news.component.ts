@@ -1,6 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { Subject } from 'rxjs/internal/Subject';
+import { takeUntil } from 'rxjs/operators';
 import { AuthService } from '../services/auth.service';
 import { NewsService } from '../services/news.service';
 import { UserRights } from './i-user-types';
@@ -12,11 +13,12 @@ import { NewsPart, NewsType } from './news-types';
 @Component({
   selector: 'app-news',
   templateUrl: './news.component.html',
-  styleUrls: ['./news.component.scss']
+  styleUrls: ['./news.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class NewsComponent implements OnInit {
+export class NewsComponent implements OnInit, OnDestroy {
 
-  private readonly newsSub: Subscription;
+  private readonly ngUnsubscribe$: Subject<number>;
   public items!: NewsPart[];
   public edit_item!: NewsPart;
   public newsTypeValues: typeof NewsType = NewsType;
@@ -24,13 +26,23 @@ export class NewsComponent implements OnInit {
   public curUserRights!: UserRights;
 
   constructor(private readonly newsService: NewsService,
-              private readonly authService: AuthService) 
+              private readonly authService: AuthService,
+              private readonly crd: ChangeDetectorRef) 
   {
-    this.newsSub = newsService
+    this.ngUnsubscribe$ = new Subject<number>();
+
+    newsService
         .getAllNewsItems()
+        .pipe
+        (
+          takeUntil(this.ngUnsubscribe$)
+        )
         .subscribe
         (
-          items => this.items = items,
+          items => {
+            this.items = items;
+            this.crd.markForCheck();
+          }, 
           (error: HttpErrorResponse) => { console.log(error.status + ' ' + error.message); }
         );
   }
@@ -95,7 +107,7 @@ export class NewsComponent implements OnInit {
   }
 
   selectAllNewsItems($event: Event) {
-    this.newsItems.forEach(item => item.onSelectChanged(true));        
+    this.newsItems.forEach(item => item.onSelectChanged(true));
   }
 
   showContextMenu($event: MouseEvent) {
@@ -118,6 +130,7 @@ export class NewsComponent implements OnInit {
   }
 
   ngOnDestroy() {
-    this.newsSub.unsubscribe();
+    this.ngUnsubscribe$.next(0);
+    this.ngUnsubscribe$.complete();
   }
 }
