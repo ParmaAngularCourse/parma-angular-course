@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Information } from './news-types';
 
-
 @Component({
   selector: 'app-news',
   templateUrl: './news.component.html',
@@ -12,6 +11,7 @@ export class NewsComponent implements OnInit {
 
   public isEditorOpen: boolean = false;
   public editedPost!: Information;
+
 
   public informationList: Information[] = [
     {
