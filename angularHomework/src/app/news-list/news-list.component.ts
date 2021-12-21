@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, OnInit, ViewChild } from '@angular/
 import { ModalComponent } from '../shared/modal/modal.component';
 import { ContextMenuComponent } from '../shared/context-menu/context-menu.component';
 import { News, NewsTypeObjectEnum } from '../model/news-type';
+import { currUser } from '../model/userPermissions';
 
 @Component({
   selector: 'app-news-list',
@@ -19,6 +20,8 @@ export class NewsListComponent implements OnInit {
   ];
 
   public chechedNewsIds: number[] = [];
+
+  readonly  currUser = currUser;
 
   public selectedNews: News | undefined;
 

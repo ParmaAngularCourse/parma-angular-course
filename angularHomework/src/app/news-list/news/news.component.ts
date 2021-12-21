@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { currUser } from 'src/app/model/userPermissions';
 import { News } from '../../model/news-type';
 
 @Component({
@@ -15,6 +16,8 @@ export class NewsComponent implements OnInit {
   @Output() checkedNews: EventEmitter<number> = new EventEmitter();
   @Output() editNews: EventEmitter<number> = new EventEmitter();
 
+  readonly currUser = currUser;
+  
   constructor() { }
 
   ngOnInit(): void {

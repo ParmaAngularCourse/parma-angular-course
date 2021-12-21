@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { currUser } from 'src/app/model/userPermissions';
 import { News, NewsType, NewsTypeObjectEnum } from '../../model/news-type';
 
 @Component({
@@ -16,11 +17,13 @@ export class NewsModalContentComponent implements OnInit {
   public title: string = '';
   private _news: News | undefined;
 
+  readonly currUser = currUser;
+
   @Input()
   get news(): News | undefined { return this._news}
   set news(_news: News | undefined) {
     this._news = _news;
-    this.title = this._news && this._news.id != 0 ? "Изменить новость" : "Добавить новость";
+    this.title = this._news && this._news.id != 0 ? "изменить новость" : "Добавить новость";
   }
 
   @Output() saveNews: EventEmitter<News> = new EventEmitter();
