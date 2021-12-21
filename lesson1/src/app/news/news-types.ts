@@ -17,3 +17,8 @@ export enum NewsTypes {
     Since,
     Internet,
   }
+
+  export type UserRightsObj = {
+    isUsercanDeleteNews: boolean,
+    isUsercanEditNews: boolean,
+}
