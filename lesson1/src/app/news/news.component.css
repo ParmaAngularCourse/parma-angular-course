@@ -61,3 +61,28 @@ div {
 	background: -o-linear-gradient(#fff, #999);
 }
 
+.btn_disable {
+    margin: 20px 0px 20px 30px;
+    width: 100px;
+    height: 30px;
+    color: white;
+    border-radius: 5px;
+    background: lightgray;
+    font-family: Arial;
+    text-align: center;
+    line-height: 30px;
+    user-select: none;
+}
+
+.btn-line{
+    white-space:nowrap;
+	padding: 0px 0px 0px 20px;
+}
+
+.btn-line div{
+    width:auto;
+    display:inline-block;
+    margin: 10px 20px 0px 0px ;
+    padding: 0px 10px 0px 10px;
+}
+

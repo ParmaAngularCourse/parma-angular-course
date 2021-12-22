@@ -10,7 +10,12 @@
         </app-edit-news>
     </div>
     <div class="news-list"> 
-        <div class="btn" (click)=showModal(emptyNews)>Добавить</div>
+        <div class="btn-line">
+            <div class="btn" (click)=showModal(emptyNews)>Добавить</div>
+            <div [class]="isVisibleDelete? 'btn': 'btn_disable'" (click)=deleteCheckedNews()>
+                Удалить
+            </div>
+        </div>
         <app-single-news (openModal)=showModal($event) (deleteItem)=deleteItem($event) (checkNews)=checkNews($event)
             [single_news_data]="item" *ngFor="let item of newsItems">
         </app-single-news>

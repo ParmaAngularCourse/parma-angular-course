@@ -30,6 +30,7 @@ export class NewsComponent implements OnInit {
   }
 
   public title!: string;
+  public isVisibleDelete: boolean = false;
 
   public newsItems: newsType[] = [
     {
@@ -111,9 +112,8 @@ export class NewsComponent implements OnInit {
     if (this.newsItems[id-1].checked)
     {
       this.newsItems.splice(id-1, 1);
-      for (let i=0; i<this.newsItems.length; i++){
-        this.newsItems[i].id = i+1;
-      }
+      this.refreshIds();
+      this.refreshDelete();
     }
   }
 
@@ -122,7 +122,6 @@ export class NewsComponent implements OnInit {
 
   onShowContextMenu($event: MouseEvent){
     console.log("onShowContextMenu");
-    //this.contextMenu.show({top:50, left:50});
     this.contextMenu.show({top: $event.clientY, left: $event.clientX});
     return false;
   }
@@ -136,11 +135,40 @@ export class NewsComponent implements OnInit {
     for (let i=0; i<this.newsItems.length; i++){
       this.newsItems[i].checked = true;
     }
+    this.isVisibleDelete = true;
   }
- 
+
   checkNews(id:number){
     console.log("check news id=",id);
     this.newsItems[id-1].checked = !this.newsItems[id-1].checked;
+    this.refreshDelete();
+  }
+
+  refreshDelete(): void{
+    for (let i=0; i<this.newsItems.length; i++){
+      if (this.newsItems[i].checked){
+        this.isVisibleDelete = true;
+        return;
+      }
+    }
+    this.isVisibleDelete = false;
+  }
+
+  deleteCheckedNews(){
+    for (let i=this.newsItems.length-1; i>=0; i--){
+      if (this.newsItems[i].checked)
+      {
+        this.newsItems.splice(i, 1);
+      }
+    }
+    this.refreshIds();
+    this.refreshDelete();
+  }
+
+  refreshIds(){
+    for (let i=0; i<this.newsItems.length; i++){
+      this.newsItems[i].id = i+1;
+    }
   }
 }
 
