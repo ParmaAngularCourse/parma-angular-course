@@ -13,4 +13,9 @@ export type  newsType = {
     subject: subjectType,
     checked: boolean
   }
+
+export type positionType = {
+  top: number, 
+  left: number
+}
   

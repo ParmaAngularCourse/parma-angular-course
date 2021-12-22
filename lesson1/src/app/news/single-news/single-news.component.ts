@@ -13,6 +13,7 @@ export class SingleNewsComponent implements OnInit {
   @Input() modalVisible : boolean = false;
   @Output() openModal: EventEmitter<newsType> = new EventEmitter();
   @Output() deleteItem: EventEmitter<number> = new EventEmitter();
+  @Output() checkNews: EventEmitter<number> = new EventEmitter();
 
   constructor() { }
 
@@ -22,7 +23,9 @@ export class SingleNewsComponent implements OnInit {
 
   selectNews(item: newsType)
   {
-    item.checked = !item.checked;
+    console.log("check single news id=",item.id);
+    //item.checked = !item.checked;
+    this.checkNews.emit(item.id);
   }
 
   public editNews(item: newsType){

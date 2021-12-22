@@ -1,7 +1,8 @@
 import { isNgTemplate } from '@angular/compiler';
 import { Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
+import { ContextMenuComponent } from '../context-menu/context-menu.component';
 import { EditNewsComponent } from './edit-news/edit-news.component';
-import { newsType, subjectType } from './news-types';
+import { newsType, positionType, subjectType } from './news-types';
 
 @Component({
   selector: 'app-news',
@@ -68,6 +69,7 @@ export class NewsComponent implements OnInit {
   constructor() { }
 
   @ViewChild('modalWindow') editNews!: EditNewsComponent;
+  @ViewChild('contextMenu') contextMenu!: ContextMenuComponent;
 
   ngOnInit(): void {
 
@@ -117,6 +119,29 @@ export class NewsComponent implements OnInit {
 
   public cancelModal(){
   }
+
+  onShowContextMenu($event: MouseEvent){
+    console.log("onShowContextMenu");
+    //this.contextMenu.show({top:50, left:50});
+    this.contextMenu.show({top: $event.clientY, left: $event.clientX});
+    return false;
+  }
+
+  onClick(){
+    this.contextMenu.hide();
+    return false;
+  }
+
+  selectAll(){
+    console.log("select all");
+    for (let i=0; i<this.newsItems.length; i++){
+      this.newsItems[i].checked = true;
+    }
+  }
  
+  checkNews(id:number){
+    console.log("check news id=",id);
+    this.newsItems[id-1].checked = !this.newsItems[id-1].checked;
+  }
 }
 
