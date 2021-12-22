@@ -1,0 +1,20 @@
+.main-menu {
+  padding: 10px 0 10px 0;
+  background-color: black;
+}
+
+.main-menu-item {
+  padding: 10px;
+  text-decoration: none;
+  color: aqua;
+}
+
+.main-menu-item.selected {
+  background-color: aqua;
+  color: black;
+}
+
+.main-menu-auth {
+  padding: 10px;
+  color: cornflowerblue;
+}

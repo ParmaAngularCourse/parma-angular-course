@@ -1,6 +1,6 @@
 import {Component, OnInit, ChangeDetectionStrategy, OnDestroy} from '@angular/core';
 import {NewsTag} from "../news/news-types";
-// import {TagsListService} from "../news/services/tags-list.service";
+// import {TagsListService} from "../services/tags-list.service";
 // import {takeUntil} from "rxjs/operators";
 // import {Subject} from "rxjs";
 

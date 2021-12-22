@@ -13,7 +13,7 @@ import {NewsService} from "./services/news.service";
 import {HttpErrorResponse} from "@angular/common/http";
 import {Subject} from "rxjs";
 import {debounceTime, distinctUntilChanged, map, takeUntil} from "rxjs/operators";
-import {Permission, PermissionService} from './services/permission.service';
+import {Permission, PermissionService} from '../services/permission.service';
 import {NewsItemModalReactiveComponent} from "./news-item-modal-reactive/news-item-modal-reactive.component";
 import {ActivatedRoute} from "@angular/router";
 

@@ -3,6 +3,7 @@ import {RouterModule, Routes} from "@angular/router";
 import {NewsComponent} from "./news/news.component";
 import {PageNotFoundComponent} from "./page-not-found/page-not-found.component";
 import {MainComponent} from "./main/main.component";
+import {PersonComponent} from "./person/person.component";
 
 const routes: Routes = [
   {
@@ -29,6 +30,10 @@ const routes: Routes = [
         component: NewsComponent
       }
     ]
+  },
+  {
+    path: 'person',
+    component: PersonComponent
   },
   {
     path: '**',

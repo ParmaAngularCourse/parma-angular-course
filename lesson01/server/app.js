@@ -98,4 +98,12 @@ app.post("/api/news", jsonParser, (req, res) => {
   res.send(v);
 });
 
+app.get("/api/personinfo", (req, res) => {
+  res.send({
+    name: "Иван",
+    family: "Иванов",
+    email: "ivanov@mail.ru"
+  });
+});
+
 app.listen(3000);

@@ -7,7 +7,7 @@ import {
   OnInit,
   Output
 } from '@angular/core';
-import {Permission, PermissionService} from "../services/permission.service";
+import {Permission, PermissionService} from "../../services/permission.service";
 import {NewsItemModel, NewsTag} from "../news-types";
 import {takeUntil} from "rxjs/operators";
 import {HttpErrorResponse} from "@angular/common/http";

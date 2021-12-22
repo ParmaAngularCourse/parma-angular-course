@@ -8,7 +8,7 @@ import {
   OnDestroy
 } from '@angular/core';
 import {NewsItemModel} from "../news-types";
-import {Permission, PermissionService} from "../services/permission.service";
+import {Permission, PermissionService} from "../../services/permission.service";
 import {Subject, Subscription} from "rxjs";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 

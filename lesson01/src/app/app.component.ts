@@ -7,4 +7,6 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'lesson07';
+
+  isAutorized : boolean = false;
 }
