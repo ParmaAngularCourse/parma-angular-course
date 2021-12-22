@@ -15,6 +15,7 @@ import {Subject} from "rxjs";
 import {debounceTime, distinctUntilChanged, map, takeUntil} from "rxjs/operators";
 import {Permission, PermissionService} from './services/permission.service';
 import {NewsItemModalReactiveComponent} from "./news-item-modal-reactive/news-item-modal-reactive.component";
+import {ActivatedRoute} from "@angular/router";
 
 @Component({
   selector: 'app-news',
@@ -29,6 +30,8 @@ export class NewsComponent implements OnInit, OnDestroy {
   newsTab3: NewsItemModel[] = [];
   perms: Permission[] = [];
   private readonly _ngUnsubscribe$: Subject<number>;
+  private _selectedTag : string = "";
+  private _searchVal : string = "";
   keyUp = new Subject<KeyboardEvent>();
 
   @ViewChild('modalComponent') modal! : NewsItemModalReactiveComponent;
@@ -42,13 +45,21 @@ export class NewsComponent implements OnInit, OnDestroy {
 
   constructor(private _newsService: NewsService,
               private _permService: PermissionService,
+              private _route: ActivatedRoute,
               private _cd: ChangeDetectorRef) {
     this._ngUnsubscribe$ = new Subject();
     this.perms = this._permService.getPermissions();
   }
 
   ngOnInit(): void {
-    this.doSearch("");
+    this._route.params
+      .pipe(
+        takeUntil(this._ngUnsubscribe$)
+      )
+      .subscribe(params => {
+        this._selectedTag = params?.tagsId ?? "";
+        this.doSearch();
+      });
 
     this.keyUp
       .pipe(
@@ -58,12 +69,15 @@ export class NewsComponent implements OnInit, OnDestroy {
         takeUntil(this._ngUnsubscribe$)
       )
       .subscribe({
-        next: value => this.doSearch(value)
+        next: value => {
+          this._searchVal = value;
+          this.doSearch();
+        }
       });
   }
 
-  private doSearch(value: string) {
-    let ss = this._newsService.getNews(value)
+  private doSearch() {
+    let ss = this._newsService.getNews(this._searchVal, this._selectedTag)
       .pipe(
         takeUntil(this._ngUnsubscribe$)
       );

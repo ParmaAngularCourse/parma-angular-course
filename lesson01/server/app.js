@@ -58,14 +58,23 @@ app.get("/api/news", (req, res) => {
   console.log("====get=>");
 
   let searchString = req.query?.s ?? "";
+  let selectedTag = req.query?.t ?? "";
+  let filteredData = [];
+
   if(searchString.length === 0){
     console.log("all");
-    res.json(data);
+    filteredData = data;
   } else {
     console.log("searchString:>" + searchString + "<");
-    let filteredData = data.filter(p => p.head.toUpperCase().indexOf(searchString.toUpperCase(), 0) > -1)
-    res.json(filteredData);
+    filteredData = data.filter(p => p.head.toUpperCase().indexOf(searchString.toUpperCase(), 0) > -1)
   }
+
+  if(selectedTag.length !== 0 ){
+    console.log("selectedTag:>" + selectedTag + "<");
+    filteredData = filteredData.filter(p => p.tag === selectedTag)
+  }
+
+  res.json(filteredData);
 });
 
 app.delete("/api/news/:id", (req, res) => {

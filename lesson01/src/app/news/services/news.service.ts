@@ -26,9 +26,11 @@ export class NewsService implements OnDestroy {
     this._ngUnsubscribe$ = new Subject<number>();
   }
 
-  public getNews(searchVal: string) : Observable<NewsItemModel[]>{
+  public getNews(searchVal: string, selectedTag : string) : Observable<NewsItemModel[]>{
     this._newsSubject = new BehaviorSubject<NewsItemModel[]>([]);
-    let _params = new HttpParams().set('s', searchVal);
+    let _params = new HttpParams()
+      .set('s', searchVal)
+      .set('t', selectedTag);
 
     this._http.get<NewsItem[]>(this._url + "news", {
       params: _params
