@@ -129,7 +129,6 @@ export class NewsComponent implements OnInit {
 
   onClick(){
     this.contextMenu.hide();
-    return false;
   }
 
   selectAll(){
