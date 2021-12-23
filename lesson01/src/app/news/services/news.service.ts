@@ -73,13 +73,23 @@ export class NewsService implements OnDestroy {
   }
 
   public addNewsItem(item: NewsItemModel) : void {
-    this._http.put<NewsItemModel>(this._url + "news", item)
+    this._http.put<NewsItem>(this._url + "news",
+      {
+        id : item.id,
+        date: item.date.toISOString(),
+        head: item.head,
+        desc: item.desc,
+        tag: item.tag
+      })
       .pipe(
         takeUntil(this._ngUnsubscribe$)
       )
       .subscribe({
-        complete: () =>
-          this.addNewsItemComplete(item),
+        next: (val) => {
+          item.id = val.id;
+          this.addNewsItemComplete(item);
+        },
+        complete: () => {},
         error: (error: HttpErrorResponse) =>
           console.log(error.status + " " + error.message)
       });
@@ -88,11 +98,6 @@ export class NewsService implements OnDestroy {
   private addNewsItemComplete(item: NewsItemModel) : void {
     if(this._newsSubject) {
       let news: NewsItemModel[] = this._newsSubject.getValue();
-      let maxId = news
-        .map((v) => { return v.id;})
-        .sort()[news.length - 1];
-      maxId = maxId == undefined ? 1 : maxId;
-      item.id = maxId + 1;
       news.push(item);
       this._newsSubject?.next(news);
     }

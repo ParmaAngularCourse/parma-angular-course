@@ -8,7 +8,7 @@ import {PersonComponent} from "./person/person.component";
 const routes: Routes = [
   {
     path: '',
-    redirectTo: '/main/news',
+    redirectTo: '/main/news/',
     pathMatch: 'full'
   },
   {
