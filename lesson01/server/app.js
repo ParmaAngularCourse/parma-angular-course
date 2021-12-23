@@ -18,7 +18,7 @@ app.use(function(req, res, next) {
 
 app.get("/api/tags", (req, res) => {
   let content = fs.readFileSync(tagsFileBd, "utf8");
-  res.json(JSON.parse(content));
+  return res.json(JSON.parse(content));
 });
 
 app.get("/api/news", (req, res) => {
@@ -44,7 +44,7 @@ app.get("/api/news", (req, res) => {
     filteredData = filteredData.filter(p => p.tag === selectedTag)
   }
 
-  res.json(filteredData);
+  return res.json(filteredData);
 });
 
 app.delete("/api/news/:id", (req, res) => {
@@ -59,9 +59,9 @@ app.delete("/api/news/:id", (req, res) => {
     data.splice(index, 1);
     content = JSON.stringify(data);
     fs.writeFileSync(objectsFileBd, content);
-    res.send();
+    return res.send();
   } else {
-    res.sendStatus(404);
+    return res.sendStatus(404);
   }
 });
 
@@ -88,7 +88,7 @@ app.put("/api/news", jsonParser, (req, res) => {
   content = JSON.stringify(data);
   fs.writeFileSync(objectsFileBd, content);
 
-  res.send(item);
+  return res.send(item);
 })
 
 app.post("/api/news", jsonParser, (req, res) => {
@@ -112,18 +112,98 @@ app.post("/api/news", jsonParser, (req, res) => {
     oldItem.tag = item.tag;
     content = JSON.stringify(data);
     fs.writeFileSync(objectsFileBd, content);
-    res.send(oldItem);
+    return res.send(oldItem);
   } else {
-    res.sendStatus(404);
+    return res.sendStatus(404);
   }
 });
 
 app.get("/api/personinfo", (req, res) => {
-  res.send({
-    name: "Иван",
-    family: "Иванов",
-    email: "ivanov@mail.ru"
-  });
+  let content = fs.readFileSync(personFileBd, "utf8");
+  let data = JSON.parse(content);
+
+  if(!data.isAuth){
+    return res.sendStatus(401);
+  }
+
+  return res.send(data.personInfo);
+});
+
+app.post("/api/personinfo", jsonParser, (req, res) => {
+  if(!req.body) {
+    console.log("sendStatus: 400");
+    return res.sendStatus(400);
+  }
+
+  let personInfo = req.body;
+  console.log(personInfo);
+
+  let content = fs.readFileSync(personFileBd, "utf8");
+  let data = JSON.parse(content);
+
+  if(!data.isAuth){
+    return res.sendStatus(401);
+  }
+
+  data.personInfo = personInfo;
+  content = JSON.stringify(data);
+  fs.writeFileSync(personFileBd, content);
+
+  return res.send();
+});
+
+app.get("/api/permissions", (req, res) => {
+  let content = fs.readFileSync(personFileBd, "utf8");
+  let data = JSON.parse(content);
+
+  if(!data.isAuth){
+    return res.sendStatus(401);
+  }
+
+  return res.send(data.permissions);
+});
+
+app.post("/api/login", jsonParser, (req, res) => {
+  if(!req.body) {
+    console.log("sendStatus: 400");
+    return res.sendStatus(400);
+  }
+
+  let content = fs.readFileSync(personFileBd, "utf8");
+  let data = JSON.parse(content);
+
+  let loginInfo = req.body;
+  if(loginInfo.login != data.login){
+    return res.status(403).send("Пользователь не найден");
+  }
+  if(loginInfo.password != data.password){
+    return res.status(403).send("Пароль неверный");
+  }
+
+  data.isAuth = true;
+  content = JSON.stringify(data);
+  fs.writeFileSync(personFileBd, content);
+
+  return res.send(data.authToken);
+});
+
+app.get("/api/logout", (req, res) => {
+  let content = fs.readFileSync(personFileBd, "utf8");
+  let data = JSON.parse(content);
+  data.isAuth = false;
+  content = JSON.stringify(data);
+  fs.writeFileSync(personFileBd, content);
+
+  return res.send();
+});
+
+app.get("/api/isauth", (req, res) => {
+  let content = fs.readFileSync(personFileBd, "utf8");
+  let data = JSON.parse(content);
+  if(data.isAuth)
+    return res.send(data.authToken);
+  else
+    return res.send();
 });
 
 app.listen(3000, ()=>console.log("Сервер запущен..."));

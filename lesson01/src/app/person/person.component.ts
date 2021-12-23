@@ -1,9 +1,10 @@
 import {Component, OnInit, ChangeDetectionStrategy, OnDestroy, ChangeDetectorRef} from '@angular/core';
 import {FormControl, FormGroup, Validators} from "@angular/forms";
-import {PersonInfo, PersonInfoService} from "./service/person-info.service";
+import {PersonInfoService} from "../services/person-info.service";
 import {Subject} from "rxjs";
 import {takeUntil} from "rxjs/operators";
 import {HttpErrorResponse} from "@angular/common/http";
+import {PersonInfo} from "../types";
 
 @Component({
   selector: 'app-person',
@@ -56,7 +57,12 @@ export class PersonComponent implements OnInit, OnDestroy {
   }
 
   onSave() : void {
-    console.log('onSave');
+    this.personInfo.name = this.personName.value;
+    this.personInfo.family = this.personFamily.value;
+    this.personInfo.email = this.personEmail.value;
+
+    console.log('onSave:' + this.personInfo);
+    this._personInfoService.updatePersonInfo(this.personInfo);
   }
 
   onCancel() : void {

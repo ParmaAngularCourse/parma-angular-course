@@ -17,4 +17,15 @@
 .main-menu-auth {
   padding: 10px;
   color: cornflowerblue;
+  cursor: pointer;
+}
+
+.user-name {
+  color: cornflowerblue;
+  padding: 10px;
+}
+
+.user-name:before {
+  content: "\2659";
+  font-size: 0.8em;
 }

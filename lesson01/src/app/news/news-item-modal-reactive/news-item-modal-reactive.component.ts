@@ -8,9 +8,12 @@ import {
   OnDestroy
 } from '@angular/core';
 import {NewsItemModel} from "../news-types";
-import {Permission, PermissionService} from "../../services/permission.service";
 import {Subject, Subscription} from "rxjs";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
+import {Permission} from "../../types";
+import {PersonInfoService} from "../../services/person-info.service";
+import {takeUntil} from "rxjs/operators";
+import {HttpErrorResponse} from "@angular/common/http";
 
 @Component({
   selector: 'app-news-item-modal-reactive',
@@ -22,8 +25,6 @@ export class NewsItemModalReactiveComponent implements OnInit, OnDestroy {
 
   editedItem!: NewsItemModel;
   isVisible: boolean = false;
-  perms: Permission[] = [];
-
   newsItemFormGroup! : FormGroup;
 
   @Output() save : EventEmitter<NewsItemModel> = new EventEmitter<NewsItemModel>();
@@ -41,14 +42,9 @@ export class NewsItemModalReactiveComponent implements OnInit, OnDestroy {
     return this.newsItemFormGroup.get('tagsField') as FormControl;
   }
 
-  private _ngUnsubscribe$: Subject<number>;
   private _valueChangeSubscription!: Subscription;
 
-  constructor(private _permService : PermissionService,
-              private _cd : ChangeDetectorRef) {
-    this._ngUnsubscribe$ = new Subject();
-    this.perms = this._permService.getPermissions();
-  }
+  constructor(private _cd : ChangeDetectorRef) {}
 
   ngOnInit(): void {
     this.addControls();
@@ -109,9 +105,6 @@ export class NewsItemModalReactiveComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     if(this._valueChangeSubscription)
       this._valueChangeSubscription.unsubscribe();
-
-    this._ngUnsubscribe$.next();
-    this._ngUnsubscribe$.complete();
   }
 }
 

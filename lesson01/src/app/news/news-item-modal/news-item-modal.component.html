@@ -36,7 +36,7 @@
                     onChange: this.onTagsChange.bind(this)
                   }" >
     </ng-container>
-    <button (click)="this.saveItem()" *appPermission="this.perms; action:'edit'">Сохранить</button>
+    <button (click)="this.saveItem()" *appPermission="'edit'">Сохранить</button>
     <button (click)="this.cancel()">Отмена</button>
   </ng-container>
 </app-modal-window>

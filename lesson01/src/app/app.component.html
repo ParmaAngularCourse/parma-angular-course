@@ -2,9 +2,10 @@
 
 <nav class="main-menu">
   <a class="main-menu-item" routerLink="main" routerLinkActive="selected">Новости</a>
-  <a class="main-menu-item" routerLink="person" routerLinkActive="selected">Профиль</a>
-  <a class="main-menu-auth" routerLink="login" *ngIf="!this.isAutorized">Вход</a>
-  <a class="main-menu-auth" routerLink="logout" *ngIf="this.isAutorized">Выход</a>
+  <a class="main-menu-item" routerLink="person" routerLinkActive="selected" *ngIf="this.isAuthorized">{{this.userName}}</a>
+  <a class="main-menu-auth" routerLink="login" *ngIf="!this.isAuthorized">Вход</a>
+<!--  <span class="user-name" *ngIf="this.isAuthorized">{{this.userName}}</span>-->
+  <a class="main-menu-auth" (click)="this.logout()" *ngIf="this.isAuthorized">Выход</a>
 </nav>
 <br>
 <router-outlet></router-outlet>

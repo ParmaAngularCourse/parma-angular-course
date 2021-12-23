@@ -1,0 +1,23 @@
+.login-block {
+  width: 300px;
+  padding-left: calc(50% - 150px);
+  padding-top: 100px;
+}
+
+.login-block input {
+  margin-bottom: 5px;
+  width: 100%;
+}
+
+.validation-error-message {
+  font-size: 0.6em;
+  color: red;
+  margin-top: -5px;
+}
+
+.global-error {
+  background-color: red;
+  color: white;
+  font-weight: bold;
+  padding: 5px;
+}

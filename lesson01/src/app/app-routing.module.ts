@@ -4,6 +4,7 @@ import {NewsComponent} from "./news/news.component";
 import {PageNotFoundComponent} from "./page-not-found/page-not-found.component";
 import {MainComponent} from "./main/main.component";
 import {PersonComponent} from "./person/person.component";
+import {LoginComponent} from "./login/login.component";
 
 const routes: Routes = [
   {
@@ -34,6 +35,10 @@ const routes: Routes = [
   {
     path: 'person',
     component: PersonComponent
+  },
+  {
+    path: 'login',
+    component: LoginComponent
   },
   {
     path: '**',

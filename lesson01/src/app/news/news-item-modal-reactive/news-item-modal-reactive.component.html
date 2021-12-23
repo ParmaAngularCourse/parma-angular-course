@@ -34,7 +34,7 @@
       </div>
     </ng-container>
 
-    <button (click)="this.saveItem()" [disabled]="!this.newsItemFormGroup.valid" *appPermission="this.perms; action:'edit'">Сохранить</button>
+    <button (click)="this.saveItem()" [disabled]="!this.newsItemFormGroup.valid" *appPermission="'edit'">Сохранить</button>
     <button (click)="this.cancel()">Отмена</button>
   </ng-container>
 </app-modal-window>

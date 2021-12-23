@@ -20,6 +20,7 @@ import {AppRoutingModule} from "./app-routing.module";
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { MainComponent } from './main/main.component';
 import { PersonComponent } from './person/person.component';
+import { LoginComponent } from './login/login.component';
 
 @NgModule({
   declarations: [
@@ -37,7 +38,8 @@ import { PersonComponent } from './person/person.component';
     TagsSelectorComponent,
     PageNotFoundComponent,
     MainComponent,
-    PersonComponent
+    PersonComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule, HttpClientModule, ReactiveFormsModule, AppRoutingModule

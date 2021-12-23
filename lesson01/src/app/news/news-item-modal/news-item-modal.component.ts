@@ -7,7 +7,6 @@ import {
   OnInit,
   Output
 } from '@angular/core';
-import {Permission, PermissionService} from "../../services/permission.service";
 import {NewsItemModel, NewsTag} from "../news-types";
 import {takeUntil} from "rxjs/operators";
 import {HttpErrorResponse} from "@angular/common/http";
@@ -25,17 +24,14 @@ export class NewsItemModalComponent implements OnInit, OnDestroy {
   tagsList: NewsTag[] = [];
   editedItem!: NewsItemModel;
   isVisible: boolean = false;
-  perms: Permission[] = [];
 
   @Output() save : EventEmitter<NewsItemModel> = new EventEmitter<NewsItemModel>();
 
   private _ngUnsubscribe$: Subject<number>;
 
-  constructor(private _permService : PermissionService,
-              private _tagsListService: TagsListService,
+  constructor(private _tagsListService: TagsListService,
               private _cd : ChangeDetectorRef) {
     this._ngUnsubscribe$ = new Subject();
-    this.perms = this._permService.getPermissions();
   }
 
   ngOnInit(): void {
@@ -43,12 +39,12 @@ export class NewsItemModalComponent implements OnInit, OnDestroy {
       .pipe(
         takeUntil(this._ngUnsubscribe$)
       )
-      .subscribe(
-        (data) => {this.tagsList = data;},
-        (error: HttpErrorResponse) => {
+      .subscribe({
+        next: (data) => this.tagsList = data,
+        error: (error: HttpErrorResponse) => {
           console.log(error.status + " " + error.message)
         }
-      );
+      });
   }
 
   onDateChange(value: string) {
