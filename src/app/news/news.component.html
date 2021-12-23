@@ -1,12 +1,25 @@
-<div (contextmenu)="rightClick($event)">
-  <input type="search" class="search" placeholder="Поиск" (keyup)="updateSearch($event)">
-  <div class="context" *ngIf="isContextMenuVisible" [style.top.px]="contextMenuPosition.top" [style.left.px]="contextMenuPosition.left"><button (click)="clickCheckAllButton()">Отметить все</button></div>
-  <button (click)="clickAddButton()">Добавить</button><button *appRights="roleEnum.GlobalDeleter" (click)="clickDeleteButton()" [disabled]="noOneChecked()">Удалить</button>
-  <div class="wrapper">
-    <app-report (initReport)="initReport($event, i)" (deleteReport)="deleteReport(i)" class="news" *ngFor="let n of news; let i = index" [report]="n" [ngClass]="{checked:n.isChecked,left:n.colNum==1,right:n.colNum==3,center:n.colNum==2||n.colNum==null}"></app-report>
+<div class="wrapper news-wrapper">
+  <div class="left">
+    <div class="news-type">
+      <app-crazy-radio appNewsTypeStyle="mediumvioletred" name="options" ng-control="options" value="" [(ngModel)]="newsType" (click)="updateFilter()">Все</app-crazy-radio>
+      <ng-container *ngFor="let item of newsTypeEnum | keyvalue">
+        <app-crazy-radio [appNewsTypeStyle]="newsTypeColors.get(item.value)" ng-control="options" value={{item.value}} name="options" [(ngModel)]="newsType" (click)="updateFilter()">{{item.value}}</app-crazy-radio>
+      </ng-container>
+    </div>
   </div>
-  <app-modal #modal>
-    <div class="modal-header-text">{{modalHeader}}</div>
-    <app-edit-report-form (saveReport)="saveReport($event)" [report]="modalData"></app-edit-report-form>
-  </app-modal>
+  <div (contextmenu)="rightClick($event)" class="center">
+    <input type="search" class="search" placeholder="Поиск" (keyup)="updateSearch($event)">
+    <div class="context" *ngIf="isContextMenuVisible" [style.top.px]="contextMenuPosition.top" [style.left.px]="contextMenuPosition.left"><button (click)="clickCheckAllButton()">Отметить все</button></div>
+    <button (click)="clickAddButton()">Добавить</button>
+    <ng-container *ngIf="canSubmit">
+      <button *appRights="roleEnum.GlobalDeleter" (click)="clickDeleteButton()" [disabled]="noOneChecked()">Удалить</button>
+    </ng-container>
+    <div class="wrapper">
+      <app-report (initReport)="initReport($event, i)" (deleteReport)="deleteReport(i)" class="news" *ngFor="let n of news; let i = index" [report]="n" [ngClass]="{checked:n.isChecked,left:n.colNum==1,right:n.colNum==3,center:n.colNum==2||n.colNum==null}"></app-report>
+    </div>
+    <app-modal #modal>
+      <div class="modal-header-text">{{modalHeader}}</div>
+      <app-edit-report-form (saveReport)="saveReport($event)" [report]="modalData"></app-edit-report-form>
+    </app-modal>
+  </div>
 </div>

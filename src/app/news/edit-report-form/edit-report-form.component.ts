@@ -1,5 +1,6 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AuthService } from '../../auth.service';
 import { Report, NewsType, newsTypeColors } from '../news-types';
 import { Role } from '../roles';
 
@@ -11,7 +12,7 @@ import { Role } from '../roles';
 })
 export class EditReportFormComponent {
 
-  constructor(private fb: FormBuilder) { }
+  constructor(private fb: FormBuilder, private authService: AuthService) { }
 
   @Output() saveReport: EventEmitter<Report> = new EventEmitter();
   @Input() report!: Report;
@@ -19,6 +20,7 @@ export class EditReportFormComponent {
   newsTypeColors = newsTypeColors;
   newsTypeEnum = NewsType;
   roleEnum = Role;
+  canSubmit = this.authService.isAuth();
 
   ngOnChanges() { this.editReportForm.patchValue(this.report); }
 
@@ -29,6 +31,13 @@ export class EditReportFormComponent {
     type: [null, Validators.required],
     colNum: null
   });
+
+  templates = [
+    { name: 'header', header: 'Заголовок', type: 'text' },
+    { name: 'body', header: 'Новость', type: 'text' },
+    { name: 'timestamp', header: 'На момент времени', type: 'date' },
+    { name: 'type', header: 'Тип новости', type: 'radio', enum: this.newsTypeEnum, colors: this.newsTypeColors }
+  ];
 
   submit() {
     this.saveReport.emit(this.editReportForm.value);

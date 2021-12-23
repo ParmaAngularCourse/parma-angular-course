@@ -1,3 +1,5 @@
+import { Validator } from "@angular/forms";
+
 export type Report = {
   header: string,
   body: string,
@@ -22,3 +24,18 @@ export const newsTypeColors = new Map<string, string | "black">([
   [NewsType.Tourism, 'plum'],
   [NewsType.Science, 'hotpink']
 ]);
+
+export type Template = {
+  name: string,
+  header?: string,
+  type?: string,
+  enum?: any,
+  colors?: any,
+  validators?: Validator[]
+}
+
+export type User = {
+  name: string,
+  surname: string,
+  email: string
+}

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, Self } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnInit, Self } from '@angular/core';
 import { ControlValueAccessor, NgControl, NG_VALIDATORS, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 @Component({
@@ -12,12 +12,13 @@ export class CrazyRadioComponent implements OnInit, ControlValueAccessor {
   model: any;
   onChange = (value: any) => { };
   onTouched = () => { };
-  constructor(@Self() private ngControl: NgControl) {
+  constructor(@Self() private ngControl: NgControl, private ref: ChangeDetectorRef) {
     ngControl.valueAccessor = this;
   }
 
   ngOnInit() {
     this.ngControl?.control?.valueChanges.subscribe((value: any) => {
+      this.ref.detectChanges();
       if (this.model === value) return;
       this.writeValue(value);
     });

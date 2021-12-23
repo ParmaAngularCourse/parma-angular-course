@@ -2,10 +2,12 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChild } from '@angular/core';
 import { ModalComponent } from '../modal/modal.component';
 import { NewsService } from '../news.service';
-import { Report } from './news-types';
+import { NewsType, newsTypeColors, Report } from './news-types';
 import { Role } from './roles';
 import { Subject } from 'rxjs';
 import { debounceTime, takeUntil } from 'rxjs/operators';
+import { ActivatedRoute, Router } from '@angular/router';
+import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'app-news',
@@ -15,14 +17,31 @@ import { debounceTime, takeUntil } from 'rxjs/operators';
 })
 export class NewsComponent {
 
-  public news!: Report[];
+  public news: Report[] = [];
   private ngUnsubscribe$!: Subject<number>;
   private searchSubject: Subject<string> = new Subject();
 
-  constructor(private _newsService: NewsService, private ref: ChangeDetectorRef) {
+  constructor(private authService: AuthService, private _newsService: NewsService, private ref: ChangeDetectorRef, private router: Router, private route: ActivatedRoute) {
     this.ngUnsubscribe$ = new Subject();
     this.setSearchSubscription();
-    this._newsService.getNews("").pipe(takeUntil(this.ngUnsubscribe$)).subscribe(((data: any) => { this.news = data; this.ref.markForCheck(); }), (error: HttpErrorResponse) => console.log(error));
+    this.getNews();
+    this.route.queryParams.subscribe(
+      (params: any) => {
+        this.newsType = params['newsType'] ?? "";
+        this.isModalShow = params['isModalShow'] ?? false;
+        this.modalIndex = params['modalIndex'] ?? -1;
+      }
+    );
+  }
+
+  showModal() {
+    console.log(this.news);
+    if (this.isModalShow) {
+      if (this.news.length <= this.modalIndex)
+        this.clickAddButton();
+      else this.initReport(this.news[this.modalIndex], this.modalIndex);
+      this.isModalShow = false;
+    }
   }
 
   @ViewChild('modal') modal!: ModalComponent;
@@ -40,21 +59,38 @@ export class NewsComponent {
   isContextMenuVisible = false;
   contextMenuPosition: { left: number, top: number; } = { left: 0, top: 0 };
   roleEnum = Role;
-  searchText = "";
+  searchText: string | null = null;
+  newsTypeEnum = NewsType;
+  newsTypeColors = newsTypeColors;
+  newsType = "";
+  canSubmit = this.authService.isAuth();
+  isModalShow = false;
+
+  getNews() {
+    this._newsService.getNews(this.searchText ?? "", this.newsType).pipe(takeUntil(this.ngUnsubscribe$)).subscribe(((data: any) => { this.news = data; this.ref.markForCheck(); this.showModal(); }), (error: HttpErrorResponse) => console.log(error));
+  }
 
   setSearchSubscription() {
     this.searchSubject.pipe(
       debounceTime(600)
-    ).subscribe((searchValue: string) => {
-      if (searchValue != this.searchText) {
-        this.searchText = searchValue;
-        this._newsService.getNews(searchValue).pipe(takeUntil(this.ngUnsubscribe$)).subscribe(((data: any) => { this.news = data; this.ref.markForCheck(); }), (error: HttpErrorResponse) => console.log(error));
+    ).subscribe((searchText: string) => {
+      if (searchText != this.searchText) {
+        this.searchText = searchText;
+        this.getNews();
       }
     });
   }
 
   updateSearch(searchTextValue: any) {
     this.searchSubject.next(searchTextValue.target.value);
+  }
+
+  updateFilter() {
+    this.getNews();
+    this.router.navigate(['.'], {
+      relativeTo: this.route, queryParams:
+        { newsType: this.newsType }
+    });
   }
 
   clickAddButton() {
@@ -65,7 +101,7 @@ export class NewsComponent {
       let i = x.colNum ?? 0;
       if (i > 0) { tally[i] = (tally[i] || 0) + 1; }
       return tally;
-    }, {1:0, 2:0, 3:0});
+    }, { 1: 0, 2: 0, 3: 0 });
     this.modalData.colNum = (Object.keys(counts) as unknown as Array<number>).find(key => counts[key] === Math.min(...(Object.values(counts) as unknown as Array<number>)));
     this.modal.show();
   }

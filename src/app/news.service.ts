@@ -10,23 +10,26 @@ import { combineAll, concat, flatMap, map, mergeAll, toArray } from 'rxjs/operat
 })
 export class NewsService {
 
-  constructor(private http: HttpClient) {
-    this.http.get<Report[]>(this.newsGetApi).subscribe((x: any) => this.newsSubject?.next(x));
-  }
+  constructor(private http: HttpClient) { }
 
   private newsSubject = new BehaviorSubject<Report[]>([]);
   newsGetApi = "https://localhost:44360/News";
+  currentFilter: string | null = null;
+  currentType: string | null = null;
 
-  public getNews(filter: string): Observable<Report[]> {
+  public getNews(filter: string, type: string): Observable<Report[]> {
     let colNum = 1;
-    if (filter != "") this.http.get<Report[]>(this.newsGetApi, { params: { filter: filter } }).pipe(
-      mergeAll(),
-      map((x: Report) => {
-        x.colNum = colNum <= 3 ? colNum++ : colNum = 1;
-        return (x);
-      }),
-      toArray()
-    ).subscribe((x: any) => this.newsSubject?.next(x));
+    if (filter != this.currentFilter || type != this.currentType) {
+      this.currentFilter = filter; this.currentType = type;
+      this.http.get<Report[]>(this.newsGetApi, { params: { filter: filter, type: type } }).pipe(
+        mergeAll(),
+        map((x: Report) => {
+          x.colNum = colNum <= 3 ? colNum++ : colNum = 1;
+          return (x);
+        }),
+        toArray()
+      ).subscribe((x: any) => this.newsSubject?.next(x));
+    }
     return this.newsSubject;
   }
 
