@@ -1,4 +1,5 @@
 import { Validator } from "@angular/forms";
+import { Observable } from 'rxjs';
 
 export type Report = {
   header: string,
@@ -38,4 +39,8 @@ export type User = {
   name: string,
   surname: string,
   email: string
+}
+
+export interface ComponentCanDeactivate {
+  canDeactivate: () => boolean | Observable<boolean>;
 }

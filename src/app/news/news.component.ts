@@ -2,12 +2,13 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChild } from '@angular/core';
 import { ModalComponent } from '../modal/modal.component';
 import { NewsService } from '../news.service';
-import { NewsType, newsTypeColors, Report } from './news-types';
+import { ComponentCanDeactivate, NewsType, newsTypeColors, Report } from './news-types';
 import { Role } from './roles';
 import { Subject } from 'rxjs';
 import { debounceTime, takeUntil } from 'rxjs/operators';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../auth.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-news',
@@ -15,7 +16,7 @@ import { AuthService } from '../auth.service';
   styleUrls: ['./news.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class NewsComponent {
+export class NewsComponent implements ComponentCanDeactivate {
 
   public news: Report[] = [];
   private ngUnsubscribe$!: Subject<number>;
@@ -35,7 +36,6 @@ export class NewsComponent {
   }
 
   showModal() {
-    console.log(this.news);
     if (this.isModalShow) {
       if (this.news.length <= this.modalIndex)
         this.clickAddButton();
@@ -65,6 +65,7 @@ export class NewsComponent {
   newsType = "";
   canSubmit = this.authService.isAuth();
   isModalShow = false;
+  isDirty = false;
 
   getNews() {
     this._newsService.getNews(this.searchText ?? "", this.newsType).pipe(takeUntil(this.ngUnsubscribe$)).subscribe(((data: any) => { this.news = data; this.ref.markForCheck(); this.showModal(); }), (error: HttpErrorResponse) => console.log(error));
@@ -104,6 +105,7 @@ export class NewsComponent {
     }, { 1: 0, 2: 0, 3: 0 });
     this.modalData.colNum = (Object.keys(counts) as unknown as Array<number>).find(key => counts[key] === Math.min(...(Object.values(counts) as unknown as Array<number>)));
     this.modal.show();
+    this.isDirty = false;
   }
 
   clickDeleteButton() {
@@ -120,6 +122,7 @@ export class NewsComponent {
     this.modalHeader = "Изменить новость";
     this.modalData = Object.assign({}, $event);
     this.modal.show();
+    this.isDirty = false;
   }
 
   deleteReport(i: number) {
@@ -145,5 +148,13 @@ export class NewsComponent {
     this.ngUnsubscribe$.next(0);
     this.ngUnsubscribe$.complete();
     this.searchSubject.unsubscribe();
+  }
+
+  canDeactivate(): boolean | Observable<boolean> {
+    return this.modal.isModalVisible && this.isDirty ? confirm("Изменения в открытом модальном окне не сохранены. Вы точно хотите покинуть страницу?") : true;
+  }
+
+  setIsDirty() {
+    this.isDirty = true;
   }
 }

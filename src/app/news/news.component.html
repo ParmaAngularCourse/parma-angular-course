@@ -19,7 +19,7 @@
     </div>
     <app-modal #modal>
       <div class="modal-header-text">{{modalHeader}}</div>
-      <app-edit-report-form (saveReport)="saveReport($event)" [report]="modalData"></app-edit-report-form>
+      <app-edit-report-form (saveReport)="saveReport($event)" [report]="modalData" (setIsDirty)="setIsDirty()"></app-edit-report-form>
     </app-modal>
   </div>
 </div>

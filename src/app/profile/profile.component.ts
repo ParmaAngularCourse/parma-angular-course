@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { User } from '../news/news-types';
+import { ComponentCanDeactivate, User } from '../news/news-types';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-profile',
@@ -8,7 +9,7 @@ import { User } from '../news/news-types';
   styleUrls: ['./profile.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ProfileComponent {
+export class ProfileComponent implements ComponentCanDeactivate {
 
   constructor(private fb: FormBuilder) { }
 
@@ -35,5 +36,9 @@ export class ProfileComponent {
 
   cancel() {
     this.userForm.patchValue(this.user);
+  }
+
+  canDeactivate(): boolean | Observable<boolean> {
+    return this.userForm.dirty ? confirm("Изменения не сохранены. Вы точно хотите покинуть страницу?") : true;
   }
 }

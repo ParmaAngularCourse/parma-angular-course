@@ -3,7 +3,7 @@ import { Report } from './news/news-types';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { BehaviorSubject } from 'rxjs';
-import { combineAll, concat, flatMap, map, mergeAll, toArray } from 'rxjs/operators';
+import { map, mergeAll, toArray } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +13,7 @@ export class NewsService {
   constructor(private http: HttpClient) { }
 
   private newsSubject = new BehaviorSubject<Report[]>([]);
-  newsGetApi = "https://localhost:44360/News";
+  newsGetApi = "api/News";
   currentFilter: string | null = null;
   currentType: string | null = null;
 

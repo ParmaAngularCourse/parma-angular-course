@@ -4,11 +4,12 @@ import { AuthGuard } from './auth.guard';
 import { LoginComponent } from './login/login.component';
 import { NewsComponent } from './news/news.component';
 import { ProfileComponent } from './profile/profile.component';
+import { SaveGuard } from './save.guard';
 
 const routes: Routes = [
   { path: '', redirectTo: '/news', pathMatch: 'full' },
-  { path: 'news', component: NewsComponent },
-  { path: 'profile', component: ProfileComponent, canActivate: [AuthGuard] },
+  { path: 'news', component: NewsComponent, canDeactivate: [SaveGuard] },
+  { path: 'profile', component: ProfileComponent, canActivate: [AuthGuard], canDeactivate: [SaveGuard] },
   { path: 'login', component: LoginComponent }
 ];
 

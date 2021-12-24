@@ -12,9 +12,14 @@ import { Role } from '../roles';
 })
 export class EditReportFormComponent {
 
-  constructor(private fb: FormBuilder, private authService: AuthService) { }
+  constructor(private fb: FormBuilder, private authService: AuthService) {
+    this.editReportForm.statusChanges.subscribe((change: any) => {
+      if (this.editReportForm.dirty) this.setIsDirty.emit();
+    })
+  }
 
   @Output() saveReport: EventEmitter<Report> = new EventEmitter();
+  @Output() setIsDirty: EventEmitter<void> = new EventEmitter();
   @Input() report!: Report;
 
   newsTypeColors = newsTypeColors;
