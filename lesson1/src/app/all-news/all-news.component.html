@@ -1,13 +1,24 @@
-<div>
+<div (click)="disableContextMenu()" oncontextmenu="return false;">
 
-    <app-news-post-modal-window (cancel)="onCloseModal()" (saveNews)="onAddNewsPost($event)" 
-    [isOpen]="isOpenedModalCommon" [newsPost]="postToEdit">
-    </app-news-post-modal-window>
-    <div [ngClass]="{'disabled':isOpenedModalCommon}">
-        <button (click)="onOpenModal()">Добавить</button>
 
-        <app-singe-card-news *ngFor="let item of news" [singlePost]="item" (deletePost)="onDeletePost($event)" (editPost)="onEditPost($event)">
+    <app-modal-common [operationTitle]="getTitle()">
+        <app-news-post-modal-window (saveNews)="onAddNewsPost($event)" [newsPost]="postToEdit" 
+         (cancel)="onCloseModal()">
+
+        </app-news-post-modal-window>
+    </app-modal-common>
+
+    <div (contextmenu)="onRightClick($event)">
+        <button (click)="onAddPost()">Добавить</button>
+        <button (click)="onDeleteSelected()" [disabled]="!isAnyToDelete()">Удалить выбранные</button>
+
+        <app-singe-card-news *ngFor="let item of news" [singlePost]="item" (deletePost)="onDeletePost($event)"
+            (editPost)="onEditPost($event)">
         </app-singe-card-news>
     </div>
 
+</div>
+
+<div *ngIf="contextmenu">
+    <app-context-menu [x]="contextmenuX" [y]="contextmenuY" (selectAll)="onSelectAll()"></app-context-menu>
 </div>

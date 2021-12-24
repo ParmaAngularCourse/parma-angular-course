@@ -1,4 +1,6 @@
-import { NewsPost } from "src/models/news-single";
+import { NewsPost } from "src/models/NewsPost";
+import { NewsPostTag } from "src/models/NewsPostTag";
+import { toDateString } from "src/utils/DateUtils";
 
 export class NewsService {
 
@@ -6,15 +8,14 @@ export class NewsService {
     public GetNews(): Array<NewsPost> {
         const news = Array<NewsPost>();
         for (let index = 0; index < 4; index++) {
+            let date = this.randomDate(new Date("1920-01-01"));
             news.push({
                 id: index,
-                title: `Title: ${this.randomString(5)}`,
-                text: `Text: ${this.randomString(250)}`,
-                uploadDate: this.randomDate(new Date("1920-01-01")),
+                title: this.randomString(5),
+                text: this.randomString(100),
+                uploadDate: toDateString(date),
                 isSelected: false,
-                comments : [{
-                    commentText : this.randomString(10)
-                }]
+                tag: NewsPostTag.economics
             });
         }
         return news;
@@ -28,8 +29,8 @@ export class NewsService {
     // Генерация рандомной строки нужной длины
     randomString(length: number) {
         var result = '';
-        var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789абвгдеёжзийклмнопрстуфхцчшщъыьэюяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ ';
-        var charactersLength = characters.length;
+        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789абвгдеёжзийклмнопрстуфхцчшщъыьэюяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ ';
+        const charactersLength = characters.length;
         for (var i = 0; i < length; i++) {
             result += characters.charAt(Math.floor(Math.random() *
                 charactersLength));

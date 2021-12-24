@@ -1,0 +1,11 @@
+<div class="overlay" *ngIf="isModalOpen">
+    
+    <div class="modal-window">
+        <div class="modal-window-menu">
+            <span class="header">{{operationTitle}}</span>
+            <span class="close" (click)="Close()">X</span>
+        </div>
+        <ng-content class="content">
+        </ng-content>
+    </div>
+</div>

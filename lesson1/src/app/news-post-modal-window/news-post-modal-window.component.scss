@@ -1,11 +1,17 @@
-.button{
+.button {
     margin: 16px;
+    cursor: pointer;
 }
-.modal-window {
-    background-color:yellowgreen;
-    position: absolute;
+.post-modal-window {
+    background-color: yellowgreen;
     margin-left: auto;
     margin-right: auto;
-    top: 25%;
-    left: 35%; 
+    width: 100%;
+    height: 100%;
+}
+
+.flex-container { display: flex;}
+
+span{
+    font-weight: bold;
 }

@@ -1,3 +1,3 @@
-export class comment {
+export class Comment {
     commentText : string = "";
 }

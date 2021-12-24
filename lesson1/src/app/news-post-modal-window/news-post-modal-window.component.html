@@ -1,16 +1,39 @@
-<div class="modal-window" *ngIf="isOpen">
+<div class="post-modal-window">
     <div>
-        <label for="postDate">Дата</label>
-        <input id ="postDate" #date type="date" [valueAsDate]="newsPost?.uploadDate">
+        <ng-container [ngTemplateOutlet]="inputPost" #date [ngTemplateOutletContext]="{label:'Дата',
+             type:'datetime-local', 
+             val:newsPost?.uploadDate,
+            id: 'date', action:onDateInputChanged}">
+        </ng-container>
 
-        <label for="title">Заголовок</label>
-        <input id ="title"  #title type="text" [value]="newsPost?.title">
+        <ng-container [ngTemplateOutlet]="inputPost" #title
+            [ngTemplateOutletContext]="{label:'Заголовок', type:'text', val:newsPost?.title??'title', id: 'title', action:onTitleInputChanged}">
+        </ng-container>
 
-        <label for="text" >Текст</label>
-        <input id ="text" #text type="text" [value]="newsPost?.text">
+        <ng-container [ngTemplateOutlet]="inputPost" #text
+            [ngTemplateOutletContext]="{label:'Текст', type:'text', val:newsPost?.text??'text' , id: 'text', action:onTextInputChanged}">
+        </ng-container>
+
+        <ng-container [ngTemplateOutlet]="radioPostTag"
+            [ngTemplateOutletContext]="{enum:newsTags, val:newsPost?.tag, name:'radioTag'}"></ng-container>
+
     </div>
     <div>
-        <input class="button" type="button" (click)="onEditSave(date.value, title.value, text.value)" value="Сохранить"/>
-        <input class="button" type="button" (click)="onCancel()"value="Отмена"/>
+        <input class="button" type="button" (click)="onEditSave()" value="Сохранить" />
+        <input class="button" type="button" (click)="onCancel()" value="Отмена" />
     </div>
 </div>
+
+
+<ng-template #radioPostTag let-enum="enum" let-val="val" let-name="name">
+    <div *ngFor="let item of enum| keyvalue; let i = index ">
+        <input [id]="name" name="name" type="radio" [value]="item" [checked]="item.value === val"
+            (change)="onRadioChange(i)">
+        <label for="name">{{item.value}}</label>
+    </div>
+</ng-template>
+
+<ng-template #inputPost let-label='label' let-type='type' let-val='val' let-id='id' let-action='action'>
+    <label for="input">{{label}}</label>
+    <input [type]='type' #input id="input" [value]='val' (change)=action(input.value)>
+</ng-template>
