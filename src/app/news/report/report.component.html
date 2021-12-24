@@ -1,8 +1,9 @@
 <input [(ngModel)]="report.isChecked" type="checkbox">
 <div>
-  <p style="font-weight:bold">{{report.header}}</p>
+  <p class="header">{{report.header | upperCaseNamePipe}}</p>
   <p>{{report.body}}</p>
   <p>На момент времени: {{report.timestamp}}</p>
-  <button (click)="clickEditButton()">Редактировать</button>
-  <button (click)="clickDeleteButton()" [disabled]="!report.isChecked">Удалить</button>
+  <button [ngClass]="{'news-button': report.isChecked}" (click)="clickEditButton()">Редактировать</button>
+  <button [ngClass]="{'news-button': report.isChecked}" [disabled]="!report.isChecked">Удалить</button>
 </div>
+<div tooltip="{{report.type}}" class="news-type" [appNewsTypeStyle]="report.type ? newsTypeColors.get(report.type) : ''">{{report.type | newsTypePipe}}</div>

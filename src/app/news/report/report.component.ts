@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
-import { Report } from '../news-types';
+import { newsTypeColors, Report } from '../news-types';
 
 @Component({
   selector: 'app-report',
@@ -11,6 +11,7 @@ export class ReportComponent {
   @Input() report!: Report;
   @Output() initReport: EventEmitter<Report> = new EventEmitter();
   @Output() deleteReport: EventEmitter<void> = new EventEmitter();
+  newsTypeColors = newsTypeColors;
 
   clickEditButton() {
     this.initReport.emit(this.report);

@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { Report, NewsType } from '../news-types';
+import { Report, NewsType, newsTypeColors } from '../news-types';
+import { Role } from '../roles';
 
 @Component({
   selector: 'app-edit-report-form',
@@ -14,6 +15,7 @@ export class EditReportFormComponent {
   @Input() report!: Report;
 
   editReportForm!: FormGroup;
+  newsTypeColors = newsTypeColors;
 
   constructor(private fb: FormBuilder) { }
   ngOnChanges() { this.initForm(); }
@@ -27,4 +29,5 @@ export class EditReportFormComponent {
   }
 
   newsTypeEnum = NewsType;
+  roleEnum = Role;
 }
