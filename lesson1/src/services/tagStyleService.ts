@@ -1,6 +1,6 @@
 import { NewsPostTag } from "src/models/NewsPostTag";
 
-export function GetStyleFromTag(tag: NewsPostTag): string {
+export function GetStyleFromTag(tag: any): string {
     switch (tag) {
         case NewsPostTag.economics:
             return "slateblue"

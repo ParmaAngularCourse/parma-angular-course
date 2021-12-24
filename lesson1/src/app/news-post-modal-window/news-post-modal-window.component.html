@@ -29,8 +29,7 @@
     <div *ngFor="let item of enum| keyvalue; let i = index ">
         <input [id]="name" name="name" type="radio" [value]="item" [checked]="item.value === val"
             (change)="onRadioChange(i)" >
-        <label for="name" [appNewsTagStyleDirective]="val">{{item.value}}</label>
-        <span [appNewsTagStyleDirective]="val"> asdsda</span>
+        <label for="name" [appNewsTagStyleDirective]="item.value">{{item.value}}</label>
     </div>
 </ng-template>
 

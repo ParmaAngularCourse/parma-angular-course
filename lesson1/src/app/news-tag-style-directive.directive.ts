@@ -7,7 +7,7 @@ import { GetStyleFromTag } from 'src/services/tagStyleService';
 })
 export class NewsTagStyleDirectiveDirective {
 
-  @Input('appNewsTagStyleDirective') tagValue = NewsPostTag.noTag;
+  @Input('appNewsTagStyleDirective') tagValue : any = NewsPostTag.noTag;
   @HostBinding('style.background-color') backColorStyle!: string;
   constructor() { }
 

@@ -33,13 +33,13 @@ export class NewsPostModalWindowComponent {
     currentEditablePost.title = this.editedTitle === "" ? this.newsPost?.title ?? "" : this.editedTitle;
     currentEditablePost.text = this.editedText === "" ? this.newsPost?.text ?? "" : this.editedText;
     currentEditablePost.uploadDate = this.editedDate === "" ? this.newsPost!.uploadDate : this.editedDate;
-    currentEditablePost.tag = this.editedTag === NewsPostTag.noTag ? NewsPostTag.noTag  : this.editedTag;
+    currentEditablePost.tag = this.editedTag === NewsPostTag.noTag ? NewsPostTag.noTag : this.editedTag;
     const editedNewsPost = new NewsPost(currentEditablePost);
     this.newsPost = null;
-    this. editedText = "";
-    this. editedTitle = "";
-    this. editedDate = "";
-    this. editedTag = NewsPostTag.noTag;
+    this.editedText = "";
+    this.editedTitle = "";
+    this.editedDate = "";
+    this.editedTag = NewsPostTag.noTag;
     this.saveNews.emit(editedNewsPost);
     this.onCancel();
   }
@@ -66,4 +66,23 @@ export class NewsPostModalWindowComponent {
   onDateInputChanged = (value: string) => {
     this.editedDate = value;
   };
+
+  getTagByName(tagName: string): NewsPostTag {
+
+    console.log(tagName);
+    switch (tagName) {
+      case "Экономика":
+        return NewsPostTag.economics
+      case "Интернет":
+        return NewsPostTag.internet
+      case "Политика":
+        return NewsPostTag.politycs
+      case "Наука":
+        return NewsPostTag.science
+      case "Туризм":
+        return NewsPostTag.tourism
+      default:
+        return NewsPostTag.noTag
+    }
+  }
 }
