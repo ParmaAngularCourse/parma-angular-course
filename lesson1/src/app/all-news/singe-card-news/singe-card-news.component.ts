@@ -5,7 +5,7 @@ import { NewsPost } from 'src/models/NewsPost';
   selector: 'app-singe-card-news',
   templateUrl: './singe-card-news.component.html',
   styleUrls: ['./singe-card-news.component.scss'],
-  //changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SingeCardNewsComponent {
 

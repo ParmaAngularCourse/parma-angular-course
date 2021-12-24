@@ -1,16 +1,23 @@
 <div>
     <div class="card" [ngClass]="{'selected-card ':singlePost.isSelected}">
         <input type="checkbox" [value]="singlePost.isSelected" [checked]="singlePost.isSelected" (click)='onSelect()'>
-        <span>Text: {{singlePost.title}}</span>
+        <span>Title: {{singlePost.title | capitalLetterPipe}}</span>
         <br>
-        <span>Title: {{singlePost.text}}</span>
+        <span>Text: {{singlePost.text }}</span>
         <br>
         <span>Tag: {{singlePost.tag}}</span>
         <br>
         <span>Date: {{singlePost.uploadDate | date:'medium'}}</span>
+        <br>
+        
+        <div class="tag">
+            <span [appNewsTagStyleDirective]="singlePost.tag" class="tag-short"> {{singlePost.tag | firstLetterPipe}}</span>
+            <span class="tooltip"> {{singlePost.tag}}</span>
+        </div>
         <div>
             <input class=".button" type="button" (click)="onEdit()" value="Редактировать" />
-            <input class=".button" type="button" (click)="onDeletePost()" [disabled]="!singlePost.isSelected" value="Удалить"/>
+            <input class=".button" type="button" (click)="onDeletePost()" [disabled]="!singlePost.isSelected"
+                value="Удалить" />
         </div>
     </div>
 </div>

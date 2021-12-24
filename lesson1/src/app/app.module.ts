@@ -8,6 +8,10 @@ import { SingeCardNewsComponent } from './all-news/singe-card-news/singe-card-ne
 import { NewsPostModalWindowComponent } from './news-post-modal-window/news-post-modal-window.component';
 import { ContextMenuComponent } from './context-menu/context-menu.component';
 import { ModalCommonComponent } from './modal-common/modal-common.component';
+import { CapitalLetterPipePipe } from './capital-letter-pipe.pipe';
+import { PermissionDirectiveDirective } from './permission-directive.directive';
+import { FirstLetterPipePipe } from './first-letter-pipe.pipe';
+import { NewsTagStyleDirectiveDirective } from './news-tag-style-directive.directive';
 
 @NgModule({
   declarations: [
@@ -16,7 +20,11 @@ import { ModalCommonComponent } from './modal-common/modal-common.component';
     SingeCardNewsComponent,
     NewsPostModalWindowComponent,
     ContextMenuComponent,
-    ModalCommonComponent
+    ModalCommonComponent,
+    CapitalLetterPipePipe,
+    PermissionDirectiveDirective,
+    FirstLetterPipePipe,
+    NewsTagStyleDirectiveDirective
   ],
   imports: [
     BrowserModule, FormsModule

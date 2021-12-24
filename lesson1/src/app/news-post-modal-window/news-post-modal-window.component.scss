@@ -3,15 +3,17 @@
     cursor: pointer;
 }
 .post-modal-window {
-    background-color: yellowgreen;
+    background-color: whitesmoke;
     margin-left: auto;
     margin-right: auto;
     width: 100%;
     height: 100%;
 }
 
-.flex-container { display: flex;}
+.flex-container {
+    display: flex;
+}
 
-span{
+span {
     font-weight: bold;
 }

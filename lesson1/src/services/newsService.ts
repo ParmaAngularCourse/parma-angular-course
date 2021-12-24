@@ -15,7 +15,7 @@ export class NewsService {
                 text: this.randomString(100),
                 uploadDate: toDateString(date),
                 isSelected: false,
-                tag: NewsPostTag.economics
+                tag: NewsPostTag.politycs
             });
         }
         return news;

@@ -18,6 +18,8 @@ export class NewsPostModalWindowComponent {
   @Output() saveNews = new EventEmitter<NewsPost>();
   @Output() cancel = new EventEmitter<void>();
 
+  @Input() userPermissions = "";
+
   newsTags = Object.values(NewsPostTag).filter(x => x != NewsPostTag.noTag);
 
   private editedText = "";

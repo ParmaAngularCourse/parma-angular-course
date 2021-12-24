@@ -19,7 +19,7 @@
 
     </div>
     <div>
-        <input class="button" type="button" (click)="onEditSave()" value="Сохранить" />
+        <input class="button" type="button" (click)="onEditSave()" value="Сохранить"  />
         <input class="button" type="button" (click)="onCancel()" value="Отмена" />
     </div>
 </div>
@@ -28,8 +28,9 @@
 <ng-template #radioPostTag let-enum="enum" let-val="val" let-name="name">
     <div *ngFor="let item of enum| keyvalue; let i = index ">
         <input [id]="name" name="name" type="radio" [value]="item" [checked]="item.value === val"
-            (change)="onRadioChange(i)">
-        <label for="name">{{item.value}}</label>
+            (change)="onRadioChange(i)" >
+        <label for="name" [appNewsTagStyleDirective]="val">{{item.value}}</label>
+        <span [appNewsTagStyleDirective]="val"> asdsda</span>
     </div>
 </ng-template>
 

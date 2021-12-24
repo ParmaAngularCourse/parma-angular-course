@@ -2,7 +2,7 @@
 
 
     <app-modal-common [operationTitle]="getTitle()">
-        <app-news-post-modal-window (saveNews)="onAddNewsPost($event)" [newsPost]="postToEdit" 
+        <app-news-post-modal-window (saveNews)="onAddNewsPost($event)" [newsPost]="postToEdit" [userPermissions]="userPermission"
          (cancel)="onCloseModal()">
 
         </app-news-post-modal-window>
