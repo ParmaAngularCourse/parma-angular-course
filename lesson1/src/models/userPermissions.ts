@@ -1,1 +1,1 @@
-export const UserPemission = "admin"
+export const UserHasPemission = true;

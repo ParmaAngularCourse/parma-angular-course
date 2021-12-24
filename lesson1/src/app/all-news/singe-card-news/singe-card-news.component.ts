@@ -10,6 +10,7 @@ import { NewsPost } from 'src/models/NewsPost';
 export class SingeCardNewsComponent {
 
   @Input() singlePost!: NewsPost
+  @Input() userPermissions = false;
   @Output() deletePost =  new EventEmitter<number>();
   @Output() editPost = new EventEmitter<number>();
 

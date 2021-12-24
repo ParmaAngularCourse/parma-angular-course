@@ -18,7 +18,7 @@ export class NewsPostModalWindowComponent {
   @Output() saveNews = new EventEmitter<NewsPost>();
   @Output() cancel = new EventEmitter<void>();
 
-  @Input() userPermissions = "";
+  @Input() userPermissions = false;
 
   newsTags = Object.values(NewsPostTag).filter(x => x != NewsPostTag.noTag);
 

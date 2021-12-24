@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
-import { flatMap } from 'rxjs';
-import { UserPemission } from 'src/models/userPermissions';
+import { UserHasPemission } from 'src/models/userPermissions';
 import { NewsService } from 'src/services/newsService';
 import { NewsPost } from '../../models/NewsPost';
 import { ModalCommonComponent } from '../modal-common/modal-common.component';
@@ -21,8 +20,8 @@ export class AllNewsComponent {
   contextmenuY = 0;
   news: NewsPost[] = new NewsService().GetNews();
   postToEdit: NewsPost = new NewsPost();
-  userPermission = UserPemission;
-  
+  userPermission :boolean = UserHasPemission;
+
   onDeletePost(postId: number) {
     this.news = this.news.filter(item => item.id != postId);
   }

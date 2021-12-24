@@ -17,6 +17,7 @@
         <div>
             <input class=".button" type="button" (click)="onEdit()" value="Редактировать" />
             <input class=".button" type="button" (click)="onDeletePost()" [disabled]="!singlePost.isSelected"
+            *appPermissionDirective="userPermissions"
                 value="Удалить" />
         </div>
     </div>
