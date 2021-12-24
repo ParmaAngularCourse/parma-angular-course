@@ -66,23 +66,4 @@ export class NewsPostModalWindowComponent {
   onDateInputChanged = (value: string) => {
     this.editedDate = value;
   };
-
-  getTagByName(tagName: string): NewsPostTag {
-
-    console.log(tagName);
-    switch (tagName) {
-      case "Экономика":
-        return NewsPostTag.economics
-      case "Интернет":
-        return NewsPostTag.internet
-      case "Политика":
-        return NewsPostTag.politycs
-      case "Наука":
-        return NewsPostTag.science
-      case "Туризм":
-        return NewsPostTag.tourism
-      default:
-        return NewsPostTag.noTag
-    }
-  }
 }
