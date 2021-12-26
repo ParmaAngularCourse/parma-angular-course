@@ -16,6 +16,7 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthorizationService } from './service/authorization.service';
 import { ReactiveFormsModule } from '@angular/forms';
 import { DatePipe } from '@angular/common';
+import { NewsTypeComponent } from './news-editor/news-type/news-type.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,8 @@ import { DatePipe } from '@angular/common';
     GetNewsColorPipe,
     NewsStylesDirective,
     NewsTypeColorDirective,
-    CheckAccessDirective
+    CheckAccessDirective,
+    NewsTypeComponent
   ],
   imports: [
     BrowserModule,

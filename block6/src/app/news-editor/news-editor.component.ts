@@ -3,7 +3,6 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, On
 import { AbstractControl, FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { INewsData } from 'src/model/INewsData';
 import { TypeNews } from 'src/model/TypeNews';
-import { TypeNewsColorDictionary } from 'src/model/TypeNewsColorDictionary';
 
 @Component({
   selector: 'app-news-editor',
@@ -14,16 +13,7 @@ import { TypeNewsColorDictionary } from 'src/model/TypeNewsColorDictionary';
 export class NewsEditorComponent implements OnInit { 
   @Output() public saveEditForm: EventEmitter<INewsData> = new EventEmitter(); 
   public currentNews: INewsData;
-
-  public id:number = -1;
-  public newsDate:Date|null = null; 
-  public newsTitle:string = "Заголовок";
-  public newsBody:string = "Текст";
-  public newsType:TypeNews = TypeNews.Type0_None;
-  public radioDataSource: typeof TypeNews = TypeNews;
-  public newsTypeColorDict: typeof TypeNewsColorDictionary = TypeNewsColorDictionary;
-  public isVisible: boolean = false;
-  
+  public isVisible: boolean = false;  
   public editForm!: FormGroup
 
   private getNewsDateControl():FormControl{
@@ -38,14 +28,12 @@ export class NewsEditorComponent implements OnInit {
     return this.editForm.controls['newsBodyControl'];
   }
 
+  private getNewsTypeControl():AbstractControl{
+    return this.editForm.controls['newsTypeControl'];
+  }
+
   constructor(private cd:ChangeDetectorRef, private fb: FormBuilder, private datepipe: DatePipe){
-    this.currentNews = {
-      id: -1,
-      date: new Date(),
-      title: "Заголовок",
-      body: "Текст",
-      type: TypeNews.Type0_None
-    }
+    this.currentNews = this.getDefaultNewsData();
   }
 
   ngOnInit(): void {
@@ -53,14 +41,16 @@ export class NewsEditorComponent implements OnInit {
       {        
         newsDateControl: [this.getDateToLocalStringFormat(this.currentNews.date), { updateOn: 'change' }],
         newsTitleControl: [this.currentNews.title],
-        newsBodyControl: [this.currentNews.body]
+        newsBodyControl: [this.currentNews.body],
+        newsTypeControl: [this.currentNews.type, { updateOn: 'change' }], 
       },
       { updateOn: 'blur'}
     );
     
     this.getNewsDateControl(). valueChanges.subscribe((value:string)=> this.onChangeNewsDate(value))
     this.getNewsTitleControl().valueChanges.subscribe((value:string)=> this.onChangeNewsTitle(value))
-    this.getNewsBodyControl().valueChanges.subscribe((value:string)=> this.onChangeNewsBody(value))    
+    this.getNewsBodyControl().valueChanges.subscribe((value:string)=> this.onChangeNewsBody(value))
+    this.getNewsTypeControl().valueChanges.subscribe((value:TypeNews)=> this.onChangeNewsType(value))
   }
 
   saveForm() {
@@ -73,6 +63,9 @@ export class NewsEditorComponent implements OnInit {
     if(newsData){
       this.currentNews = { ...newsData };
     }
+    else{
+      this.currentNews = this.getDefaultNewsData();
+    }
 
     this.editForm.patchValue({
       newsDateControl: this.getDateToLocalStringFormat(this.currentNews.date),
@@ -81,11 +74,6 @@ export class NewsEditorComponent implements OnInit {
       newsTypeControl: this.currentNews.type
     });
 
-    /*this.id = this.currentNews.id;
-    this.newsDate = this.currentNews.date;
-    this.newsTitle = this.currentNews.title;
-    this.newsBody = this.currentNews.body;
-    this.newsType = this.currentNews.type;*/
     this.cd.markForCheck();
   }
 
@@ -117,17 +105,22 @@ export class NewsEditorComponent implements OnInit {
   onChangeNewsBody(value:string){
     this.currentNews.body = value;
   }
-/*
-  onChangeNewsType(value:TypeNews){
-    this.newsType = value;
-  }
 
-  getNewsTypeColor(value:keyof typeof TypeNews):string{
-    var typeNews = TypeNews[value];
-    return TypeNewsColorDictionary.get(typeNews) ?? "";
-  }*/
+  onChangeNewsType(value:TypeNews){
+    this.currentNews.type = value;
+  }
 
   ngDoCheck(){
     console.log('app-news-editor - ' + this.currentNews.title);
+  }
+
+  private getDefaultNewsData():INewsData{
+    return {
+      id: -1,
+      date: new Date(),
+      title: "Заголовок",
+      body: "Текст",
+      type: TypeNews.Type0_None
+    }
   }
 }
