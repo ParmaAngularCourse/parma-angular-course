@@ -5,6 +5,7 @@ import {PageNotFoundComponent} from "./page-not-found/page-not-found.component";
 import {MainComponent} from "./main/main.component";
 import {PersonComponent} from "./person/person.component";
 import {LoginComponent} from "./login/login.component";
+import {AuthGuard} from "./services/auth.guard";
 
 const routes: Routes = [
   {
@@ -34,6 +35,7 @@ const routes: Routes = [
   },
   {
     path: 'person',
+    canActivate: [AuthGuard],
     component: PersonComponent
   },
   {
