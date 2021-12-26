@@ -8,7 +8,7 @@ import {
   OnDestroy
 } from '@angular/core';
 import {NewsItemModel} from "../news-types";
-import {Subject, Subscription} from "rxjs";
+import {Subject} from "rxjs";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {Permission} from "../../types";
 import {PersonInfoService} from "../../services/person-info.service";
@@ -42,18 +42,10 @@ export class NewsItemModalReactiveComponent implements OnInit, OnDestroy {
     return this.newsItemFormGroup.get('tagsField') as FormControl;
   }
 
-  private _valueChangeSubscription!: Subscription;
 
   constructor(private _cd : ChangeDetectorRef) {}
 
   ngOnInit(): void {
-    this.addControls();
-  }
-
-  addControls() : void {
-    if(this._valueChangeSubscription)
-      this._valueChangeSubscription.unsubscribe();
-
     this.newsItemFormGroup = new FormGroup({
       dateField : new FormControl('', [Validators.required, dateNotFutureValidator]),
       headField : new FormControl('', [Validators.required]),
@@ -61,7 +53,7 @@ export class NewsItemModalReactiveComponent implements OnInit, OnDestroy {
       tagsField : new FormControl('', [Validators.required])
     });
 
-    this._valueChangeSubscription = this.newsItemFormGroup.valueChanges
+    this.newsItemFormGroup.valueChanges
       .subscribe(
         (value => {
           this.editedItem.date = new Date(value.dateField);
@@ -73,8 +65,6 @@ export class NewsItemModalReactiveComponent implements OnInit, OnDestroy {
   }
 
   show(item?: NewsItemModel) {
-    this.addControls();
-
     if(item != undefined){
       this.editedItem = new NewsItemModel(item.id, item.date, item.head, item.desc, item.tag);
       this.editedItem.selected = item.selected;
@@ -94,6 +84,7 @@ export class NewsItemModalReactiveComponent implements OnInit, OnDestroy {
   }
 
   cancel() {
+    this.newsItemFormGroup.reset();
     this.isVisible = false;
   }
 
@@ -103,8 +94,6 @@ export class NewsItemModalReactiveComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    if(this._valueChangeSubscription)
-      this._valueChangeSubscription.unsubscribe();
   }
 }
 

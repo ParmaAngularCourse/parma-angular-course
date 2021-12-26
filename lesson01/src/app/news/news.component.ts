@@ -10,12 +10,21 @@ import {NewsItemModel} from "./news-types";
 import {ContextMenuComponent} from "./context-menu/context-menu.component";
 import {NewsItemComponent} from "./news-item/news-item.component";
 import {NewsService} from "./services/news.service";
-import {HttpErrorResponse} from "@angular/common/http";
-import {Subject} from "rxjs";
-import {debounceTime, distinctUntilChanged, map, takeUntil} from "rxjs/operators";
+//import {HttpErrorResponse} from "@angular/common/http";
+import {of, Subject} from "rxjs";
+import {
+  bufferCount,
+  concatAll,
+  debounceTime,
+  distinctUntilChanged,
+  map,
+  startWith,
+  switchMap,
+  takeUntil, toArray
+} from "rxjs/operators";
 import {NewsItemModalReactiveComponent} from "./news-item-modal-reactive/news-item-modal-reactive.component";
 import {ActivatedRoute} from "@angular/router";
-import {PersonInfoService} from "../services/person-info.service";
+//import {PersonInfoService} from "../services/person-info.service";
 
 @Component({
   selector: 'app-news',
@@ -62,6 +71,7 @@ export class NewsComponent implements OnInit, OnDestroy {
       .pipe(
         debounceTime(600),
         map((event: any) => event.target.value),
+        startWith(''),
         distinctUntilChanged(),
         takeUntil(this._ngUnsubscribe$)
       )
@@ -74,49 +84,25 @@ export class NewsComponent implements OnInit, OnDestroy {
   }
 
   private doSearch() {
-    let ss = this._newsService.getNews(this._searchVal, this._selectedTag)
+    this._newsService.getNews(this._searchVal, this._selectedTag)
       .pipe(
+        switchMap(data => {
+          return of(data).pipe(
+            concatAll(),
+            bufferCount(3),
+            toArray()
+          )
+        }),
         takeUntil(this._ngUnsubscribe$)
-      );
-
-    ss.pipe(
-      map(p => p.filter(m => m.tag === "politic")),
-      takeUntil(this._ngUnsubscribe$)
-    ).subscribe(
-      (data) => {
-        this.newsTab1 = data;
-        this._cd.detectChanges();
-      },
-      (error: HttpErrorResponse) => {
-        console.log(error.status + " " + error.message)
-      }
-    );
-
-    ss.pipe(
-      map(p => p.filter(m => m.tag === "internet")),
-      takeUntil(this._ngUnsubscribe$)
-    ).subscribe(
-      (data) => {
-        this.newsTab2 = data;
-        this._cd.detectChanges();
-      },
-      (error: HttpErrorResponse) => {
-        console.log(error.status + " " + error.message)
-      }
-    );
-
-    ss.pipe(
-      map(p => p.filter(m => m.tag !== "internet" && m.tag !== "politic")),
-      takeUntil(this._ngUnsubscribe$)
-    ).subscribe(
-      (data) => {
-        this.newsTab3 = data;
-        this._cd.detectChanges();
-      },
-      (error: HttpErrorResponse) => {
-        console.log(error.status + " " + error.message)
-      }
-    );
+      )
+      .subscribe({
+        next: value => {
+          this.newsTab1 = value.filter(p => p[0] != null).map(m => {return m[0];})
+          this.newsTab2 = value.filter(p => p[1] != null).map(m => {return m[1];})
+          this.newsTab3 = value.filter(p => p[2] != null).map(m => {return m[2];})
+          this._cd.detectChanges();
+        }
+      });
   }
 
   onEditItem($event: NewsItemModel) {
