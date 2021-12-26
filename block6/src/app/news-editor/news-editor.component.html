@@ -1,5 +1,5 @@
 <ng-container *ngIf = "isVisible">
-    <div class="mmodal">
+    <div [formGroup]="editForm" class="mmodal">
         <div class="mmodal-body">
             <div id="header-block">
                 <div id="header-caption-block">                
@@ -10,7 +10,19 @@
                 </div>                         
             </div>          
             <ul class="input-data-block">
-                <ng-container 
+                <li class="input-data-group">              
+                    <label class ="input-data-label">Дата:</label><br> 
+                    <input formControlName="newsDateControl" type="datetime-local">
+                </li>
+                <li class="input-data-group">              
+                    <label class ="input-data-label">Заголовок:</label><br> 
+                    <input formControlName="newsTitleControl" type="text" class="input-data-textbox">
+                </li>
+                <li class="input-data-group">              
+                    <label class ="input-data-label">Текст:</label><br> 
+                    <textarea formControlName="newsBodyControl" class="input-data-textarea"></textarea>
+                </li>
+                <!--<ng-container 
                     [ngTemplateOutlet]="inputTemplate"
                     [ngTemplateOutletContext]="{
                         inputCaption: 'Дата',
@@ -46,7 +58,7 @@
                     inputDataSource: radioDataSource,
                     initBackColorFunc: getNewsTypeColor.bind(this)
                 }">
-                </ng-container>  
+                </ng-container>-->  
             </ul>
             <div>
                 <button *appCheckAccess = "'Save'" class="control-button" (click)="saveForm()">Сохранить</button>

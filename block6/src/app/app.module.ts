@@ -14,6 +14,8 @@ import { NewsTypeColorDirective } from './Directives/news-type-color.directive';
 import { CheckAccessDirective } from './Directives/check-access.directive';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthorizationService } from './service/authorization.service';
+import { ReactiveFormsModule } from '@angular/forms';
+import { DatePipe } from '@angular/common';
 
 @NgModule({
   declarations: [
@@ -31,14 +33,16 @@ import { AuthorizationService } from './service/authorization.service';
   ],
   imports: [
     BrowserModule,
-    HttpClientModule
+    HttpClientModule,
+    ReactiveFormsModule
   ],
   providers: [
     {
       provide:HTTP_INTERCEPTORS,
       useClass: AuthorizationService,
       multi: true
-    }
+    },
+    DatePipe
   ],
   bootstrap: [AppComponent]
 })
