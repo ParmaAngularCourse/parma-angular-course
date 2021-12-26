@@ -1,13 +1,14 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Directive, Input, TemplateRef, ViewContainerRef } from '@angular/core';
+import { Directive, Input, OnDestroy, OnInit, TemplateRef, ViewContainerRef } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { User } from 'src/model/User';
 import { AuthorizationService } from '../service/authorization.service';
 
+
 @Directive({
   selector: '[appCheckAccess]'
 })
-export class CheckAccessDirective {
+export class CheckAccessDirective implements OnInit, OnDestroy {
   @Input('appCheckAccess') AccessKey:string = ""
   private unsubscriptionSubj!:Subject<void>
 
@@ -30,8 +31,7 @@ export class CheckAccessDirective {
           else{
             this.view.clear();
           }
-        }
-        //this.cd.markForCheck();
+        }        
       },
       error: (error: HttpErrorResponse) => 
       {

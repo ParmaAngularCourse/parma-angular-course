@@ -16,24 +16,15 @@ export class NewsService {
   public getNewsList():Observable<INewsData[]>{
     if(!this.newsListSubject){
       this.newsListSubject = new BehaviorSubject<INewsData[]>([]);
-      this.httpService.get<ServerResponse<INewsData[]>>('https://localhost:44379/api/NewsData/GetNews')
-      .pipe()
+      this.httpService.get<ServerResponse<INewsData[]>>('https://localhost:44379/api/NewsData/GetNews')      
       .subscribe({
         next: (response)=> { 
-          var newsList:News[] = [];
           if (response.isSuccess === false) {
-            console.error(`Ошибка при получении данных c сервера: ${response.errorText}`)
-            //throw new TypeError(`Ошибка при получении данных сервера ${response.errorText}`)
+            console.error(`Ошибка при получении данных c сервера: ${response.errorText}`)            
           }
           else{
-            newsList = response?.data?.map(sNews=>new News(sNews.id,
-                                                       new Date(sNews.date),
-                                                       sNews.title,
-                                                       sNews.body,
-                                                       sNews.type)) ?? []
+            this.CreateNewsList(response?.data);            
           }
-          newsList = newsList.sort((newsF, newsS)=>newsS.date.getTime() - newsF.date.getTime());
-          this.newsListSubject?.next(newsList); 
         },
         error:(err)=> { console.error(`Ошибка при получении данных c сервера: ${err}`)}        
       });
@@ -43,67 +34,102 @@ export class NewsService {
   }
 
   public addNews(news: INewsData){
-    if(this.newsListSubject){
-      var newsArray = this.newsListSubject?.value ?? [];
-      var editNews = new News(news.id, news.date, news.title, news.body, news.type);
-      if(newsArray.length > 0){
-        var newsIndex = newsArray.findIndex(x=>x.id == editNews.id);
-        if(newsIndex < 0){
-          var maxNewsId = Math.max.apply(Math, newsArray.map(function(n) { return n.id; }));
-          editNews.id = maxNewsId + 1;
+    this.httpService.post<ServerResponse<INewsData>>('https://localhost:44379/api/NewsData/AddNews', news)
+    .subscribe({
+      next: (response)=> {
+        if (response.isSuccess === false) {
+          console.error(`При попытке изменить список новостей возникла ошибка: ${response.errorText}`)            
         }
-      }
-      else{
-        editNews.id = 0;
-      }
-      this.httpService.post<ServerResponse<void>>('https://localhost:44379/api/NewsData/AddNews',editNews)
-      .pipe()
-      .subscribe({
-        next: (response)=> {
-          if (response.isSuccess === false) {
-            console.error(`При попытке изменить список новостей возникла ошибка: ${response.errorText}`)            
-          }
-          else{            
-            var newsIndex = newsArray.findIndex(x=>x.id == editNews.id);
-            if(newsIndex > -1){
-              newsArray[newsIndex] = editNews;
+        else{
+          if(response?.data){
+            var editNews = this.NewsDataToNews(response.data);            
+            if(this.isExistingNews(editNews)){
+              this.updateNewsItem(editNews);
             }
             else{
-              newsArray.push(editNews);      
-            }       
-            newsArray = newsArray.sort((newsF, newsS)=>newsS.date.getTime() - newsF.date.getTime());
-            this.newsListSubject?.next(newsArray);
-          }           
-        },
-        error:(err)=> { console.error(`При попытке изменить список новостей возникла ошибка: ${err}`)}        
-      });
-    }
+              this.addNewsItem(editNews);
+            } 
+          }
+        }           
+      },
+      error:(err)=> { console.error(`При попытке изменить список новостей возникла ошибка: ${err}`)}        
+    });    
   }  
 
   public deleteNews(news:News){
-    if(this.newsListSubject){  
-      var params = new HttpParams().set('newsId',news.id)    
-      this.httpService.delete<ServerResponse<void>>('https://localhost:44379/api/NewsData/DeleteNews',{
-        params: params
-      })
-      .pipe()
-      .subscribe({
-        next: (response)=> {  
-          var newsArray = this.newsListSubject?.value ?? [];         
-          if (response.isSuccess === false) {
-            console.error(`При попытке удалить новость возникла ошибка: ${response.errorText}`)            
-          }
-          else{
-            var newsIndex = newsArray.indexOf(news, 0);
-            if (newsIndex > -1) {
+    var params = new HttpParams().set('newsId',news.id)    
+    this.httpService.delete<ServerResponse<void>>('https://localhost:44379/api/NewsData/DeleteNews',{
+      params: params
+    })
+    .subscribe({
+      next: (response)=> {                 
+        if (response.isSuccess === false) {
+          console.error(`При попытке удалить новость возникла ошибка: ${response.errorText}`)            
+        }
+        else{
+          this.DeleteNewsItem(news);            
+        }           
+      },        
+      error:(err)=> { console.error(`При попытке удалить новость возникла ошибка: ${err}`)}        
+    });    
+  }
 
-              newsArray.splice(newsIndex, 1);
-            }
-            this.newsListSubject?.next(newsArray);
-          }           
-        },
-        error:(err)=> { console.error(`При попытке удалить новость возникла ошибка: ${err}`)}        
-      });
+  private CreateNewsList(newsDataList: INewsData[]|undefined): void 
+  {
+    var newsList = newsDataList?.map(sNews=> this.NewsDataToNews(sNews)) ?? []
+    if(newsList.length > 0){
+      newsList = this.SortNewsList(newsList);
     }
+
+    this.newsListSubject?.next(newsList);
+  }
+
+  private isExistingNews(news: INewsData): boolean 
+  {
+    return this.GetNewsIndex(news) >= 0;
+  }
+
+  private updateNewsItem(news: INewsData): void 
+  {
+    var newsArray = this.newsListSubject?.value ?? [];
+    var newsIndex = this.GetNewsIndex(news);
+    newsArray[newsIndex] = news;
+    newsArray = this.SortNewsList(newsArray);
+    this.newsListSubject?.next(newsArray);
+  }
+
+  private addNewsItem(news: INewsData): void 
+  {
+    var newsArray = this.newsListSubject?.value ?? [];
+    newsArray.push(news);
+    newsArray = this.SortNewsList(newsArray);
+    this.newsListSubject?.next(newsArray);
+  }
+
+  private DeleteNewsItem(news: INewsData): void 
+  {
+    if(this.isExistingNews(news)){
+      var newsArray = this.newsListSubject?.value ?? [];
+      var newsIndex = this.GetNewsIndex(news);
+      newsArray.splice(newsIndex, 1);      
+      this.newsListSubject?.next(newsArray);
+    }
+  }
+
+  private GetNewsIndex(news: INewsData): number{
+    var newsArray = this.newsListSubject?.value ?? [];
+    return newsArray.findIndex(x=>x.id == news.id)
+  }
+
+  private NewsDataToNews(newsData: INewsData): News{
+    return new News(newsData.id,
+                    new Date(newsData.date),
+                    newsData.title,
+                    newsData.body,
+                    newsData.type)
+  }
+
+  private SortNewsList(newsList: News[]):News[]{
+    return newsList.sort((newsF, newsS)=>newsS.date.getTime() - newsF.date.getTime());
   }
 }

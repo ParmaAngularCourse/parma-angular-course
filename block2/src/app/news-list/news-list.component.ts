@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { INewsData } from 'src/model/INewsData';
 import { News } from 'src/model/News';
@@ -14,7 +14,7 @@ import { NewsBlockComponent } from './news-block/news-block.component';
   styleUrls: ['./news-list.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class NewsListComponent implements OnInit {
+export class NewsListComponent implements OnInit, OnDestroy {
   @ViewChild('newsEditForm') newsEditForm!: NewsEditorComponent
   @ViewChild('contextMenu') newsContextMenu!: NewsContextMenuComponent
   @ViewChildren(NewsBlockComponent) childrenComponents!:QueryList<NewsBlockComponent>

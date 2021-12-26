@@ -38,7 +38,7 @@ namespace AngularAppDataServer.Repositories
             return Task.CompletedTask;
         }
 
-        internal Task AddNews(News news)
+        internal Task<News> AddNews(News news)
         {
             if (news != null) 
             {
@@ -53,17 +53,20 @@ namespace AngularAppDataServer.Repositories
                         }
                         else
                         {
+                            var newId = newsList.Max(x => x.Id);
+                            news.Id = newId + 1;
                             newsList.Add(news);
                         }
                     }
                     else
                     {
+                        news.Id = 0;
                         newsList.Add(news);
                     }
                 }
             }
 
-            return Task.CompletedTask;
+            return Task.FromResult(news);
         }
 
         internal Task<IEnumerable<News>> LoadNewsData()

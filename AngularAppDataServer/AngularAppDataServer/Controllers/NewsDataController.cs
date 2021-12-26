@@ -26,7 +26,7 @@ namespace AngularAppDataServer.Controllers
         }
 
         [HttpPost]
-        public async Task<ServiceResponse<object>> AddNews(News news)
+        public async Task<ServiceResponse<News>> AddNews(News news)
         {
             return await executeService.TryExecute(() => dataService.AddNews(news));
         }

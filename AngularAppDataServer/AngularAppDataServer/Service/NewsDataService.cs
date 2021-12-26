@@ -20,9 +20,9 @@ namespace AngularAppDataServer.Service
             return await dataRepository.LoadNewsData().ConfigureAwait(false);
         }
 
-        internal async Task AddNews(News news)
+        internal async Task<News> AddNews(News news)
         {
-            await dataRepository.AddNews(news).ConfigureAwait(false);
+            return await dataRepository.AddNews(news).ConfigureAwait(false);
         }
 
         internal async Task DeleteNews(int newsId)
