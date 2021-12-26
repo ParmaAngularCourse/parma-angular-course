@@ -7,14 +7,23 @@ import {
   ViewChildren
 } from '@angular/core';
 import {NewsItemModel} from "./news-types";
-import {NewsItemModalComponent} from "./news-item-modal/news-item-modal.component";
 import {ContextMenuComponent} from "./context-menu/context-menu.component";
 import {NewsItemComponent} from "./news-item/news-item.component";
 import {NewsService} from "./services/news.service";
 import {HttpErrorResponse} from "@angular/common/http";
-import {Subject} from "rxjs";
-import {takeUntil} from "rxjs/operators";
+import {of, Subject} from "rxjs";
+import {
+  bufferCount,
+  concatAll,
+  debounceTime,
+  distinctUntilChanged,
+  map,
+  startWith,
+  switchMap,
+  takeUntil, toArray
+} from "rxjs/operators";
 import {Permission, PermissionService} from './services/permission.service';
+import {NewsItemModalReactiveComponent} from "./news-item-modal-reactive/news-item-modal-reactive.component";
 
 @Component({
   selector: 'app-news',
@@ -24,15 +33,20 @@ import {Permission, PermissionService} from './services/permission.service';
 })
 export class NewsComponent implements OnInit, OnDestroy {
 
-  news: NewsItemModel[] = [];
+  newsTab1: NewsItemModel[] = [];
+  newsTab2: NewsItemModel[] = [];
+  newsTab3: NewsItemModel[] = [];
   perms: Permission[] = [];
-  private _ngUnsubscribe$: Subject<number>;
+  private readonly _ngUnsubscribe$: Subject<number>;
+  keyUp = new Subject<KeyboardEvent>();
 
-  @ViewChild('modalComponent') modal! : NewsItemModalComponent;
+  @ViewChild('modalComponent') modal! : NewsItemModalReactiveComponent;
   @ViewChild('contextMenuComponent') menuComponent! : ContextMenuComponent;
   @ViewChildren(NewsItemComponent) newsItemComponents!: QueryList<NewsItemComponent>;
   get isSomeItemSelected(): boolean {
-    return this.news.filter(p => p.selected).length > 0;
+    return this.newsTab1.filter(p => p.selected).length > 0 ||
+      this.newsTab2.filter(p => p.selected).length > 0 ||
+      this.newsTab3.filter(p => p.selected).length > 0;
   }
 
   constructor(private _newsService: NewsService,
@@ -43,19 +57,36 @@ export class NewsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this._newsService.getNews()
+    this.keyUp
       .pipe(
+        debounceTime(600),
+        map((event: any) => event.target.value),
+        startWith(''),
+        distinctUntilChanged(),
+
+        switchMap(value => this._newsService.getNews(value)),
+        switchMap(data => {
+          return of(data).pipe(
+            concatAll(),
+            bufferCount(3),
+            toArray()
+          )
+        }),
+
         takeUntil(this._ngUnsubscribe$)
       )
-      .subscribe(
-      (data) => {
-        this.news = data;
-        this._cd.detectChanges();
-      },
-      (error: HttpErrorResponse) => {
-        console.log(error.status + " " + error.message)
-      }
-    );
+      .subscribe({
+        next: value => this.doSearch(value)
+      });
+  }
+
+  private doSearch(value: NewsItemModel[][]) {
+    value.forEach(p => {
+      if (p[0]) this.newsTab1.push(p[0]);
+      if (p[1]) this.newsTab2.push(p[1]);
+      if (p[2]) this.newsTab3.push(p[2]);
+    });
+    this._cd.detectChanges();
   }
 
   onEditItem($event: NewsItemModel) {
@@ -93,7 +124,9 @@ export class NewsComponent implements OnInit, OnDestroy {
   }
 
   onDeleteSelected() {
-    let selectedList = this.news.filter(p => p.selected);
+    let selectedList = this.newsTab1.filter(p => p.selected);
+    selectedList = selectedList.concat(this.newsTab2.filter(p => p.selected));
+    selectedList = selectedList.concat(this.newsTab3.filter(p => p.selected));
     selectedList.forEach(selectedItem => {
       this.onRemoveItem(selectedItem.id);
     });

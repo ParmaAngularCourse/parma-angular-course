@@ -24,10 +24,11 @@ export class NewsItemModalComponent implements OnInit, OnDestroy {
 
   tagsList: NewsTag[] = [];
   editedItem!: NewsItemModel;
-
-  @Output() save : EventEmitter<NewsItemModel> = new EventEmitter<NewsItemModel>();
   isVisible: boolean = false;
   perms: Permission[] = [];
+
+  @Output() save : EventEmitter<NewsItemModel> = new EventEmitter<NewsItemModel>();
+
   private _ngUnsubscribe$: Subject<number>;
 
   constructor(private _permService : PermissionService,
