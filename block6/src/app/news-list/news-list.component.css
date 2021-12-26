@@ -1,0 +1,12 @@
+.control-button{
+    margin-right: 10px;
+    background-color: darkblue;
+    color: white;
+    height: 30px;
+    width: 100px;
+    text-align: center;
+}
+
+.news-block {
+	margin-right: 60px;
+}

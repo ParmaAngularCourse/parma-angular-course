@@ -1,0 +1,84 @@
+<ng-container *ngIf = "isVisible">
+    <div class="mmodal">
+        <div class="mmodal-body">
+            <div id="header-block">
+                <div id="header-caption-block">                
+                    <ng-content></ng-content>
+                </div> 
+                <div id="header-button-block">
+                    <button id = "close-button" class="control-button" type="button" (click)="closeForm()">×</button>
+                </div>                         
+            </div>          
+            <ul class="input-data-block">
+                <ng-container 
+                    [ngTemplateOutlet]="inputTemplate"
+                    [ngTemplateOutletContext]="{
+                        inputCaption: 'Дата',
+                        inputType: 'datetime-local',
+                        inputValue: newsDate | date:'yyyy-MM-dd HH:mm:ss',
+                        inputOnChange: onChangeNewsDate.bind(this)
+                    }">
+                </ng-container>
+                <ng-container 
+                    [ngTemplateOutlet]="inputTemplate"
+                    [ngTemplateOutletContext]="{
+                        inputCaption: 'Заголовок',
+                        inputType: 'text',                    
+                        inputCssClass: 'input-data-textbox',
+                        inputValue: newsTitle,
+                        inputOnChange: onChangeNewsTitle.bind(this)
+                    }">
+                </ng-container>  
+                <ng-container 
+                [ngTemplateOutlet]="inputTextAreaTemplate"
+                [ngTemplateOutletContext]="{
+                    inputCaption: 'Текст',
+                    inputValue: newsBody,
+                    inputOnChange: onChangeNewsBody.bind(this)
+                }">
+                </ng-container>  
+                <ng-container 
+                [ngTemplateOutlet]="inputRadioTemplate"
+                [ngTemplateOutletContext]="{
+                    inputCaption: 'Тип',
+                    inputValue: newsType,
+                    inputOnChange: onChangeNewsType.bind(this),
+                    inputDataSource: radioDataSource,
+                    initBackColorFunc: getNewsTypeColor.bind(this)
+                }">
+                </ng-container>  
+            </ul>
+            <div>
+                <button *appCheckAccess = "'Save'" class="control-button" (click)="saveForm()">Сохранить</button>
+                <button class="control-button" (click)="closeForm()">Отмена</button>
+            </div>        
+        </div>
+    </div>
+    <div class="mmodal-background" (click)="closeForm()"></div>
+</ng-container>
+
+<ng-template #inputTemplate let-inputCaption = "inputCaption" let-inputType = "inputType" let-inputCssClass="inputCssClass" let-inputValue = "inputValue" let-inputOnChange = "inputOnChange"> 
+    <li class="input-data-group">              
+        <label class ="input-data-label">{{inputCaption}}:</label><br> 
+        <input #inputControl [ngClass]="inputCssClass" [type]="inputType" [value]="inputValue" (change)="inputOnChange(inputControl.value)">
+    </li>
+</ng-template>
+
+<ng-template #inputTextAreaTemplate let-inputCaption = "inputCaption" let-inputValue = "inputValue" let-inputOnChange = "inputOnChange"> 
+    <li class="input-data-group">              
+        <label class ="input-data-label">{{inputCaption}}:</label><br> 
+        <textarea class="input-data-textarea" #inputControl [value]="inputValue" (change)="inputOnChange(inputControl.value)"></textarea>
+    </li>
+</ng-template>
+
+<ng-template #inputRadioTemplate let-inputCaption = "inputCaption" let-inputValue = "inputValue" let-inputDataSource = "inputDataSource" let-backColor="initBackColorFunc" let-inputOnChange = "inputOnChange"> 
+    <li class="input-data-group">              
+        <label class ="input-data-label">{{inputCaption}}:</label><br> 
+        <ul id="input-type-block" *ngFor="let item of inputDataSource | keyvalue; let i = index">
+            <li>
+                <input #inputControl type="radio" id="item.key" [value]="item.value" (change)="inputOnChange(inputControl.value)" [checked]="item.value == inputValue">
+                <label for="item.key" class="type-label" [appNewsTypeColor]="backColor(item.key)">{{item.value}}</label>
+            </li>
+        </ul>
+    </li>
+</ng-template>

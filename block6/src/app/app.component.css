@@ -1,0 +1,23 @@
+.title_header{
+    font: italic 2.0em "Fira Sans";
+}
+
+.main_block{
+    border: 10px groove #3306af;
+    position:fixed;
+    padding:0;
+    margin: 0;
+
+    top: 0;
+    left:0;
+
+    width: 99%;
+    height: 98%;     
+}
+
+.news_content{
+    width: auto;
+    height: 88%;
+    position: absolute;
+    overflow: auto;    
+}
