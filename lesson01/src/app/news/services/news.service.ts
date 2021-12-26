@@ -2,8 +2,7 @@ import {Injectable, OnDestroy} from '@angular/core';
 import {NewsItemModel} from "../news-types";
 import {BehaviorSubject, Observable, Subject} from "rxjs";
 import {HttpClient, HttpErrorResponse, HttpParams} from "@angular/common/http";
-import {map} from 'rxjs/internal/operators/map';
-import {takeUntil} from "rxjs/operators";
+import {takeUntil, map} from "rxjs/operators";
 
 type NewsItem = {
   id: number,

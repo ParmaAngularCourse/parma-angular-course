@@ -8,12 +8,8 @@ import {
   OnDestroy
 } from '@angular/core';
 import {NewsItemModel} from "../news-types";
-import {Subject} from "rxjs";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
-import {Permission} from "../../types";
-import {PersonInfoService} from "../../services/person-info.service";
-import {takeUntil} from "rxjs/operators";
-import {HttpErrorResponse} from "@angular/common/http";
+import {ActivatedRoute, Router} from "@angular/router";
 
 @Component({
   selector: 'app-news-item-modal-reactive',
@@ -43,7 +39,9 @@ export class NewsItemModalReactiveComponent implements OnInit, OnDestroy {
   }
 
 
-  constructor(private _cd : ChangeDetectorRef) {}
+  constructor(private _cd : ChangeDetectorRef,
+              private _route: ActivatedRoute,
+              private _router: Router) {}
 
   ngOnInit(): void {
     this.newsItemFormGroup = new FormGroup({
@@ -85,10 +83,12 @@ export class NewsItemModalReactiveComponent implements OnInit, OnDestroy {
 
   cancel() {
     this.newsItemFormGroup.reset();
+    this._router.navigate([{}], { relativeTo: this._route}).then(_ => {});
     this.isVisible = false;
   }
 
   saveItem() {
+    this._router.navigate([{}], { relativeTo: this._route}).then(_ => {});
     this.isVisible = false;
     this.save.emit(this.editedItem);
   }

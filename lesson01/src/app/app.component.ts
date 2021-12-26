@@ -40,9 +40,9 @@ export class AppComponent implements OnInit, OnDestroy {
       .pipe(
         takeUntil(this._ngUnsubscribe$)
       )
-      .subscribe(val => {
+      .subscribe(_ => {
         this.removePersonalInfoSubscription();
-        this._router.navigate(['login']);
+        this._router.navigate(['login']).then(_ => {});
       })
   }
 

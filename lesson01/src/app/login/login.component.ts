@@ -49,8 +49,8 @@ export class LoginComponent implements OnInit {
         takeUntil(this._ngUnsubscribe$)
       )
       .subscribe({
-        next: val => {
-          this._router.navigate(['main/news/']);
+        next: _ => {
+          this._router.navigate(['main/news/']).then(_ => {});
         },
         error: (errorMess: string) => {
           this.errorInLogin = true;

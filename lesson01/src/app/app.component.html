@@ -4,7 +4,6 @@
   <a class="main-menu-item" routerLink="main" routerLinkActive="selected">Новости</a>
   <a class="main-menu-item" routerLink="person" routerLinkActive="selected" *ngIf="this.isAuthorized">{{this.userName}}</a>
   <a class="main-menu-auth" routerLink="login" *ngIf="!this.isAuthorized">Вход</a>
-<!--  <span class="user-name" *ngIf="this.isAuthorized">{{this.userName}}</span>-->
   <a class="main-menu-auth" (click)="this.logout()" *ngIf="this.isAuthorized">Выход</a>
 </nav>
 <br>
