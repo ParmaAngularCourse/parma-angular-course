@@ -6,6 +6,7 @@ import {MainComponent} from "./main/main.component";
 import {PersonComponent} from "./person/person.component";
 import {LoginComponent} from "./login/login.component";
 import {AuthGuard} from "./services/auth.guard";
+import {TagsListService} from "./news/services/tags-list.service";
 
 const routes: Routes = [
   {
@@ -15,6 +16,9 @@ const routes: Routes = [
   },
   {
     path: 'main',
+    resolve: {
+      TagsList: TagsListService
+    },
     component: MainComponent,
     children: [
       {

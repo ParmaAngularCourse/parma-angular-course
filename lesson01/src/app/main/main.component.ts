@@ -1,8 +1,8 @@
 import {Component, OnInit, ChangeDetectionStrategy, OnDestroy} from '@angular/core';
 import {NewsTag} from "../news/news-types";
-// import {TagsListService} from "../services/tags-list.service";
-// import {takeUntil} from "rxjs/operators";
-// import {Subject} from "rxjs";
+import {ActivatedRoute} from "@angular/router";
+import {takeUntil} from "rxjs/operators";
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-main',
@@ -12,32 +12,25 @@ import {NewsTag} from "../news/news-types";
 })
 export class MainComponent implements OnInit, OnDestroy {
 
-  tagsList: NewsTag[] =[
-    {tag: "politic", text: "Политика", color: "#58B957"},
-    {tag: "tourism", text: "Туризм", color: "#55BFE0"},
-    {tag: "economy", text: "Экономика", color: "#EFAC43"},
-    {tag: "science", text: "Наука", color: "#3D8BCD"},
-    {tag: "internet", text: "Интернет", color: "#999999"}
-  ];
-  //private readonly _ngUnsubscribe$: Subject<number>;
+  tagsList: NewsTag[] =[];
+  private readonly _ngUnsubscribe$: Subject<number>;
 
-  constructor(/*private _tagsListService: TagsListService*/) {
-    //this._ngUnsubscribe$ = new Subject();
+  constructor(private _route: ActivatedRoute) {
+    this._ngUnsubscribe$ = new Subject();
   }
 
   ngOnInit(): void {
-    /*this._tagsListService.getTagsList()
+    this._route.data
       .pipe(
         takeUntil(this._ngUnsubscribe$)
       )
-      .subscribe({
-        next : (data) => this.tagsList = data
-      });*/
+      .subscribe(params => {
+        this.tagsList = (params.TagsList as NewsTag[]);
+      });
   }
 
   ngOnDestroy() {
-    /*this._ngUnsubscribe$.next();
-    this._ngUnsubscribe$.complete();*/
+    this._ngUnsubscribe$.next();
+    this._ngUnsubscribe$.complete();
   }
-
 }

@@ -3,6 +3,7 @@ import {NewsTag} from "../news-types";
 import {HttpClient} from "@angular/common/http";
 import {AsyncSubject, Observable } from "rxjs";
 import { map } from 'rxjs/operators';
+import {ActivatedRouteSnapshot, Resolve, RouterStateSnapshot} from "@angular/router";
 
 type Tag = {
   tag: string,
@@ -13,7 +14,7 @@ type Tag = {
 @Injectable({
   providedIn: 'root'
 })
-export class TagsListService {
+export class TagsListService implements Resolve<NewsTag[]> {
 
   private readonly _url : string = "http://localhost:3000/api/tags";
   private _tagsSubject?: AsyncSubject<NewsTag[]>;
@@ -36,5 +37,9 @@ export class TagsListService {
         })
     }
     return this._tagsSubject.asObservable();
+  }
+
+  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<NewsTag[]> | Promise<NewsTag[]> | NewsTag[] {
+    return this.getTagsList();
   }
 }
