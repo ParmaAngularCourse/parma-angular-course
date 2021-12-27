@@ -1,0 +1,12 @@
+<div [class]="single_post.isCheck?'background_check':'background_uncheck'" style="width: 300px; border: 2px solid lightgray; margin-bottom: 10px; padding-left: 5px;">
+    <input [checked]="single_post.isCheck" type='checkbox' (change)="changeCheckbox(single_post)" />
+    <div>{{single_post.date}}</div>
+    <div>{{single_post.title}}</div>
+    <div>{{single_post.text}}</div>
+    <br>
+    <div style="margin-bottom: 5px;">
+        <button (click)="clickEditButton(single_post)" style="display: inline-block;">Редактировать</button>
+        <div style="width: 10px; display: inline-block;"></div>
+        <button [disabled]="!single_post.isCheck? true : null" (click)="clickDeleteButton(single_post)" style="display: inline-block; ">Удалить</button>
+    </div>
+</div>
