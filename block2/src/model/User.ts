@@ -1,5 +1,7 @@
 import { Permission } from "./Permission";
 
 export class User{
-    public Permissions: Array<Permission> = [];
+    public login: string = "";
+    public password: string = "";
+    public permissions: Array<Permission> = [];
 }
