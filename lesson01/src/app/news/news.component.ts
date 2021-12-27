@@ -20,13 +20,7 @@ import {
   switchMap,
   takeUntil, toArray
 } from "rxjs/operators";
-import {NewsItemModalReactiveComponent} from "./news-item-modal-reactive/news-item-modal-reactive.component";
 import {ActivatedRoute, Router} from "@angular/router";
-
-type ShowModalParams = {
-  modal: string,
-  id: number | undefined
-}
 
 @Component({
   selector: 'app-news',
@@ -43,9 +37,7 @@ export class NewsComponent implements OnInit, OnDestroy {
   private _selectedTag : string = "";
   private _searchVal : string = "";
   keyUp = new Subject<KeyboardEvent>();
-  private _showModalParams : ShowModalParams | undefined;
 
-  @ViewChild('modalComponent') modal! : NewsItemModalReactiveComponent;
   @ViewChild('contextMenuComponent') menuComponent! : ContextMenuComponent;
   @ViewChildren(NewsItemComponent) newsItemComponents!: QueryList<NewsItemComponent>;
   get isSomeItemSelected(): boolean {
@@ -62,20 +54,13 @@ export class NewsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    let params = this._route.snapshot.queryParams;
-    if(params?.modal) {
-      this._showModalParams = {
-        modal: params?.modal,
-        id: params?.id ?? undefined
-      };
-    }
-
     this._route.params
       .pipe(
         takeUntil(this._ngUnsubscribe$)
       )
       .subscribe(params => {
         this._selectedTag = params?.tagsId ?? "";
+        if(this._selectedTag === "all") this._selectedTag = "";
         this.doSearch();
       });
 
@@ -112,31 +97,20 @@ export class NewsComponent implements OnInit, OnDestroy {
           this.newsTab2 = value.filter(p => p[1] != null).map(m => {return m[1];})
           this.newsTab3 = value.filter(p => p[2] != null).map(m => {return m[2];})
           this._cd.detectChanges();
-          this.showModalIfNeed();
         }
       });
   }
 
   onEditItem($event: NewsItemModel) {
-    this._router.navigate([], { relativeTo: this._route, queryParams: {modal: 'edit', id: $event.id}})
-      .then(_ => this.modal.show($event));
+    this._router.navigate([{ outlets: { modal: ['edit', $event.id] }}]).then(_ => {});
   }
 
   onAdd() {
-    this._router.navigate([], { relativeTo: this._route, queryParams: {modal: 'add'}})
-      .then(_ => this.modal.show());
+    this._router.navigate([{ outlets: { modal: ['add'] }}]).then(_ => {});
   }
 
   onRemoveItem($event: number) {
     this._newsService.removeNewsItem($event);
-  }
-
-  onSaveModal(editedItem: NewsItemModel) {
-    if(editedItem.id > 0) {
-      this._newsService.editNewsItem(editedItem);
-    } else {
-      this._newsService.addNewsItem(editedItem);
-    }
   }
 
   onContextMenu($event: MouseEvent) {
@@ -160,21 +134,6 @@ export class NewsComponent implements OnInit, OnDestroy {
     selectedList.forEach(selectedItem => {
       this.onRemoveItem(selectedItem.id);
     });
-  }
-
-  showModalIfNeed() {
-    if(this._showModalParams?.modal === "edit"){
-      let items = this.newsTab1.filter(p => p.id == this._showModalParams?.id);
-      items = items.concat(this.newsTab2.filter(p => p.id == this._showModalParams?.id));
-      items = items.concat(this.newsTab3.filter(p => p.id == this._showModalParams?.id))
-      if(items.length > 0){
-        this.modal.show(items[0]);
-        this._showModalParams = undefined;
-      }
-    } else if(this._showModalParams?.modal === "add") {
-      this.modal.show();
-      this._showModalParams = undefined;
-    }
   }
 
   ngOnDestroy() {

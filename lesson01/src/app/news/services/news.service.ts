@@ -1,8 +1,8 @@
 import {Injectable, OnDestroy} from '@angular/core';
 import {NewsItemModel} from "../news-types";
-import {BehaviorSubject, Observable, Subject} from "rxjs";
+import {AsyncSubject, BehaviorSubject, Observable, Subject} from "rxjs";
 import {HttpClient, HttpErrorResponse, HttpParams} from "@angular/common/http";
-import {takeUntil, map} from "rxjs/operators";
+import {map, takeUntil} from "rxjs/operators";
 
 type NewsItem = {
   id: number,
@@ -19,10 +19,12 @@ export class NewsService implements OnDestroy {
 
   private _url: string = "/api/";
   private _newsSubject?: BehaviorSubject<NewsItemModel[]>;
+  private _getItemSub$: BehaviorSubject<boolean>;
   private _ngUnsubscribe$: Subject<number>;
 
   constructor(private _http: HttpClient) {
     this._ngUnsubscribe$ = new Subject<number>();
+    this._getItemSub$ = new BehaviorSubject<boolean>(false);
   }
 
   public getNews(searchVal: string, selectedTag : string) : Observable<NewsItemModel[]>{
@@ -42,6 +44,7 @@ export class NewsService implements OnDestroy {
       )
       .subscribe((value) => {
         this._newsSubject?.next(value);
+        this._getItemSub$.next(true);
     });
 
     return this._newsSubject.asObservable();
@@ -122,6 +125,37 @@ export class NewsService implements OnDestroy {
       news[index] = item;
       this._newsSubject?.next(news);
     }
+  }
+
+  public getItemById(newsId: number) : NewsItemModel | undefined {
+    if (this._newsSubject) {
+      let news: NewsItemModel[] = this._newsSubject.getValue();
+      return  news.find(p => p.id == newsId);
+    }
+    return undefined;
+  }
+
+  public getItemById1(newsId: number) : Observable<NewsItemModel | undefined> {
+    let o$ = new BehaviorSubject<NewsItemModel | undefined>(undefined);
+    if(!this._newsSubject) {
+      this._getItemSub$.subscribe({
+        next: value => {
+          if (!value) return;
+          if (this._newsSubject) {
+            let news: NewsItemModel[] = this._newsSubject.getValue();
+            o$.next(news.find(p => p.id == newsId));
+            //o$.complete();
+          }
+        }
+      });
+    } else {
+
+      let news: NewsItemModel[] = this._newsSubject.getValue();
+      let item = news.find(p => p.id == newsId);
+      o$.next(item);
+      //o$.complete();
+    }
+    return o$.asObservable();
   }
 
   ngOnDestroy(): void {

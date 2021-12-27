@@ -36,14 +36,17 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   logout(): void {
-    this._personInfoService.logout()
-      .pipe(
-        takeUntil(this._ngUnsubscribe$)
-      )
-      .subscribe(_ => {
-        this.removePersonalInfoSubscription();
-        this._router.navigate(['login']).then(_ => {});
-      })
+    this._router.navigate(['login']).then(value => {
+      if(value) {
+        this._personInfoService.logout()
+          .pipe(
+            takeUntil(this._ngUnsubscribe$)
+          )
+          .subscribe(_ => {
+            this.removePersonalInfoSubscription();
+          });
+      }
+    });
   }
 
   private addPersonalInfoSubscription() : void {

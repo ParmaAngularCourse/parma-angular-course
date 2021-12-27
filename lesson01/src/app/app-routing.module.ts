@@ -7,11 +7,14 @@ import {PersonComponent} from "./person/person.component";
 import {LoginComponent} from "./login/login.component";
 import {AuthGuard} from "./services/auth.guard";
 import {TagsListService} from "./news/services/tags-list.service";
+import {UnsaveWarningGuard} from "./services/unsave-warning.guard";
+import {NewsItemModalReactiveComponent} from "./news/news-item-modal-reactive/news-item-modal-reactive.component";
+import {NewsItemModalReactiveResolver} from "./news/news-item-modal-reactive/news-item-modal-reactive.resolver";
 
 const routes: Routes = [
   {
     path: '',
-    redirectTo: '/main/news/',
+    redirectTo: '/main/news/all',
     pathMatch: 'full'
   },
   {
@@ -23,12 +26,12 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        redirectTo: 'news/',
+        redirectTo: 'news/all',
         pathMatch: 'full'
       },
       {
         path: 'news',
-        redirectTo: 'news/',
+        redirectTo: 'news/all',
         pathMatch: 'full'
       },
       {
@@ -40,7 +43,21 @@ const routes: Routes = [
   {
     path: 'person',
     canActivate: [AuthGuard],
+    canDeactivate: [UnsaveWarningGuard],
     component: PersonComponent
+  },
+  {
+    path: 'add',
+    component: NewsItemModalReactiveComponent,
+    outlet: 'modal'
+  },
+  {
+    path: 'edit/:id',
+    component: NewsItemModalReactiveComponent,
+    outlet: 'modal',
+    resolve: {
+      newsItem: NewsItemModalReactiveResolver
+    }
   },
   {
     path: 'login',

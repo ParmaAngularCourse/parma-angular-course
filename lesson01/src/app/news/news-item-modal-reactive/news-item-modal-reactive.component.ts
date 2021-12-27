@@ -5,7 +5,6 @@ import {
   Output,
   EventEmitter,
   ChangeDetectorRef,
-  OnDestroy
 } from '@angular/core';
 import {NewsItemModel} from "../news-types";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
@@ -17,10 +16,9 @@ import {ActivatedRoute, Router} from "@angular/router";
   styleUrls: ['./news-item-modal-reactive.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class NewsItemModalReactiveComponent implements OnInit, OnDestroy {
+export class NewsItemModalReactiveComponent implements OnInit {
 
   editedItem!: NewsItemModel;
-  isVisible: boolean = false;
   newsItemFormGroup! : FormGroup;
 
   @Output() save : EventEmitter<NewsItemModel> = new EventEmitter<NewsItemModel>();
@@ -60,6 +58,22 @@ export class NewsItemModalReactiveComponent implements OnInit, OnDestroy {
           this.editedItem.tag = value.tagsField;
         })
       )
+
+    this._route.url.subscribe(value => {
+      switch (value[0].path){
+        case "add" : this.show(); break;
+        case "edit" : {
+          this._route.data.subscribe({
+            next: value => {
+              this.show(value.newsItem);
+            }
+          })
+          break;
+        }
+        default: this.cancel(); break;
+      }
+    });
+
   }
 
   show(item?: NewsItemModel) {
@@ -77,23 +91,27 @@ export class NewsItemModalReactiveComponent implements OnInit, OnDestroy {
       tagsField : this.editedItem.tag
     }, {emitEvent: false})
 
-    this.isVisible = true;
-    this._cd.markForCheck();
+    this._cd.detectChanges();
   }
 
   cancel() {
-    this.newsItemFormGroup.reset();
-    this._router.navigate([{}], { relativeTo: this._route}).then(_ => {});
-    this.isVisible = false;
+    // this._router.navigate([{}], {relativeTo: this._route}).then(value => {
+    //   if (value) {
+    //     this.newsItemFormGroup.reset();
+    //     //this.isVisible = false;
+    //     this._cd.detectChanges();
+    //   }
+    // });
+    this._router.navigate([{ outlets: {modal: null}}], {relativeTo: this._route.parent}).then(value => {});
   }
 
   saveItem() {
-    this._router.navigate([{}], { relativeTo: this._route}).then(_ => {});
-    this.isVisible = false;
-    this.save.emit(this.editedItem);
-  }
-
-  ngOnDestroy() {
+    // this._router.navigate([{}], { relativeTo: this._route}).then(value => {
+    //   if(value) {
+    //     //this.isVisible = false;
+    //     this.save.emit(this.editedItem);
+    //   }
+    // });
   }
 }
 

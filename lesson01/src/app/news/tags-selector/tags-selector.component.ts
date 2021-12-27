@@ -65,6 +65,7 @@ export class TagsSelectorComponent implements OnInit, OnDestroy, ControlValueAcc
 
   writeValue(_val: string): void {
     this.controlValue = _val;
+    this._cd.detectChanges();
   }
 
   resetValue() {
