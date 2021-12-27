@@ -1,1 +1,10 @@
-/* You can add global styles to this file, and also import other style files */
+.blueButton {
+    color: white;
+    background-color: rgb(64, 140, 255); 
+    height: 35px; 
+    border-radius: 5px;
+}
+
+button:disabled {
+    background-color: darkgray; 
+}
