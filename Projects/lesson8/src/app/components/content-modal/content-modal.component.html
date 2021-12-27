@@ -1,0 +1,7 @@
+<label>Комментарий: </label>
+<input type="text" [value]="value" (input)="saveValue($event)">
+
+<div style="margin-top: 30px;">
+    <button (click)="saveComment()">Сохранить</button>
+    <button (click)="close()">Отмена</button>
+</div>

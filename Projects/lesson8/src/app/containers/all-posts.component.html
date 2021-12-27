@@ -1,0 +1,6 @@
+<div>Результаты поиска: {{count$ | async}}</div>
+<div>Результаты поиска без слова: {{countWithoutWords$ | async}}</div>
+
+<app-single-post *ngFor="let item of posts$ | async" (addComment)="onAddComment($event, item.id)" (resetChange)="onResetChange()" [single_post]="item" 
+    style="border: 1px solid green; display: inline-block; margin: 10px;">
+</app-single-post>

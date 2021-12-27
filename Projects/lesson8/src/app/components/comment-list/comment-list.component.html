@@ -1,0 +1,7 @@
+<div *ngFor="let item of comments">{{item.commentText}}</div>
+
+<button (click)="showModal()">Добавить комментарий</button>
+
+<app-modal #ModalWindow>
+    <app-content-modal [initialValue]="initialAddValue" [title]="'Добавить комментарий'" (closeModal)="closeModal()" (saveModal)="saveComment($event)"></app-content-modal>
+</app-modal>

@@ -1,0 +1,8 @@
+.snackBar {
+    width: 250px;
+    height: 100px;
+    border: 1px solid black;
+    position: absolute;
+    bottom: 5%;
+    right: 5%;
+}

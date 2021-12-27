@@ -1,0 +1,6 @@
+<p>{{title}}</p>
+<div style="font-weight: bold;">{{single_post.title}}</div>
+<div style="font-style: italic; margin-bottom: 15px;">{{single_post.text}}</div>
+<app-comment-list (addComment)="onAddComment($event)" (resetChange)="onResetChange()" [comments]="single_post.comments"></app-comment-list>
+
+<button (click)="viewPost()">Просмотр новости</button>

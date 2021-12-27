@@ -1,0 +1,8 @@
+<div class="editModal" *ngIf="showModal">
+    <div>
+        <span>{{title}}</span><span class="closeBtn" (click)="hide()">X</span>
+    </div>
+    <div style="margin-top: 30px;">
+        <ng-content></ng-content>                
+    </div> 
+</div>
