@@ -1,8 +1,10 @@
 import { DatePipe } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { AbstractControl, FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { INewsData } from 'src/model/INewsData';
 import { TypeNews } from 'src/model/TypeNews';
+import { NewsDateValidator } from '../Validators/NewsDateValidators';
+import { NotEmptyStringValidator } from '../Validators/NotEmptyStringValidator';
 
 @Component({
   selector: 'app-news-editor',
@@ -16,19 +18,19 @@ export class NewsEditorComponent implements OnInit {
   public isVisible: boolean = false;  
   public editForm!: FormGroup
 
-  private getNewsDateControl():FormControl{
+  public get newsDateControl():FormControl{
     return this.editForm.controls['newsDateControl'] as FormControl;
   }
 
-  private getNewsTitleControl():AbstractControl{
+  public get newsTitleControl():AbstractControl{
     return this.editForm.controls['newsTitleControl'];
   }
 
-  private getNewsBodyControl():AbstractControl{
+  public get newsBodyControl():AbstractControl{
     return this.editForm.controls['newsBodyControl'];
   }
 
-  private getNewsTypeControl():AbstractControl{
+  public get newsTypeControl():AbstractControl{
     return this.editForm.controls['newsTypeControl'];
   }
 
@@ -39,18 +41,20 @@ export class NewsEditorComponent implements OnInit {
   ngOnInit(): void {
     this.editForm = this.fb.group(
       {        
-        newsDateControl: [this.getDateToLocalStringFormat(this.currentNews.date), { updateOn: 'change' }],
-        newsTitleControl: [this.currentNews.title],
-        newsBodyControl: [this.currentNews.body],
-        newsTypeControl: [this.currentNews.type, { updateOn: 'change' }], 
-      },
-      { updateOn: 'blur'}
+        newsDateControl: [this.getDateToLocalStringFormat(this.currentNews.date), 
+        { 
+          validators: NewsDateValidator('Дата')
+        }],
+        newsTitleControl: [this.currentNews.title, [NotEmptyStringValidator('Заголовок')]],
+        newsBodyControl: [this.currentNews.body, [NotEmptyStringValidator('Текст')]],
+        newsTypeControl: [this.currentNews.type] 
+      }
     );
     
-    this.getNewsDateControl(). valueChanges.subscribe((value:string)=> this.onChangeNewsDate(value))
-    this.getNewsTitleControl().valueChanges.subscribe((value:string)=> this.onChangeNewsTitle(value))
-    this.getNewsBodyControl().valueChanges.subscribe((value:string)=> this.onChangeNewsBody(value))
-    this.getNewsTypeControl().valueChanges.subscribe((value:TypeNews)=> this.onChangeNewsType(value))
+    this.newsDateControl.valueChanges.subscribe((value:string)=> this.onChangeNewsDate(value))
+    this.newsTitleControl.valueChanges.subscribe((value:string)=> this.onChangeNewsTitle(value))
+    this.newsBodyControl.valueChanges.subscribe((value:string)=> this.onChangeNewsBody(value))
+    this.newsTypeControl.valueChanges.subscribe((value:TypeNews)=> this.onChangeNewsType(value))
   }
 
   saveForm() {
@@ -90,12 +94,12 @@ export class NewsEditorComponent implements OnInit {
     if(value){    
       this.currentNews.date = new Date(value);
     }
-    else{
+    /*else{
       this.currentNews.date = new Date(1900,0,1);
       this.editForm.patchValue({
         newsDateControl: this.getDateToLocalStringFormat(this.currentNews.date)
       });
-    }
+    }*/
   }
 
   onChangeNewsTitle(value:string){

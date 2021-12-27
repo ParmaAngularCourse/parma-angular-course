@@ -29,7 +29,7 @@ export class NewsTypeComponent implements OnInit, ControlValueAccessor, Validato
 
   validate(control: AbstractControl): ValidationErrors | null {
     if(control.value === TypeNews.Type0_None){
-      return { message: 'Нельзя указывать пустой тип новости'}
+      return { message: 'Нельзя указывать "Пустой" тип новости'}
     }
     else{
       return null;
