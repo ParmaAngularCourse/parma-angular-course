@@ -1,0 +1,27 @@
+.background_uncheck{
+    background-color: white;
+}
+.background_check{
+    background-color: gray;
+}
+
+.politic{
+    background-color: green;
+    color: white;
+}
+.travel{
+    background-color: skyblue;
+    color: white;
+}
+.economic{
+    background-color: orange;
+    color: white;
+}
+.since{
+    background-color: rgb(57, 98, 175);
+    color: white;
+}
+.internet{
+    background-color: gray;
+    color: white;
+}

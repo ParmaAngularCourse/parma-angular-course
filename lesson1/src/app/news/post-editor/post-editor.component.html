@@ -1,0 +1,37 @@
+<div *ngIf="isEditorOpen" style="position: absolute; left: 50%; top: 50%; z-index: 999;  margin-left: -150px; margin-top: -150px;" >
+    <ng-content></ng-content>
+
+    <div style="width: 300px; border: 2px solid lightgray; margin-bottom: 10px; padding-left: 5px;">
+        
+        <ng-container *ngTemplateOutlet = "dataType; context: {inputTitle: 'Дата', type: 'date', value: localData?.date, method: dateChange}"></ng-container>
+        <ng-container *ngTemplateOutlet = "dataType; context: {inputTitle: 'Заголовок', type: 'text', value: localData?.title, method: titleChange}"></ng-container>
+        <ng-container *ngTemplateOutlet = "dataType; context: {inputTitle: 'Текст', type: 'text', value: localData?.text, method: textChange}"></ng-container>    
+        <div>Тип:</div>
+        <ng-container *ngTemplateOutlet = "radioType; context: {radioTitle: 'Политика', radioColor: 'green', radioValue: 1}"></ng-container>
+        <ng-container *ngTemplateOutlet = "radioType; context: {radioTitle: 'Туризм', radioColor: 'skyblue', radioValue: 2}"></ng-container>
+        <ng-container *ngTemplateOutlet = "radioType; context: {radioTitle: 'Экономика', radioColor: 'orange', radioValue: 3}"></ng-container>
+        <ng-container *ngTemplateOutlet = "radioType; context: {radioTitle: 'Наука', radioColor: 'rgb(57, 98, 175)', radioValue: 4}"></ng-container>
+        <ng-container *ngTemplateOutlet = "radioType; context: {radioTitle: 'Интернет', radioColor: 'gray', radioValue: 5}"></ng-container>
+
+        <div style="margin-bottom: 5px; text-align: right;">
+            <br>
+            <button *appUserRightsStr=userRights.isUsercanEditNews style="display: inline-block;" (click)="clickPostEditorSaveButton(edit_post) " class="blueButton">Сохранить</button>
+            <div style="width: 10px; display: inline-block;"></div>
+            <button style="display: inline-block; " (click)="clickPostEditorCancelButton()" class="blueButton">Отмена</button>
+        </div>
+    </div>
+
+    <ng-template #radioType let-radioTitle = "radioTitle" let-radioColor = "radioColor" let-radioValue = "radioValue" >
+        <div appNewsTypeStyles style="padding: 1px; display: inline-block; border-radius: 3px;">
+            <input name="newsTypeRadio" type="radio" (change) = "newsTypeChange(radioValue)" [checked]="localData?.newsType==radioValue" style="display: inline-block;" >
+            <div [style.background-color]="radioColor" class="newsTypeRadio">{{radioTitle}}</div>
+        </div>
+        <br>
+    </ng-template>
+
+    <ng-template #dataType let-inputTitle = "inputTitle" let-type = "type" let-value = "value" let-method = "method" let-selector = "selector" >
+            <div>{{inputTitle}}:</div>
+            <input type={{type}} [value]=value (change)=method($event,localData)/>
+    </ng-template>
+
+</div>
