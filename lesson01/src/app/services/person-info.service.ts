@@ -11,7 +11,7 @@ export class PersonInfoService implements OnDestroy {
 
   private _authToken : AuthToken | undefined;
 
-  private _url: string = "http://localhost:3000/api/";
+  private _url: string = "/api/";
   private _infoSubject: BehaviorSubject<PersonInfo>;
   private _permissionSubject: BehaviorSubject<Permission[]>;
   private _isAuthorizeSubject?: BehaviorSubject<boolean>;

@@ -16,7 +16,7 @@ type Tag = {
 })
 export class TagsListService implements Resolve<NewsTag[]> {
 
-  private readonly _url : string = "http://localhost:3000/api/tags";
+  private readonly _url : string = "/api/tags";
   private _tagsSubject?: AsyncSubject<NewsTag[]>;
 
   constructor(private _http: HttpClient) {  }

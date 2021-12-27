@@ -17,7 +17,7 @@ type NewsItem = {
 })
 export class NewsService implements OnDestroy {
 
-  private _url: string = "http://localhost:3000/api/";
+  private _url: string = "/api/";
   private _newsSubject?: BehaviorSubject<NewsItemModel[]>;
   private _ngUnsubscribe$: Subject<number>;
 
