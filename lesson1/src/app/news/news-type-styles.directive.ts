@@ -8,11 +8,11 @@ export class NewsTypeStylesDirective {
   @HostBinding('style.background-color') divBack?: string;
   
   @HostListener('mouseover', ['$event']) onmouseoverEvent(event: any){
-    this.divBack = "gray";
+    this.divBack = "darkgray";
   }
 
   @HostListener('mouseout', ['$event']) onmouseoutEvent(event: any){
-    this.divBack = "white";
+    this.divBack = "transparent";
   }
 
   constructor() { 

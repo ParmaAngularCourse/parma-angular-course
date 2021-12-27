@@ -16,7 +16,7 @@ export class NewsComponent implements OnInit {
   public editorTitle?: string;
 
 
-  public userRights: UserRightsObj = {isUsercanDeleteNews: false, isUsercanEditNews: true};
+  public userRights: UserRightsObj = {isUsercanDeleteNews: true, isUsercanEditNews: true};
 
   public informationList: Information[] = [
     {
@@ -111,6 +111,10 @@ export class NewsComponent implements OnInit {
 
     this.contextMenu.show({top: $event.clientY + 15, left: $event.clientX + 15});
     return false;
+  }
+
+  contextMenuClose(){
+    this.contextMenu.hide();
   }
 
 

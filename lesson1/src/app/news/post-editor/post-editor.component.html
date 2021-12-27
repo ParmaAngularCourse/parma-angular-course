@@ -13,7 +13,7 @@
         <ng-container *ngTemplateOutlet = "radioType; context: {radioTitle: 'Наука', radioColor: 'rgb(57, 98, 175)', radioValue: 4}"></ng-container>
         <ng-container *ngTemplateOutlet = "radioType; context: {radioTitle: 'Интернет', radioColor: 'gray', radioValue: 5}"></ng-container>
 
-        <div style="margin-bottom: 5px;">
+        <div style="margin-bottom: 5px; text-align: right;">
             <br>
             <button *appUserRightsStr=userRights.isUsercanEditNews style="display: inline-block;" (click)="clickPostEditorSaveButton(edit_post) " class="blueButton">Сохранить</button>
             <div style="width: 10px; display: inline-block;"></div>

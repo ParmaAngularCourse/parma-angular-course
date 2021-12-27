@@ -1,4 +1,4 @@
-<div (contextmenu) = "contextMenuShow($event)">
+<div (contextmenu) = "contextMenuShow($event)" (click)="contextMenuClose()">
     <div style="width: max-content; border: 2px solid gray; margin-left: 10px; padding: 10px; ">
         <div style="display: inline-block;">
             <button (click)="onNewPost()" class="blueButton">Добавить</button>
