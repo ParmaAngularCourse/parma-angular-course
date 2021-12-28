@@ -49,7 +49,8 @@ const routes: Routes = [
   {
     path: 'add',
     component: NewsItemModalReactiveComponent,
-    outlet: 'modal'
+    outlet: 'modal',
+    canDeactivate: [UnsaveWarningGuard]
   },
   {
     path: 'edit/:id',
@@ -57,7 +58,8 @@ const routes: Routes = [
     outlet: 'modal',
     resolve: {
       newsItem: NewsItemModalReactiveResolver
-    }
+    },
+    canDeactivate: [UnsaveWarningGuard]
   },
   {
     path: 'login',

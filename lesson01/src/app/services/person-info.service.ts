@@ -1,7 +1,7 @@
 import {Injectable, OnDestroy} from '@angular/core';
-import {AsyncSubject, BehaviorSubject, Observable, Subject} from "rxjs";
+import {BehaviorSubject, Observable, Subject} from "rxjs";
 import {HttpClient, HttpErrorResponse} from "@angular/common/http";
-import {catchError, takeUntil} from "rxjs/operators";
+import {takeUntil} from "rxjs/operators";
 import {AuthToken, LoginParams, Permission, PersonInfo} from "../types";
 
 @Injectable({
@@ -12,7 +12,7 @@ export class PersonInfoService implements OnDestroy {
   private _authToken : AuthToken | undefined;
 
   private _url: string = "/api/";
-  private _infoSubject: BehaviorSubject<PersonInfo>;
+  private readonly _infoSubject: BehaviorSubject<PersonInfo>;
   private _permissionSubject: BehaviorSubject<Permission[]>;
   private _isAuthorizeSubject?: BehaviorSubject<boolean>;
   private _ngUnsubscribe$: Subject<number>;
@@ -144,7 +144,7 @@ export class PersonInfoService implements OnDestroy {
             this._authToken = value;
             this._isAuthorizeSubject?.next(value != undefined);
           },
-          error: (err : HttpErrorResponse) => {
+          error: (_ : HttpErrorResponse) => {
             this._isAuthorizeSubject?.next(false);
           }
         });

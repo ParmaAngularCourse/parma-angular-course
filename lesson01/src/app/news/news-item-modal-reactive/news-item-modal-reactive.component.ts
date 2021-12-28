@@ -2,13 +2,12 @@ import {
   Component,
   OnInit,
   ChangeDetectionStrategy,
-  Output,
-  EventEmitter,
   ChangeDetectorRef,
 } from '@angular/core';
 import {NewsItemModel} from "../news-types";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {ActivatedRoute, Router} from "@angular/router";
+import {NewsService} from "../services/news.service";
 
 @Component({
   selector: 'app-news-item-modal-reactive',
@@ -20,8 +19,6 @@ export class NewsItemModalReactiveComponent implements OnInit {
 
   editedItem!: NewsItemModel;
   newsItemFormGroup! : FormGroup;
-
-  @Output() save : EventEmitter<NewsItemModel> = new EventEmitter<NewsItemModel>();
 
   get dateField() : FormControl {
     return this.newsItemFormGroup.get('dateField') as FormControl;
@@ -37,7 +34,8 @@ export class NewsItemModalReactiveComponent implements OnInit {
   }
 
 
-  constructor(private _cd : ChangeDetectorRef,
+  constructor(private _newsService: NewsService,
+              private _cd : ChangeDetectorRef,
               private _route: ActivatedRoute,
               private _router: Router) {}
 
@@ -95,23 +93,22 @@ export class NewsItemModalReactiveComponent implements OnInit {
   }
 
   cancel() {
-    // this._router.navigate([{}], {relativeTo: this._route}).then(value => {
-    //   if (value) {
-    //     this.newsItemFormGroup.reset();
-    //     //this.isVisible = false;
-    //     this._cd.detectChanges();
-    //   }
-    // });
-    this._router.navigate([{ outlets: {modal: null}}], {relativeTo: this._route.parent}).then(value => {});
+    this._router.navigate([{ outlets: {modal: null}}], {relativeTo: this._route.parent}).then(value => {
+      if(value) {
+        this.newsItemFormGroup.reset();
+      }
+    });
   }
 
   saveItem() {
-    // this._router.navigate([{}], { relativeTo: this._route}).then(value => {
-    //   if(value) {
-    //     //this.isVisible = false;
-    //     this.save.emit(this.editedItem);
-    //   }
-    // });
+    this._router.navigate([{ outlets: {modal: null}}], {relativeTo: this._route.parent}).then(value => {
+      if(value) {
+        if(this.editedItem.id > 0)
+          this._newsService.editNewsItem(this.editedItem);
+        else
+          this._newsService.addNewsItem(this.editedItem);
+      }
+    });
   }
 }
 

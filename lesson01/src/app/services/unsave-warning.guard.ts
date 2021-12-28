@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, CanActivate, CanActivateChild, CanDeactivate, CanLoad, Route, RouterStateSnapshot, UrlSegment, UrlTree } from '@angular/router';
+import { ActivatedRouteSnapshot, CanDeactivate, RouterStateSnapshot, UrlTree } from '@angular/router';
 import { Observable } from 'rxjs';
 import {PersonComponent} from "../person/person.component";
 import {NewsItemModalReactiveComponent} from "../news/news-item-modal-reactive/news-item-modal-reactive.component";
@@ -19,16 +19,16 @@ export class UnsaveWarningGuard implements CanDeactivate<PersonComponent | NewsI
     if(component instanceof PersonComponent)
     {
       if (!(component as PersonComponent).personFormGroup.pristine){
-        return confirm("Покинуть страницу?");
+        return confirm("Имеются несохраненные данные, вы действительно хотите покинуть страницу?");
       }
     }
 
-    /*if(component instanceof NewsItemModalReactiveComponent)
+    if(component instanceof NewsItemModalReactiveComponent)
     {
       if (!(component as NewsItemModalReactiveComponent).newsItemFormGroup.pristine){
-        return confirm("Покинуть страницу?");
+        return confirm("Имеются несохраненные данные, вы действительно хотите закрыть окно?");
       }
-    }*/
+    }
 
     return true;
   }

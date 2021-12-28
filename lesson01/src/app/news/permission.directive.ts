@@ -13,11 +13,6 @@ export class PermissionDirective implements OnInit, OnDestroy {
   private _ngUnsubscribe$: Subject<number>;
   private _action: string = "";
 
-  // @Input() set appPermission(perms: Permission[]) {
-  //   this.permissions = perms;
-  // }
-  // @Input() appPermissionAction!: string;
-
   @Input() set appPermission(action: string) {
     this._action = action;
   }

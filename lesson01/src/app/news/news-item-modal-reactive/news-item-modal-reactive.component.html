@@ -1,7 +1,7 @@
 <app-modal-window
   (modalClose)="this.cancel()"
 >
-  <ng-container ngProjectAs="modal-title">{{"Добавить новость"}}</ng-container>
+  <ng-container ngProjectAs="modal-title">{{this.editedItem.id != -1 ? "Изменить новость" : "Добавить новость"}}</ng-container>
   <ng-container ngProjectAs="modal-inner">
 
     <ng-container [formGroup]="this.newsItemFormGroup">
