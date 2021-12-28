@@ -22,3 +22,7 @@ export enum NewsTypes {
     isUsercanDeleteNews: boolean,
     isUsercanEditNews: boolean,
 }
+
+export type JsonInformationListData = {
+    informationList: Information[]
+  }
