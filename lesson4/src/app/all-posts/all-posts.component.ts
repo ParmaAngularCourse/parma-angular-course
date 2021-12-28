@@ -79,10 +79,11 @@ export class AllPostsComponent {
   contextMenuX = 0;
   contextMenuY = 0;
   isActiveDeletePostBtn: boolean = false;
-
-  isShowDeleteButton: boolean = true;
-
   user: UserType = user1;
+
+  get permissions(): PermissionUser[] { return this.user.permissions; };
+
+  
 
   ngDoCheck() {
     console.log('all-posts');
@@ -107,28 +108,16 @@ export class AllPostsComponent {
   }
 
   saveNewPostHandler(post:PostObj) {
-    const findPost = this.posts.find((e) => e.id === post.id);
-    if (findPost) {
-      findPost.date = post.date;
-      findPost.title = post.title;
-      findPost.text = post.text;
-      findPost.isSelected = post.isSelected;
-      findPost.postType = post.postType;
-      this.posts = this.posts.map(e => {
-        if (e.id === post.id) return {...e}
-        else return e;
+    if (post.id === -1)
+    {
+      this.posts.push({
+        ...post,
+        id: this.posts.reduce((maxValue, post)=> maxValue > post.id ? maxValue: post.id, -1) + 1,
       });
     }
-    else {
-      let maxIndex = -1;
-      this.posts.forEach((e) => {
-        if (e.id > maxIndex) {
-          maxIndex = e.id;
-        }
-      });
-      maxIndex+=1;
-      post.id = maxIndex;
-      this.posts.push(post);
+    else{
+      const id = this.posts.findIndex((e) => e.id === post.id);
+      this.posts[id] = post;
     }
     this.popupPostDetailWindow.show(false);
   }
