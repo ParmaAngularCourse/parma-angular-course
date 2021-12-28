@@ -7,12 +7,11 @@ import { User } from './user-rights';
 import { NewsSourceService } from '../news-source.service';
 import { HttpErrorResponse } from '@angular/common/http';
 
-
 @Component({
   selector: 'app-news',
   templateUrl: './news.component.html',
   styleUrls: ['./news.component.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.Default// OnPush
 })
 export class NewsComponent {
 
@@ -26,6 +25,7 @@ export class NewsComponent {
 
   public ThemeEnum = Theme;
 
+
   @ViewChild('contextMenuComponent') menuComponent!: ContextMenuComponent;
   @ViewChild('popupDialog') popupDialog!: PopupDialogComponent;  
   
@@ -34,6 +34,7 @@ export class NewsComponent {
          private _newsSourceService: NewsSourceService)
  {     
       this.checkCheckboxes();     
+     
       // this._newsSourceService.getNews().subscribe({
       //     complete: (data: NewsItem[]) => { 
       //       this.ourNews = data;
@@ -61,7 +62,7 @@ export class NewsComponent {
      this._newsSourceService.getNews().subscribe((data: NewsItem[]) => {
         this.ourNews = data;
         console.log("refreshNews "+ data.length);   
-        this.cdr.detectChanges();    
+        //this.cdr.detectChanges();    
       }
       );   
       
@@ -74,6 +75,7 @@ export class NewsComponent {
   onShowAddNewsDialog(){
     this.editDialogCaption = "Добавление новости";
     this.editDialogNewsItem =  this.getEmptyNews();
+    this.editDialogNewsItem.id = -123; // Для корректной отработки логики onClickSavePopupButton
     this.popupDialog.show();
   }
 
@@ -108,15 +110,14 @@ export class NewsComponent {
 
   onClickSavePopupButton= ()=>{    
     const currentNewsIndex= this.ourNews.findIndex((el)=> el.id === this.editDialogNewsItem.id);
-
     if (currentNewsIndex > -1) { 
-        this._newsSourceService.updateNewsItem(currentNewsIndex,this.unsavedNewsItem.content);            
+        this._newsSourceService.updateNewsItem(this.editDialogNewsItem.id, this.unsavedNewsItem.content);            
     } else {
         this._newsSourceService.addNews(this.unsavedNewsItem.content);
     }   
+    this.cdr.markForCheck();  
     this.onClickClosePopupButton();
-    this.refreshNewsList();
-    this.cdr.detectChanges();  
+    this.refreshNewsList();  
   }
 
 

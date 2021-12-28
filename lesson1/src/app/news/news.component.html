@@ -38,7 +38,7 @@
         <div>
             {{inputCaption}}
         </div>
-        <input type="date" [valueAsDate]="inputValue" class="dialogInput" (change)="onDialogInpChange($event, field)" >     
+        <input type="date" [value]="inputValue | date :'yyyy-MM-dd'" class="dialogInput" (change)="onDialogInpChange($event, field)" >    
    </ng-template>
 
    <ng-template #textInpTemplate let-inputValue="inpValue" let-inputCaption="inpCaption" let-field="fieldName" >    
@@ -74,7 +74,7 @@
         <div *ngFor="let enum of ThemeEnum | keyvalue" >            
             <label [appAdTheme]="enum.key" >
                  <input type="radio" name="name" [value]="enum.key" (click)="onRadioButChange(enum.value)"
-                     [checked]="currentValue == enum.value"> {{enum.value}} 
+                     [checked]="currentValue == enum.key"> {{enum.value}} 
              </label>            
         </div>
     </div>
