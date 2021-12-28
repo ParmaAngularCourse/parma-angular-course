@@ -17,6 +17,8 @@ export class PostPermissionSaveDirective {
     else if (this._viewRef){
       const indexView = this.view.indexOf(this._viewRef);
       this.view.remove(indexView);
+      this._viewRef.destroy();
+      this.view.clear();
     }
   }
   constructor(private template: TemplateRef<any>, private view:ViewContainerRef) { }
