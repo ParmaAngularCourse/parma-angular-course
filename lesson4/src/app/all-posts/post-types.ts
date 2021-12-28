@@ -12,5 +12,5 @@ export enum PostType {
     tourism = 'tourism',
     economic = 'economic',
     science = 'science',
-    internet = 'internet'
+    internet = 'internet',
 }
