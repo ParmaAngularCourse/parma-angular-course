@@ -77,4 +77,7 @@ export class AllNewsComponent {
     return this.postToEdit.id === -1 ? 'Добавление' : 'Редактирование'
   }
 
+  onPermissionToggleClick(){
+    this.userPermission = !this.userPermission;
+  }
 }

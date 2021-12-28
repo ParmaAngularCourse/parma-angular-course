@@ -9,8 +9,10 @@ export class PermissionDirectiveDirective {
   constructor(private template: TemplateRef<any>,
           private view : ViewContainerRef) { }
 
-  ngOnInit(){
+  ngOnChanges(){
     if(this.userPermission)
       this.view.createEmbeddedView(this.template);
+      else
+      this.view.clear();
   }
 }
