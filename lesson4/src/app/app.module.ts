@@ -7,10 +7,11 @@ import { SinglePostDetailComponent } from './all-posts/single-post-detail/single
 import { SinglePostComponent } from './all-posts/single-post/single-post.component';
 
 import { AppComponent } from './app.component';
-import { PostTitleCasePipePipe } from './post-title-case-pipe.pipe';
+import { StringCasePipePipe } from './post-title-case-pipe.pipe';
 import { PostTypePipePipe } from './post-type-pipe.pipe';
 import { PostTypeSylesDirective } from './post-type-syles.directive';
-import { PostPermissionDirective } from './post-permission.directive';
+import { PostPermissionDeleteDirective } from './post-permission-delete.directive';
+import { PostPermissionSaveDirective } from './post-permission-save.directive';
 
 @NgModule({
   declarations: [
@@ -20,10 +21,11 @@ import { PostPermissionDirective } from './post-permission.directive';
     SinglePostDetailComponent,
     HeaderPostDetailComponent,
     ContextMenuComponent,
-    PostTitleCasePipePipe,
+    StringCasePipePipe,
     PostTypePipePipe,
     PostTypeSylesDirective,
-    PostPermissionDirective
+    PostPermissionDeleteDirective,
+    PostPermissionSaveDirective
   ],
   imports: [
     BrowserModule,

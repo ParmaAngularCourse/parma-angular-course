@@ -1,6 +1,6 @@
 <button class="buttonStyle" (click)="addNewPostHandler()">Добавить</button>
-<button *appPostPermission="isShowDeleteButton" class="buttonStyle" [disabled] ="!isActiveDeletePostBtn" (click)="deletePostsHandler()">Удалить</button>
-<app-single-post [user]="user" *ngFor="let item of posts" [post]="item | postTitleCasePipe" (deletePostEvent)="deletePostHandler($event)" 
+<button *appPostPermissionDelete="permissions" class="buttonStyle" [disabled] ="!isActiveDeletePostBtn" (click)="deletePostsHandler()">Удалить</button>
+<app-single-post [user]="user" *ngFor="let item of posts" [post]="item" (deletePostEvent)="deletePostHandler($event)" 
 (editPostEvent)="editPostHandler($event)" (contextmenu)="rightClickHandler($event)" 
 (click)="disableContextMenuHandler()" (selectPostEvent)="selectPostHandler($event)">
 </app-single-post>

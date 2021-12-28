@@ -22,7 +22,7 @@ export class SinglePostDetailComponent {
     PostType: PostType = PostType.politic;
 
     @Input() user!: UserType;
-    get isShowSaveButton(): boolean { return this.user.permissions.includes(PermissionUser.save); }
+    get permissions(): PermissionUser[] { return this.user.permissions; }
 
     constructor(private cdr: ChangeDetectorRef) {}
 

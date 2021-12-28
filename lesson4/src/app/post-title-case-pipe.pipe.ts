@@ -1,15 +1,14 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { PostObj } from './all-posts/post-types';
 
 @Pipe({
   name: 'postTitleCasePipe'
 })
-export class PostTitleCasePipePipe implements PipeTransform {
+export class StringCasePipePipe implements PipeTransform {
 
-  transform(value: PostObj): PostObj {
-    if (value && value.title)
+  transform(value: string): string {
+    if (value && value.length > 1)
     {
-      value.title = value.title.charAt(0).toLocaleUpperCase() + value.title.slice(1).toLocaleLowerCase();
+      return value.charAt(0).toLocaleUpperCase() + value.slice(1).toLocaleLowerCase();
     }
     return value;
   }
