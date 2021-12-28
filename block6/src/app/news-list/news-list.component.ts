@@ -1,8 +1,9 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
-import { Subject, takeUntil } from 'rxjs';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { bufferCount, debounceTime, distinctUntilChanged, from, fromEvent, map, Observable, startWith, Subject, switchMap, takeUntil, toArray } from 'rxjs';
 import { INewsData } from 'src/model/INewsData';
 import { News } from 'src/model/News';
+import { NewsFilter } from 'src/model/NewsFilter';
 import { NewsContextMenuComponent } from '../news-context-menu/news-context-menu.component';
 import { NewsEditorComponent } from '../news-editor/news-editor.component';
 import { NewsService } from '../service/news.service';
@@ -17,8 +18,11 @@ import { NewsBlockComponent } from './news-block/news-block.component';
 export class NewsListComponent implements OnInit, OnDestroy {
   @ViewChild('newsEditForm') newsEditForm!: NewsEditorComponent
   @ViewChild('contextMenu') newsContextMenu!: NewsContextMenuComponent
-  @ViewChildren(NewsBlockComponent) childrenComponents!:QueryList<NewsBlockComponent>
-  public newsArray:News[] = [];
+  @ViewChild('newsFilter') newsFilter!: ElementRef
+  @ViewChildren(NewsBlockComponent) childrenComponents!:QueryList<NewsBlockComponent>  
+  public newsArray1:News[] = [];
+  public newsArray2:News[] = [];
+  public newsArray3:News[] = [];
   public editFormCaption: string = "";
   public enableDeleteButton:boolean = false;  
   private unsubscriptionSubj!:Subject<void>
@@ -28,18 +32,59 @@ export class NewsListComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.unsubscriptionSubj = new Subject();
-    this.newsService.getNewsList()
-    .pipe(
-      takeUntil(this.unsubscriptionSubj)
-    )
-    .subscribe({
-      next: (data) => {
-        this.newsArray = data;
-        this.cd.markForCheck();
-      },
+    this.unsubscriptionSubj = new Subject();   
+  }
+
+  ngAfterViewInit() {
+    var filterO: Observable<Event> = fromEvent(this.newsFilter.nativeElement, 'keyup');
+    filterO.pipe(      
+      debounceTime(600),                
+      map(event => 
+      {
+        var value = (event.target as HTMLInputElement).value
+        return {
+          searchTextFilter: value
+        } as NewsFilter;
+      }),
+      startWith(new NewsFilter()),
+      distinctUntilChanged((previous:NewsFilter, current:NewsFilter)=> previous.searchTextFilter === current.searchTextFilter),
+      switchMap(value=> this.newsService.getNewsList(value)),
+      switchMap(value=> {
+        return from(value).pipe(
+          bufferCount(3),
+          toArray()          
+        )
+      }),
+      takeUntil(this.unsubscriptionSubj)                  
+    ).subscribe({
+      next: (data) => this.setNewsData(data),
       error: (error: HttpErrorResponse) => console.log(error.status + ' ' + error.message) 
     });
+  }
+
+  private setNewsData(data:INewsData[][]):void{
+    this.newsArray1 = [];
+    this.newsArray2 = [];
+    this.newsArray3 = [];
+
+    data.forEach(newsArray => {
+      var na1 = newsArray[0];
+      if (na1){ 
+        this.newsArray1.push(na1)
+      };
+
+      var na2 = newsArray[1];
+      if (na2){ 
+        this.newsArray2.push(na2)
+      };
+
+      var na3 = newsArray[2];
+      if (na3){ 
+        this.newsArray3.push(na3)
+      };
+    });
+    this.childrenComponents.forEach(x=>x.onCheckboxChange(false));
+    this.cd.markForCheck();
   }
 
   onDeleteNews(news:News){

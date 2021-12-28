@@ -1,5 +1,5 @@
 .control-button{
-    margin-right: 10px;
+    margin-left: 10px;
     background-color: darkblue;
     color: white;
     height: 30px;
@@ -7,6 +7,18 @@
     text-align: center;
 }
 
-.news-block {
+.news-block:after {    
 	margin-right: 60px;
+    display: table-column;
+    clear: both;
+    content: "";
 }
+
+.input-filter-textbox{
+    width: calc(100% - 30px);
+    margin-left: 10px; 
+    margin-bottom: 10px;
+    text-align: left;
+    height: 30px;
+    font: 1.6em "Fira Sans"
+  }

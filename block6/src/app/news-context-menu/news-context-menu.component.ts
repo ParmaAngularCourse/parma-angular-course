@@ -22,7 +22,10 @@ export class NewsContextMenuComponent implements OnInit {
     this.cd.markForCheck();    
   }
 
-  closeMenu() {
+  closeMenu(event?:Event|undefined) {
+    if(event){
+      event.preventDefault()
+    }
     this.isVisible = false;
     this.cd.markForCheck();
   }

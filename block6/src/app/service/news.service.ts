@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { INewsData } from 'src/model/INewsData';
 import { News } from 'src/model/News';
+import { NewsFilter } from 'src/model/NewsFilter';
 import { ServerResponse } from 'src/model/ServerResponse';
 
 @Injectable({
@@ -13,22 +14,26 @@ export class NewsService {
 
   constructor(private httpService:HttpClient){}
 
-  public getNewsList():Observable<INewsData[]>{
+  public getNewsList(filter:NewsFilter):Observable<INewsData[]>{
     if(!this.newsListSubject){
       this.newsListSubject = new BehaviorSubject<INewsData[]>([]);
-      this.httpService.get<ServerResponse<INewsData[]>>('https://localhost:44379/api/NewsData/GetNews')      
-      .subscribe({
-        next: (response)=> { 
-          if (response.isSuccess === false) {
-            console.error(`Ошибка при получении данных c сервера: ${response.errorText}`)            
-          }
-          else{
-            this.CreateNewsList(response?.data);            
-          }
-        },
-        error:(err)=> { console.error(`Ошибка при получении данных c сервера: ${err}`)}        
-      });
     }
+
+    this.httpService.post<ServerResponse<INewsData[]>>('https://localhost:44379/api/NewsData/GetNews', filter)      
+    .subscribe({
+      next: (response)=> { 
+        if (response.isSuccess === false) {
+          console.error(`Ошибка при получении данных c сервера: ${response.errorText}`)            
+        }
+        else{
+          this.CreateNewsList(response?.data);            
+        }
+      },
+      error:(err)=> { 
+        console.error(`Ошибка при получении данных c сервера: ${err}`)
+        return []
+      }        
+    });
 
     return this.newsListSubject.asObservable();
   }

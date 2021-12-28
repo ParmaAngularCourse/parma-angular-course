@@ -2,5 +2,5 @@
     <div id="contextMenu" class="btn-group" [ngStyle]="{'left.px': menuTopLeftPosition.left, 'top.px': menuTopLeftPosition.top}">    
         <ng-content></ng-content>
     </div>
-    <div class="mmodal-background" (click)="closeMenu()"></div>
+    <div class="mmodal-background" (contextmenu)="closeMenu($event)" (click)="closeMenu($event)"></div>
 </ng-container>

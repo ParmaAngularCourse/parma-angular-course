@@ -1,11 +1,19 @@
 .news-block {
-  width: 100%;
-  display: inline-block;  
+  float: left;
+  display: table-row;
+  width: 30%;
+  height: 265px;
   margin-left: 10px;
   margin-bottom: 5px;
   margin-top: 5px;
   padding-bottom: 10px; 
   padding-left: 30px; 
+  position: relative;
+}
+
+.news-body{
+  overflow: auto;
+  height: 150px;
 }
 
 .news-block-uncheked{
@@ -52,7 +60,19 @@
   color: white;
   height: 30px;
   width: 100px;
-  text-align: center;
+  text-align: center;  
+}
+
+.delete{
+  position: absolute;
+  right: 10px;
+  bottom: 10px; 
+}
+
+.save{
+  position: absolute;
+  right: 120px;
+  bottom: 10px; 
 }
 
 .news-type-tag {	

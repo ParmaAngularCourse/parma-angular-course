@@ -10,9 +10,11 @@
             </div>            
             <span class="news-type-tag" [title]="currentNews.type" [appNewsTypeColor]="currentNews.type | getNewsColor">{{currentNews.type | getFirstLetter | firstLetterUppercase}}</span>
         </div>
-        <div>{{currentNews.body}}</div>
-        <button class="control-button" name="EditButton" (click)="onEditNew()">Редактировать</button>        
-        <button *appCheckAccess = "'Delete'" class="control-button" name="DeleteButton" [disabled]="!enableDeleteButton" (click)="onDeleteNew()">Удалить</button>
-      </div>      
+      </div>
+      <div class="news-body">
+        {{currentNews.body}}
+      </div>     
     </div>
+    <button class="control-button save" name="EditButton" (click)="onEditNew()">Редактировать</button>        
+    <button *appCheckAccess = "'Delete'" class="control-button delete" name="DeleteButton" [disabled]="!enableDeleteButton" (click)="onDeleteNew()">Удалить</button> 
   </div>

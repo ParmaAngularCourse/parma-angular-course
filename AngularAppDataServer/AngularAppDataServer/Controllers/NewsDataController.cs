@@ -19,10 +19,10 @@ namespace AngularAppDataServer.Controllers
             this.executeService = executeService;
         }
 
-        [HttpGet]
-        public async Task<ServiceResponse<IEnumerable<News>>> GetNews()
+        [HttpPost]
+        public async Task<ServiceResponse<IEnumerable<News>>> GetNews(Filter filter)
         {
-            return await executeService.TryExecute(() => dataService.GetNewsData());
+            return await executeService.TryExecute(() => dataService.GetNewsData(filter));
         }
 
         [HttpPost]
