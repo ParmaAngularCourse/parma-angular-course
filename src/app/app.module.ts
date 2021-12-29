@@ -19,6 +19,7 @@ import { CrazyRadioComponent } from './crazy-radio/crazy-radio.component';
 import { ProfileComponent } from './profile/profile.component';
 import { EditComponentComponent } from './edit-component/edit-component.component';
 import { LoginComponent } from './login/login.component';
+import { CustomRadioComponent } from './custom-radio/custom-radio.component';
 
 @NgModule({
   declarations: [
@@ -35,7 +36,8 @@ import { LoginComponent } from './login/login.component';
     CrazyRadioComponent,
     ProfileComponent,
     EditComponentComponent,
-    LoginComponent
+    LoginComponent,
+    CustomRadioComponent
   ],
   imports: [
     BrowserModule,

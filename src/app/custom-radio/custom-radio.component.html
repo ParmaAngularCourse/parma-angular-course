@@ -1,0 +1,3 @@
+<div *ngFor="let item of enum | keyvalue">
+  <app-crazy-radio [appNewsTypeStyle]="colors.get(item.value)" value={{item.value}} [(ngModel)]="model" (click)="select()">{{item.value}}</app-crazy-radio>
+</div>
