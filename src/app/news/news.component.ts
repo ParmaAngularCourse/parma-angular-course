@@ -1,7 +1,11 @@
-import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChild } from '@angular/core';
 import { ModalComponent } from '../modal/modal.component';
-import { NewsType, Report } from './news-types';
+import { NewsService } from '../news.service';
+import { Report } from './news-types';
 import { Role } from './roles';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-news',
@@ -11,34 +15,13 @@ import { Role } from './roles';
 })
 export class NewsComponent {
 
-  public news: Report[] = [{
-    header: "Внимание!",
-    body: "Произошло непоправимое. Я проснулась",
-    timestamp: "2021-11-10",
-    isChecked: false,
-    type: NewsType.Politics
-  },
-  {
-    header: "НОВОСТЬ",
-    body: "Внимание-внимание! Я забыла мысль",
-    timestamp: "2021-11-17",
-    isChecked: false,
-    type: NewsType.Science
-  },
-  {
-    header: "...",
-    body: "Что?",
-    timestamp: "2021-11-22",
-    isChecked: true,
-    type: NewsType.Tourism
-  },
-  {
-    header: "Невнимание",
-    body: "Сегодня нормально",
-    timestamp: "2021-11-23",
-    isChecked: false,
-    type: NewsType.Internet
-  }]
+  public news!: Report[];
+  private ngUnsubscribe$!: Subject<number>;
+
+  constructor(private _newsService: NewsService, private ref: ChangeDetectorRef) {
+    this.ngUnsubscribe$ = new Subject();
+    this._newsService.getNews().pipe(takeUntil(this.ngUnsubscribe$)).subscribe(((data: any) => { this.news = data; this.ref.markForCheck(); }), (error: HttpErrorResponse) => console.log(error));
+  }
 
   @ViewChild('modal') modal!: ModalComponent;
 
@@ -63,14 +46,11 @@ export class NewsComponent {
   }
 
   clickDeleteButton() {
-    this.news = this.news.filter(x => !x.isChecked);
+    this._newsService.deleteCheckedReports();
   }
 
   saveReport($event: Report) {
-    if (this.modalIndex < this.news.length)
-      this.news[this.modalIndex] = $event;
-    else
-      this.news.push($event);
+    this._newsService.saveReport($event, this.modalIndex);
     this.modal.hide();
   }
 
@@ -82,7 +62,7 @@ export class NewsComponent {
   }
 
   deleteReport(i: number) {
-    this.news.splice(i, 1);
+    this._newsService.deleteReport(i);
   }
 
   rightClick(e: { clientX: any; clientY: any; }) {
@@ -98,5 +78,10 @@ export class NewsComponent {
 
   clickCheckAllButton() {
     return this.news.forEach(x => x.isChecked = true);
+  }
+
+  ngOnDestroy() {
+    this.ngUnsubscribe$.next(0);
+    this.ngUnsubscribe$.complete();
   }
 }

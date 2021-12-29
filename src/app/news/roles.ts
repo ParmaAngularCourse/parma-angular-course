@@ -3,4 +3,4 @@ export enum Role {
   ModalSaver
 }
 
-export const myRoles: Role[] = [Role.ModalSaver];
+export const myRoles: Role[] = [Role.ModalSaver, Role.GlobalDeleter];

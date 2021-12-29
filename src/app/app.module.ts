@@ -13,6 +13,8 @@ import { RightsDirective } from './rights.directive';
 import { UpperCaseNamePipePipe } from './upper-case-name-pipe.pipe';
 import { NewsTypePipePipe } from './news-type-pipe.pipe';
 import { TooltipDirective } from './tooltip.directive';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { HttpInterseptorService } from './http-interseptor.service';
 
 @NgModule({
   declarations: [
@@ -31,9 +33,14 @@ import { TooltipDirective } from './tooltip.directive';
     BrowserModule,
     AppRoutingModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    HttpClientModule
   ],
-  providers: [],
+  providers: [{
+    provide: HTTP_INTERCEPTORS,
+    useClass: HttpInterseptorService,
+    multi: true
+  }], 
   bootstrap: [AppComponent]
 })
 export class AppModule { }
