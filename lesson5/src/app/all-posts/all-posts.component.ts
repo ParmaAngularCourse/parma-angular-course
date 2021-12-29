@@ -34,7 +34,7 @@ export class AllPostsComponent {
 
   constructor(private postService: PostsService, private userInfoService: UserInfoService, private cdr: ChangeDetectorRef) {
     this.ngUnsubscribe$ = new Subject<void>();
-    this.postService.getPosts().pipe(
+    this.postService.getPostsOberverble().pipe(
       takeUntil(this.ngUnsubscribe$)
     ).subscribe({
       next: (data) => {
@@ -42,9 +42,9 @@ export class AllPostsComponent {
         this.cdr.markForCheck();
       },
       error: (e) => { console.log(e.status + ' '+ e.message); },
-      complete: () => { console.info('complete getPosts all-post component'); } 
+      complete: () => { console.info('complete getPosts all-post component'); }
   });
-    this.userInfoService.getUser()
+    this.userInfoService.getUserObserverble()
     .pipe(
       takeUntil(this.ngUnsubscribe$)
     )

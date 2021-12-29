@@ -18,21 +18,22 @@ export class PostsService {
 
   private api = "/Posts";
 
-  private postSubject!: BehaviorSubject<PostObj[]>;
-  constructor(private httpClient: HttpClient) { }
+  private postSubject: BehaviorSubject<PostObj[]> = new BehaviorSubject<PostObj[]>([]);
+  constructor(private httpClient: HttpClient) {
+    this.loadPosts();
+  }
 
-  public getPosts():Observable<PostObj[]>{
-    if (!this.postSubject) {
-      this.postSubject = new BehaviorSubject<PostObj[]>([]);
-    }
-
-    this.httpClient.post<DataObj[]>(`${this.api}/GetPosts`, null)
-    .pipe(
-      map(item => this.mapToPostObj(item))
-    ).subscribe((value) => {
-      this.postSubject.next(value);
-    });
+  public getPostsOberverble():Observable<PostObj[]>{
     return this.postSubject.asObservable();
+  }
+
+  public loadPosts() {
+    this.httpClient.post<DataObj[]>(`${this.api}/GetPosts`, null)
+      .pipe(
+        map(item => this.mapToPostObj(item))
+      ).subscribe((value) => {
+        this.postSubject.next(value);
+      });
   }
 
   private mapToPostObj(items: DataObj[]): PostObj[] {
@@ -104,9 +105,6 @@ export class PostsService {
   }
 
   public deleteSelectedPosts(posts: PostObj[]) {
-
-    if (this.postSubject)
-    {
       const ids = posts.filter(e => e.isSelected).map(e => e.id);
       this.httpClient.post(`${this.api}/DeletePosts`, ids).subscribe({
         next: (value) => {
@@ -115,13 +113,9 @@ export class PostsService {
         error: (error: HttpErrorResponse) => console.log(error.status + ' '+ error.message),
         complete: () => { console.log("delete selected posts complite"); }
     });
-
-    }
   }
 
   public deletePost(post:PostObj) {
-    if (this.postSubject)
-    {
       let posts = this.postSubject.getValue();
       this.httpClient.post(`${this.api}/DeletePosts`, [post.id]).subscribe({
         next: (value) => {
@@ -130,7 +124,5 @@ export class PostsService {
         error: (error: HttpErrorResponse) => console.log(error.status + ' '+ error.message),
         complete: () => { console.log("delete single post complite"); }
     });
-
-    }
   }
 }
