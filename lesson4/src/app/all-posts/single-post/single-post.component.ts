@@ -13,8 +13,6 @@ export class SinglePostComponent {
 
   @Input() user!: UserType;
 
-  get permissions():PermissionUser[] { return this.user.permissions }
-
   @Output() deletePostEvent: EventEmitter<PostObj> = new EventEmitter();
   @Output() editPostEvent: EventEmitter<PostObj> = new EventEmitter();
   @Output() selectPostEvent: EventEmitter<PostObj> = new EventEmitter();
