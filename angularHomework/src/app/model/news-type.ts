@@ -25,3 +25,10 @@ export const NewsTypeObjectEnum = {
    Internet: { id: 5, text: "Интернет", color: "grey" },
 } as const
 
+export type NewsObj = {
+   id: number,
+   title: string,
+   dateTime: string,
+   text: string,
+   newsType: number
+ }
