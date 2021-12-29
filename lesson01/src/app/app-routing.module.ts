@@ -9,7 +9,6 @@ import {AuthGuard} from "./services/auth.guard";
 import {TagsListService} from "./news/services/tags-list.service";
 import {UnsaveWarningGuard} from "./services/unsave-warning.guard";
 import {NewsItemModalReactiveComponent} from "./news/news-item-modal-reactive/news-item-modal-reactive.component";
-import {NewsItemModalReactiveResolver} from "./news/news-item-modal-reactive/news-item-modal-reactive.resolver";
 
 const routes: Routes = [
   {
@@ -56,9 +55,6 @@ const routes: Routes = [
     path: 'edit/:id',
     component: NewsItemModalReactiveComponent,
     outlet: 'modal',
-    resolve: {
-      newsItem: NewsItemModalReactiveResolver
-    },
     canDeactivate: [UnsaveWarningGuard]
   },
   {

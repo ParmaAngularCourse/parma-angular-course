@@ -2,12 +2,14 @@ import {
   Component,
   OnInit,
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
+  ChangeDetectorRef, OnDestroy,
 } from '@angular/core';
 import {NewsItemModel} from "../news-types";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {ActivatedRoute, Router} from "@angular/router";
 import {NewsService} from "../services/news.service";
+import {switchMap, takeUntil} from "rxjs/operators";
+import {Subject} from "rxjs";
 
 @Component({
   selector: 'app-news-item-modal-reactive',
@@ -15,7 +17,7 @@ import {NewsService} from "../services/news.service";
   styleUrls: ['./news-item-modal-reactive.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class NewsItemModalReactiveComponent implements OnInit {
+export class NewsItemModalReactiveComponent implements OnInit, OnDestroy {
 
   editedItem!: NewsItemModel;
   newsItemFormGroup! : FormGroup;
@@ -33,11 +35,14 @@ export class NewsItemModalReactiveComponent implements OnInit {
     return this.newsItemFormGroup.get('tagsField') as FormControl;
   }
 
+  private _ngUnsubscribe$: Subject<number>;
 
   constructor(private _newsService: NewsService,
               private _cd : ChangeDetectorRef,
               private _route: ActivatedRoute,
-              private _router: Router) {}
+              private _router: Router) {
+    this._ngUnsubscribe$ = new Subject<number>();
+  }
 
   ngOnInit(): void {
     this.newsItemFormGroup = new FormGroup({
@@ -61,9 +66,16 @@ export class NewsItemModalReactiveComponent implements OnInit {
       switch (value[0].path){
         case "add" : this.show(); break;
         case "edit" : {
-          this._route.data.subscribe({
+          this._route.params
+            .pipe(
+              switchMap(params => {
+                return this._newsService.getItemById(params.id)
+              }),
+              takeUntil(this._ngUnsubscribe$)
+            )
+            .subscribe({
             next: value => {
-              this.show(value.newsItem);
+              this.show(value);
             }
           })
           break;
@@ -109,6 +121,11 @@ export class NewsItemModalReactiveComponent implements OnInit {
           this._newsService.addNewsItem(this.editedItem);
       }
     });
+  }
+
+  ngOnDestroy(): void {
+    this._ngUnsubscribe$.next();
+    this._ngUnsubscribe$.complete();
   }
 }
 

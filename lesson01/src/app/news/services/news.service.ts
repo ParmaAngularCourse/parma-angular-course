@@ -1,6 +1,6 @@
 import {Injectable, OnDestroy} from '@angular/core';
 import {NewsItemModel} from "../news-types";
-import {BehaviorSubject, Observable, Subject} from "rxjs";
+import {BehaviorSubject, Observable, of, Subject} from "rxjs";
 import {HttpClient, HttpErrorResponse, HttpParams} from "@angular/common/http";
 import {map, takeUntil} from "rxjs/operators";
 
@@ -127,35 +127,13 @@ export class NewsService implements OnDestroy {
     }
   }
 
-  public getItemById(newsId: number) : NewsItemModel | undefined {
-    if (this._newsSubject) {
-      let news: NewsItemModel[] = this._newsSubject.getValue();
-      return  news.find(p => p.id == newsId);
+  public getItemById(newsId: number) : Observable<NewsItemModel | undefined> {
+    if(this._newsSubject) {
+      return this._newsSubject.pipe(
+        map(news => news.find(p => p.id == newsId))
+      )
     }
-    return undefined;
-  }
-
-  public getItemById1(newsId: number) : Observable<NewsItemModel | undefined> {
-    let o$ = new BehaviorSubject<NewsItemModel | undefined>(undefined);
-    if(!this._newsSubject) {
-      this._getItemSub$.subscribe({
-        next: value => {
-          if (!value) return;
-          if (this._newsSubject) {
-            let news: NewsItemModel[] = this._newsSubject.getValue();
-            o$.next(news.find(p => p.id == newsId));
-            //o$.complete();
-          }
-        }
-      });
-    } else {
-
-      let news: NewsItemModel[] = this._newsSubject.getValue();
-      let item = news.find(p => p.id == newsId);
-      o$.next(item);
-      //o$.complete();
-    }
-    return o$.asObservable();
+    return of(undefined);
   }
 
   ngOnDestroy(): void {
