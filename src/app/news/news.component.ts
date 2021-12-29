@@ -9,6 +9,7 @@ import { debounceTime, takeUntil } from 'rxjs/operators';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../auth.service';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-news',
@@ -47,6 +48,7 @@ export class NewsComponent implements ComponentCanDeactivate {
   @ViewChild('modal') modal!: ModalComponent;
 
   defaultReport = {
+    id: 0,
     header: "",
     body: "",
     timestamp: "",
@@ -68,7 +70,16 @@ export class NewsComponent implements ComponentCanDeactivate {
   isDirty = false;
 
   getNews() {
-    this._newsService.getNews(this.searchText ?? "", this.newsType).pipe(takeUntil(this.ngUnsubscribe$)).subscribe(((data: any) => { this.news = data; this.ref.markForCheck(); this.showModal(); }), (error: HttpErrorResponse) => console.log(error));
+    this._newsService
+      .getNews(this.searchText ?? "", this.newsType)
+      .pipe(takeUntil(this.ngUnsubscribe$),
+        map((r: Report[]) => {
+          let colNum = 0;
+          r.forEach(x => x.colNum = colNum < 3 ? ++colNum : colNum = 1);
+          return r;
+        })
+      )
+      .subscribe(((data: any) => { this.news = data; this.ref.markForCheck(); this.showModal(); }), (error: HttpErrorResponse) => console.log(error));
   }
 
   setSearchSubscription() {
@@ -98,12 +109,6 @@ export class NewsComponent implements ComponentCanDeactivate {
     this.modalIndex = this.news.length;
     this.modalHeader = "Добавить новость";
     this.modalData = Object.assign({}, this.defaultReport);
-    const counts = this.news.reduce((tally: Record<number, number>, x) => {
-      let i = x.colNum ?? 0;
-      if (i > 0) { tally[i] = (tally[i] || 0) + 1; }
-      return tally;
-    }, { 1: 0, 2: 0, 3: 0 });
-    this.modalData.colNum = (Object.keys(counts) as unknown as Array<number>).find(key => counts[key] === Math.min(...(Object.values(counts) as unknown as Array<number>)));
     this.modal.show();
     this.isDirty = false;
   }

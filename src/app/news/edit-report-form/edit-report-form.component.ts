@@ -34,7 +34,8 @@ export class EditReportFormComponent {
     body: ["", [Validators.required, Validators.minLength(3)]],
     timestamp: ["", Validators.required],
     type: [null, Validators.required],
-    colNum: null
+    colNum: null,
+    id: 0
   });
 
   templates = [
