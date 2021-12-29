@@ -79,7 +79,7 @@ export class PostsService {
     .subscribe({
       next: (value) => {
         let posts = this.postSubject.getValue();
-        post.id = value as number | -1;
+        post.id = value as number || -1;
         posts.push(post);
         this.postSubject.next(posts);
       },
@@ -104,7 +104,7 @@ export class PostsService {
   }
 
   public deleteSelectedPosts(posts: PostObj[]) {
-    
+
     if (this.postSubject)
     {
       const ids = posts.filter(e => e.isSelected).map(e => e.id);
@@ -115,7 +115,7 @@ export class PostsService {
         error: (error: HttpErrorResponse) => console.log(error.status + ' '+ error.message),
         complete: () => { console.log("delete selected posts complite"); }
     });
-      
+
     }
   }
 
@@ -130,7 +130,7 @@ export class PostsService {
         error: (error: HttpErrorResponse) => console.log(error.status + ' '+ error.message),
         complete: () => { console.log("delete single post complite"); }
     });
-      
+
     }
   }
 }
