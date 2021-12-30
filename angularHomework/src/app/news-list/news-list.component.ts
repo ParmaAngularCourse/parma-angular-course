@@ -49,7 +49,6 @@ export class NewsListComponent implements OnInit {
           if (checkedIndex > -1) {
             this.chechedNewsIds.splice(checkedIndex, 1);
           }
-          this.cdr.markForCheck();
         }
         else {
           console.log('Failed to delete the news');
@@ -100,7 +99,6 @@ export class NewsListComponent implements OnInit {
       (isOk) => {
         if (isOk) {
           this.chechedNewsIds = [];
-          this.cdr.markForCheck();
         }
         else {
           console.log('Failed to delete the news');
