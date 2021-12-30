@@ -49,6 +49,18 @@ export class NewsService {
     );
   }
 
+  public deleteSeveralNews(ids: number[]): Observable<boolean> {
+    return this.httpNewsService.deleteSeveralNews(ids).pipe(
+      tap(isOk => {
+        if (isOk && this.newsSubject) {
+          let news: News[] = this.newsSubject.value;
+
+          news = news.filter(item => !ids.includes(item.id));
+          this.newsSubject.next(news);
+      }})
+    );
+  }
+
   public addOrEditNews(news: News): Observable<boolean> {
 
     var newsObj = {

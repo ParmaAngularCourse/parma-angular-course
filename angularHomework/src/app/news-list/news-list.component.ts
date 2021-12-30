@@ -94,11 +94,19 @@ export class NewsListComponent implements OnInit {
   }
 
   OnClickDeleteButton() {
-    let newsToDelete = this.news.filter(item => !this.chechedNewsIds.includes(item.id));
+    let newsToDelete = this.news.filter(item => this.chechedNewsIds.includes(item.id)).map(item => item.id);
 
-    newsToDelete.forEach(element => {
-      this.OnDeleteNews(element.id);
-    });
+    this._newsService.deleteSeveralNews(newsToDelete).subscribe(
+      (isOk) => {
+        if (isOk) {
+          this.chechedNewsIds = [];
+          this.cdr.markForCheck();
+        }
+        else {
+          console.log('Failed to delete the news');
+        }
+      }
+    );
   }
 
   onSelectAllNews() {
@@ -115,13 +123,11 @@ export class NewsListComponent implements OnInit {
   }
 
   onSaveNews($event: News) {
-
     this._newsService.addOrEditNews($event).subscribe(
       (isOk) => {
         if (isOk) {
           this.modalComponent?.close();
           this.selectedNews = undefined;
-          this.cdr.markForCheck();
         }
         else {
           console.log('Failed to update the news');

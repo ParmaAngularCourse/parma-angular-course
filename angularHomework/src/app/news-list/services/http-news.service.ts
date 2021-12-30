@@ -22,5 +22,9 @@ export class HttpNewsService {
 
   public addOrEditNews(news: NewsObj): Observable<boolean> {
     return this.http.post<boolean>(this.rootUrl + 'News', news);
-  } 
+  }
+
+  public deleteSeveralNews(ids: number[]): Observable<boolean> {
+    return this.http.post<boolean>(this.rootUrl + 'News/deleteSeveral', ids);
+  }
 }

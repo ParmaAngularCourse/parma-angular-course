@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { UserPermissions } from 'src/app/model/userPermissions';
-import { UserAuthService } from 'src/app/user-authservice';
+import { UserPermissions } from '../../model/userPermissions';
+import { UserAuthService } from '../../user-authservice';
 import { News, NewsType, NewsTypeObjectEnum } from '../../model/news-type';
 
 @Component({
