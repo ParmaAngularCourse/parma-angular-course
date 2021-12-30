@@ -1,4 +1,4 @@
-export const currUser = {
-    allowSave: false,
-    allowDelete: true
+export type UserPermissions = {
+    allowSave: boolean,
+    allowDelete: boolean
 }

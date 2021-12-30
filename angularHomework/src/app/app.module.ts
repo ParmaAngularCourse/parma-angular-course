@@ -11,6 +11,8 @@ import { FirstCapitalLetterPipe } from './pipes/first-capital-letter.pipe';
 import { FirstLetterLowerPipe } from './pipes/first-letter-lower.pipe';
 import { NewsTypeStyleDirective } from './news-list/directives/news-type-style.directive';
 import { UserPermissionsDirective } from './directives/user-permissions.directive';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { AuthInterceptor } from './auth.interceptor';
 
 @NgModule({
   declarations: [
@@ -27,9 +29,14 @@ import { UserPermissionsDirective } from './directives/user-permissions.directiv
   ],
   imports: [
     BrowserModule,
-    FormsModule
+    FormsModule,
+    HttpClientModule
   ],
-  providers: [],
+  providers: [{
+    provide: HTTP_INTERCEPTORS,
+    useClass: AuthInterceptor,
+    multi: true
+  }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

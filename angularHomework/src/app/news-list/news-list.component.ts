@@ -1,8 +1,11 @@
-import { ChangeDetectionStrategy, Component, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { ModalComponent } from '../shared/modal/modal.component';
 import { ContextMenuComponent } from '../shared/context-menu/context-menu.component';
 import { News, NewsTypeObjectEnum } from '../model/news-type';
-import { currUser } from '../model/userPermissions';
+import { HttpErrorResponse } from '@angular/common/http';
+import { NewsService } from './services/news.service';
+import { UserAuthService } from '../user-authservice';
+import { UserPermissions } from '../model/userPermissions';
 
 @Component({
   selector: 'app-news-list',
@@ -12,37 +15,47 @@ import { currUser } from '../model/userPermissions';
 })
 export class NewsListComponent implements OnInit {
 
-  public news: Array<News> = [
-    { id: 1, title: "News 1", text: "this is a news 1 text", dateTime: "2021-08-15T14:23", newsType: NewsTypeObjectEnum.Economics},
-    { id: 2, title: "News 2", text: "this is a news 2 text", dateTime: "2021-09-23T21:23", newsType: NewsTypeObjectEnum.Politics },
-    { id: 3, title: "News 3", text: "this is a news 3 text", dateTime: "2021-10-26T09:00", newsType: NewsTypeObjectEnum.Science },
-    { id: 4, title: "News 4", text: "this is a news 4 text", dateTime: "2021-11-01T15:03", newsType: NewsTypeObjectEnum.Tourism }
-  ];
+  public news: Array<News> = [];
 
   public chechedNewsIds: number[] = [];
 
-  readonly  currUser = currUser;
+  readonly  currUser: UserPermissions;
 
   public selectedNews: News | undefined;
 
   @ViewChild(ContextMenuComponent) menuComponent: ContextMenuComponent | undefined;
   @ViewChild(ModalComponent) modalComponent: ModalComponent | undefined;
 
-  constructor() { }
+  constructor(private _newsService: NewsService, 
+    private cdr: ChangeDetectorRef,
+    private _userAuthService: UserAuthService) {
+
+    this._newsService.getNews().subscribe({
+        next: (data) => { this.news = data; this.cdr.markForCheck();},
+        error: (error: HttpErrorResponse) => {console.log(error.status)}
+    });
+
+    this.currUser = this._userAuthService.getUserPermissions();
+  }
 
   ngOnInit(): void {
   }
 
   OnDeleteNews($event: number) {
-    const index = this.news.findIndex(item => item.id === $event);
-    if (index > -1) {
-      this.news.splice(index, 1);
-    }
-
-    const checkedIndex = this.chechedNewsIds.findIndex(id => id === $event);
-    if (checkedIndex > -1) {
-      this.chechedNewsIds.splice(index, 1);
-    }
+    this._newsService.deleteNews($event).subscribe(
+      (isOk) => {
+        if (isOk) {
+          const checkedIndex = this.chechedNewsIds.findIndex(id => id === $event);
+          if (checkedIndex > -1) {
+            this.chechedNewsIds.splice(checkedIndex, 1);
+          }
+          this.cdr.markForCheck();
+        }
+        else {
+          console.log('Failed to delete the news');
+        }
+      }
+    );
   }
 
   OnEditNews($event: number) {
@@ -81,8 +94,19 @@ export class NewsListComponent implements OnInit {
   }
 
   OnClickDeleteButton() {
-    this.news = this.news.filter(item => !this.chechedNewsIds.includes(item.id));
-    this.chechedNewsIds = [];
+    let newsToDelete = this.news.filter(item => this.chechedNewsIds.includes(item.id)).map(item => item.id);
+
+    this._newsService.deleteSeveralNews(newsToDelete).subscribe(
+      (isOk) => {
+        if (isOk) {
+          this.chechedNewsIds = [];
+          this.cdr.markForCheck();
+        }
+        else {
+          console.log('Failed to delete the news');
+        }
+      }
+    );
   }
 
   onSelectAllNews() {
@@ -99,16 +123,15 @@ export class NewsListComponent implements OnInit {
   }
 
   onSaveNews($event: News) {
-    if ($event.id === 0) {
-      $event.id = this.news.length + 1;
-      this.news.push($event);
-    } else {
-      let index = this.news.findIndex(item => item.id === $event.id);
-      if (index > -1) {
-        this.news[index] = $event;
-      }
-    }
-    this.modalComponent?.close();  
-    this.selectedNews = undefined;
+    this._newsService.addOrEditNews($event).subscribe(
+      (isOk) => {
+        if (isOk) {
+          this.modalComponent?.close();
+          this.selectedNews = undefined;
+        }
+        else {
+          console.log('Failed to update the news');
+        }
+      });
   }
 }
