@@ -1,0 +1,18 @@
+
+<div>
+  <input #userNameControl class="inputStyle" type="text" />
+  <button class="buttonStyle" (click)="changeUser(userNameControl.value)">Сменить пользователя</button>
+  <div class="userNameCurrentStyle">Текущее имя пользователя:{{user.name}}</div>
+</div>
+<div>
+  <button class="buttonStyle" (click)="addNewPostHandler()">Добавить</button>
+  <button *appPostPermissionDelete="user.permissions" class="buttonStyle" [disabled] ="!isActiveDeletePostBtn" (click)="deletePostsHandler()">Удалить</button>
+</div>
+<app-single-post [user]="user" *ngFor="let item of posts" [post]="item" (deletePostEvent)="deletePostHandler($event)"
+(editPostEvent)="editPostHandler($event)" (contextmenu)="rightClickHandler($event)"
+(click)="disableContextMenuHandler()" (selectPostEvent)="selectPostHandler($event)">
+</app-single-post>
+<app-header-post-detail #popupPostDetailWindow (closeDialogHeaderEvent)="closePopupPostDetailsHandler()" [titleDialog]="titleDialog" >
+    <app-single-post-detail [user]="user" #postDetailContent (saveNewPostEvent)="saveNewPostHandler($event)" (closePopupEvent)="closePopupPostDetailsHandler()"></app-single-post-detail>
+</app-header-post-detail>
+<app-context-menu *ngIf="isVisibleContextMenu" [x]="contextMenuX" [y]="contextMenuY" (selectAllItems)="selectAllPostsHandler()"></app-context-menu>
