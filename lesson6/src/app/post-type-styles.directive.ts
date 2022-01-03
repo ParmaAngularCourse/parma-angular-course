@@ -2,9 +2,9 @@ import { Directive, HostBinding, Input } from '@angular/core';
 import { PostType } from './all-posts/post-types';
 
 @Directive({
-  selector: '[appPostTypeSyles]'
+  selector: '[appPostTypeStyles]'
 })
-export class PostTypeSylesDirective {
+export class PostTypeStylesDirective {
 
   @HostBinding('style.background-color') backgroundColor: string = "brown";
   @HostBinding('style.color') color: string = "white";
@@ -12,10 +12,10 @@ export class PostTypeSylesDirective {
   @HostBinding('style.border-radius') borderRedius: string = "4px";
   @HostBinding('style.padding') padding: string = "1px 10px";
   @HostBinding('style.margin') margin: string = "3px;"
-  @Input('appPostTypeSyles') postType!: PostType | string;
+  @Input('appPostTypeStyles') postType!: PostType | string;
 
-  constructor() { 
-    
+  constructor() {
+
   }
 
   ngOnInit() {

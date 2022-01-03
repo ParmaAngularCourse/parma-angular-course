@@ -9,11 +9,13 @@ import { SinglePostComponent } from './all-posts/single-post/single-post.compone
 import { AppComponent } from './app.component';
 import { PostTitleCasePipePipe } from './post-title-case-pipe.pipe';
 import { PostTypePipePipe } from './post-type-pipe.pipe';
-import { PostTypeSylesDirective } from './post-type-syles.directive';
+import { PostTypeStylesDirective } from './post-type-styles.directive';
 import { PostPermissionDeleteDirective } from './post-permission-delete.directive';
 import { PostPermissionSaveDirective } from './post-permission-save.directive';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { HttpInterseptorService } from './http-interseptor.service';
+import { PostTypeControlComponent } from './all-posts/post-type-control/post-type-control.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -25,13 +27,15 @@ import { HttpInterseptorService } from './http-interseptor.service';
     ContextMenuComponent,
     PostTitleCasePipePipe,
     PostTypePipePipe,
-    PostTypeSylesDirective,
+    PostTypeStylesDirective,
     PostPermissionDeleteDirective,
-    PostPermissionSaveDirective
+    PostPermissionSaveDirective,
+    PostTypeControlComponent
   ],
   imports: [
     BrowserModule,
-    HttpClientModule
+    HttpClientModule,
+    ReactiveFormsModule
   ],
   providers: [
     {

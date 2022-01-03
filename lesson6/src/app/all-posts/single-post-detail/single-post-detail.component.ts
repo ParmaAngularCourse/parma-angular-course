@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angular/core';
+import { FormControl, Validators } from '@angular/forms';
 import { PostObj, PostType } from '../post-types';
 import { UserType } from '../users';
 @Component({
@@ -14,6 +15,7 @@ export class SinglePostDetailComponent {
     }
     @Input() set post(value){
       this._post = value;
+      this.typePostControl.setValue(this._post.postType);
       this.cdr.markForCheck();
     };
     @Output() saveNewPostEvent: EventEmitter<PostObj> = new EventEmitter<PostObj>();
@@ -23,6 +25,8 @@ export class SinglePostDetailComponent {
 
     @Input() user!: UserType;
 
+    typePostControl!: FormControl
+
     constructor(private cdr: ChangeDetectorRef) {}
 
     savePostHandler() {
@@ -31,6 +35,10 @@ export class SinglePostDetailComponent {
 
     cancelSavePostHandler(){
       this.closePopupEvent.emit();
+    }
+    ngOnInit() {
+      this.typePostControl = new FormControl(this.post.postType, [Validators.required]);
+      this.typePostControl.valueChanges.subscribe((value) => this.post.postType = value);
     }
 
     ngDoCheck() {
