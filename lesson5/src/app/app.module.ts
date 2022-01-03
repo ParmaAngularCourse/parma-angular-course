@@ -10,7 +10,8 @@ import { AppComponent } from './app.component';
 import { PostTitleCasePipePipe } from './post-title-case-pipe.pipe';
 import { PostTypePipePipe } from './post-type-pipe.pipe';
 import { PostTypeSylesDirective } from './post-type-syles.directive';
-import { PostPermissionDirective } from './post-permission.directive';
+import { PostPermissionDeleteDirective } from './post-permission-delete.directive';
+import { PostPermissionSaveDirective } from './post-permission-save.directive';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { HttpInterseptorService } from './http-interseptor.service';
 
@@ -25,7 +26,8 @@ import { HttpInterseptorService } from './http-interseptor.service';
     PostTitleCasePipePipe,
     PostTypePipePipe,
     PostTypeSylesDirective,
-    PostPermissionDirective
+    PostPermissionDeleteDirective,
+    PostPermissionSaveDirective
   ],
   imports: [
     BrowserModule,

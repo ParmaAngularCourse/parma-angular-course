@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angular/core';
 import { PostObj, PostType } from '../post-types';
-import { PermissionUser, UserType } from '../users';
+import { UserType } from '../users';
 @Component({
   selector: 'app-single-post-detail',
   templateUrl: './single-post-detail.component.html',
@@ -22,7 +22,6 @@ export class SinglePostDetailComponent {
     PostType: PostType = PostType.politic;
 
     @Input() user!: UserType;
-    get isShowSaveButton(): boolean { return this.user.permissions.includes(PermissionUser.save); }
 
     constructor(private cdr: ChangeDetectorRef) {}
 

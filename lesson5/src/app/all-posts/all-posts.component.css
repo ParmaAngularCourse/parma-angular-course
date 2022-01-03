@@ -12,3 +12,16 @@
     background-color: darkgrey;
     border-radius: 5px;
 }
+
+.inputStyle {
+  border: 1px solid gray;
+  border-radius: 5px;
+  height: 16px;
+  padding: 5px;
+  width: 200%px;
+  margin: auto 10px auto auto
+}
+
+.userNameCurrentStyle{
+  display: inline;
+}

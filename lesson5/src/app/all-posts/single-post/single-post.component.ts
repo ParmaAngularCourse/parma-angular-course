@@ -14,8 +14,6 @@ export class SinglePostComponent {
 
   @Input() user!: UserType;
 
-  get isShowDeleteButton():boolean { return this.user.permissions.includes(PermissionUser.delete); }
-
   @Output() deletePostEvent = new EventEmitter<PostObj>();
   @Output() editPostEvent = new EventEmitter<PostObj>();
   @Output() selectPostEvent = new EventEmitter<PostObj>();
@@ -38,15 +36,7 @@ export class SinglePostComponent {
   }
 
   editPostHandler(){
-    let post = {
-      id: this.post.id, 
-      date: this.post.date, 
-      title: this.post.title, 
-      text: this.post.text, 
-      isSelected: this.post.isSelected, 
-      postType: this.post.postType
-    };
-    this.editPostEvent.emit(post);
+    this.editPostEvent.emit({...this.post});
   }
 
 }

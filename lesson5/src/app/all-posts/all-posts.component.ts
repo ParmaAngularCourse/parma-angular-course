@@ -26,8 +26,6 @@ export class AllPostsComponent {
   contextMenuY = 0;
   isActiveDeletePostBtn: boolean = false;
 
-  isShowDeleteButton: boolean = true;
-
   user: UserType = {name: "", permissions: []};
 
   private ngUnsubscribe$!: Subject<void>;
@@ -78,13 +76,11 @@ export class AllPostsComponent {
   }
 
   saveNewPostHandler(post:PostObj) {
-    let findIndex = this.posts.findIndex(e => e.id === post.id);
-    if (findIndex > -1){
-      this.postService.updatePost(post, findIndex);
-      //this.posts[findIndex] = post; Нужно ли здесь оптимизировать при редктировании? Сложно потом сопровождать.
+    if (post.id === -1){
+      this.postService.addPost(post);
     }
     else {
-      this.postService.addPost(post);
+      this.postService.updatePost(post, post.id);
     }
     this.popupPostDetailWindow.show(false);
   }
@@ -134,6 +130,10 @@ export class AllPostsComponent {
   ngOnDestroy() {
     this.ngUnsubscribe$.unsubscribe();
     this.ngUnsubscribe$.complete();
+  }
+
+  changeUser(userName:string){
+    this.userInfoService.loadUser(userName);
   }
 
 }

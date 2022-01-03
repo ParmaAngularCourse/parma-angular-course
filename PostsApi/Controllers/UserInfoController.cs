@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using PostsApi.Models;
+using System.Linq;
 
 namespace PostsApi.Controllers
 {
@@ -32,7 +33,13 @@ namespace PostsApi.Controllers
         [HttpGet]
         public UserInfo GetUserInfo()
         {
-            return _userInfo[0];
+            return _userInfo[1];
+        }
+
+        [HttpGet]
+        public UserInfo GetUserInfoByName(string name)
+        {
+            return _userInfo.FirstOrDefault(e => string.Equals(e.Name, name, System.StringComparison.OrdinalIgnoreCase));
         }
     }
 }
