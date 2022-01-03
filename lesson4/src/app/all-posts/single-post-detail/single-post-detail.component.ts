@@ -22,7 +22,6 @@ export class SinglePostDetailComponent {
     PostType: PostType = PostType.politic;
 
     @Input() user!: UserType;
-    get permissions(): PermissionUser[] { return this.user.permissions; }
 
     constructor(private cdr: ChangeDetectorRef) {}
 

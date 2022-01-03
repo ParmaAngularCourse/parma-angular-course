@@ -97,6 +97,7 @@
           },
           "defaultConfiguration": "development",
           "options": {
+            "browserTarget": "lesson5:build:development",
             "proxyConfig": "proxy.conf.json"
           }
         },

@@ -3,7 +3,7 @@
 <ng-container [ngTemplateOutlet]="inputsPostDetail" [ngTemplateOutletContext]="{value: post.text, type: 'text', lable:'Текст:', change:changeText, idName:'textPostDetail'}"></ng-container>
 <ng-container [ngTemplateOutlet]="radioPostDetail" [ngTemplateOutletContext]="{postType: post.postType}"></ng-container>
 <div class="divButtonsStyle">
-    <button *appPostPermissionSave="permissions" class="buttonStyle" (click)="savePostHandler()">Сохранить</button>
+    <button *appPostPermissionSave="user.permissions" class="buttonStyle" (click)="savePostHandler()">Сохранить</button>
     <button class="buttonStyle" (click)="cancelSavePostHandler()">Отмена</button>
 </div>
 

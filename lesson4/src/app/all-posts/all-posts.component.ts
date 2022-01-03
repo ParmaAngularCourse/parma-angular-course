@@ -81,9 +81,7 @@ export class AllPostsComponent {
   isActiveDeletePostBtn: boolean = false;
   user: UserType = user1;
 
-  get permissions(): PermissionUser[] { return this.user.permissions; };
 
-  
 
   ngDoCheck() {
     console.log('all-posts');

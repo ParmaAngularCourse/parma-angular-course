@@ -13,20 +13,22 @@ type dateUserType = {
 })
 export class UserInfoService {
 
-  private userSubject: BehaviorSubject<UserType>;
+  private userSubject: BehaviorSubject<UserType>= new BehaviorSubject<UserType>({name: "", permissions:[]});
   constructor(private httpClient: HttpClient) {
-    this.userSubject = new BehaviorSubject<UserType>({name: "", permissions:[]});
+    this.loadUser();
    }
 
-  public getUser(): Observable<UserType> {
-    this.httpClient.get<dateUserType>("/UserInfo/GetUserInfo")
-    .pipe(
-      map(item => this.mapToUserType(item))
-    )
-    .subscribe((data) => this.userSubject.next(data));
-
+  public getUserObserverble(): Observable<UserType> {
     return this.userSubject.asObservable();
   }
+  private loadUser() {
+    this.httpClient.get<dateUserType>("/UserInfo/GetUserInfo")
+      .pipe(
+        map(item => this.mapToUserType(item))
+      )
+      .subscribe((data) => this.userSubject.next(data));
+  }
+
   private mapToUserType(item: dateUserType): UserType {
 
     let result = {
