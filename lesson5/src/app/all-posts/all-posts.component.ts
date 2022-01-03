@@ -80,7 +80,7 @@ export class AllPostsComponent {
       this.postService.addPost(post);
     }
     else {
-      this.postService.updatePost(post, post.id);
+      this.postService.updatePost(post);
     }
     this.popupPostDetailWindow.show(false);
   }

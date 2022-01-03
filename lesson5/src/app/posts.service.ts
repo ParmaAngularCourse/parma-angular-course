@@ -62,15 +62,11 @@ export class PostsService {
   }
 
   public saveNewPost(post:PostObj) {
-    if (this.postSubject) {
-      let posts = this.postSubject.getValue();
-      let findIndex = posts.findIndex(e => e.id === post.id);
-      if (findIndex > -1){
-        this.updatePost(post, findIndex);
-      }
-      else {
-        this.addPost(post);
-      }
+    if (post.id === -1){
+      this.addPost(post);
+    }
+    else {
+      this.updatePost(post);
     }
   }
 
@@ -89,13 +85,14 @@ export class PostsService {
     });
   }
 
-  updatePost(post: PostObj, findIndex: number) {
+  updatePost(post: PostObj) {
     let dataObjects = this.mapToDataObj([post]);
     let result: PostObj;
     this.httpClient.post(`${this.api}/UpdatePost`, dataObjects[0])
     .subscribe({
       next: (value) => {
         let posts = this.postSubject.getValue();
+        let findIndex = posts.findIndex(e => e.id === post.id);
         posts[findIndex] = post;
         this.postSubject.next(posts); // Здесь можно отключить обновление всего списка
       },
