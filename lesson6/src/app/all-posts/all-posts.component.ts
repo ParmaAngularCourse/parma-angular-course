@@ -1,11 +1,12 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { PostsService } from '../posts.service';
 import { HeaderPostDetailComponent } from './header-post-detail/header-post-detail.component';
-import { PostObj, PostType } from './post-types';
+import { PostObj } from './post-types';
 import { SinglePostDetailComponent } from './single-post-detail/single-post-detail.component';
 import { UserType } from './users';
 import { UserInfoService } from '../user-info.service';
-import { Subject, takeUntil } from 'rxjs';
+import { debounceTime, of, Subject, switchMap, takeUntil } from 'rxjs';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-all-posts',
@@ -13,9 +14,9 @@ import { Subject, takeUntil } from 'rxjs';
   styleUrls: ['./all-posts.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AllPostsComponent {
+export class AllPostsComponent implements OnInit {
 
-  public posts: PostObj[] = []
+  public posts: PostObj[] | null | undefined = [];
 
   //editPost!:PostObj; Через свойство не работает, если есть вложенный компонент
   titleDialog:string = "";
@@ -29,6 +30,9 @@ export class AllPostsComponent {
   user: UserType = {name: "", permissions: []};
 
   private ngUnsubscribe$!: Subject<void>;
+
+  searchControl!:FormControl;
+  searchValue: string = "";
 
   constructor(private postService: PostsService, private userInfoService: UserInfoService, private cdr: ChangeDetectorRef) {
     this.ngUnsubscribe$ = new Subject<void>();
@@ -54,6 +58,32 @@ export class AllPostsComponent {
       error: (e) => { console.log(e.status + ' '+ e.message); },
       complete: () => { console.info('complete get user all-post component'); }
     });
+
+    this.postService.searchPostsObserverble().pipe(
+      takeUntil(this.ngUnsubscribe$)
+    ).subscribe({
+      next: (data) => {
+        this.posts = data;
+        this.cdr.markForCheck();
+      },
+      error: (e) => { console.log(e.status + ' '+ e.message); },
+      complete: () => { console.info('complete searchPosts all-post component'); }
+    });
+  }
+
+  ngOnInit(): void {
+    this.searchControl = new FormControl(this.searchValue);
+    this.searchControl.valueChanges
+    .pipe(
+      debounceTime(800),
+      // switchMap((value) => {
+      //   this.searchValue = value;
+      //   return of([value]);
+      // })
+    )
+    .subscribe((value) => {
+      this.postService.searchPosts(value);
+    });
   }
 
   ngDoCheck() {
@@ -70,7 +100,7 @@ export class AllPostsComponent {
 
   addNewPostHandler() {
     this.popupPostDetailWindow.show(true);
-    let editPost = {id:-1, date:"", title:"", text:"", isSelected:false, postType:PostType.politic};
+    let editPost = {id:-1, date:"", title:"", text:"", isSelected:false, postType: null};
     this.postDetailContent.post = editPost;
     this.titleDialog = "Добавить новость";
   }
@@ -112,7 +142,7 @@ export class AllPostsComponent {
   }
 
   selectAllPostsHandler() {
-    this.posts = this.posts.map(e => {
+    this.posts = this.posts?.map(e => {
       if (!e.isSelected) {
         e.isSelected= true;
         return {...e}
@@ -124,7 +154,9 @@ export class AllPostsComponent {
   }
 
   selectPostHandler(post:PostObj) {
-    this.isActiveDeletePostBtn = Boolean(this.posts.find(e => e.isSelected));
+    if (this.posts) {
+      this.isActiveDeletePostBtn = Boolean(this.posts.find(e => e.isSelected));
+    }
   }
 
   ngOnDestroy() {

@@ -1,18 +1,11 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { Component, OnInit, Optional, Self } from '@angular/core';
+import { AbstractControl, ControlValueAccessor, NgControl, ValidationErrors, Validators } from '@angular/forms';
 import { PostType } from '../post-types';
 
 @Component({
   selector: 'app-post-type-control',
   templateUrl: './post-type-control.component.html',
   styleUrls: ['./post-type-control.component.css'],
-  providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: PostTypeControlComponent,
-      multi: true
-    }
-  ]
 })
 export class PostTypeControlComponent implements OnInit, ControlValueAccessor {
 
@@ -28,12 +21,27 @@ export class PostTypeControlComponent implements OnInit, ControlValueAccessor {
   scienceClass:string = this.scienceClassDefault;
   internetClass:string = this.internetClassDefault;
 
-  value:PostType = PostType.politic;
+  value:PostType | null = null;
 
   private onChange = (value:PostType) => {};
 
+  private _typePostControl: AbstractControl | null = null;
+  get typePostControl(): AbstractControl | null
+  {
+    if (!this._typePostControl)
+    {
+      this._typePostControl = this._ngControl?.control
+    }
+    return this._typePostControl;
+  }
 
-  constructor() { }
+
+  constructor(@Self() @Optional() private _ngControl: NgControl) {
+    if (_ngControl)
+    {
+      _ngControl.valueAccessor = this;
+    }
+   }
 
   writeValue(value: PostType): void {
     this.value = value;

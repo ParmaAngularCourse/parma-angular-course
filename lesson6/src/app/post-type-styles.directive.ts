@@ -12,7 +12,7 @@ export class PostTypeStylesDirective {
   @HostBinding('style.border-radius') borderRedius: string = "4px";
   @HostBinding('style.padding') padding: string = "1px 10px";
   @HostBinding('style.margin') margin: string = "3px;"
-  @Input('appPostTypeStyles') postType!: PostType | string;
+  @Input('appPostTypeStyles') postType!: PostType | string | null;
 
   constructor() {
 
@@ -22,7 +22,7 @@ export class PostTypeStylesDirective {
     this.backgroundColor = this.getColorByPostType(this.postType);
   }
 
-  getColorByPostType(postType: PostType | string):string {
+  getColorByPostType(postType: PostType | string | null):string {
     switch (postType as PostType) {
       case PostType.politic: return "green";
       case PostType.economic: return "coral";

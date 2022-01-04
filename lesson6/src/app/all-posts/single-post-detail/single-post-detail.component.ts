@@ -1,7 +1,8 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angular/core';
-import { FormControl, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { PostObj, PostType } from '../post-types';
 import { UserType } from '../users';
+import { required } from '../validators';
 @Component({
   selector: 'app-single-post-detail',
   templateUrl: './single-post-detail.component.html',
@@ -9,13 +10,13 @@ import { UserType } from '../users';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SinglePostDetailComponent {
-    private _post: PostObj = {id:-1, date:"", title: "", text:"", isSelected: false, postType: PostType.politic};
+    private _post: PostObj = {id:-1, date:"", title: "", text:"", isSelected: false, postType: null};
     get post() {
       return this._post;
     }
     @Input() set post(value){
       this._post = value;
-      this.typePostControl.setValue(this._post.postType);
+      this.setControlValues(this._post);
       this.cdr.markForCheck();
     };
     @Output() saveNewPostEvent: EventEmitter<PostObj> = new EventEmitter<PostObj>();
@@ -25,9 +26,19 @@ export class SinglePostDetailComponent {
 
     @Input() user!: UserType;
 
-    typePostControl!: FormControl
+    typePostControl!: FormControl;
+    datePostControl!: FormControl;
+    titlePostControl!: FormControl;
+    textPostControl!: FormControl;
 
     constructor(private cdr: ChangeDetectorRef) {}
+
+  private setControlValues(post: PostObj) {
+    this.datePostControl.setValue(post.date);
+    this.typePostControl.setValue(post.postType);
+    this.titlePostControl.setValue(post.title);
+    this.textPostControl.setValue(post.text);
+  }
 
     savePostHandler() {
       this.saveNewPostEvent.emit(this.post);
@@ -37,19 +48,18 @@ export class SinglePostDetailComponent {
       this.closePopupEvent.emit();
     }
     ngOnInit() {
-      this.typePostControl = new FormControl(this.post.postType, [Validators.required]);
+      this.datePostControl = new FormControl(this.post.date, [required("Дата")])
+      this.typePostControl = new FormControl(this.post.postType, [required("Тип новости")]);
+      this.titlePostControl = new FormControl(this.post.title, [required("Заголовок")]);
+      this.textPostControl = new FormControl(this.post.text, [required("Текст")]);
+
+      this.datePostControl.valueChanges.subscribe((value) => this.post.date = value);
       this.typePostControl.valueChanges.subscribe((value) => this.post.postType = value);
+      this.titlePostControl.valueChanges.subscribe((value) => this.post.title = value);
+      this.textPostControl.valueChanges.subscribe((value) => this.post.text = value);
     }
 
     ngDoCheck() {
       console.log('single-post-detail');
     }
-
-    selectPostType(postType:string) {
-      this.post.postType = postType as PostType;
-    }
-
-    changeDate = (value:string) => {this.post.date = value;}
-    changeTitle = (value:string) => {this.post.title = value;}
-    changeText = (value:string) => {this.post.text = value;}
 }

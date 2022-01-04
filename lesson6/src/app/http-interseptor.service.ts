@@ -12,7 +12,7 @@ export class HttpInterseptorService implements HttpInterceptor {
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
 
-    let headers = new HttpHeaders();
+    let headers = req.headers;
     headers = headers.set('Authorization', 'Bearer ggggggg');
     if (req.url && (req.url.indexOf('UserInfo') === -1)) {
       let userInfoService = this.injector.get(UserInfoService);

@@ -6,3 +6,8 @@
   <button [class]="scienceClass" (click)="selectScience()">Наука</button>
   <button [class]="internetClass" (click)="selectInternet()">Интернет</button>
 </div>
+<div *ngIf="typePostControl?.errors">
+  <ng-container *ngFor="let error of typePostControl?.errors | validationErrors">
+    <div class="divError" >{{error.message}}</div>
+  </ng-container>
+</div>

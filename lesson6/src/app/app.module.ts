@@ -16,6 +16,7 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { HttpInterseptorService } from './http-interseptor.service';
 import { PostTypeControlComponent } from './all-posts/post-type-control/post-type-control.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { ValidationErrorsPipe } from './validation-errors.pipe';
 
 @NgModule({
   declarations: [
@@ -30,7 +31,8 @@ import { ReactiveFormsModule } from '@angular/forms';
     PostTypeStylesDirective,
     PostPermissionDeleteDirective,
     PostPermissionSaveDirective,
-    PostTypeControlComponent
+    PostTypeControlComponent,
+    ValidationErrorsPipe
   ],
   imports: [
     BrowserModule,

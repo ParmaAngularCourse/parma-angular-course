@@ -6,7 +6,7 @@ import { PostType } from '../../../lesson3/src/app/all-posts/post-types';
 })
 export class PostTypePipePipe implements PipeTransform {
 
-  transform(value: PostType| string, CharAtIndex?: number): string {
+  transform(value: PostType| string | null, CharAtIndex?: number): string {
     let result = "";
     switch (value as PostType) {
       case PostType.economic: result = "Экономика"; break;

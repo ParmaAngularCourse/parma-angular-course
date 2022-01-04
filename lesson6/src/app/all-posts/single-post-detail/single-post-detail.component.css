@@ -7,6 +7,10 @@
     margin: auto 10px auto auto
 }
 
+.inputStyle.ng-invalid {
+  border-color: red;
+}
+
 .buttonStyle {
     color: white;
     background-color: dodgerblue;
@@ -29,40 +33,7 @@
     justify-content: right;
 }
 
-.radioBtnStyle {
-    border: 0px;
-    border-radius: 3px;
-    color: white;
-}
-
-.politicRadioStyle {
-    background-color: green;
-}
-
-.tourismRadioStyle {
-    border: 0px;
-    background-color: darkcyan;
-    border-radius: 3px;
-    color: white;
-}
-
-.economicRadioStyle{
-    border: 0px;
-    background-color: coral;
-    border-radius: 3px;
-    color: white;
-}
-
-.scienceRadioStyle {
-    border: 0px;
-    background-color: royalblue;
-    border-radius: 3px;
-    color: white;
-}
-
-.internetRadioStyle {
-    border: 0px;
-    background-color: gray;
-    border-radius: 3px;
-    color: white;
+.divError {
+  color: red;
+  font-size: small;
 }

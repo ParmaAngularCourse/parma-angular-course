@@ -4,7 +4,7 @@ export type PostObj = {
     title:string,
     text: string,
     isSelected: boolean,
-    postType: PostType
+    postType: PostType | null
 }
 
 export enum PostType {

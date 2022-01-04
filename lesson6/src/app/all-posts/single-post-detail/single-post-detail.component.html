@@ -1,14 +1,27 @@
-<ng-container [ngTemplateOutlet]="inputsPostDetail" [ngTemplateOutletContext]="{value: post.date, type: 'datetime-local', lable:'Дата:', change:changeDate, idName:'datePostDetail'}"></ng-container>
-<ng-container [ngTemplateOutlet]="inputsPostDetail" [ngTemplateOutletContext]="{value: post.title, type: 'text', lable:'Заголовок:', change:changeTitle, idName:'titlePostDetail'}"></ng-container>
-<ng-container [ngTemplateOutlet]="inputsPostDetail" [ngTemplateOutletContext]="{value: post.text, type: 'text', lable:'Текст:', change:changeText, idName:'textPostDetail'}"></ng-container>
+<div>
+  <label [attr.for]="inputDate">Дата:</label>
+  <input #inputDate class="inputStyle" type="datetime-local" [formControl]="datePostControl" />
+  <div *ngIf="datePostControl.errors">
+    <div class="divError" *ngFor="let error of datePostControl.errors | validationErrors">{{error.message}}</div>
+  </div>
+</div>
+<div>
+  <label [attr.for]="inputTitle">Заголовок:</label>
+  <input #inputTitle class="inputStyle" type="text" [formControl]="titlePostControl" />
+  <div *ngIf="titlePostControl.errors">
+    <div class="divError" *ngFor="let error of titlePostControl.errors  | validationErrors">{{error.message}}</div>
+  </div>
+</div>
+<div>
+  <label [attr.for]="inputText">Текст:</label>
+  <input #inputText class="inputStyle" type="text" [formControl]="textPostControl" />
+  <div *ngIf="textPostControl.errors">
+    <div class="divError" *ngFor="let error of textPostControl.errors | validationErrors">{{error.message}}</div>
+  </div>
+</div>
 <app-post-type-control [formControl]="typePostControl"></app-post-type-control>
 <div class="divButtonsStyle">
     <button *appPostPermissionSave="user.permissions" class="buttonStyle" (click)="savePostHandler()">Сохранить</button>
     <button class="buttonStyle" (click)="cancelSavePostHandler()">Отмена</button>
 </div>
-
-<ng-template #inputsPostDetail let-value="value" let-typeInput="type" let-lableName="lable" let-change="change" let-id="idName">
-    <label [attr.for]="id">{{lableName}}</label>
-    <input [id]="id" #input class="inputStyle" [type]="typeInput" [value]="value" (change)="change(input.value)" />
-</ng-template>
 

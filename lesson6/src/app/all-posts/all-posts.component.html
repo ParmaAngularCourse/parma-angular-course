@@ -1,8 +1,13 @@
 
 <div>
+  <label [attr.for]="userNameControl">Имя пользователя:</label>
   <input #userNameControl class="inputStyle" type="text" />
   <button class="buttonStyle" (click)="changeUser(userNameControl.value)">Сменить пользователя</button>
   <div class="userNameCurrentStyle">Текущее имя пользователя:{{user.name}}</div>
+</div>
+<div>
+  <label [attr.for]="findControl">Найти:</label>
+  <input #findControl class="inputStyle" type="text" [formControl]="searchControl" />
 </div>
 <div>
   <button class="buttonStyle" (click)="addNewPostHandler()">Добавить</button>

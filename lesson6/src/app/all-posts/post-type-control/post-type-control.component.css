@@ -39,3 +39,8 @@
   opacity: 0.35;
   cursor: pointer;
 }
+
+.divError {
+  color: red;
+  font-size: small;
+}
