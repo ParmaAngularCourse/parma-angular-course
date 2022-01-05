@@ -12,6 +12,7 @@ import { CapitalLetterPipePipe } from './capital-letter-pipe.pipe';
 import { PermissionDirectiveDirective } from './permission-directive.directive';
 import { FirstLetterPipePipe } from './first-letter-pipe.pipe';
 import { NewsTagStyleDirectiveDirective } from './news-tag-style-directive.directive';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,7 @@ import { NewsTagStyleDirectiveDirective } from './news-tag-style-directive.direc
     NewsTagStyleDirectiveDirective
   ],
   imports: [
-    BrowserModule, FormsModule
+    BrowserModule, FormsModule, HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -10,24 +10,26 @@ import { ModalCommonComponent } from '../modal-common/modal-common.component';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AllNewsComponent {
-
-
+  constructor(private _newsService: NewsService) {
+    this.updateValue();
+  }
   @ViewChild(ModalCommonComponent) public modalComponent!: ModalCommonComponent;
 
   isModalOpen: boolean = false;
   contextmenu = false;
   contextmenuX = 0;
   contextmenuY = 0;
-  news: NewsPost[] = new NewsService().GetNews();
+  news!: NewsPost[];
   postToEdit: NewsPost = new NewsPost();
-  userPermission :boolean = UserHasPemission;
+  userPermission: boolean = UserHasPemission;
 
   onDeletePost(postId: number) {
-    this.news = this.news.filter(item => item.id != postId);
+    this._newsService.Delete(item => item.id != postId);
+    this.updateValue();
   }
 
   onEditPost(postId: number) {
-    this.postToEdit = this.news.find(x => x.id === postId) ?? new NewsPost();
+    this.postToEdit = this._newsService.GetFirstOrDefault(x => x.id === postId);
     this.modalComponent.Open();
   }
 
@@ -35,6 +37,7 @@ export class AllNewsComponent {
     this.postToEdit = new NewsPost();
     this.modalComponent.Open();
   }
+
   onCloseModal() {
     this.modalComponent.Close();
   }
@@ -42,20 +45,21 @@ export class AllNewsComponent {
   onAddNewsPost(newsPost: NewsPost) {
     const existedPostIndex = this.news.findIndex(x => x.id === newsPost.id);
     if (existedPostIndex > -1) {
-      this.news[existedPostIndex] = newsPost;
+      this._newsService.Update(newsPost);
     }
     else {
-      newsPost.id = this.news.length + 1;
-      this.news.push(newsPost);
+      this._newsService.Add(newsPost);
     }
+    this.updateValue();
   }
 
   onDeleteSelected() {
-    this.news = this.news.filter(item => item.isSelected === false);
+    this._newsService.Delete(item => item.isSelected === false);
+    this.updateValue();
   }
 
   isAnyToDelete(): boolean {
-    return this.news.some(x => x.isSelected);
+    return this._newsService.isAnySelected();
   }
 
   onRightClick(event: MouseEvent) {
@@ -70,13 +74,18 @@ export class AllNewsComponent {
   }
 
   onSelectAll() {
-    this.news = this.news.map(x => { x = new NewsPost(x); x.isSelected = true; return x; });
+    this._newsService.selectAll();
+    this.updateValue();
   }
 
   getTitle(): string {
     return this.postToEdit.id === -1 ? 'Добавление' : 'Редактирование'
   }
 
+
+  updateValue() {
+    this.news = this._newsService.GetAll();
+  }
   onPermissionToggleClick(){
     this.userPermission = !this.userPermission;
   }
