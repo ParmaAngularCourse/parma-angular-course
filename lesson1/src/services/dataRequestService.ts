@@ -1,9 +1,11 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { partitionArray } from '@angular/compiler/src/util';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, map, Observable, ReplaySubject } from 'rxjs';
 import { API_URL } from 'src/api';
 import { NewsPost } from 'src/models/NewsPost';
 import { NewsPostTag } from 'src/models/NewsPostTag';
+import { toDateString } from 'src/utils/DateUtils';
 
 @Injectable({ providedIn: 'root' })
 export class DataRequestService {
@@ -27,8 +29,8 @@ export class DataRequestService {
               post.text = x.text;
               post.title = x.title;
               post.isSelected = false;
-              post.tag = NewsPostTag.noTag;
-              console.log(post);
+              post.tag = Object.values(NewsPostTag).find((t) => t === x.tag)!;
+              post.uploadDate = toDateString(new Date(x.date));
               return post;
             })
           )
@@ -37,6 +39,16 @@ export class DataRequestService {
     }
     return this.newsSubject.asObservable();
   }
+
+  public Delete(keys: Array<number>) {
+
+    const body = {
+        keys: keys
+    }
+      this.http.delete(API_URL, {
+          body: body
+      }).subscribe()
+  }
 }
 
 type newsObj = {
@@ -44,4 +56,5 @@ type newsObj = {
   text: string;
   title: string;
   date: string;
+  tag: string;
 };

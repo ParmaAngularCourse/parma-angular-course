@@ -41,7 +41,7 @@ export class AllNewsComponent {
   userPermission: boolean = UserHasPemission;
 
   onDeletePost(postId: number) {
-    this._newsService.Delete((item) => item.id != postId);
+    this._newsService.Delete((item) => item.id == postId);
   }
 
   onEditPost(postId: number) {
@@ -70,11 +70,12 @@ export class AllNewsComponent {
   }
 
   onDeleteSelected() {
-    this._newsService.Delete((item) => item.isSelected === false);
+    const keys = this.news.filter(x=>x.isSelected).map(x=>x.id);
+    this._newsService.Delete((item) => keys.includes(item.id));
   }
 
   isAnyToDelete(): boolean {
-    return this._newsService.isAnySelected();
+    return this.news?.some(x => x.isSelected);
   }
 
   onRightClick(event: MouseEvent) {

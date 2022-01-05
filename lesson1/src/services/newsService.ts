@@ -55,7 +55,9 @@ export class NewsService {
     }
 
     public Delete(predicate: Predicate<NewsPost>) {
-        this.news = this.news.filter(predicate);
+       const keys = this.news.filter(predicate).map(x=>x.id);
+       console.log(keys);
+       this.requestService.Delete(keys);
     }
 
     public selectAll() {
