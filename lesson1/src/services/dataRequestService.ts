@@ -1,4 +1,9 @@
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import {
+  HttpClient,
+  HttpHeaders,
+  HttpParams,
+  JsonpInterceptor,
+} from '@angular/common/http';
 import { partitionArray } from '@angular/compiler/src/util';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, map, Observable, ReplaySubject } from 'rxjs';
@@ -41,13 +46,29 @@ export class DataRequestService {
   }
 
   public Delete(keys: Array<number>) {
-
     const body = {
-        keys: keys
-    }
-      this.http.delete(API_URL, {
-          body: body
-      }).subscribe()
+      keys: keys,
+    };
+    this.http
+      .delete(API_URL, {
+        body: body,
+      })
+      .subscribe();
+  }
+
+  public Add(item: NewsPost) {
+    console.log(item);
+    const body = {
+      title: item.title,
+      text: item.text,
+      date: item.uploadDate,
+      tag: item.tag,
+    };
+    this.http
+      .post(API_URL, {
+        body: body,
+      })
+      .subscribe();
   }
 }
 

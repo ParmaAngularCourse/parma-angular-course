@@ -20,16 +20,13 @@ export class AllNewsComponent {
     private _newsService: NewsService,
     private cdr: ChangeDetectorRef
   ) {
-    this._newsService.GetAll().subscribe({
-      next: (data) => {
-        this.news = data;
-        this.cdr.markForCheck();
-      },
-      error: (error: HttpErrorResponse) => {
-        console.log(error.status);
-      },
-    });
+    this.PullData(); // не обновляет страницу
   }
+
+  ngOnChanges() {
+    this.PullData();
+  }
+  
   @ViewChild(ModalCommonComponent) public modalComponent!: ModalCommonComponent;
 
   isModalOpen: boolean = false;
@@ -42,6 +39,7 @@ export class AllNewsComponent {
 
   onDeletePost(postId: number) {
     this._newsService.Delete((item) => item.id == postId);
+    this.PullData();
   }
 
   onEditPost(postId: number) {
@@ -70,12 +68,13 @@ export class AllNewsComponent {
   }
 
   onDeleteSelected() {
-    const keys = this.news.filter(x=>x.isSelected).map(x=>x.id);
+    const keys = this.news.filter((x) => x.isSelected).map((x) => x.id);
     this._newsService.Delete((item) => keys.includes(item.id));
+    this.PullData();
   }
 
   isAnyToDelete(): boolean {
-    return this.news?.some(x => x.isSelected);
+    return this.news?.some((x) => x.isSelected);
   }
 
   onRightClick(event: MouseEvent) {
@@ -99,5 +98,17 @@ export class AllNewsComponent {
 
   onPermissionToggleClick() {
     this.userPermission = !this.userPermission;
+  }
+
+  private PullData() {
+    this._newsService.GetAll().subscribe({
+      next: (data) => {
+        this.news = data;
+        this.cdr.markForCheck();
+      },
+      error: (error: HttpErrorResponse) => {
+        console.log(error.status);
+      },
+    });
   }
 }
