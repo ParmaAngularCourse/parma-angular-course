@@ -18,6 +18,8 @@ export class NewsPostModalWindowComponent {
   @Output() saveNews = new EventEmitter<NewsPost>();
   @Output() cancel = new EventEmitter<void>();
 
+  @Input() userPermissions = false;
+
   newsTags = Object.values(NewsPostTag).filter(x => x != NewsPostTag.noTag);
 
   private editedText = "";
@@ -31,13 +33,13 @@ export class NewsPostModalWindowComponent {
     currentEditablePost.title = this.editedTitle === "" ? this.newsPost?.title ?? "" : this.editedTitle;
     currentEditablePost.text = this.editedText === "" ? this.newsPost?.text ?? "" : this.editedText;
     currentEditablePost.uploadDate = this.editedDate === "" ? this.newsPost!.uploadDate : this.editedDate;
-    currentEditablePost.tag = this.editedTag === NewsPostTag.noTag ? NewsPostTag.noTag  : this.editedTag;
+    currentEditablePost.tag = this.editedTag === NewsPostTag.noTag ? NewsPostTag.noTag : this.editedTag;
     const editedNewsPost = new NewsPost(currentEditablePost);
     this.newsPost = null;
-    this. editedText = "";
-    this. editedTitle = "";
-    this. editedDate = "";
-    this. editedTag = NewsPostTag.noTag;
+    this.editedText = "";
+    this.editedTitle = "";
+    this.editedDate = "";
+    this.editedTag = NewsPostTag.noTag;
     this.saveNews.emit(editedNewsPost);
     this.onCancel();
   }

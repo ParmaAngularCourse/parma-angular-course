@@ -1,4 +1,4 @@
-$blue: #3f5f69;
+$blue: #6bc9e6;
 $brown: #b0938f;
 $black: #000000;
 
@@ -28,4 +28,19 @@ p{
 .button{
     margin-left: $margin;
     cursor: pointer;
+}
+
+.tag{
+    position: absolute;
+    left: 80%;
+}
+.tag-short{
+    border: 3px solid black;
+}
+.tag:hover .tooltip{
+    visibility: visible;
+}
+
+.tooltip{
+    visibility: hidden;
 }
