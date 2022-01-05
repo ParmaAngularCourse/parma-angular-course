@@ -1,4 +1,7 @@
-import { Injectable, Predicate } from "@angular/core";
+import { HttpErrorResponse } from "@angular/common/http";
+import { GeneratedFile } from "@angular/compiler";
+import { ChangeDetectorRef, Injectable, Predicate } from "@angular/core";
+import { Observable } from "rxjs";
 import { NewsPost } from "src/models/NewsPost";
 import { NewsPostTag } from "src/models/NewsPostTag";
 import { toDateString } from "src/utils/DateUtils";
@@ -12,11 +15,10 @@ import { DataRequestService } from "./dataRequestService";
 export class NewsService {
 
     constructor(private readonly requestService: DataRequestService) {
-       this. ExtractData();
     }
     
 
-    private news!: Array<NewsPost>;
+    private news: Array<NewsPost> = this.Generate();
 
     // Мок сервиса, отдающего новости
     private Generate(): Array<NewsPost> {
@@ -35,11 +37,8 @@ export class NewsService {
         return news;
     }
 
-    public GetAll(): Array<NewsPost> {
-        if(this.news){
-            this.ExtractData();
-        }
-        return this.news;
+    public GetAll(): Observable<Array<NewsPost>> {
+       return this.requestService.Get()
     }
 
     public GetFirstOrDefault(predicate: Predicate<NewsPost>): NewsPost {
@@ -82,12 +81,5 @@ export class NewsService {
                 charactersLength));
         }
         return result;
-    }
-
-    private ExtractData(){
-        this.requestService.Get().subscribe(
-            (data => this.news = data),
-            (error) => { console.log(error) }
-        )
     }
 }
