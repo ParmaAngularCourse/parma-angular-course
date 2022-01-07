@@ -32,7 +32,6 @@ export class DataRequestService {
             item.map((x) => {
               const post = new NewsPost();
               post.id = x.id;
-              console.log(post.id);
               post.text = x.text;
               post.title = x.title;
               post.isSelected = false;
