@@ -1,9 +1,10 @@
 # parma-angular-course
 
-запусти сервер
+## запустить сервер
+> ```cd .\server```\
+> ```node .\app.js```
 
-node server/index.js
+## запустить фронт
 
-запусти фронт
-
-cd lesson1 && npm run start
+> ```cd lesson1```\
+>``` npm run start```
