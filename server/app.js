@@ -71,7 +71,7 @@ app.put("/api/news", jsonParser, function (req, res) {
   let data = fs.readFileSync(filePath, "utf8");
   let news = JSON.parse(data);
 
-  let bodyValue = req.body;
+  let bodyValue = req.body.body;
   const text = bodyValue.text;
   const title = bodyValue.title;
   const date = bodyValue.date;
@@ -90,6 +90,8 @@ app.put("/api/news", jsonParser, function (req, res) {
       news[i] = record;
     }
   }
+  console.log("Updated " + JSON.stringify(record));
+
   data = JSON.stringify(news);
   fs.writeFileSync(filePath, data); // отправляем удаленную новость
   res.sendStatus(200);

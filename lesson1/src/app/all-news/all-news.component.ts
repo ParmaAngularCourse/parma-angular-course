@@ -5,6 +5,7 @@ import {
   Component,
   ViewChild,
 } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { UserHasPemission } from 'src/models/userPermissions';
 import { NewsService } from 'src/services/newsService';
 import { NewsPost } from '../../models/NewsPost';
@@ -23,10 +24,6 @@ export class AllNewsComponent {
     this.PullData(); // не обновляет страницу
   }
 
-  ngOnChanges() {
-    this.PullData();
-  }
-  
   @ViewChild(ModalCommonComponent) public modalComponent!: ModalCommonComponent;
 
   isModalOpen: boolean = false;
@@ -36,16 +33,16 @@ export class AllNewsComponent {
   news!: NewsPost[];
   postToEdit: NewsPost = new NewsPost();
   userPermission: boolean = UserHasPemission;
+  private subscrition!: Subscription;
 
   onDeletePost(postId: number) {
-    this._newsService.Delete((item) => item.id == postId);
-    this.PullData();
+    console.log(postId);
+    this._newsService.Delete([postId]);
+    this.PushToRefresh();
   }
 
   onEditPost(postId: number) {
-    this.postToEdit = this._newsService.GetFirstOrDefault(
-      (x) => x.id === postId
-    );
+    this.postToEdit = this.news.find(x=>x.id==postId)!;
     this.modalComponent.Open();
   }
 
@@ -69,8 +66,8 @@ export class AllNewsComponent {
 
   onDeleteSelected() {
     const keys = this.news.filter((x) => x.isSelected).map((x) => x.id);
-    this._newsService.Delete((item) => keys.includes(item.id));
-    this.PullData();
+    this._newsService.Delete(keys);
+    this.PushToRefresh();
   }
 
   isAnyToDelete(): boolean {
@@ -89,8 +86,11 @@ export class AllNewsComponent {
   }
 
   onSelectAll() {
-    this._newsService.selectAll();
-  }
+    this.news = this.news.map((x) => {
+      x = new NewsPost(x);
+      x.isSelected = true;
+      return x;
+    });  }
 
   getTitle(): string {
     return this.postToEdit.id === -1 ? 'Добавление' : 'Редактирование';
@@ -100,15 +100,29 @@ export class AllNewsComponent {
     this.userPermission = !this.userPermission;
   }
 
+  ngOnDestroy() {
+    this.subscrition.unsubscribe();
+  }
+
   private PullData() {
-    this._newsService.GetAll().subscribe({
+    this.subscrition = this._newsService.GetAll().subscribe({
       next: (data) => {
         this.news = data;
-        this.cdr.markForCheck();
+        this.PushToRefresh();
       },
       error: (error: HttpErrorResponse) => {
         console.log(error.status);
       },
     });
+  }
+
+  private PushToRefresh() {
+    this.cdr.markForCheck();
+  }
+
+ 
+
+  public isAnySelected(): boolean {
+    return this.news.some((x) => x.isSelected);
   }
 }
