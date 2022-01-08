@@ -5,7 +5,7 @@ import { PostObj } from './post-types';
 import { SinglePostDetailComponent } from './single-post-detail/single-post-detail.component';
 import { UserType } from './users';
 import { UserInfoService } from '../user-info.service';
-import { debounceTime, of, Subject, switchMap, takeUntil } from 'rxjs';
+import { bufferCount, concatAll, debounceTime, from, map, merge, mergeAll, mergeMap, of, reduce, scan, Subject, switchMap, takeUntil, tap, toArray, windowCount, zip, Observable, EMPTY } from 'rxjs';
 import { FormControl } from '@angular/forms';
 
 @Component({
@@ -17,6 +17,8 @@ import { FormControl } from '@angular/forms';
 export class AllPostsComponent implements OnInit {
 
   public posts: PostObj[] | null | undefined = [];
+  public posts2: PostObj[] | null | undefined = [];
+  public posts3: PostObj[] | null | undefined = [];
 
   //editPost!:PostObj; Через свойство не работает, если есть вложенный компонент
   titleDialog:string = "";
@@ -40,8 +42,13 @@ export class AllPostsComponent implements OnInit {
       takeUntil(this.ngUnsubscribe$)
     ).subscribe({
       next: (data) => {
-        this.posts = data;
-        this.cdr.markForCheck();
+        if (data) {
+          let dataArr = this.splitArray(data);
+          this.posts = dataArr[0];
+          this.posts2 = dataArr[1];
+          this.posts3 = dataArr[2];
+          this.cdr.markForCheck();
+        }
       },
       error: (e) => { console.log(e.status + ' '+ e.message); },
       complete: () => { console.info('complete getPosts all-post component'); }
@@ -59,16 +66,88 @@ export class AllPostsComponent implements OnInit {
       complete: () => { console.info('complete get user all-post component'); }
     });
 
+    let arr1: PostObj[] = [];
+    let arr2: PostObj[] = [];
+    let arr3: PostObj[] = [];
+    let countSearch = 0;
+    const arrCount = 3;
+    let arr: PostObj[][];
+    arr = [];
+
+    const seed = 0;
     this.postService.searchPostsObserverble().pipe(
+      // mergeMap(e => {
+      //   if (e) {
+      //     const mod3 = e.length % arrCount;
+      //     if (mod3 === 0) {
+      //       countSearch = e.length / arrCount;
+      //     } else {
+      //       countSearch = Math.trunc(e.length / arrCount) + 1;
+      //     }
+      //     for(let i = 0; i < arrCount; i++)
+      //     {
+      //       arr[i] = [];
+      //     }
+      //     return e;
+      //   } else return [];
+      // }),
+      // bufferCount(countSearch, 3),
+      // reduce<PostObj[], PostObj[][]>((acc, val, i) => {
+      //   if (val && i < arrCount) {
+      //     acc[i]= val;
+      //   }
+      //   return acc;
+      // }, arr),
+      //toArray(),
+      map(e => {
+        if (e) {
+          return this.splitArray(e);
+        }
+        else return [][0];
+      }),
       takeUntil(this.ngUnsubscribe$)
     ).subscribe({
       next: (data) => {
-        this.posts = data;
+        // if (data) {
+        //   let dataArr = this.splitArray(data);
+        //   this.posts = dataArr[0];
+        //   this.posts2 = dataArr[1];
+        //   this.posts3 = dataArr[2];
+        //   this.cdr.markForCheck();
+        // }
+        this.posts = data[0];
+        this.posts2 = data[1];
+        this.posts3 = data[2];
         this.cdr.markForCheck();
       },
       error: (e) => { console.log(e.status + ' '+ e.message); },
       complete: () => { console.info('complete searchPosts all-post component'); }
     });
+  }
+
+  splitArray(array: PostObj[]): PostObj[][] {
+    let result: PostObj[][];
+    result = [];
+    const arrCount = 3;
+    let countSearch = 0;
+    const mod3 = array.length % arrCount;
+    if (mod3 === 0) {
+      countSearch = array.length / arrCount;
+    } else {
+      countSearch = Math.trunc(array.length / arrCount) + 1;
+    }
+    let next = 0;
+    for(let i = 0; i < arrCount; i++) {
+      result[i]=[];
+      for(let j = 0; j < countSearch; j++) {
+        if (array.length > next) {
+          const element = array[next++];
+          result[i][j]=element;
+        }
+      }
+    }
+
+    return result;
   }
 
   ngOnInit(): void {

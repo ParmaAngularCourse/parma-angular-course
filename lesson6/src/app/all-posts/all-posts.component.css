@@ -25,3 +25,9 @@
 .userNameCurrentStyle{
   display: inline;
 }
+
+.columsStyle {
+  display: inline-table;
+  width: 300px;
+  margin: 10px;
+}

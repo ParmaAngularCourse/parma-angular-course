@@ -19,6 +19,7 @@ export class PostsService {
   private api = "/Posts";
 
   private postSubject: BehaviorSubject<PostObj[] | null | undefined> = new BehaviorSubject<PostObj[] | null| undefined>([]);
+  private postSearchSubject: BehaviorSubject<PostObj[] | null | undefined> = new BehaviorSubject<PostObj[] | null| undefined>([]);
   private _bufferPosts: Map<string, PostObj[] | null | undefined> = new Map<string, PostObj[] | null | undefined>();
 
   constructor(private httpClient: HttpClient) {
@@ -134,7 +135,7 @@ export class PostsService {
 
     if (this._bufferPosts.has(value)) {
       let bufferValue = this._bufferPosts.get(value);
-      this.postSubject.next(bufferValue);
+      this.postSearchSubject.next(bufferValue);
     }
     else {
       let httpHeaders = new HttpHeaders();
@@ -146,12 +147,12 @@ export class PostsService {
       );
       searchObs.subscribe((valuePost) => {
         this._bufferPosts.set(value, valuePost);
-        this.postSubject.next(valuePost);
+        this.postSearchSubject.next(valuePost);
       });
     }
   }
 
   public searchPostsObserverble(): Observable<PostObj[]| null | undefined> {
-    return this.postSubject.asObservable();
+    return this.postSearchSubject.asObservable();
   }
 }
