@@ -6,12 +6,13 @@ import { AdThemeDirective } from './ad-theme.directive';
 import { User } from './user-rights';
 import { NewsSourceService } from '../news-source.service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-news',
   templateUrl: './news.component.html',
   styleUrls: ['./news.component.css'],
-  changeDetection: ChangeDetectionStrategy.Default// OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NewsComponent {
 
@@ -24,7 +25,7 @@ export class NewsComponent {
   public currentUser: User = { Name: "Петр",Rights: {CanDelete: true, CanSave: true } };
 
   public ThemeEnum = Theme;
-
+  private ngUnsubscribe!: Subject<NewsItem[]>;
 
   @ViewChild('contextMenuComponent') menuComponent!: ContextMenuComponent;
   @ViewChild('popupDialog') popupDialog!: PopupDialogComponent;  
@@ -33,40 +34,24 @@ export class NewsComponent {
          private cdr: ChangeDetectorRef,
          private _newsSourceService: NewsSourceService)
  {     
+      this.ngUnsubscribe = new Subject();
       this.checkCheckboxes();     
      
-      // this._newsSourceService.getNews().subscribe({
-      //     complete: (data: NewsItem[]) => { 
-      //       this.ourNews = data;
-      //       return data;
-      //     } ,
-      //     error: (e: HttpErrorResponse) => {console.log(e.status + ' ' + e.message );}
-      //   });
-
-      this._newsSourceService.getNews().subscribe(
-        (data) => {
-          this.ourNews = data; 
-          console.log("Данные "+ data.length);   
-          this.cdr.detectChanges();            
-        },
-        (e: HttpErrorResponse) => console.log(e.status + ' ' + e.message )
-      );
-
+      this._newsSourceService.getNewsOberverble().pipe(
+          takeUntil(this.ngUnsubscribe)
+        ).subscribe({
+          next: (data) => {this.ourNews = data;       
+            this.cdr.markForCheck();       
+            },
+          error: (e: HttpErrorResponse) => console.log(e.status + ' ' + e.message)
+        });   
   }
 
-  ngOnInit(){
-   
-  }
+  ngOnInit(){}
 
-   refreshNewsList(){
-     this._newsSourceService.getNews().subscribe((data: NewsItem[]) => {
-        this.ourNews = data;
-        console.log("refreshNews "+ data.length);   
-        //this.cdr.detectChanges();    
-      }
-      );   
-      
-   }  
+  ngOnDestroy(){
+    this.ngUnsubscribe.complete();
+  }
  
   getEmptyNews(): NewsItem{
     return {id: 0, content: {  caption: "", text: "", date: new Date(), theme: Theme.Unknown },  checked: false };
@@ -89,7 +74,6 @@ export class NewsComponent {
 
   onDeleteNews(id?: number){
     this._newsSourceService.deleteNews(id);
-    this.refreshNewsList();
   }
 
   checkCheckboxes(){
@@ -116,10 +100,8 @@ export class NewsComponent {
         this._newsSourceService.addNews(this.unsavedNewsItem.content);
     }   
     this.cdr.markForCheck();  
-    this.onClickClosePopupButton();
-    this.refreshNewsList();  
+    this.onClickClosePopupButton(); 
   }
-
 
   onContextCheckAll(){    
     this.ourNews = this.ourNews.map(function(news){

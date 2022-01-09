@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { NewsItem, NewsContent, Theme } from './news/news-types';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { map, Observable } from 'rxjs';
+import { BehaviorSubject, map, Observable, ReplaySubject, Subject } from 'rxjs';
 import { getThemeKey } from './news/news-types';
 
 type NewsData = {
@@ -16,60 +16,77 @@ type NewsData = {
   providedIn: 'root'
 })
 export class NewsSourceService {
-
-  private allNews: NewsItem[] =[];
   private _api = 'https://localhost:44369/api/News/';
   private getThemeKeyFunc = getThemeKey;
+  private getNewsSubject: BehaviorSubject<NewsItem[]> = new BehaviorSubject<NewsItem[]>([]) ;
 
-  constructor(private httpClient: HttpClient) { }
+  constructor(private httpClient: HttpClient) {
+      this.loadNews();
+  }
 
-  public getNews() : Observable<NewsItem[]> {
-    this.printTime('GetNews');
-    return this.httpClient.get<NewsData[]>(this._api + "GetNews", {
-        headers: new HttpHeaders().set('Authorization','fff')
-      }).pipe(map(raw_items => 
-      raw_items.map(item => {return { 
-                  id: item.id,
-                  content: { caption: item.caption, text: item.text, date: item.date, theme: item.theme },
-                  checked: false  
-               }})));
+  public getNewsOberverble() : Observable<NewsItem[]> {    
+    return this.getNewsSubject.asObservable();              
+  }
+
+  public loadNews() {
+    this.httpClient.get<NewsData[]>(this._api + "GetNews"
+           /*, {headers: new HttpHeaders().set('Authorization','fff')}*/
+        ).pipe(map(raw_items => 
+          raw_items.map(item => {          
+            return { 
+                id: item.id,
+                content: { caption: item.caption, text: item.text, date: item.date, theme: item.theme },
+                checked: false  
+            }})
+          ))
+      .subscribe((value)=> this.getNewsSubject.next(value));
   }
 
   public deleteNews(id?: number){   
-    this.printTime('DeleteNews');
-    if (id !== undefined){
-       let isSuccess = false;
-       this.httpClient.delete<boolean>(this._api + `DeleteNews/${id}`).subscribe((data: boolean) => isSuccess = data);
-       console.log(`DeleteNews/${id} => ${isSuccess}`);
-    } else {
-        this.allNews.filter(n=> n.checked).forEach((el)=>
-            this.httpClient.delete<boolean>(this._api + `DeleteNews/${el.id}`) 
-        );       
+    if (id !== undefined){      
+       this.httpClient.delete<boolean>(this._api + `DeleteNews/${id}`)
+          .subscribe((isSuccess: boolean) => {         
+              if (isSuccess){
+                this.loadNews();
+              }
+            });
+    } else {      
+        var deletedIds = this.getNewsSubject.getValue().filter(n=> n.checked).map(el=> el.id);        
+        deletedIds.forEach((id)=>{       
+            this.httpClient.delete<boolean>(this._api + `DeleteNews/${id}`)
+              .subscribe((isSuccess: boolean) => {
+                  deletedIds.shift();             
+                  if (!deletedIds.length){              
+                    this.loadNews();
+                  }
+            });              
+        });     
     }
   }
   
-  public addNews(newItem: NewsContent){
-    this.printTime(`addNews`);
-    this.httpClient.post<NewsData>(this._api + "AddNews", {id: 0, caption: newItem.caption, text: newItem.text, date: newItem.date, theme: this.getThemeKeyFunc(newItem.theme)})
-        .subscribe(
-          (data) => {console.log(JSON.stringify(data))},  //changed
-          (err)=>console.log(err),
-          ()=>console.log("Done")
+  public addNews(newItem: NewsContent){    
+    this.httpClient.post<NewsData>(this._api + "AddNews",
+       {id: 0, caption: newItem.caption, text: newItem.text, date: newItem.date, theme: this.getThemeKeyFunc(newItem.theme)})
+        .subscribe({          
+          next: (data) => {
+            this.printTime(`addNews`);
+            console.log(JSON.stringify(data));
+            this.loadNews();
+          },  
+          error: (err)=>console.log(err)         
+        }     
       );
-    // let maxId = Math.max(... this.allNews.map(n=> n.id), 0);
-    // this.allNews.push( { id: maxId +1, content: newItem, checked: false });
-  
   }
 
-  public updateNewsItem(id: number, newsItem: NewsContent){
-    this.printTime(`UpdateNews`)
-    let isSuccess = false;
-    this.httpClient.put<boolean>(this._api + `UpdateNews`, {id: id, caption: newsItem.caption,
+  public updateNewsItem(id: number, newsItem: NewsContent){  
+      this.httpClient.put<boolean>(this._api + `UpdateNews`, {id: id, caption: newsItem.caption,
             text: newsItem.text, date: newsItem.date, theme: this.getThemeKeyFunc(newsItem.theme)})
-        .subscribe((data: boolean) => isSuccess = data);
-    console.log(`UpdateNews/${id} => ${isSuccess}`);
-    // const currentNews = this.allNews[itemIndex];
-    // this.allNews[itemIndex]  = {... currentNews, content: newsItem };
+        .subscribe({
+            next: (isSuccess: boolean) => {
+                this.printTime("UpdateNews => " + isSuccess);            
+                this.loadNews();
+            }
+          });
   }
 
   public printTime(text: string | undefined){
