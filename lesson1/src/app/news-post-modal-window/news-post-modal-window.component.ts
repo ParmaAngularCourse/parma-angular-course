@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { NewsPost } from 'src/models/NewsPost';
 import { NewsPostTag } from 'src/models/NewsPostTag';
-import { toDateString } from '../../utils/DateUtils'
 @Component({
   selector: 'app-news-post-modal-window',
   templateUrl: './news-post-modal-window.component.html',
@@ -22,10 +22,22 @@ export class NewsPostModalWindowComponent {
 
   newsTags = Object.values(NewsPostTag).filter(x => x != NewsPostTag.noTag);
 
+  newsPostForm !: FormGroup;
+
   private editedText = "";
   private editedTitle = "";
   private editedDate!: string;
   private editedTag = NewsPostTag.noTag;
+
+
+  constructor(){
+    this.newsPostForm = new FormGroup({
+      text: new FormControl(this.newsPost?.text, [Validators.required]),
+      title: new FormControl(this.newsPost?.title, [Validators.required]),
+      date: new FormControl(this.newsPost?.uploadDate, [Validators.required]),
+      radio: new FormControl(this.newsPost?.tag, [Validators.required])
+    });
+  }
 
   onEditSave() {
     const currentEditablePost = new NewsPost();
