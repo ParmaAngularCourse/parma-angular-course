@@ -53,14 +53,18 @@ export class DataRequestService {
     this.http
       .delete(API_URL, {
         body: body,
-      }).pipe(
-          tap(isOk =>
-            {
-                if(isOk && this.newsSubject){
-                    const posts = this.newsSubject?.value.filter(x=>!keys.includes(x.id));
-                    this.newsSubject.next(posts);
-                }
-            })
+        responseType: 'text',
+      })
+      .pipe(
+        tap((isOk) => {
+          if (isOk && this.newsSubject) {
+            const posts = this.newsSubject?.value.filter(
+              (x) => !keys.includes(x.id)
+            );
+            this.newsSubject.next(posts);
+            console.log(posts);
+          }
+        })
       )
       .subscribe();
   }
@@ -76,7 +80,17 @@ export class DataRequestService {
     this.http
       .post(API_URL, {
         body: body,
+        responseType: 'text',
       })
+      .pipe(
+        tap((isOk) => {
+          if (isOk && this.newsSubject) {
+            const posts = this.newsSubject?.value;
+            posts.push(item);
+            this.newsSubject.next(posts);
+          }
+        })
+      )
       .subscribe();
   }
 
@@ -92,6 +106,7 @@ export class DataRequestService {
     this.http
       .put(API_URL, {
         body: body,
+        responseType: 'text',
       })
       .subscribe();
   }

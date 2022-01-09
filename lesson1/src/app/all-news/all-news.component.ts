@@ -38,7 +38,6 @@ export class AllNewsComponent {
   onDeletePost(postId: number) {
     console.log(postId);
     this._newsService.Delete([postId]);
-    this.PushToRefresh();
   }
 
   onEditPost(postId: number) {
@@ -67,7 +66,6 @@ export class AllNewsComponent {
   onDeleteSelected() {
     const keys = this.news.filter((x) => x.isSelected).map((x) => x.id);
     this._newsService.Delete(keys);
-    this.PushToRefresh();
   }
 
   isAnyToDelete(): boolean {
@@ -120,7 +118,6 @@ export class AllNewsComponent {
     this.cdr.markForCheck();
   }
 
- 
 
   public isAnySelected(): boolean {
     return this.news.some((x) => x.isSelected);

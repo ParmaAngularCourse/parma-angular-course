@@ -17,12 +17,12 @@ export class NewsService {
     return this.requestService.Get();
   }
 
-  public Add(item: NewsPost): void {
+  public Add(item: NewsPost) {
     //item.id = this.news.length + 1;
     this.requestService.Add(item);
   }
 
-  public Update(item: NewsPost): void {
+  public Update(item: NewsPost) {
     this.requestService.Update(item);
   }
 
