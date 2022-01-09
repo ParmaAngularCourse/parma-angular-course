@@ -18,7 +18,6 @@ export class NewsService {
   }
 
   public Add(item: NewsPost) {
-    //item.id = this.news.length + 1;
     this.requestService.Add(item);
   }
 

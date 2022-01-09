@@ -21,7 +21,7 @@ export class AllNewsComponent {
     private _newsService: NewsService,
     private cdr: ChangeDetectorRef
   ) {
-    this.PullData(); // не обновляет страницу
+    this.PullData(); 
   }
 
   @ViewChild(ModalCommonComponent) public modalComponent!: ModalCommonComponent;
@@ -36,7 +36,6 @@ export class AllNewsComponent {
   private subscrition!: Subscription;
 
   onDeletePost(postId: number) {
-    console.log(postId);
     this._newsService.Delete([postId]);
   }
 
