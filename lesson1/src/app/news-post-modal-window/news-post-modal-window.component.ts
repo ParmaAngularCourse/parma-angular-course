@@ -32,10 +32,10 @@ export class NewsPostModalWindowComponent {
 
   constructor(){
     this.newsPostForm = new FormGroup({
-      text: new FormControl(this.newsPost?.text, [Validators.required]),
-      title: new FormControl(this.newsPost?.title, [Validators.required]),
-      date: new FormControl(this.newsPost?.uploadDate, [Validators.required]),
-      radio: new FormControl(this.newsPost?.tag, [Validators.required])
+      textControl: new FormControl(this.newsPost?.text, [Validators.required]),
+      titleControl: new FormControl(this.newsPost?.title, [Validators.required]),
+      dateControl: new FormControl(this.newsPost?.uploadDate, [Validators.required]),
+      radioControl: new FormControl(this.newsPost?.tag, [Validators.required])
     });
   }
 
