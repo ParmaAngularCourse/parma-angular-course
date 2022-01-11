@@ -5,7 +5,7 @@ import { PostObj } from './post-types';
 import { SinglePostDetailComponent } from './single-post-detail/single-post-detail.component';
 import { UserType } from './users';
 import { UserInfoService } from '../user-info.service';
-import { bufferCount, concatAll, debounceTime, from, map, merge, mergeAll, mergeMap, of, reduce, scan, Subject, switchMap, takeUntil, tap, toArray, windowCount, zip, Observable, EMPTY } from 'rxjs';
+import { bufferCount, concatAll, debounceTime, from, map, merge, mergeAll, mergeMap, of, reduce, scan, Subject, switchMap, takeUntil, tap, toArray, windowCount, zip, Observable, EMPTY, distinctUntilChanged } from 'rxjs';
 import { FormControl } from '@angular/forms';
 
 @Component({
@@ -155,10 +155,7 @@ export class AllPostsComponent implements OnInit {
     this.searchControl.valueChanges
     .pipe(
       debounceTime(800),
-      // switchMap((value) => {
-      //   this.searchValue = value;
-      //   return of([value]);
-      // })
+      distinctUntilChanged((previos: string, current: string) => previos === current)
     )
     .subscribe((value) => {
       this.postService.searchPosts(value);

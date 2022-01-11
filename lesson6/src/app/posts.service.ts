@@ -132,6 +132,15 @@ export class PostsService {
   }
 
   public searchPosts(value: string) {
+    let searchObs = this.httpClient.post<DataObj[]>(`${this.api}/SearchPost`, {value}).pipe(
+        map(item => this.mapToPostObj(item))
+    ).subscribe((valuePost) => {
+      this._bufferPosts.set(value, valuePost);
+      this.postSearchSubject.next(valuePost);
+    });
+  }
+
+  public searchPostsWithBuffer(value: string) {
 
     if (this._bufferPosts.has(value)) {
       let bufferValue = this._bufferPosts.get(value);
