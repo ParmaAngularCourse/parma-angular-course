@@ -3,7 +3,6 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, OnDe
 import { bufferCount, debounceTime, distinctUntilChanged, from, fromEvent, map, Observable, startWith, Subject, switchMap, takeUntil, toArray } from 'rxjs';
 import { INewsData } from 'src/model/INewsData';
 import { News } from 'src/model/News';
-import { NewsFilter } from 'src/model/NewsFilter';
 import { NewsContextMenuComponent } from '../news-context-menu/news-context-menu.component';
 import { NewsEditorComponent } from '../news-editor/news-editor.component';
 import { NewsService } from '../service/news.service';
@@ -20,9 +19,7 @@ export class NewsListComponent implements OnInit, OnDestroy {
   @ViewChild('contextMenu') newsContextMenu!: NewsContextMenuComponent
   @ViewChild('newsFilter') newsFilter!: ElementRef
   @ViewChildren(NewsBlockComponent) childrenComponents!:QueryList<NewsBlockComponent>  
-  public newsArray1:News[] = [];
-  public newsArray2:News[] = [];
-  public newsArray3:News[] = [];
+  public newsArray: INewsData[][] = [];
   public editFormCaption: string = "";
   public enableDeleteButton:boolean = false;  
   private unsubscriptionSubj!:Subject<void>
@@ -36,53 +33,29 @@ export class NewsListComponent implements OnInit, OnDestroy {
   }
 
   ngAfterViewInit() {
-    var filterO: Observable<Event> = fromEvent(this.newsFilter.nativeElement, 'keyup');
-    filterO.pipe(      
-      debounceTime(600),                
-      map(event => 
-      {
-        var value = (event.target as HTMLInputElement).value
-        return {
-          searchTextFilter: value
-        } as NewsFilter;
-      }),
-      startWith(new NewsFilter()),
-      distinctUntilChanged((previous:NewsFilter, current:NewsFilter)=> previous.searchTextFilter === current.searchTextFilter),
-      switchMap(value=> this.newsService.getNewsList(value)),
+    fromEvent<Event>(this.newsFilter.nativeElement, 'keyup')
+    .pipe(
+      debounceTime(600),
+      map(event => (event.target as HTMLInputElement).value),
+      startWith(''),
+      distinctUntilChanged(),
+      switchMap(value=> this.newsService.getNewsList({ searchTextFilter: value })),
       switchMap(value=> {
         return from(value).pipe(
-          bufferCount(3),
-          toArray()          
+        bufferCount(3),
+        toArray()
         )
       }),
-      takeUntil(this.unsubscriptionSubj)                  
-    ).subscribe({
+      takeUntil(this.unsubscriptionSubj)
+    )
+    .subscribe({
       next: (data) => this.setNewsData(data),
-      error: (error: HttpErrorResponse) => console.log(error.status + ' ' + error.message) 
+      error: (error: HttpErrorResponse) => console.log(error.status + ' ' + error.message)
     });
   }
 
   private setNewsData(data:INewsData[][]):void{
-    this.newsArray1 = [];
-    this.newsArray2 = [];
-    this.newsArray3 = [];
-
-    data.forEach(newsArray => {
-      var na1 = newsArray[0];
-      if (na1){ 
-        this.newsArray1.push(na1)
-      };
-
-      var na2 = newsArray[1];
-      if (na2){ 
-        this.newsArray2.push(na2)
-      };
-
-      var na3 = newsArray[2];
-      if (na3){ 
-        this.newsArray3.push(na3)
-      };
-    });
+    this.newsArray = data;
     this.childrenComponents.forEach(x=>x.onCheckboxChange(false));
     this.cd.markForCheck();
   }

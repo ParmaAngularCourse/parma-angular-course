@@ -23,7 +23,7 @@ export class AuthorizationService implements HttpInterceptor {
   public GetCurrentUser():Observable<User>{
     if(!this.userSubject){
       this.userSubject = new BehaviorSubject<User>(new User());
-      this.httpService.get<ServerResponse<User>>('https://localhost:44379/api/Auth/GetUserInfo')
+      this.httpService.get<ServerResponse<User>>('http://localhost:5000/api/Auth/GetUserInfo')
       .pipe()
       .subscribe({
         next: (response)=> { 

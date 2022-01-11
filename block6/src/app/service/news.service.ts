@@ -19,7 +19,7 @@ export class NewsService {
       this.newsListSubject = new BehaviorSubject<INewsData[]>([]);
     }
 
-    this.httpService.post<ServerResponse<INewsData[]>>('https://localhost:44379/api/NewsData/GetNews', filter)      
+    this.httpService.post<ServerResponse<INewsData[]>>('http://localhost:5000/api/NewsData/GetNews', filter)      
     .subscribe({
       next: (response)=> { 
         if (response.isSuccess === false) {
@@ -39,7 +39,7 @@ export class NewsService {
   }
 
   public addNews(news: INewsData){
-    this.httpService.post<ServerResponse<INewsData>>('https://localhost:44379/api/NewsData/AddNews', news)
+    this.httpService.post<ServerResponse<INewsData>>('http://localhost:5000/api/NewsData/AddNews', news)
     .subscribe({
       next: (response)=> {
         if (response.isSuccess === false) {
@@ -63,7 +63,7 @@ export class NewsService {
 
   public deleteNews(news:News){
     var params = new HttpParams().set('newsId',news.id)    
-    this.httpService.delete<ServerResponse<void>>('https://localhost:44379/api/NewsData/DeleteNews',{
+    this.httpService.delete<ServerResponse<void>>('http://localhost:5000/api/NewsData/DeleteNews',{
       params: params
     })
     .subscribe({
