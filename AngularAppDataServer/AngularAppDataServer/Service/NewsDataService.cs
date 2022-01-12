@@ -15,9 +15,9 @@ namespace AngularAppDataServer.Service
             this.dataRepository = dataRepository;
         }
 
-        internal async Task<IEnumerable<News>> GetNewsData()
+        internal async Task<IEnumerable<News>> GetNewsData(Filter filter)
         {
-            return await dataRepository.LoadNewsData().ConfigureAwait(false);
+            return await dataRepository.LoadNewsData(filter).ConfigureAwait(false);
         }
 
         internal async Task<News> AddNews(News news)
