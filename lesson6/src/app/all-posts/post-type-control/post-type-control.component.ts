@@ -52,27 +52,7 @@ export class PostTypeControlComponent implements OnInit, ControlValueAccessor {
   }
 
   setValue(postType: PostType) {
-    this.value = PostType.politic;
-    this.onChange(this.value);
-  }
-
-  selectPolitic() {
-    this.value = PostType.politic;
-    this.onChange(this.value);
-  }
-
-  selectTourism() {
-    this.value = PostType.tourism;
-    this.onChange(this.value);
-  }
-
-  selectEconomic() {
-    this.value = PostType.economic;
-    this.onChange(this.value);
-  }
-
-  selectScience() {
-    this.value = PostType.science;
+    this.value = postType;
     this.onChange(this.value);
   }
 

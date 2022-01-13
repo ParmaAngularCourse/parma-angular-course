@@ -5,7 +5,7 @@ import { PostObj } from './post-types';
 import { SinglePostDetailComponent } from './single-post-detail/single-post-detail.component';
 import { UserType } from './users';
 import { UserInfoService } from '../user-info.service';
-import { bufferCount, concatAll, debounceTime, from, map, merge, mergeAll, mergeMap, of, reduce, scan, Subject, switchMap, takeUntil, tap, toArray, windowCount, zip, Observable, EMPTY, distinctUntilChanged, filter, concatMap } from 'rxjs';
+import { bufferCount, concatAll, debounceTime, from, map, merge, mergeAll, mergeMap, of, reduce, scan, Subject, switchMap, takeUntil, tap, toArray, windowCount, zip, Observable, EMPTY, distinctUntilChanged, filter, concatMap, switchAll } from 'rxjs';
 import { FormControl } from '@angular/forms';
 
 @Component({
@@ -40,29 +40,27 @@ export class AllPostsComponent implements OnInit {
     this.ngUnsubscribe$ = new Subject<void>();
 
       this.postService.getPostsOberverble().pipe(
-        map(value => {
-          let t1: PostObj[] = [];
-          let t2: PostObj[] = [];
-          let t3: PostObj[] = [];
-          of(value).pipe(
-            concatAll(),
-            bufferCount(3),
-            takeUntil(this.ngUnsubscribe$),
-        ).subscribe(
-          (data) => {
-            if (data[0]) {
-              t1.push(data[0]);
-            }
-            if (data[1]) {
-              t2.push(data[1]);
-            }
-            if (data[2]) {
-              t3.push(data[2]);
-            }
-          }
-        );
-        return [t1, t2, t3];
-      }),
+        switchMap(value => {
+            let t1: PostObj[] = [];
+            let t2: PostObj[] = [];
+            let t3: PostObj[] = [];
+            return of(value).pipe(
+              concatAll(),
+              bufferCount(3),
+              map((data)=>{
+                if (data[0]) {
+                  t1.push(data[0]);
+                }
+                if (data[1]) {
+                  t2.push(data[1]);
+                }
+                if (data[2]) {
+                  t3.push(data[2]);
+                }
+                return [t1, t2, t3]
+              }),
+          );
+        }),
         takeUntil(this.ngUnsubscribe$),
       ).subscribe({
         next: (data) => {
