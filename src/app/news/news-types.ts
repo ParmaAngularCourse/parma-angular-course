@@ -2,6 +2,7 @@ import { Validator } from "@angular/forms";
 import { Observable } from 'rxjs';
 
 export type Report = {
+  id: number,
   header: string,
   body: string,
   timestamp: string,
