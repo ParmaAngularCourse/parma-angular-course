@@ -1,13 +1,14 @@
 <div>Тип:</div>
 <div>
-  <button [class]="politicClass" (click)="selectPolitic()">Политика</button>
-  <button [class]="tourismClass" (click)="selectTourism()">Туризм</button>
-  <button [class]="economicClass" (click)="selectEconomic()">Экономика</button>
-  <button [class]="scienceClass" (click)="selectScience()">Наука</button>
-  <button [class]="internetClass" (click)="selectInternet()">Интернет</button>
+  <ng-container *ngFor="let item of postTypes">
+    <button [appPostTypeStyles]="item" [class]="((value === item) ? (item | postTypeBtnStyle) + ' selectedStyle ' : item | postTypeBtnStyle)" 
+      [style]="(value === item) ? 'border: 2px' : 'border: 0px'"
+      (click)="selectValue(item)">{{item | postTypePipe}}</button>
+    <!-- <div [appPostTypeStyles]="item" (click)="selectValue(item)">{{item | postTypePipe}}</div> -->
+  </ng-container>
 </div>
 <div *ngIf="typePostControl?.errors">
   <ng-container *ngFor="let error of typePostControl?.errors | validationErrors">
-    <div class="divError" >{{error.message}}</div>
+    <div class="divError">{{error.message}}</div>
   </ng-container>
 </div>

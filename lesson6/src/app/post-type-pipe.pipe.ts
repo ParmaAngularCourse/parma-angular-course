@@ -8,6 +8,7 @@ export class PostTypePipePipe implements PipeTransform {
 
   transform(value: PostType| string | null, CharAtIndex?: number): string {
     let result = "";
+    //Можно инкапсулировать
     switch (value as PostType) {
       case PostType.economic: result = "Экономика"; break;
       case PostType.internet: result = "Интернет"; break;

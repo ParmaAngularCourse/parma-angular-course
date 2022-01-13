@@ -32,7 +32,7 @@ export class SinglePostComponent {
   }
 
   ngDoCheck() {
-    console.log('single-post ' + this.post.id);
+    //console.log('single-post ' + this.post.id);
   }
 
   editPostHandler(){
