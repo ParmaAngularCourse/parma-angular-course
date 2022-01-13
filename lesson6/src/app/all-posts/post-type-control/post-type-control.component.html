@@ -1,10 +1,8 @@
 <div>Тип:</div>
 <div>
   <ng-container *ngFor="let item of postTypes">
-    <button [appPostTypeStyles]="item" [class]="((value === item) ? (item | postTypeBtnStyle) + ' selectedStyle' : item | postTypeBtnStyle)" 
-      [style]="(value === item) ? 'border: 2px' : 'border: 0px'"
+    <button [appPostTypeStyles]="item" [class]="((value === item) ? (item | postTypeBtnStyle) + ' selectedStyle ' : item | postTypeBtnStyle)" 
       (click)="selectValue(item)">{{item | postTypePipe}}</button>
-    <!-- <div [appPostTypeStyles]="item" (click)="selectValue(item)">{{item | postTypePipe}}</div> -->
   </ng-container>
 </div>
 <div *ngIf="typePostControl?.errors">

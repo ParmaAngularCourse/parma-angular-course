@@ -8,7 +8,7 @@ export class PostTypeStylesDirective {
 
   @HostBinding('style.background-color') backgroundColor: string = "brown";
   @HostBinding('style.color') color: string = "white";
-  @HostBinding('style.border') border: string = "0px";
+  //@HostBinding('style.border') border: string = "0px";
   @HostBinding('style.border-radius') borderRedius: string = "4px";
   @HostBinding('style.padding') padding: string = "1px 10px";
   @HostBinding('style.margin') margin: string = "3px;"
