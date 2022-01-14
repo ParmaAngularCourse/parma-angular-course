@@ -1,0 +1,31 @@
+.buttonStyle {
+    font-size: large;
+    display: inline-flex;
+    justify-content: right;
+    border: 0px;
+    background-color: transparent;
+}
+
+.headerStyle {
+    font-size: 1.1em;
+    display: inline-flex;
+    width: 90%;
+    justify-content: center;
+}
+
+.b-popup{
+    width:100vw;
+    height: 100vh;
+    background-color: rgba(0,0,0,0.5);
+    overflow:hidden;
+    position:fixed;
+    top:0px;
+}
+.b-popup-content{
+    margin:100px auto 40px auto;
+    width:340px;
+    padding:10px;
+    background-color: #dfdfdf;
+    border-radius:5px;
+    box-shadow: 0px 0px 10px #000;
+}
