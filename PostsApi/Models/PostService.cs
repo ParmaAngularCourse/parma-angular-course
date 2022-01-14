@@ -11,7 +11,7 @@ namespace PostsApi.Models
         {
             var rnd = new Random();
             var postTypes = Enum.GetValues<PostTypeEnum>();
-            _posts = Enumerable.Range(0,7).Select(index => new Post() {
+            _posts = Enumerable.Range(0,96).Select(index => new Post() {
                 Id = index,
                 Date = DateTime.Now.AddDays(rnd.Next(100)),
                 Title = "Title " + (++index),
@@ -57,6 +57,15 @@ namespace PostsApi.Models
             {
                 _posts.Remove(deletePost);
             }
+        }
+
+        public Post[] SearchPost(string value)
+        {
+            if (!string.IsNullOrWhiteSpace(value))
+            {
+                return _posts.FindAll((e) => e.Title.Contains(value, StringComparison.OrdinalIgnoreCase))?.ToArray();
+            }
+            return _posts.ToArray();
         }
     }
 }

@@ -38,5 +38,11 @@ namespace PostsApi.Controllers
         {
             _postService.DeletePosts(ids);
         }
+
+        [HttpPost]
+        public Post[] SearchPost(SearchModel model)
+        {
+            return _postService.SearchPost(model.Value);
+        }
     }
 }
