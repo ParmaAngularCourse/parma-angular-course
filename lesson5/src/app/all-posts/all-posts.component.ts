@@ -1,8 +1,11 @@
-import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChild } from '@angular/core';
+import { PostsService } from '../posts.service';
 import { HeaderPostDetailComponent } from './header-post-detail/header-post-detail.component';
 import { PostObj, PostType } from './post-types';
 import { SinglePostDetailComponent } from './single-post-detail/single-post-detail.component';
-import { PermissionUser, user1, user2, UserType } from './users';
+import { UserType } from './users';
+import { UserInfoService } from '../user-info.service';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-all-posts',
@@ -12,64 +15,7 @@ import { PermissionUser, user1, user2, UserType } from './users';
 })
 export class AllPostsComponent {
 
-  public posts: PostObj[] = [
-    {
-      id: 0,
-      date: "2021-01-01T08:09",
-      title: "post 1",
-      text:"Text Post 1",
-      isSelected: false,
-      postType: PostType.economic,
-    },
-    {
-      id: 1,
-      date: "2021-01-01T10:16",
-      title: "post 2",
-      text:"Text Post 2",
-      isSelected: false,
-      postType: PostType.internet,
-    },
-    {
-      id: 2,
-      date: "2021-01-02T11:18",
-      title: "post 3",
-      text:"Text Post 3",
-      isSelected: false,
-      postType: PostType.politic,
-    },
-    {
-      id: 3,
-      date: "2021-01-03T14:16",
-      title: "post 4",
-      text:"Text post 4",
-      isSelected: false,
-      postType: PostType.tourism,
-    },
-    {
-      id: 4,
-      date: "2021-01-04T10:16",
-      title: "post 5",
-      text:"Text Post 5",
-      isSelected: false,
-      postType: PostType.internet,
-    },
-    {
-      id: 5,
-      date: "2021-01-06T16:16",
-      title: "post 6",
-      text:"Text Post 6",
-      isSelected: false,
-      postType: PostType.science,
-    },
-    {
-      id: 6,
-      date: "2021-01-07T17:16",
-      title: "post 7",
-      text:"Text Post 7",
-      isSelected: false,
-      postType: PostType.politic,
-    },
-  ]
+  public posts: PostObj[] = []
 
   //editPost!:PostObj; Через свойство не работает, если есть вложенный компонент
   titleDialog:string = "";
@@ -79,23 +25,47 @@ export class AllPostsComponent {
   contextMenuX = 0;
   contextMenuY = 0;
   isActiveDeletePostBtn: boolean = false;
-  user: UserType = user1;
 
+  user: UserType = {name: "", permissions: []};
 
+  private ngUnsubscribe$!: Subject<void>;
+
+  constructor(private postService: PostsService, private userInfoService: UserInfoService, private cdr: ChangeDetectorRef) {
+    this.ngUnsubscribe$ = new Subject<void>();
+    this.postService.getPostsOberverble().pipe(
+      takeUntil(this.ngUnsubscribe$)
+    ).subscribe({
+      next: (data) => {
+        this.posts = data;
+        this.cdr.markForCheck();
+      },
+      error: (e) => { console.log(e.status + ' '+ e.message); },
+      complete: () => { console.info('complete getPosts all-post component'); }
+  });
+    this.userInfoService.getUserObserverble()
+    .pipe(
+      takeUntil(this.ngUnsubscribe$)
+    )
+    .subscribe({
+      next: (data) => {
+        this.user = data;
+        this.cdr.markForCheck();
+      },
+      error: (e) => { console.log(e.status + ' '+ e.message); },
+      complete: () => { console.info('complete get user all-post component'); }
+    });
+  }
 
   ngDoCheck() {
     console.log('all-posts');
   }
 
   deletePostsHandler() {
-    this.posts = this.posts.filter(e => !e.isSelected);
+    this.postService.deleteSelectedPosts(this.posts);
   }
 
   deletePostHandler(post:PostObj) {
-    const index = this.posts.findIndex((e) => e.id === post.id);
-    if (index > -1) {
-      this.posts.splice(index, 1);
-    }
+    this.postService.deletePost(post);
   }
 
   addNewPostHandler() {
@@ -106,16 +76,11 @@ export class AllPostsComponent {
   }
 
   saveNewPostHandler(post:PostObj) {
-    if (post.id === -1)
-    {
-      this.posts.push({
-        ...post,
-        id: this.posts.reduce((maxValue, post)=> maxValue > post.id ? maxValue: post.id, -1) + 1,
-      });
+    if (post.id === -1){
+      this.postService.addPost(post);
     }
-    else{
-      const id = this.posts.findIndex((e) => e.id === post.id);
-      this.posts[id] = post;
+    else {
+      this.postService.updatePost(post);
     }
     this.popupPostDetailWindow.show(false);
   }
@@ -160,6 +125,15 @@ export class AllPostsComponent {
 
   selectPostHandler(post:PostObj) {
     this.isActiveDeletePostBtn = Boolean(this.posts.find(e => e.isSelected));
+  }
+
+  ngOnDestroy() {
+    this.ngUnsubscribe$.unsubscribe();
+    this.ngUnsubscribe$.complete();
+  }
+
+  changeUser(userName:string){
+    this.userInfoService.loadUser(userName);
   }
 
 }

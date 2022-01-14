@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angular/core';
 import { PostObj } from '../post-types';
-import { PermissionUser, user1, user2, UserType } from '../users';
+import { PermissionUser, UserType } from '../users';
 
 @Component({
   selector: 'app-single-post',
@@ -9,13 +9,14 @@ import { PermissionUser, user1, user2, UserType } from '../users';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SinglePostComponent {
+
   @Input() post!:PostObj;
 
   @Input() user!: UserType;
 
-  @Output() deletePostEvent: EventEmitter<PostObj> = new EventEmitter();
-  @Output() editPostEvent: EventEmitter<PostObj> = new EventEmitter();
-  @Output() selectPostEvent: EventEmitter<PostObj> = new EventEmitter();
+  @Output() deletePostEvent = new EventEmitter<PostObj>();
+  @Output() editPostEvent = new EventEmitter<PostObj>();
+  @Output() selectPostEvent = new EventEmitter<PostObj>();
 
   constructor(private cdr: ChangeDetectorRef) { }
 

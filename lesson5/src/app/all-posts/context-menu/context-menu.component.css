@@ -1,0 +1,11 @@
+.contextMenu {
+    position: absolute;
+}
+.buttonStyle {
+    border: 1px solid black;
+    border-radius: 3px;
+    margin: 3px;
+    padding: auto;
+    background-color: khaki;
+    color: black;
+}
