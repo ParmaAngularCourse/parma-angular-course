@@ -1,22 +1,17 @@
 <div>
   <div *ngFor="let item of controlValue.newsTags | keyvalue; let i = index">
-    <input
-      class="radio"
+    <div
+      class="tag"
+      (click)="onRadioChange(i)"
+      formControlName="radioControl" !!!!!
+      name="radioControl"
       id="radioTag"
       #radioTag
-      name="radioControl"
-      type="radio"
-      [formControl]="radioControl"
-      [value]="item"
-      [checked]="item.value === controlValue?.selectedTag"
-      (change)="onRadioChange(i)"
-    />
-
-    <div class="tag" (click)="onRadioChange(i)">
+    >
       <span [appNewsTagStyleDirective]="item.value" class="tag-short">
         {{ item.value | firstLetterPipe }}</span
       >
-      <span class="tooltip" (click)="onRadioChange(i)"> {{ item.value }}</span>
+      <span class="tooltip"> {{ item.value }}</span>
     </div>
   </div>
   <ng-container
