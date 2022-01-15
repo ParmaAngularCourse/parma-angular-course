@@ -1,0 +1,15 @@
+<div *ngFor="let item of newsTags | keyvalue; let i = index">
+    <input
+      id="radioTag"
+      #radioTag
+      name="radioControl"
+      type="radio"
+      formControlName="radioControl"
+      [value]="item"
+      [checked]="item.value === selectedTag"
+      (change)="onRadioChange(i)"
+    />
+    <label for="name" [appNewsTagStyleDirective]="item.value">{{
+      item.value
+    }}</label>
+  </div>
