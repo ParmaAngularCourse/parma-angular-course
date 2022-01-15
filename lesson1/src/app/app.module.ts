@@ -18,6 +18,7 @@ import {
   HTTP_INTERCEPTORS,
 } from '@angular/common/http';
 import { AuthInterseptorService } from './auth-interseptor.service';
+import { NewsRadioControlComponent } from './news-radio-control/news-radio-control.component';
 
 @NgModule({
   declarations: [
@@ -31,6 +32,7 @@ import { AuthInterseptorService } from './auth-interseptor.service';
     PermissionDirectiveDirective,
     FirstLetterPipePipe,
     NewsTagStyleDirectiveDirective,
+    NewsRadioControlComponent,
   ],
   imports: [BrowserModule, FormsModule, HttpClientModule, ReactiveFormsModule],
   providers: [

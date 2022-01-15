@@ -46,7 +46,13 @@ export class NewsPostModalWindowComponent {
       dateControl: new FormControl(this.newsPost?.uploadDate, [
         Validators.required,
       ]),
-      radioControl: new FormControl(this.newsPost?.tag, [Validators.required]),
+      radioControl: new FormControl(
+        {
+          newsTags: this.newsTags,
+          selectedTag: this.newsPost?.tag,
+        },
+        [Validators.required]
+      ),
     });
   }
 
@@ -54,7 +60,10 @@ export class NewsPostModalWindowComponent {
     this.newsPostForm?.get('textControl')?.setValue(this.newsPost?.text);
     this.newsPostForm?.get('titleControl')?.setValue(this.newsPost?.title);
     this.newsPostForm?.get('dateControl')?.setValue(this.newsPost?.uploadDate);
-    this.newsPostForm?.get('radioControl')?.setValue(this.newsPost?.tag);
+    this.newsPostForm?.get('radioControl')?.setValue({
+      newsTags: this.newsTags,
+      selectedTag: this.newsPost?.tag,
+    });
   }
 
   onEditSave() {

@@ -1,15 +1,34 @@
-<div *ngFor="let item of newsTags | keyvalue; let i = index">
+<div>
+  <div *ngFor="let item of controlValue.newsTags | keyvalue; let i = index">
     <input
+      class="radio"
       id="radioTag"
       #radioTag
       name="radioControl"
       type="radio"
-      formControlName="radioControl"
+      [formControl]="radioControl"
       [value]="item"
-      [checked]="item.value === selectedTag"
+      [checked]="item.value === controlValue?.selectedTag"
       (change)="onRadioChange(i)"
     />
-    <label for="name" [appNewsTagStyleDirective]="item.value">{{
-      item.value
-    }}</label>
+
+    <div class="tag" (click)="onRadioChange(i)">
+      <span [appNewsTagStyleDirective]="item.value" class="tag-short">
+        {{ item.value | firstLetterPipe }}</span
+      >
+      <span class="tooltip" (click)="onRadioChange(i)"> {{ item.value }}</span>
+    </div>
   </div>
+  <ng-container
+    [ngTemplateOutlet]="error"
+    [ngTemplateOutletContext]="{
+      show: radioControl?.errors
+    }"
+  >
+  </ng-container>
+</div>
+<ng-template #error let-show="show">
+  <div *ngIf="show">
+    <span class="errorText">Должен быть выбран один тип новости</span>
+  </div>
+</ng-template>

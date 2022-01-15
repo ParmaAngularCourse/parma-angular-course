@@ -1,0 +1,21 @@
+.errorText {
+  color: red;
+}
+.radio {
+  float: left;
+}
+.tag {
+  left: 20%;
+}
+
+.tag-short {
+  border: 3px solid black;
+}
+
+.tag:hover .tooltip {
+  visibility: visible;
+}
+
+.tooltip {
+  visibility: hidden;
+}
