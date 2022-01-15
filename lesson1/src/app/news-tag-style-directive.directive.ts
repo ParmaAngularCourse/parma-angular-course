@@ -11,7 +11,7 @@ export class NewsTagStyleDirectiveDirective {
   @HostBinding('style.background-color') backColorStyle!: string;
   constructor() { }
 
-  ngOnInit(){
+  ngOnChanges(){
     console.log(this.tagValue);
     this.backColorStyle =  GetStyleFromTag(this.tagValue);
   }

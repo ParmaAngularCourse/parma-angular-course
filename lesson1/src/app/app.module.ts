@@ -12,7 +12,12 @@ import { CapitalLetterPipePipe } from './capital-letter-pipe.pipe';
 import { PermissionDirectiveDirective } from './permission-directive.directive';
 import { FirstLetterPipePipe } from './first-letter-pipe.pipe';
 import { NewsTagStyleDirectiveDirective } from './news-tag-style-directive.directive';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import {
+  HttpClient,
+  HttpClientModule,
+  HTTP_INTERCEPTORS,
+} from '@angular/common/http';
+import { AuthInterseptorService } from './auth-interseptor.service';
 
 @NgModule({
   declarations: [
@@ -25,12 +30,16 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
     CapitalLetterPipePipe,
     PermissionDirectiveDirective,
     FirstLetterPipePipe,
-    NewsTagStyleDirectiveDirective
+    NewsTagStyleDirectiveDirective,
   ],
-  imports: [
-    BrowserModule, FormsModule, HttpClientModule
+  imports: [BrowserModule, FormsModule, HttpClientModule],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterseptorService,
+      multi: true,
+    },
   ],
-  providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ViewChild,
+} from '@angular/core';
+import { Subscription } from 'rxjs';
 import { UserHasPemission } from 'src/models/userPermissions';
 import { NewsService } from 'src/services/newsService';
 import { NewsPost } from '../../models/NewsPost';
@@ -7,12 +14,16 @@ import { ModalCommonComponent } from '../modal-common/modal-common.component';
   selector: 'app-all-news',
   templateUrl: './all-news.component.html',
   styleUrls: ['./all-news.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AllNewsComponent {
-  constructor(private _newsService: NewsService) {
-    this.updateValue();
+  constructor(
+    private _newsService: NewsService,
+    private cdr: ChangeDetectorRef
+  ) {
+    this.PullData(); 
   }
+
   @ViewChild(ModalCommonComponent) public modalComponent!: ModalCommonComponent;
 
   isModalOpen: boolean = false;
@@ -22,14 +33,14 @@ export class AllNewsComponent {
   news!: NewsPost[];
   postToEdit: NewsPost = new NewsPost();
   userPermission: boolean = UserHasPemission;
+  private subscrition!: Subscription;
 
   onDeletePost(postId: number) {
-    this._newsService.Delete(item => item.id != postId);
-    this.updateValue();
+    this._newsService.Delete([postId]);
   }
 
   onEditPost(postId: number) {
-    this.postToEdit = this._newsService.GetFirstOrDefault(x => x.id === postId);
+    this.postToEdit = this.news.find(x=>x.id==postId)!;
     this.modalComponent.Open();
   }
 
@@ -43,28 +54,26 @@ export class AllNewsComponent {
   }
 
   onAddNewsPost(newsPost: NewsPost) {
-    const existedPostIndex = this.news.findIndex(x => x.id === newsPost.id);
+    const existedPostIndex = this.news.findIndex((x) => x.id === newsPost.id);
     if (existedPostIndex > -1) {
       this._newsService.Update(newsPost);
-    }
-    else {
+    } else {
       this._newsService.Add(newsPost);
     }
-    this.updateValue();
   }
 
   onDeleteSelected() {
-    this._newsService.Delete(item => item.isSelected === false);
-    this.updateValue();
+    const keys = this.news.filter((x) => x.isSelected).map((x) => x.id);
+    this._newsService.Delete(keys);
   }
 
   isAnyToDelete(): boolean {
-    return this._newsService.isAnySelected();
+    return this.news?.some((x) => x.isSelected);
   }
 
   onRightClick(event: MouseEvent) {
-    this.contextmenuX = event.clientX
-    this.contextmenuY = event.clientY
+    this.contextmenuX = event.clientX;
+    this.contextmenuY = event.clientY;
     this.contextmenu = true;
     return false;
   }
@@ -74,19 +83,42 @@ export class AllNewsComponent {
   }
 
   onSelectAll() {
-    this._newsService.selectAll();
-    this.updateValue();
-  }
+    this.news = this.news.map((x) => {
+      x = new NewsPost(x);
+      x.isSelected = true;
+      return x;
+    });  }
 
   getTitle(): string {
-    return this.postToEdit.id === -1 ? 'Добавление' : 'Редактирование'
+    return this.postToEdit.id === -1 ? 'Добавление' : 'Редактирование';
   }
 
-
-  updateValue() {
-    this.news = this._newsService.GetAll();
-  }
-  onPermissionToggleClick(){
+  onPermissionToggleClick() {
     this.userPermission = !this.userPermission;
+  }
+
+  ngOnDestroy() {
+    this.subscrition.unsubscribe();
+  }
+
+  private PullData() {
+    this.subscrition = this._newsService.GetAll().subscribe({
+      next: (data) => {
+        this.news = data;
+        this.PushToRefresh();
+      },
+      error: (error: HttpErrorResponse) => {
+        console.log(error.status);
+      },
+    });
+  }
+
+  private PushToRefresh() {
+    this.cdr.markForCheck();
+  }
+
+
+  public isAnySelected(): boolean {
+    return this.news.some((x) => x.isSelected);
   }
 }
