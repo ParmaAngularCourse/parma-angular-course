@@ -51,11 +51,13 @@ export class NewsPostModalWindowComponent {
   }
 
   ngOnChanges() {
-    this.newsPostForm?.get('textControl')?.setValue(this.newsPost?.text);
-    this.newsPostForm?.get('titleControl')?.setValue(this.newsPost?.title);
-    this.newsPostForm?.get('dateControl')?.setValue(this.newsPost?.uploadDate);
-    this.newsPostForm?.get('radioControl')?.setValue(this.newsPost?.tag);
-  }
+    this.newsPostForm.setValue({
+      'textControl':this.newsPost?.text,
+      'titleControl':this.newsPost?.title,
+      'dateControl':this.newsPost?.uploadDate,
+       'radioControl':this.newsPost?.tag,
+    })
+   }
 
   onEditSave() {
     const currentEditablePost = new NewsPost();

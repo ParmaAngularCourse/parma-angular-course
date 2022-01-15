@@ -1,6 +1,4 @@
-import {
-  HttpClient
-} from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, map, Observable, ReplaySubject, tap } from 'rxjs';
 import { API_URL } from 'src/api';
@@ -10,10 +8,12 @@ import { toDateString } from 'src/utils/DateUtils';
 
 @Injectable({ providedIn: 'root' })
 export class DataRequestService {
-  constructor(private readonly http: HttpClient) {}
+  constructor(private readonly http: HttpClient) {
+    this.Init();
+  }
   private newsSubject?: BehaviorSubject<Array<NewsPost>>;
 
-  public Get(): Observable<Array<NewsPost>> {
+  public Init() {
     if (!this.newsSubject) {
       this.newsSubject = new BehaviorSubject<NewsPost[]>([]);
 
@@ -38,7 +38,10 @@ export class DataRequestService {
         )
         .subscribe((value) => this.newsSubject?.next(value));
     }
-    return this.newsSubject.asObservable();
+  }
+
+  public Get(): Observable<Array<NewsPost>> {
+    return this.newsSubject!.asObservable();
   }
 
   public Delete(keys: Array<number>) {
@@ -83,6 +86,7 @@ export class DataRequestService {
             const posts = this.newsSubject?.value;
             posts.push(item);
             this.newsSubject.next(posts);
+            console.log(posts);
           }
         })
       )
