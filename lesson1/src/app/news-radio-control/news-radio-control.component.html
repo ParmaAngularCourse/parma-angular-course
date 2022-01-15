@@ -2,8 +2,8 @@
   <div *ngFor="let item of controlValue.newsTags | keyvalue; let i = index">
     <div
       class="tag"
+      [class.font-weight-bold]="selectedTagKey == i ? true : false"
       (click)="onRadioChange(i)"
-      formControlName="radioControl" !!!!!
       name="radioControl"
       id="radioTag"
       #radioTag
@@ -11,7 +11,12 @@
       <span [appNewsTagStyleDirective]="item.value" class="tag-short">
         {{ item.value | firstLetterPipe }}</span
       >
-      <span class="tooltip"> {{ item.value }}</span>
+      <span
+        class="tooltip"
+        [ngClass]="selectedTagKey == i ? 'selectedTag' : 'tag'"
+      >
+        {{ item.value }}</span
+      >
     </div>
   </div>
   <ng-container

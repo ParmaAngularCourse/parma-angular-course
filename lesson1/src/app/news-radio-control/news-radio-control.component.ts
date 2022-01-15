@@ -1,4 +1,3 @@
-import { KeyValue } from '@angular/common';
 import {
   Component,
   OnInit,
@@ -29,6 +28,7 @@ import { NewsPostTag } from 'src/models/NewsPostTag';
 export class NewsRadioControlComponent implements OnInit, ControlValueAccessor {
   radioControl!: FormControl;
   controlValue!: ControlRadioValue;
+  selectedTagKey!: number;
   onChange!: (_val: ControlRadioValue) => {};
   onTouch!: () => {};
 
@@ -45,14 +45,14 @@ export class NewsRadioControlComponent implements OnInit, ControlValueAccessor {
   }
 
   ngOnInit(): void {
-    this.radioControl = new FormControl(
-       this.controlValue?.selectedTag,
-      [Validators.required]
-    );
+    this.radioControl = new FormControl(this.controlValue?.selectedTag, [
+      Validators.required,
+    ]);
   }
 
   onRadioChange = (index: number) => {
     this.controlValue.selectedTag = this.controlValue.newsTags[index];
+    this.selectedTagKey = index;
     console.log(this.controlValue.selectedTag);
   };
 }

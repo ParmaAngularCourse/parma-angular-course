@@ -8,6 +8,11 @@
   left: 20%;
 }
 
+.selectedTag {
+  @extend .tag;
+  font-weight: bold;
+  visibility: visible !important;
+}
 .tag-short {
   border: 3px solid black;
 }
