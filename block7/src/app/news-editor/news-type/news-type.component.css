@@ -1,0 +1,21 @@
+.input-data-group{
+    margin-bottom: 10px;
+    display: block;
+}
+
+.input-data-label {
+    display: inline-block;
+    width: 90px;
+    text-align: left;
+}
+
+#input-type-block {
+    list-style-type: none;
+    padding-left: 0px;
+}
+
+.type-label{
+    color: white;
+    padding-left: 10px;
+    padding-right: 10px;    
+}
