@@ -1,0 +1,38 @@
+<ng-container *ngIf = "isVisible">
+    <div [formGroup]="editForm" class="mmodal">
+        <div class="mmodal-body">
+            <div id="header-block">
+                <div id="header-caption-block">                
+                    <ng-content></ng-content>
+                </div> 
+                <div id="header-button-block">
+                    <button id = "close-button" class="control-button" type="button" (click)="closeForm()">×</button>
+                </div>                         
+            </div>          
+            <ul class="input-data-block">
+                <li class="input-data-group">              
+                    <label class ="input-data-label">Дата:</label><br> 
+                    <input formControlName="newsDateControl" type="datetime-local">
+                    <p class="invalid-error-text" *ngIf="newsDateControl.invalid && newsDateControl.dirty">{{newsDateControl?.errors?.['message']}}</p>
+                </li>
+                <li class="input-data-group">              
+                    <label class ="input-data-label">Заголовок:</label><br> 
+                    <input formControlName="newsTitleControl" type="text" class="input-data-textbox">
+                    <p class="invalid-error-text" *ngIf="newsTitleControl.invalid && newsTitleControl.dirty">{{newsTitleControl?.errors?.['message']}}</p>
+                </li>
+                <li class="input-data-group">              
+                    <label class ="input-data-label">Текст:</label><br> 
+                    <textarea formControlName="newsBodyControl" class="input-data-textarea"></textarea>
+                    <p class="invalid-error-text" *ngIf="newsBodyControl.invalid && newsBodyControl.dirty">{{newsBodyControl?.errors?.['message']}}</p>
+                </li>
+                <app-news-type formControlName="newsTypeControl"></app-news-type>
+                <p class="invalid-error-text" *ngIf="newsTypeControl.invalid">{{newsTypeControl?.errors?.['message']}}</p>
+            </ul>
+            <div>
+                <button *appCheckAccess = "'Save'" [disabled]="!editForm.valid" class="control-button" (click)="saveForm()">Сохранить</button>
+                <button class="control-button" (click)="closeForm()">Отмена</button>
+            </div>        
+        </div>
+    </div>
+    <div class="mmodal-background" (click)="closeForm()"></div>
+</ng-container>

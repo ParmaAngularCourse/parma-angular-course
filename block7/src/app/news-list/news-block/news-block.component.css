@@ -1,0 +1,84 @@
+.news-block {
+  float: left;
+  display: table-row;
+  width: 30%;
+  height: 265px;
+  margin-left: 10px;
+  margin-bottom: 5px;
+  margin-top: 5px;
+  padding-bottom: 10px; 
+  padding-left: 30px; 
+  position: relative;
+}
+
+.news-body{
+  overflow: auto;
+  height: 150px;
+}
+
+.news-block-uncheked{
+    color: black;
+}
+
+.news-block-cheked{
+    color:darkblue;
+}
+
+.news-header {
+  position: relative;
+}
+
+.news-title{
+  display:flex;
+}
+
+.news-title-block{
+  width: 95%;
+}
+
+.timeline {
+  border-left: 1px solid #a3a3a3;
+  position: absolute;
+  top: 25px;
+  left: -21px;
+  height: 80%;
+}
+
+.circle {
+  height: 10px;
+  width: 10px;
+  border-radius: 50%;
+  background-color: #a3a3a3;
+  position: absolute;
+  left: -25px;
+  top: 5px;
+}
+
+.control-button{
+  margin-right: 10px;
+  background-color: darkblue;
+  color: white;
+  height: 30px;
+  width: 100px;
+  text-align: center;  
+}
+
+.delete{
+  position: absolute;
+  right: 10px;
+  bottom: 10px; 
+}
+
+.save{
+  position: absolute;
+  right: 120px;
+  bottom: 10px; 
+}
+
+.news-type-tag {	
+	height: 30px;
+	width: 30px;
+	color: white;
+	text-align: center;
+	font-size: 1.2em;
+}
