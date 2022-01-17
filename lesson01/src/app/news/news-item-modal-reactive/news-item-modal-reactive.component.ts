@@ -2,15 +2,14 @@ import {
   Component,
   OnInit,
   ChangeDetectionStrategy,
-  Output,
-  EventEmitter,
-  ChangeDetectorRef,
-  OnDestroy
+  ChangeDetectorRef, OnDestroy,
 } from '@angular/core';
 import {NewsItemModel} from "../news-types";
-import {Permission, PermissionService} from "../services/permission.service";
-import {Subject} from "rxjs";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
+import {ActivatedRoute, Router} from "@angular/router";
+import {NewsService} from "../services/news.service";
+import {switchMap, takeUntil} from "rxjs/operators";
+import {Subject} from "rxjs";
 
 @Component({
   selector: 'app-news-item-modal-reactive',
@@ -21,12 +20,7 @@ import {FormControl, FormGroup, Validators} from "@angular/forms";
 export class NewsItemModalReactiveComponent implements OnInit, OnDestroy {
 
   editedItem!: NewsItemModel;
-  isVisible: boolean = false;
-  perms: Permission[] = [];
-
   newsItemFormGroup! : FormGroup;
-
-  @Output() save : EventEmitter<NewsItemModel> = new EventEmitter<NewsItemModel>();
 
   get dateField() : FormControl {
     return this.newsItemFormGroup.get('dateField') as FormControl;
@@ -43,10 +37,11 @@ export class NewsItemModalReactiveComponent implements OnInit, OnDestroy {
 
   private _ngUnsubscribe$: Subject<number>;
 
-  constructor(private _permService : PermissionService,
-              private _cd : ChangeDetectorRef) {
-    this._ngUnsubscribe$ = new Subject();
-    this.perms = this._permService.getPermissions();
+  constructor(private _newsService: NewsService,
+              private _cd : ChangeDetectorRef,
+              private _route: ActivatedRoute,
+              private _router: Router) {
+    this._ngUnsubscribe$ = new Subject<number>();
   }
 
   ngOnInit(): void {
@@ -58,6 +53,9 @@ export class NewsItemModalReactiveComponent implements OnInit, OnDestroy {
     });
 
     this.newsItemFormGroup.valueChanges
+      .pipe(
+        takeUntil(this._ngUnsubscribe$)
+      )
       .subscribe(
         (value => {
           this.editedItem.date = new Date(value.dateField);
@@ -65,7 +63,20 @@ export class NewsItemModalReactiveComponent implements OnInit, OnDestroy {
           this.editedItem.desc = value.descField;
           this.editedItem.tag = value.tagsField;
         })
+      );
+
+    this._route.params
+      .pipe(
+        switchMap(params => {
+          return this._newsService.getItemById(params.id)
+        }),
+        takeUntil(this._ngUnsubscribe$)
       )
+      .subscribe({
+        next: value => {
+          this.show(value);
+        }
+      });
   }
 
   show(item?: NewsItemModel) {
@@ -83,21 +94,29 @@ export class NewsItemModalReactiveComponent implements OnInit, OnDestroy {
       tagsField : this.editedItem.tag
     }, {emitEvent: false})
 
-    this.isVisible = true;
-    this._cd.markForCheck();
+    this._cd.detectChanges();
   }
 
   cancel() {
-    this.newsItemFormGroup.reset();
-    this.isVisible = false;
+    this._router.navigate([{ outlets: {modal: null}}], {relativeTo: this._route.parent}).then(value => {
+      if(value) {
+        this.newsItemFormGroup.reset();
+      }
+    });
   }
 
   saveItem() {
-    this.isVisible = false;
-    this.save.emit(this.editedItem);
+    this._router.navigate([{ outlets: {modal: null}}], {relativeTo: this._route.parent}).then(value => {
+      if(value) {
+        if(this.editedItem.id > 0)
+          this._newsService.editNewsItem(this.editedItem);
+        else
+          this._newsService.addNewsItem(this.editedItem);
+      }
+    });
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this._ngUnsubscribe$.next();
     this._ngUnsubscribe$.complete();
   }

@@ -1,0 +1,7 @@
+[
+  {"tag": "politic", "text": "Политика", "color": "#58B957"},
+  {"tag": "tourism", "text": "Туризм", "color": "#55BFE0"},
+  {"tag": "economy", "text": "Экономика", "color": "#EFAC43"},
+  {"tag": "science", "text": "Наука", "color": "#3D8BCD"},
+  {"tag": "internet", "text": "Интернет", "color": "#999999"}
+]

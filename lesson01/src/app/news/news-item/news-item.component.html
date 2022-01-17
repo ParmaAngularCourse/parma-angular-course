@@ -4,5 +4,5 @@
   <div>{{this.newsItem.date | date:'dd.MM.yyyy HH:mm'}}</div>
   <div>{{this.newsItem.head | capitalize}}</div>
   <button (click)="this.edit()">Редактировать</button>
-  <button (click)="this.remove()" [disabled]="!this.newsItem.selected">Удалить</button>
+  <button (click)="this.remove()" [disabled]="!this.newsItem.selected" *appPermission="'deleteItem'" >Удалить</button>
 </div>

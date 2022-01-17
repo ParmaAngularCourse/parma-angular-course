@@ -1,5 +1,4 @@
 <app-modal-window
-  *ngIf="this.isVisible"
   (modalClose)="this.cancel()"
 >
   <ng-container ngProjectAs="modal-title">{{this.editedItem.id != -1 ? "Изменить новость" : "Добавить новость"}}</ng-container>
@@ -34,7 +33,7 @@
       </div>
     </ng-container>
 
-    <button (click)="this.saveItem()" [disabled]="!this.newsItemFormGroup.valid" *appPermission="this.perms; action:'edit'">Сохранить</button>
+    <button (click)="this.saveItem()" [disabled]="!this.newsItemFormGroup.valid" *appPermission="'edit'">Сохранить</button>
     <button (click)="this.cancel()">Отмена</button>
   </ng-container>
 </app-modal-window>

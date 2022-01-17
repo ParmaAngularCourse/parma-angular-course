@@ -1,9 +1,8 @@
 import {Injectable, OnDestroy} from '@angular/core';
 import {NewsItemModel} from "../news-types";
-import {BehaviorSubject, Observable, Subject} from "rxjs";
+import {BehaviorSubject, Observable, of, Subject} from "rxjs";
 import {HttpClient, HttpErrorResponse, HttpParams} from "@angular/common/http";
-import {map} from 'rxjs/internal/operators/map';
-import {takeUntil} from "rxjs/operators";
+import {map, takeUntil} from "rxjs/operators";
 
 type NewsItem = {
   id: number,
@@ -18,17 +17,21 @@ type NewsItem = {
 })
 export class NewsService implements OnDestroy {
 
-  private _url: string = "http://localhost:3000/api/";
+  private _url: string = "/api/";
   private _newsSubject?: BehaviorSubject<NewsItemModel[]>;
+  private _getItemSub$: BehaviorSubject<boolean>;
   private _ngUnsubscribe$: Subject<number>;
 
   constructor(private _http: HttpClient) {
     this._ngUnsubscribe$ = new Subject<number>();
+    this._getItemSub$ = new BehaviorSubject<boolean>(false);
   }
 
-  public getNews(searchVal: string) : Observable<NewsItemModel[]>{
+  public getNews(searchVal: string, selectedTag : string) : Observable<NewsItemModel[]>{
     this._newsSubject = new BehaviorSubject<NewsItemModel[]>([]);
-    let _params = new HttpParams().set('s', searchVal);
+    let _params = new HttpParams()
+      .set('s', searchVal)
+      .set('t', selectedTag);
 
     this._http.get<NewsItem[]>(this._url + "news", {
       params: _params
@@ -41,6 +44,7 @@ export class NewsService implements OnDestroy {
       )
       .subscribe((value) => {
         this._newsSubject?.next(value);
+        this._getItemSub$.next(true);
     });
 
     return this._newsSubject.asObservable();
@@ -71,13 +75,23 @@ export class NewsService implements OnDestroy {
   }
 
   public addNewsItem(item: NewsItemModel) : void {
-    this._http.put<NewsItemModel>(this._url + "news", item)
+    this._http.put<NewsItem>(this._url + "news",
+      {
+        id : item.id,
+        date: item.date.toISOString(),
+        head: item.head,
+        desc: item.desc,
+        tag: item.tag
+      })
       .pipe(
         takeUntil(this._ngUnsubscribe$)
       )
       .subscribe({
-        complete: () =>
-          this.addNewsItemComplete(item),
+        next: (val) => {
+          item.id = val.id;
+          this.addNewsItemComplete(item);
+        },
+        complete: () => {},
         error: (error: HttpErrorResponse) =>
           console.log(error.status + " " + error.message)
       });
@@ -86,11 +100,6 @@ export class NewsService implements OnDestroy {
   private addNewsItemComplete(item: NewsItemModel) : void {
     if(this._newsSubject) {
       let news: NewsItemModel[] = this._newsSubject.getValue();
-      let maxId = news
-        .map((v) => { return v.id;})
-        .sort()[news.length - 1];
-      maxId = maxId == undefined ? 1 : maxId;
-      item.id = maxId + 1;
       news.push(item);
       this._newsSubject?.next(news);
     }
@@ -116,6 +125,15 @@ export class NewsService implements OnDestroy {
       news[index] = item;
       this._newsSubject?.next(news);
     }
+  }
+
+  public getItemById(newsId: number) : Observable<NewsItemModel | undefined> {
+    if(this._newsSubject) {
+      return this._newsSubject.pipe(
+        map(news => news.find(p => p.id == newsId))
+      )
+    }
+    return of(undefined);
   }
 
   ngOnDestroy(): void {

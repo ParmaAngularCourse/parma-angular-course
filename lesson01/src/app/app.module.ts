@@ -11,11 +11,16 @@ import { MinitagsPipe } from './news/minitags.pipe';
 import { ColorizedLabelDirective } from './news/colorized-label.directive';
 import { PermissionDirective } from './news/permission.directive';
 import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
-import {AuthInterceptorService} from "./news/services/auth-interceptor.service";
+import {AuthInterceptorService} from "./services/auth-interceptor.service";
 import { ModalWindowComponent } from './controls/modal-window/modal-window.component';
 import { NewsItemModalReactiveComponent } from './news/news-item-modal-reactive/news-item-modal-reactive.component';
 import {ReactiveFormsModule} from "@angular/forms";
 import { TagsSelectorComponent } from './news/tags-selector/tags-selector.component';
+import {AppRoutingModule} from "./app-routing.module";
+import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
+import { MainComponent } from './main/main.component';
+import { PersonComponent } from './person/person.component';
+import { LoginComponent } from './login/login.component';
 
 @NgModule({
   declarations: [
@@ -30,10 +35,14 @@ import { TagsSelectorComponent } from './news/tags-selector/tags-selector.compon
     PermissionDirective,
     ModalWindowComponent,
     NewsItemModalReactiveComponent,
-    TagsSelectorComponent
+    TagsSelectorComponent,
+    PageNotFoundComponent,
+    MainComponent,
+    PersonComponent,
+    LoginComponent
   ],
   imports: [
-    BrowserModule, HttpClientModule, ReactiveFormsModule
+    BrowserModule, HttpClientModule, ReactiveFormsModule, AppRoutingModule
   ],
   providers: [{
     provide: HTTP_INTERCEPTORS,
