@@ -6,6 +6,8 @@
       (click)="onRadioChange(i)"
       name="radioControl"
       id="radioTag"
+      [(ngModel)]="controlValue.selectedTag"
+      ngDefaultControl
       #radioTag
     >
       <span [appNewsTagStyleDirective]="item.value" class="tag-short">
@@ -18,17 +20,6 @@
         {{ item.value }}</span
       >
     </div>
-  </div>
-  <ng-container
-    [ngTemplateOutlet]="error"
-    [ngTemplateOutletContext]="{
-      show: radioControl?.errors
-    }"
-  >
-  </ng-container>
+  </div> 
 </div>
-<ng-template #error let-show="show">
-  <div *ngIf="show">
-    <span class="errorText">Должен быть выбран один тип новости</span>
-  </div>
-</ng-template>
+

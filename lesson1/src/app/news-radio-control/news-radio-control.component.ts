@@ -3,11 +3,16 @@ import {
   OnInit,
   ChangeDetectionStrategy,
   Input,
+  ChangeDetectorRef,
 } from '@angular/core';
 import {
+  AbstractControl,
   ControlValueAccessor,
   FormControl,
+  NG_VALIDATORS,
   NG_VALUE_ACCESSOR,
+  ValidationErrors,
+  Validator,
   Validators,
 } from '@angular/forms';
 import { NewsPostTag } from 'src/models/NewsPostTag';
@@ -23,19 +28,40 @@ import { NewsPostTag } from 'src/models/NewsPostTag';
       multi: true,
       useExisting: NewsRadioControlComponent,
     },
+
+    {
+      provide: NG_VALIDATORS,
+      useExisting: NewsRadioControlComponent,
+      multi: true,
+    },
   ],
 })
-export class NewsRadioControlComponent implements OnInit, ControlValueAccessor {
-  radioControl!: FormControl;
+export class NewsRadioControlComponent
+  implements ControlValueAccessor, Validator
+{
   controlValue!: ControlRadioValue;
   selectedTagKey!: number;
   onChange!: (_val: ControlRadioValue) => {};
   onTouch!: () => {};
 
-  constructor() {}
+  constructor(private cdr: ChangeDetectorRef) {}
+
+  validate(control: AbstractControl): ValidationErrors | null {
+    console.log('onValidate' + this.selectedTagKey);
+    if (this.selectedTagKey === -1 || this.selectedTagKey === undefined)
+      return {
+        message: 'не выбран тип новости',
+      };
+    else return null;
+  }
 
   writeValue(obj: ControlRadioValue): void {
     this.controlValue = obj;
+    this.selectedTagKey = this.controlValue.newsTags.indexOf(
+      this.controlValue.selectedTag!
+    );
+    console.log('selectedTag' + this.selectedTagKey);
+    this.cdr.markForCheck();
   }
   registerOnChange(fn: any): void {
     this.onChange = fn;
@@ -44,16 +70,10 @@ export class NewsRadioControlComponent implements OnInit, ControlValueAccessor {
     this.onTouch = fn;
   }
 
-  ngOnInit(): void {
-    this.radioControl = new FormControl(this.controlValue?.selectedTag, [
-      Validators.required,
-    ]);
-  }
-
   onRadioChange = (index: number) => {
     this.controlValue.selectedTag = this.controlValue.newsTags[index];
     this.selectedTagKey = index;
-    console.log(this.controlValue.selectedTag);
+    this.onChange(this.controlValue);
   };
 }
 

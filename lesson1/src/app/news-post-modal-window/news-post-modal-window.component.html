@@ -63,6 +63,13 @@
     <app-news-radio-control
       formControlName="radioControl"
     ></app-news-radio-control>
+    <ng-container
+      [ngTemplateOutlet]="error"
+      [ngTemplateOutletContext]="{
+        show: newsPostForm.get('radioControl')?.errors
+      }"
+    >
+    </ng-container>
   </div>
 
   <div>

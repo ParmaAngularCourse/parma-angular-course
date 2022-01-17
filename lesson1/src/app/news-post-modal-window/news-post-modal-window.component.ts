@@ -8,7 +8,7 @@ import {
   Output,
   ViewChild,
 } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { NewsPost } from 'src/models/NewsPost';
 import { NewsPostTag } from 'src/models/NewsPostTag';
 @Component({
@@ -37,6 +37,10 @@ export class NewsPostModalWindowComponent {
   private editedDate!: string;
   private editedTag = NewsPostTag.noTag;
 
+  constructor (private fb: FormBuilder) {
+
+  }
+
   ngOnInit() {
     this.newsPostForm = new FormGroup({
       textControl: new FormControl(this.newsPost?.text, [Validators.required]),
@@ -46,13 +50,10 @@ export class NewsPostModalWindowComponent {
       dateControl: new FormControl(this.newsPost?.uploadDate, [
         Validators.required,
       ]),
-      radioControl: new FormControl(
-        {
-          newsTags: this.newsTags,
-          selectedTag: this.newsPost?.tag,
-        },
-        [Validators.required]
-      ),
+      radioControl: this.fb.control({
+        newsTags: this.newsTags,
+        selectedTag: this.newsPost?.tag,
+      })
     });
   }
 
