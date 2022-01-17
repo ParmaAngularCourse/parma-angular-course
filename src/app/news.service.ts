@@ -11,7 +11,7 @@ export class NewsService {
 
   constructor(private http: HttpClient) { }
 
-  private newsSubject = new BehaviorSubject<Report[]>([]);
+  private newsSubject: BehaviorSubject<Report[]> = new BehaviorSubject<Report[]>([]);
   newsGetApi = "api/News";
   currentFilter: string | null = null;
   currentType: string | null = null;
@@ -23,6 +23,10 @@ export class NewsService {
         .subscribe((x: any) => this.newsSubject?.next(x));
     }
     return this.newsSubject;
+  }
+
+  public getNewsSubscription(): Observable<Report[]> {
+    return this.newsSubject.asObservable();
   }
 
   public saveReport(report: Report, i: number) {
@@ -52,5 +56,9 @@ export class NewsService {
       news.filter((x: { isChecked: any; }) => x.isChecked).forEach((x: Report) => this.http.post<void> ("api/NewsDelete", x).subscribe());
       this.newsSubject.next(news.filter((x: { isChecked: any; }) => !x.isChecked));
     }
+  }
+
+  ngOnDestroy() {
+    this.newsSubject.unsubscribe();
   }
 }

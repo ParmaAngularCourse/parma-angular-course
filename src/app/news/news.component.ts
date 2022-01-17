@@ -5,10 +5,10 @@ import { NewsService } from '../news.service';
 import { ComponentCanDeactivate, NewsType, newsTypeColors, Report } from './news-types';
 import { Role } from './roles';
 import { Subject } from 'rxjs';
-import { debounceTime, takeUntil } from 'rxjs/operators';
+import { bufferCount, debounceTime, distinctUntilChanged, mergeAll, mergeMap, reduce, takeUntil } from 'rxjs/operators';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../auth.service';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 @Component({
@@ -26,7 +26,23 @@ export class NewsComponent implements ComponentCanDeactivate {
   constructor(private authService: AuthService, private _newsService: NewsService, private ref: ChangeDetectorRef, private router: Router, private route: ActivatedRoute) {
     this.ngUnsubscribe$ = new Subject();
     this.setSearchSubscription();
-    this.getNews();
+    this._newsService.getNewsSubscription().pipe(
+      takeUntil(this.ngUnsubscribe$),
+      map((r: Report[]) => {
+        let colNum = 0;
+        r.forEach(x => x.colNum = colNum < 3 ? ++colNum : colNum = 1);
+        return r;
+      }))
+      .subscribe((data: any) => this.updateView(data));
+    this._newsService.getNewsSubscription().pipe(
+      takeUntil(this.ngUnsubscribe$),
+      mergeMap(x => of(x).pipe(
+        mergeAll(),
+        bufferCount(3),
+        reduce((acc: any, arr: any) => [...acc, arr], []))))
+      .subscribe((tally: any) => {
+        console.log(tally);
+      });
     this.route.queryParams.subscribe(
       (params: any) => {
         this.newsType = params['newsType'] ?? "";
@@ -34,6 +50,10 @@ export class NewsComponent implements ComponentCanDeactivate {
         this.modalIndex = params['modalIndex'] ?? -1;
       }
     );
+  }
+
+  ngOnInit() {
+    this.getNews();
   }
 
   showModal() {
@@ -70,26 +90,24 @@ export class NewsComponent implements ComponentCanDeactivate {
   isDirty = false;
 
   getNews() {
-    this._newsService
-      .getNews(this.searchText ?? "", this.newsType)
-      .pipe(takeUntil(this.ngUnsubscribe$),
-        map((r: Report[]) => {
-          let colNum = 0;
-          r.forEach(x => x.colNum = colNum < 3 ? ++colNum : colNum = 1);
-          return r;
-        })
-      )
-      .subscribe(((data: any) => { this.news = data; this.ref.markForCheck(); this.showModal(); }), (error: HttpErrorResponse) => console.log(error));
+    return this._newsService
+      .getNews(this.searchText ?? "", this.newsType);
+  }
+
+  updateView(data: any) {
+    this.news = data;
+    this.ref.markForCheck();
+    this.showModal();
   }
 
   setSearchSubscription() {
     this.searchSubject.pipe(
-      debounceTime(600)
+      takeUntil(this.ngUnsubscribe$),
+      debounceTime(600),
+      distinctUntilChanged()
     ).subscribe((searchText: string) => {
-      if (searchText != this.searchText) {
-        this.searchText = searchText;
-        this.getNews();
-      }
+      this.searchText = searchText;
+      this.getNews();
     });
   }
 
@@ -152,7 +170,6 @@ export class NewsComponent implements ComponentCanDeactivate {
   ngOnDestroy() {
     this.ngUnsubscribe$.next(0);
     this.ngUnsubscribe$.complete();
-    this.searchSubject.unsubscribe();
   }
 
   canDeactivate(): boolean | Observable<boolean> {
