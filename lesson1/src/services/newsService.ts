@@ -17,6 +17,10 @@ export class NewsService {
     return this.requestService.Get();
   }
 
+  public Find(clause: string) {
+    return this.requestService.Find(clause);
+  }
+
   public Add(item: NewsPost) {
     this.requestService.Add(item);
   }

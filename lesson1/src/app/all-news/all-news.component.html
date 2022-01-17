@@ -1,6 +1,10 @@
 <div (click)="disableContextMenu()" oncontextmenu="return false;">
 
 
+    <div>
+        <input #search type="text" placeholder="Поиск" class="searchBar" (change)="Search(search.value)">
+    </div>
+
     <app-modal-common [operationTitle]="getTitle()">
         <app-news-post-modal-window (saveNews)="onAddNewsPost($event)" [newsPost]="postToEdit" [userPermissions]="userPermission" (cancel)="onCloseModal()">
 

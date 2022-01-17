@@ -20,6 +20,17 @@
         {{ item.value }}</span
       >
     </div>
-  </div> 
 </div>
-
+<ng-container
+  [ngTemplateOutlet]="error"
+  [ngTemplateOutletContext]="{
+    show: ngControl?.control?.errors
+  }"
+>
+</ng-container>
+</div>
+<ng-template #error let-show="show">
+<div *ngIf="show">
+  <span class="errorText">Должен быть выбран один тип новости</span>
+</div>
+</ng-template>

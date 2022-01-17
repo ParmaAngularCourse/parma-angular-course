@@ -93,6 +93,11 @@ export class AllNewsComponent {
     return this.postToEdit.id === -1 ? 'Добавление' : 'Редактирование';
   }
 
+
+  Search(clause: string){
+    this._newsService.Find(clause);
+  }
+
   onPermissionToggleClick() {
     this.userPermission = !this.userPermission;
   }
