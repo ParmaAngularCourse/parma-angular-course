@@ -21,9 +21,7 @@
     <input class="edit-input" id={{header}} type={{type}} formControlName={{name}} value="report.{{name}}">
   </ng-template>
   <ng-template #radioTpl let-name="name" let-enum="enum" let-colors="colors">
-    <div *ngFor="let item of enum | keyvalue">
-      <app-crazy-radio [appNewsTypeStyle]="colors.get(item.value)" value={{item.value}} formControlName={{name}}>{{item.value}}</app-crazy-radio>
-    </div>
+    <app-custom-radio [enum]="enum" [colors]="colors" formControlName={{name}}></app-custom-radio>
   </ng-template>
   <ng-container *ngIf="canSubmit">
     <button [disabled]="!form?.valid" *appRights="roleEnum.ModalSaver" type="submit">{{submitName}}</button>
