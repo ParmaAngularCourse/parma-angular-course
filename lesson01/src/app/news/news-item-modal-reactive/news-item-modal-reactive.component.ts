@@ -53,6 +53,9 @@ export class NewsItemModalReactiveComponent implements OnInit, OnDestroy {
     });
 
     this.newsItemFormGroup.valueChanges
+      .pipe(
+        takeUntil(this._ngUnsubscribe$)
+      )
       .subscribe(
         (value => {
           this.editedItem.date = new Date(value.dateField);
@@ -60,30 +63,20 @@ export class NewsItemModalReactiveComponent implements OnInit, OnDestroy {
           this.editedItem.desc = value.descField;
           this.editedItem.tag = value.tagsField;
         })
+      );
+
+    this._route.params
+      .pipe(
+        switchMap(params => {
+          return this._newsService.getItemById(params.id)
+        }),
+        takeUntil(this._ngUnsubscribe$)
       )
-
-    this._route.url.subscribe(value => {
-      switch (value[0].path){
-        case "add" : this.show(); break;
-        case "edit" : {
-          this._route.params
-            .pipe(
-              switchMap(params => {
-                return this._newsService.getItemById(params.id)
-              }),
-              takeUntil(this._ngUnsubscribe$)
-            )
-            .subscribe({
-            next: value => {
-              this.show(value);
-            }
-          })
-          break;
+      .subscribe({
+        next: value => {
+          this.show(value);
         }
-        default: this.cancel(); break;
-      }
-    });
-
+      });
   }
 
   show(item?: NewsItemModel) {

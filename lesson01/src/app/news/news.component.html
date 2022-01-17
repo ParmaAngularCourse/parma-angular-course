@@ -5,36 +5,19 @@
 <button (click)="this.onAdd()">Добавить</button>
 <button (click)="this.onDeleteSelected()" [disabled]="!this.isSomeItemSelected" *appPermission="'deleteItem'" >Удалить</button>
 
+
 <div style="margin-top: 10px;">
-  <div style="width: 350px; float: left;">
-    <div>Колонка 1</div>
-    <app-news-item
-      *ngFor="let newItem of this.newsTab1"
-      [newsItem]="newItem"
-      (removeItem)="this.onRemoveItem($event)"
-      (editItem)="this.onEditItem($event)"
-      (contextmenu)="this.onContextMenu($event)">
-    </app-news-item>
-  </div>
-  <div style="width: 350px; float: left;">
-    <div>Колонка 2</div>
-    <app-news-item
-      *ngFor="let newItem of this.newsTab2"
-      [newsItem]="newItem"
-      (removeItem)="this.onRemoveItem($event)"
-      (editItem)="this.onEditItem($event)"
-      (contextmenu)="this.onContextMenu($event)">
-    </app-news-item>
-  </div>
-  <div style="width: 350px; float: left;">
-    <div>Колонка 3</div>
-    <app-news-item
-      *ngFor="let newItem of this.newsTab3"
-      [newsItem]="newItem"
-      (removeItem)="this.onRemoveItem($event)"
-      (editItem)="this.onEditItem($event)"
-      (contextmenu)="this.onContextMenu($event)">
-    </app-news-item>
+  <div *ngFor="let _ of this.newsTabs[0]; let i = index" style="width: 350px; float: left;">
+    <div>Колонка {{i + 1}}</div>
+    <ng-container *ngFor="let newItem of this.newsTabs">
+      <app-news-item
+        *ngIf="!!newItem[i]"
+        [newsItem]="newItem[i]"
+        (removeItem)="this.onRemoveItem($event)"
+        (editItem)="this.onEditItem($event)"
+        (contextmenu)="this.onContextMenu($event)">
+      </app-news-item>
+    </ng-container>
   </div>
 </div>
 

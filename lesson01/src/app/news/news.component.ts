@@ -30,9 +30,7 @@ import {ActivatedRoute, Router} from "@angular/router";
 })
 export class NewsComponent implements OnInit, OnDestroy {
 
-  newsTab1: NewsItemModel[] = [];
-  newsTab2: NewsItemModel[] = [];
-  newsTab3: NewsItemModel[] = [];
+  newsTabs: NewsItemModel[][] = [];
   private readonly _ngUnsubscribe$: Subject<number>;
   private _selectedTag : string = "";
   private _searchVal : string = "";
@@ -41,9 +39,7 @@ export class NewsComponent implements OnInit, OnDestroy {
   @ViewChild('contextMenuComponent') menuComponent! : ContextMenuComponent;
   @ViewChildren(NewsItemComponent) newsItemComponents!: QueryList<NewsItemComponent>;
   get isSomeItemSelected(): boolean {
-    return this.newsTab1.filter(p => p.selected).length > 0 ||
-      this.newsTab2.filter(p => p.selected).length > 0 ||
-      this.newsTab3.filter(p => p.selected).length > 0;
+    return this.newsTabs.some(row => row.filter(p => p.selected).length > 0);
   }
 
   constructor(private _newsService: NewsService,
@@ -93,9 +89,7 @@ export class NewsComponent implements OnInit, OnDestroy {
       )
       .subscribe({
         next: value => {
-          this.newsTab1 = value.filter(p => p[0] != null).map(m => {return m[0];})
-          this.newsTab2 = value.filter(p => p[1] != null).map(m => {return m[1];})
-          this.newsTab3 = value.filter(p => p[2] != null).map(m => {return m[2];})
+          this.newsTabs = value;
           this._cd.detectChanges();
         }
       });
@@ -128,11 +122,10 @@ export class NewsComponent implements OnInit, OnDestroy {
   }
 
   onDeleteSelected() {
-    let selectedList = this.newsTab1.filter(p => p.selected);
-    selectedList = selectedList.concat(this.newsTab2.filter(p => p.selected));
-    selectedList = selectedList.concat(this.newsTab3.filter(p => p.selected));
-    selectedList.forEach(selectedItem => {
-      this.onRemoveItem(selectedItem.id);
+    this.newsTabs.forEach(row => {
+      row.filter(item => item.selected).forEach(selectedItem => {
+        this.onRemoveItem(selectedItem.id);
+      });
     });
   }
 

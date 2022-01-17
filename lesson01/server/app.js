@@ -1,6 +1,5 @@
 const express = require("express");
 const fs = require("fs");
-const {toNumbers} = require("@angular/compiler-cli/src/diagnostics/typescript_version");
 
 const objectsFileBd = "objects.json";
 const tagsFileBd = "tags.json";

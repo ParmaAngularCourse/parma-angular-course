@@ -21,7 +21,7 @@ export class PersonInfoService implements OnDestroy {
 
   constructor(private _http: HttpClient) {
     this._ngUnsubscribe$ = new Subject<number>();
-    this._infoSubject = new BehaviorSubject<PersonInfo>({} as PersonInfo);
+    this._infoSubject = new BehaviorSubject<PersonInfo>({name: "", family: ""} as PersonInfo);
     this._permissionSubject = new BehaviorSubject<Permission[]>([]);
   }
 
@@ -46,8 +46,7 @@ export class PersonInfoService implements OnDestroy {
     return loginSubject.asObservable();
   }
 
-  public logout() : Observable<void> {
-    let logoutSubject = new Subject<void>();
+  public logout() : void  {
     this._http.get<void>(this._url + "logout")
       .pipe(
         takeUntil(this._ngUnsubscribe$)
@@ -55,13 +54,11 @@ export class PersonInfoService implements OnDestroy {
       .subscribe({
         next: _ => {
           this._authToken = undefined;
-          logoutSubject?.next();
           this._isInfoLoaded = false;
           this._isPermissionLoaded = false;
           this._isAuthorizeSubject?.next(false);
         }
       });
-    return logoutSubject.asObservable();
   }
 
   public getPersonInfo() : Observable<PersonInfo> {

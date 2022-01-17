@@ -1,7 +1,7 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {PersonInfoService} from "./services/person-info.service";
-import {Subject, Subscription} from "rxjs";
-import {takeUntil} from "rxjs/operators";
+import {of, Subject} from "rxjs";
+import {switchMap, takeUntil} from "rxjs/operators";
 import {Router} from "@angular/router";
 
 @Component({
@@ -15,50 +15,29 @@ export class AppComponent implements OnInit, OnDestroy {
   isAuthorized: boolean = false;
   userName: string = "";
   private _ngUnsubscribe$: Subject<number>;
-  private persInfoSubscribe$: Subscription;
 
   constructor(private _personInfoService: PersonInfoService,
               private _router : Router) {
     this._ngUnsubscribe$ = new Subject<number>();
-    this.persInfoSubscribe$ = new Subscription();
   }
 
   ngOnInit(): void {
     this._personInfoService.isAuthorize()
       .pipe(
+        switchMap(isAuthorized => {
+          this.isAuthorized = isAuthorized;
+          return isAuthorized ? this._personInfoService.getPersonInfo() : of(null)
+        }),
         takeUntil(this._ngUnsubscribe$)
       )
-      .subscribe(val => {
-        this.isAuthorized = val;
-        if (this.isAuthorized)
-          this.addPersonalInfoSubscription();
+      .subscribe(personalInfo => {
+        this.userName = personalInfo ? personalInfo.name + " " + personalInfo.family : ''
       });
   }
 
   logout(): void {
-    this._router.navigate(['login']).then(value => {
-      if(value) {
-        this._personInfoService.logout()
-          .pipe(
-            takeUntil(this._ngUnsubscribe$)
-          )
-          .subscribe(_ => {
-            this.removePersonalInfoSubscription();
-          });
-      }
-    });
-  }
-
-  private addPersonalInfoSubscription() : void {
-    this.persInfoSubscribe$ = this._personInfoService.getPersonInfo()
-      .subscribe(
-        val => this.userName = val.name + " " + val.family
-      );
-  }
-
-  private removePersonalInfoSubscription() : void {
-    this.persInfoSubscribe$.unsubscribe();
-    this.userName = "";
+    this._personInfoService.logout();
+    this._router.navigate(['login']).then(_ => {});
   }
 
   ngOnDestroy(): void {
