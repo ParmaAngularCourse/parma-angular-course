@@ -1,0 +1,8 @@
+<div class="field">
+    <div>
+        <label for="type">Тип</label>
+    </div>
+    <div *ngFor="let item of getNewsTypeValues()">
+        <div [newsTypeStyles]="item" class="option" [ngClass]="item === typeValue ? 'selected': ''" (click)="setNewsTypeValue(item)">{{item}}</div>
+    </div>
+</div>

@@ -33,3 +33,7 @@
 .news-actions {
     text-align: end;
 }
+
+h4 {
+    word-break: break-word;
+}

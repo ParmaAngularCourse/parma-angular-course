@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { AppComponent } from './app.component';
@@ -13,6 +14,7 @@ import { NewsTypeStylesDirective } from './news-type-styles.directive';
 import { NewsTitlePipe } from './news-title.pipe';
 import { NewsTypeBadgePipe } from './news-type-badge.pipe';
 import { HttpInterceptorService } from './http-interceptor.service';
+import { NewsTypeComponent } from './news-list/news-type/news-type.component';
 
 @NgModule({
   declarations: [
@@ -25,11 +27,13 @@ import { HttpInterceptorService } from './http-interceptor.service';
     ShowByRolesDirective,
     NewsTypeStylesDirective,
     NewsTitlePipe,
-    NewsTypeBadgePipe
+    NewsTypeBadgePipe,
+    NewsTypeComponent
   ],
   imports: [
     BrowserModule,
-    HttpClientModule
+    HttpClientModule,
+    ReactiveFormsModule
   ],
   providers: [
     {

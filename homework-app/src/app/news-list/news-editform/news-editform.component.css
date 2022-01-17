@@ -40,3 +40,15 @@
   overflow: auto;
   background-color: rgba(0,0,0,0.4);
 }
+
+.alert-danger {
+  color: #721c24;
+  background-color: #f8d7da;
+  border-color: #f5c6cb;
+  position: relative;
+  padding: 0.5rem 0.75rem;
+  margin-bottom: 1rem;
+  border: 1px solid transparent;
+  border-radius: 0.25rem;
+  width: fit-content;
+}

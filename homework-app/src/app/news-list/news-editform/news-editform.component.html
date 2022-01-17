@@ -1,45 +1,48 @@
 <div class="modal" *ngIf='showEditForm'>
-    <div class="edit-form">
+    <div [formGroup]="editForm" class="edit-form">
         <ng-content></ng-content>
-        <ng-container *ngTemplateOutlet="dateFieldTemplate; context: { label: 'Дата', date: news.date, changeMethod: dateChanged.bind(this) }"></ng-container>
-        <ng-container *ngTemplateOutlet="textFieldTemplate; context: { label: 'Заголовок', text: news.title, changeMethod: titleChanged.bind(this) }"></ng-container>
-        <ng-container *ngTemplateOutlet="textFieldTemplate; context: { label: 'Текст', text: news.text, changeMethod: textChanged.bind(this) }"></ng-container>
-        <ng-container *ngTemplateOutlet="radioFieldTemplate; context: { label: 'Тип', items: getNewsTypeValues(), selected: news.type, changeMethod: typeChanged.bind(this) }"></ng-container>
+        <div class="field">
+            <div>
+                <label for="date">Дата</label>
+            </div>
+            <div>
+                <input type="datetime-local" id="date" formControlName="date">
+            </div>
+            <div class="alert-danger" *ngIf="editForm.get('date')?.invalid && editForm.get('date')?.touched">
+                Введите корректную дату
+            </div>
+        </div>
+        <div class="field">
+            <div>
+                <label for="title">Заголовок</label>
+            </div>
+            <div>
+                <textarea id="title" class="text-field" formControlName="title"></textarea>
+            </div>
+            <div class="alert-danger" *ngIf="editForm.get('title')?.invalid && editForm.get('title')?.touched">
+                Укажите заголовок новости
+            </div>
+        </div>
+        <div class="field">
+            <div>
+                <label for="text">Текст</label>
+            </div>
+            <div>
+                <textarea id="text" class="text-field" formControlName="text"></textarea>
+            </div>
+            <div class="alert-danger" *ngIf="editForm.get('text')?.invalid && editForm.get('text')?.touched">
+                Укажите текст новости
+            </div>
+        </div>
+        <div class="field">
+            <app-news-type formControlName="type"></app-news-type>
+            <div class="alert-danger" *ngIf="editForm.get('type')?.errors?.['forbiddenNews']">
+                Не надо нам тут на такие темы новости писать!
+            </div>
+        </div>
         <div class="news-actions">
-            <button class="news-button" (click)="save()" *showByRoles>Сохранить</button>
+            <button class="news-button" (click)="save()" *showByRoles [disabled]="!editForm.valid">Сохранить</button>
             <button class="news-button" (click)="close()">Отмена</button>
         </div>
     </div>
 </div>
-
-<ng-template #dateFieldTemplate let-labelText="label" let-date="date" let-changeMethod="changeMethod">
-    <div class="field">
-        <div>
-            <label for="date">{{labelText}}</label>
-        </div>
-        <div>
-            <input type="datetime-local" id="date" [value]="getDateString(date)" #newsDate (change)="changeMethod(newsDate.value)">
-        </div>
-    </div>
-</ng-template>
-<ng-template #textFieldTemplate let-labelText="label" let-text="text" let-changeMethod="changeMethod">
-    <div class="field">
-        <div>
-            <label for="text">{{labelText}}</label>
-        </div>
-        <div>
-            <textarea id="text" class="text-field" [value]="text" #newsText (change)="changeMethod(newsText.value)"></textarea>
-        </div>
-    </div>
-</ng-template>
-<ng-template #radioFieldTemplate let-labelText="label" let-items="items" let-selected="selected" let-changeMethod="changeMethod">
-    <div class="field">
-        <div>
-            <label for="text">{{labelText}}</label>
-        </div>
-        <div *ngFor="let item of items">
-            <input type="radio" id="choice" class="radio-field" name="choice" [value]="item" [checked]="item == selected" #newsType (change)="changeMethod(newsType.value)">
-            <label for="choice" [newsTypeStyles]="item">{{item}}</label>
-        </div>
-    </div>
-</ng-template>

@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -37,10 +37,35 @@ export class NewsService {
             selected: false
           };
         }))
-      ).subscribe((value) => {
+      )
+      .subscribe((value) => {
         this.newsSubject?.next(value);
       });
     }
+    return this.newsSubject.asObservable();
+  }
+
+  public getFilteredNewsList(searchText: string): Observable<News[]> {
+    this.newsSubject = new BehaviorSubject<News[]>([]);
+
+    let params = new HttpParams().set('searchText', searchText);
+    this.http.get<NewsObj[]>(
+        `${this.serverUrl}/api/news`,
+        { params: params }
+      ).pipe(
+        map(item => item.map(news => {
+          return {
+            id: news.id,
+            date: new Date(news.date),
+            title: news.title,
+            text: news.text,
+            type: news.type,
+            selected: false
+          };
+        }))
+      ).subscribe((value) => {
+        this.newsSubject?.next(value);
+      });
     return this.newsSubject.asObservable();
   }
 
@@ -84,6 +109,7 @@ export class NewsService {
           type: news.type,
           selected: false
         };
+
         if(this.newsSubject){
           const data = this.newsSubject.value;
           const replaceIndex = data.findIndex(item => item.id == newsEdited.id);
