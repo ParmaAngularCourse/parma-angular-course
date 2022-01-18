@@ -3,7 +3,6 @@ import { ContextMenuComponent } from './context-menu/context-menu.component';
 import { Information, NewsTypes, UserRightsObj } from './news-types';
 import { PostEditorComponent } from './post-editor/post-editor.component';
 
-
 @Component({
   selector: 'app-news',
   templateUrl: './news.component.html',
@@ -17,6 +16,7 @@ export class NewsComponent implements OnInit {
 
 
   public userRights: UserRightsObj = {isUsercanDeleteNews: true, isUsercanEditNews: true};
+
 
   public informationList: Information[] = [
     {
