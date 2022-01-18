@@ -20,41 +20,20 @@ export class NewsEditformComponent implements OnInit, OnChanges {
 
   private ngUnsubscribe$: Subject<boolean>;
 
-  private dateFieldValue: Date = new Date();
-  private titleFieldValue: string = "";
-  private textFieldValue: string = "";
-  private typeFieldValue: NewsType = NewsType.Politics;
-
   constructor(private cdr: ChangeDetectorRef, private fb: FormBuilder) { 
     this.ngUnsubscribe$ = new Subject();
   }
 
   ngOnInit(): void {
     this.editForm = this.fb.group({
-      date: [this.getDateString(this.dateFieldValue), [Validators.required]],
-      title: [this.titleFieldValue, [Validators.required]],
-      text: [this.textFieldValue, [Validators.required]],
-      type: [this.typeFieldValue, [Validators.required]]
+      date: [this.getDateString(new Date()), [Validators.required]],
+      title: ['', [Validators.required]],
+      text: ['', [Validators.required]],
+      type: [NewsType.Politics, [Validators.required]]
     });
-
-    this.editForm.valueChanges.pipe(filter(() => this.editForm.valid))
-      .pipe(
-        takeUntil(this.ngUnsubscribe$)
-      )
-      .subscribe((value) => {
-        this.dateFieldValue = new Date(value.date);
-        this.titleFieldValue = value.title;
-        this.textFieldValue = value.text;
-        this.typeFieldValue = value.type;
-      });
   }
 
   ngOnChanges(): void {
-    this.dateFieldValue = this.news.date;
-    this.titleFieldValue = this.news.title;
-    this.textFieldValue = this.news.text;
-    this.typeFieldValue = this.news.type;
-
     this.editForm?.setValue({
       date: this.getDateString(this.news.date),
       title: this.news.title,
@@ -71,10 +50,7 @@ export class NewsEditformComponent implements OnInit, OnChanges {
   save() {
     this.saveNews.emit({
       ...this.news,
-      date:  this.dateFieldValue,
-      title: this.titleFieldValue,
-      text: this.textFieldValue,
-      type: this.typeFieldValue
+      ...this.editForm.value
     });
   }
 

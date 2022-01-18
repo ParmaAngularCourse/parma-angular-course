@@ -6,15 +6,9 @@
             <label for="search">Поиск: </label>
             <input type="text" id="search" [formControl]="search"/>
         </div>
-        <div class="row">
-            <div class="column">
-                <app-news *ngFor='let news of newsColumn1' [newsItem]='news' (removeNews)='onRemoveNews($event)' (editNews)='openEditNewsDialog($event)'></app-news>
-            </div>
-            <div class="column">
-                <app-news *ngFor='let news of newsColumn2' [newsItem]='news' (removeNews)='onRemoveNews($event)' (editNews)='openEditNewsDialog($event)'></app-news>
-            </div>
-            <div class="column">
-                <app-news *ngFor='let news of newsColumn3' [newsItem]='news' (removeNews)='onRemoveNews($event)' (editNews)='openEditNewsDialog($event)'></app-news>
+        <div class="row" *ngFor="let row of newsGrid">
+            <div class="column" *ngFor="let news of row">
+                <app-news [newsItem]='news' (removeNews)='onRemoveNews($event)' (editNews)='openEditNewsDialog($event)'></app-news>
             </div>
         </div>
     </div>

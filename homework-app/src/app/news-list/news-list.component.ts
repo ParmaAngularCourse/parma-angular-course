@@ -1,7 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { debounceTime, distinctUntilChanged, forkJoin, Subject, switchMap, takeUntil, from, toArray, bufferCount } from 'rxjs';
+import { debounceTime, distinctUntilChanged, forkJoin, Subject, switchMap, takeUntil, from, toArray, bufferCount, startWith } from 'rxjs';
 import { NewsService } from '../news.service';
 import { ContextMenuComponent } from './context-menu/context-menu.component';
 import { NewsEditformComponent } from './news-editform/news-editform.component';
@@ -15,15 +15,12 @@ import { News, NewsType } from './news-types';
 })
 export class NewsListComponent implements OnInit, OnDestroy {
 
-  public allNews: News[] = [];
   public newsToEdit: News = this.generateEmptyNews();
   public isEditMode: boolean = false;
   public search!: FormControl;
   public searchStr: string = '';
 
-  public newsColumn1: News[] = [];
-  public newsColumn2: News[] = [];
-  public newsColumn3: News[] = [];
+  public newsGrid: News[][] = [];
 
   @ViewChild(NewsEditformComponent) private viewEditForm!: NewsEditformComponent;
   @ViewChild("contextMenuComponent") private viewContextMenu!: ContextMenuComponent;
@@ -32,7 +29,6 @@ export class NewsListComponent implements OnInit, OnDestroy {
 
   constructor(private _newsService: NewsService, private cdr: ChangeDetectorRef) {
     this.ngUnsubscribe$ = new Subject();
-    this.getAllNews();
   }
 
   ngOnInit(): void {
@@ -40,24 +36,23 @@ export class NewsListComponent implements OnInit, OnDestroy {
     this.search.valueChanges.pipe(
       debounceTime(600),
       distinctUntilChanged(),
+      startWith(''),
       switchMap((value) => {
         return this._newsService.getFilteredNewsList(value);
+      }),
+      switchMap((data) => {
+        return from(data).pipe(
+          bufferCount(3),
+          toArray()
+        );
       }),
       takeUntil(this.ngUnsubscribe$)
     )
     .subscribe(
       { next: (data) => {
-        let selectedNewsIds = this.allNews.filter(n => n.selected).map(n => n.id);
-        this.allNews = data;
-        this.allNews.forEach((value: News) => {
-          if(selectedNewsIds.includes(value.id))
-            value.selected = true;
-        });
-        this.newsColumn1 = [];
-        this.newsColumn2 = [];
-        this.newsColumn3 = [];
-        this.updateNewsColumns();        
-        },
+        this.newsGrid = data;
+        this.cdr.markForCheck();
+      },
         error: (error: HttpErrorResponse) => { console.log(`${error.status} ${error.message}`); }
       }
     );
@@ -68,73 +63,23 @@ export class NewsListComponent implements OnInit, OnDestroy {
       this.ngUnsubscribe$.complete();
   }
 
-  updateNewsColumns() {
-    from(this.allNews).pipe(
-      bufferCount(3),
-      toArray()
-    )
-    .subscribe(result => {
-      this.newsColumn1 = [];
-      this.newsColumn2 = [];
-      this.newsColumn3 = [];
-      result.forEach(item => {
-          this.newsColumn1.push(item[0]);
-          if (item.length > 1) {
-            this.newsColumn2.push(item[1]);
-            if (item.length > 2) 
-              this.newsColumn3.push(item[2]);
-          }
-        }
-      );
-      this.cdr.markForCheck();
-    }); 
-  }
-
-  getAllNews() {
-    this._newsService.getNewsList().pipe(
-      takeUntil(this.ngUnsubscribe$)
-    )
-    .subscribe(
-      { next: (data) => {
-        let selectedNewsIds = this.allNews.filter(n => n.selected).map(n => n.id);
-        this.allNews = data;
-        this.allNews.forEach((value: News) => {
-          if(selectedNewsIds.includes(value.id))
-            value.selected = true;
-        });
-        this.newsColumn1 = [];
-        this.newsColumn2 = [];
-        this.newsColumn3 = [];
-        this.updateNewsColumns();  
-        },
-        error: (error: HttpErrorResponse) => { console.log(`${error.status} ${error.message}`); }
-      }
-    );
-  }
-
   onRemoveNews($event: number) {
     this._newsService.removeNews($event).pipe(
       takeUntil(this.ngUnsubscribe$)
-    ).subscribe(result => 
-      this.updateNewsColumns()
-    );
+    ).subscribe();
   }
 
   onSaveNews(newsToSave: News) {
     if(this.isEditMode) {
       this._newsService.updateNews(newsToSave).pipe(
         takeUntil(this.ngUnsubscribe$)
-      ).subscribe(result => 
-        this.updateNewsColumns()
-      );
+      ).subscribe();
     }
     else {
-      newsToSave.id = Math.max(...(this.allNews.map(el => el.id))) + 1;
+      newsToSave.id = Math.max(...(this.newsGrid.flat().map(el => el.id))) + 1;
       this._newsService.addNews(newsToSave).pipe(
         takeUntil(this.ngUnsubscribe$)
-      ).subscribe(result => 
-        this.updateNewsColumns()
-      );
+      ).subscribe();
     }
     this.viewEditForm.closeWindow();
   }
@@ -151,17 +96,15 @@ export class NewsListComponent implements OnInit, OnDestroy {
   }
 
   hasSelectedNews() {
-    return this.allNews.some(item => item.selected);
+    return this.newsGrid.flat().some(item => item.selected);
   }
   
   removeSelectedNews() {
-    let removeCalls: any[] = this.allNews.filter(item => item.selected)
+    let removeCalls: any[] = this.newsGrid.flat().filter(item => item.selected)
       .map(item => this._newsService.removeNews(item.id));
     forkJoin(removeCalls).pipe(
       takeUntil(this.ngUnsubscribe$)
-    ).subscribe(result => 
-      this.updateNewsColumns()
-    );
+    ).subscribe();
   }
 
   openEditNewsDialog(newsToEdit: News) {
@@ -184,8 +127,9 @@ export class NewsListComponent implements OnInit, OnDestroy {
   }
 
   onSelectAll() {
-    this.allNews = this.allNews.map(el => { return {...el, selected: true} });
-    this.updateNewsColumns();
+    this.newsGrid = this.newsGrid.map(row => {
+      return row.map(el => { return {...el, selected: true} })
+    });
   }
 
   private generateEmptyNews() : News {
