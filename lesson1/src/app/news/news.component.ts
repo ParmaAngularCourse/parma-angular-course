@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnInit, ViewChild } from '@angular/core';
 import { ContextMenuComponent } from './context-menu/context-menu.component';
-import { Information, NewsTypes } from './news-types';
+import { Information, NewsTypes, UserRightsObj } from './news-types';
 import { PostEditorComponent } from './post-editor/post-editor.component';
 
 @Component({
@@ -15,11 +15,15 @@ export class NewsComponent implements OnInit {
   public editorTitle?: string;
 
 
+  public userRights: UserRightsObj = {isUsercanDeleteNews: true, isUsercanEditNews: true};
+
+
   public informationList: Information[] = [
     {
       date: "1900-01-01",
       title: "Новость 1", 
       newsType: NewsTypes.Politic,
+      text: "знайка шел гулять на речку, перепрыгнул через овечку"
     },
     {
       date: "1900-12-01",
@@ -107,6 +111,10 @@ export class NewsComponent implements OnInit {
 
     this.contextMenu.show({top: $event.clientY + 15, left: $event.clientX + 15});
     return false;
+  }
+
+  contextMenuClose(){
+    this.contextMenu.hide();
   }
 
 

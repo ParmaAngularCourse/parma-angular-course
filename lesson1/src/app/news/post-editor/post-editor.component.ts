@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Information, NewsTypes } from '../news-types';
+import { Information, NewsTypes, UserRightsObj } from '../news-types';
 
 @Component({
   selector: 'app-post-editor',
@@ -10,6 +10,8 @@ import { Information, NewsTypes } from '../news-types';
 export class PostEditorComponent implements OnInit {
 
   @Input("edit_post_data") edit_post!: Information;
+  @Input("user_data") userRights!: UserRightsObj;
+  
   @Output() savePost: EventEmitter<Information> = new EventEmitter(); 
   @Output() cancelEditPost: EventEmitter<boolean> = new EventEmitter(); 
   

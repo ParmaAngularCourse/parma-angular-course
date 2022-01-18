@@ -6,6 +6,10 @@ import { NewsComponent } from './news/news.component';
 import { SinglePostComponent } from './news/single-post/single-post.component';
 import { PostEditorComponent } from './news/post-editor/post-editor.component';
 import { ContextMenuComponent } from './news/context-menu/context-menu.component';
+import { NewsHeaderPipePipe } from './news/news-header-pipe.pipe';
+import { NewsTypePipePipe } from './news/news-type-pipe.pipe';
+import { NewsTypeStylesDirective } from './news/news-type-styles.directive';
+import { UserRightsStrDirective } from './user-rights-str.directive';
 
 @NgModule({
   declarations: [
@@ -13,7 +17,11 @@ import { ContextMenuComponent } from './news/context-menu/context-menu.component
     NewsComponent,
     SinglePostComponent,
     PostEditorComponent,
-    ContextMenuComponent
+    ContextMenuComponent,
+    NewsHeaderPipePipe,
+    NewsTypePipePipe,
+    NewsTypeStylesDirective,
+    UserRightsStrDirective
   ],
   imports: [
     BrowserModule

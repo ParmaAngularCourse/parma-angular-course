@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy } from '@angular/core';
 import { Component, Input, OnInit, Output } from '@angular/core';
 import { EventEmitter } from '@angular/core';
-import { Information } from '../news-types';
+import { Information, NewsTypes } from '../news-types';
 
 
 @Component({
@@ -37,5 +37,31 @@ export class SinglePostComponent implements OnInit {
   changeCheckbox(param: Information){
     this.checkPost.emit(param);
   }
+
+  getNewsTypeClass(value?: NewsTypes) {
+    let result = "politic";
+    
+    switch (value) {
+      case NewsTypes.Politic:
+        result = "politic";
+      break;
+      case NewsTypes.Travel:
+        result = "travel";
+      break;
+      case NewsTypes.Economic:
+        result = "economic";
+      break;
+      case NewsTypes.Since:
+        result = "since";
+      break;
+      case NewsTypes.Internet:
+        result = "internet";
+      break;
+    }
+
+    return result ;
+  }
+
+
 
 }

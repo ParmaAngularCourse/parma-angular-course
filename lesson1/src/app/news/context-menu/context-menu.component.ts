@@ -23,6 +23,11 @@ export class ContextMenuComponent implements OnInit {
     this.position = newPosition;
   }
 
+  hide()
+  {
+    this.isVisible = false;
+  }
+
   checkAllClick()
   {
     this.checkAll.emit();
