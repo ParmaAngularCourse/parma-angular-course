@@ -13,7 +13,8 @@ import { AdThemeDirective } from './news/ad-theme.directive';
 import { SdRightsToChangeDirective } from './news/sd-rights-to-change.directive';
 import { ThemePipe } from './news/theme.pipe';
 import { CaptionPipe } from './news/caption.pipe';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { HttpInterceptorService } from './http-interceptor.service';
 
 
 @NgModule({
@@ -35,7 +36,11 @@ import { HttpClientModule } from '@angular/common/http';
     BrowserModule,
     HttpClientModule
   ],
-  providers: [],
+  providers: [{
+    provide: HTTP_INTERCEPTORS,
+    useClass: HttpInterceptorService,
+    multi: true 
+  }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

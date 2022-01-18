@@ -8,12 +8,17 @@ import { NewsSourceService } from '../news-source.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Subject, takeUntil } from 'rxjs';
 
+import { HttpInterceptorService } from '../http-interceptor.service';
+import { UserService } from '../user.service';
+
+
 @Component({
   selector: 'app-news',
   templateUrl: './news.component.html',
   styleUrls: ['./news.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
+
 export class NewsComponent {
 
   public ourNews: NewsItem[] = [];
@@ -22,35 +27,46 @@ export class NewsComponent {
   public editDialogNewsItem: NewsItem = this.getEmptyNews();
   public unsavedNewsItem: NewsItem = this.getEmptyNews();
   public isDeleteButtonAvailable = false; 
-  public currentUser: User = { Name: "Петр",Rights: {CanDelete: true, CanSave: true } };
+
+  public currentUser: User = {Name: "unknown", Rights: {CanDelete: false, CanSave: false}};
 
   public ThemeEnum = Theme;
-  private ngUnsubscribe!: Subject<NewsItem[]>;
+  private ngUnsubscribe: Subject<NewsItem[]> = new Subject();
+  private ngUserUnsubscribe: Subject<User> = new Subject();
 
   @ViewChild('contextMenuComponent') menuComponent!: ContextMenuComponent;
   @ViewChild('popupDialog') popupDialog!: PopupDialogComponent;  
   
   constructor(private viewContainerRef: ViewContainerRef,
          private cdr: ChangeDetectorRef,
-         private _newsSourceService: NewsSourceService)
+         private _newsSourceService: NewsSourceService,
+         private _userService: UserService)
  {     
-      this.ngUnsubscribe = new Subject();
-      this.checkCheckboxes();     
-     
-      this._newsSourceService.getNewsOberverble().pipe(
-          takeUntil(this.ngUnsubscribe)
-        ).subscribe({
-          next: (data) => {this.ourNews = data;       
-            this.cdr.markForCheck();       
-            },
-          error: (e: HttpErrorResponse) => console.log(e.status + ' ' + e.message)
-        });   
-  }
+   
+ }
 
-  ngOnInit(){}
+  ngOnInit(){
+
+    this.checkCheckboxes();   
+      this._newsSourceService.getNewsOberverble().pipe(
+        takeUntil(this.ngUnsubscribe)
+      ).subscribe({
+        next: (data) => {this.ourNews = data;       
+          this.cdr.markForCheck();       
+          },
+        error: (e: HttpErrorResponse) => console.log(e.status + ' ' + e.message)
+      });   
+
+      this._userService.getCurrentUserOberverble().pipe(
+        takeUntil(this.ngUserUnsubscribe)
+      ).subscribe({
+          next: (data) => {this.currentUser = data}      
+      });
+  }
 
   ngOnDestroy(){
     this.ngUnsubscribe.complete();
+    this.ngUserUnsubscribe.complete();
   }
  
   getEmptyNews(): NewsItem{

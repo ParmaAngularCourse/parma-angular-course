@@ -29,8 +29,7 @@ export class NewsSourceService {
   }
 
   public loadNews() {
-    this.httpClient.get<NewsData[]>(this._api + "GetNews"
-           /*, {headers: new HttpHeaders().set('Authorization','fff')}*/
+    this.httpClient.get<NewsData[]>(this._api + "GetNews"  
         ).pipe(map(raw_items => 
           raw_items.map(item => {          
             return { 
