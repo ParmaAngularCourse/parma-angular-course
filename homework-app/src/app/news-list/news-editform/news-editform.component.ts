@@ -1,5 +1,8 @@
 import { Component, EventEmitter, Input, OnInit, Output, ChangeDetectionStrategy, OnChanges, ChangeDetectorRef } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { News, NewsType } from '../news-types';
+import { Subject, takeUntil } from 'rxjs';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-news-editform',
@@ -13,31 +16,41 @@ export class NewsEditformComponent implements OnInit, OnChanges {
   @Output() saveNews : EventEmitter<News> = new EventEmitter();
   @Output() closeNews : EventEmitter<boolean> = new EventEmitter();
   public showEditForm: boolean = false;
+  public editForm!: FormGroup;
 
-  private dateFieldValue: Date = new Date();
-  private titleFieldValue: string = "";
-  private textFieldValue: string = "";
-  private typeFieldValue: NewsType = NewsType.Politics;
+  private ngUnsubscribe$: Subject<boolean>;
 
-  constructor(private cdr: ChangeDetectorRef) { 
+  constructor(private cdr: ChangeDetectorRef, private fb: FormBuilder) { 
+    this.ngUnsubscribe$ = new Subject();
   }
 
   ngOnInit(): void {
+    this.editForm = this.fb.group({
+      date: [this.getDateString(new Date()), [Validators.required]],
+      title: ['', [Validators.required]],
+      text: ['', [Validators.required]],
+      type: [NewsType.Politics, [Validators.required]]
+    });
   }
+
   ngOnChanges(): void {
-    this.dateFieldValue = this.news.date;
-    this.titleFieldValue = this.news.title;
-    this.textFieldValue = this.news.text;
-    this.typeFieldValue = this.news.type;
+    this.editForm?.setValue({
+      date: this.getDateString(this.news.date),
+      title: this.news.title,
+      text: this.news.text,
+      type: this.news.type
+    }, {emitEvent: false});
+  }
+
+  ngOnDestroy(): void {
+    this.ngUnsubscribe$.next(true);
+    this.ngUnsubscribe$.complete();
   }
 
   save() {
     this.saveNews.emit({
       ...this.news,
-      date:  this.dateFieldValue,
-      title: this.titleFieldValue,
-      text: this.textFieldValue,
-      type: this.typeFieldValue
+      ...this.editForm.value
     });
   }
 
@@ -47,32 +60,6 @@ export class NewsEditformComponent implements OnInit, OnChanges {
 
   getDateString(date: Date) : string {
     return (new Date(date.getTime() - date.getTimezoneOffset() * 60000).toISOString()).slice(0, -8)
-  }
-
-  getNewsTypeValues() {
-    const keysAndValues = Object.values(NewsType);
-    const typeValues : any[] = [];
-
-    keysAndValues.forEach((keyOrValue: any) => {
-      if (isNaN(Number(keyOrValue))) {
-        typeValues.push(keyOrValue);
-      }
-    });
-
-    return typeValues;
-  }
-
-  dateChanged(dateValue: string) {
-    this.dateFieldValue = new Date(dateValue);
-  }
-  titleChanged(titleValue: string) {
-    this.titleFieldValue = titleValue;
-  }
-  textChanged(textValue: string) {
-    this.textFieldValue = textValue;
-  }
-  typeChanged(typeValue: NewsType) {
-    this.typeFieldValue = typeValue;
   }
 
   showWindow() {

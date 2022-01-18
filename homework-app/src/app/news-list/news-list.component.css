@@ -1,11 +1,30 @@
 .newsList {
     border: solid 1px;
     padding: 20px;
-    width: 30%;
+    width: 70%;
     margin: auto;
     margin-top: 20px;
 }
 
 .news-list-button {
     margin-right: 5px;
+}
+
+.newsSearch {
+    padding: 5px;
+    margin-top: 10px;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 12px;
+}
+
+.column {
+    float: left;
+    width: 32%;
+    display: inline-block;
+    margin-right: 10px;
+}
+.row:after {
+    content: "";
+    display: table;
+    clear: both;
 }

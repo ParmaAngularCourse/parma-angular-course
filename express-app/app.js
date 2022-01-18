@@ -17,8 +17,13 @@ app.use(function (req, res, next) {
 // получение списка новостей
 app.get("/api/news", function(req, res) {  
     console.log("получение списка новостей");
+    const searchText = req.query.searchText;
+
     const content = fs.readFileSync(filePath,"utf8");
-    const news = JSON.parse(content);
+    let news = JSON.parse(content);
+    if(searchText) {
+        news = news.filter(n => n.title.indexOf(searchText) != -1);
+    }
     res.send(news);
 });
 
