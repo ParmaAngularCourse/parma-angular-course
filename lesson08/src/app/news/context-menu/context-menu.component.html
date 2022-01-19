@@ -1,0 +1,14 @@
+<div
+  *ngIf="this.isVisible"
+  class="sub"
+  (click)="this.onClickToSub()"
+></div>
+<div
+  *ngIf="this.isVisible"
+  class="context-menu"
+  (click)="this.onSelectItem()"
+  [style.top.px] = "this.position.top"
+  [style.left.px] = "this.position.left"
+>
+  <div>Отметить все</div>
+</div>

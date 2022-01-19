@@ -1,0 +1,23 @@
+{
+  "login": "qwe",
+  "password": "qwe",
+  "personInfo": {
+    "name": "Иван",
+    "family": "Иванов",
+    "email": "ivanov@mail.ru"
+  },
+  "authToken": {
+    "token": "0YLRiyDQt9Cw0YfQtdC8INC/0LDRgNGB0LjRiNGMINGH0YPQttC+0Lkg0LrQvtC0Pw==",
+    "expireIn": 100000,
+    "refreshToken": "0JrRgtC+INGD0LHQuNC7INCb0L7RgNGDINCf0LDQu9C80LXRgD8=",
+    "sign": "0JHRgyE="
+  },
+  "permissions": [{
+    "action": "deleteItem",
+    "enable": true
+  }, {
+    "action": "edit",
+    "enable": true
+  }],
+  "isAuth": false
+}

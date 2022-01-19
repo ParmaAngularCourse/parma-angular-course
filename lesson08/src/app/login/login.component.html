@@ -1,0 +1,23 @@
+<div class="login-block" [formGroup]="loginGroup">
+  <div>
+    <label>Логин</label>
+  </div>
+  <input type="text" formControlName="loginField" />
+  <div class="validation-error-message" *ngIf="this.loginField?.errors?.required && !this.loginField?.untouched">
+    Поле обязательно для заполнения
+  </div>
+
+  <div>
+    <label>Пароль</label>
+  </div>
+  <input type="password" formControlName="passwordField" />
+  <div class="validation-error-message" *ngIf="this.passwordField?.errors?.required && !this.passwordField?.untouched">
+    Поле обязательно для заполнения
+  </div>
+
+  <div class="global-error" *ngIf="errorInLogin">{{this.errorMess}}</div>
+
+  <div>
+    <button (click)="this.login()" [disabled]="!this.loginGroup.valid" >Войти</button>
+  </div>
+</div>

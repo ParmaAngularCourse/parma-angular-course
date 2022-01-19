@@ -1,0 +1,23 @@
+.tags-menu {
+  width: 100px;
+  float: left;
+  text-align: left;
+  margin: 10px;
+}
+
+.tags-menu-item {
+  margin-bottom: 10px;
+}
+
+.tags-menu-item a {
+  padding: 2px 4px 2px 4px;
+  border-radius: 5px;
+  font-weight: bold;
+  color: white;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.tags-menu-item .selected {
+  border: solid 1px red;
+}

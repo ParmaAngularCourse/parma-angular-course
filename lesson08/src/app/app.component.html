@@ -1,0 +1,11 @@
+<h1>{{title}}</h1>
+
+<nav class="main-menu">
+  <a class="main-menu-item" routerLink="main" routerLinkActive="selected">Новости</a>
+  <a class="main-menu-item" routerLink="person" routerLinkActive="selected" *ngIf="this.isAuthorized">{{this.userName}}</a>
+  <a class="main-menu-auth" routerLink="login" *ngIf="!this.isAuthorized">Вход</a>
+  <a class="main-menu-auth" (click)="this.logout()" *ngIf="this.isAuthorized">Выход</a>
+</nav>
+<br>
+<router-outlet></router-outlet>
+<router-outlet name="modal"></router-outlet>
