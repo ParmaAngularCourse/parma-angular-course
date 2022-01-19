@@ -8,9 +8,15 @@ import {
   Output,
   ViewChild,
 } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 import { NewsPost } from 'src/models/NewsPost';
 import { NewsPostTag } from 'src/models/NewsPostTag';
+import { MyDateYearValidator } from 'src/validators/dateYearValidator';
 @Component({
   selector: 'app-news-post-modal-window',
   templateUrl: './news-post-modal-window.component.html',
@@ -37,9 +43,7 @@ export class NewsPostModalWindowComponent {
   private editedDate!: string;
   private editedTag = NewsPostTag.noTag;
 
-  constructor (private fb: FormBuilder) {
-
-  }
+  constructor(private fb: FormBuilder) {}
 
   ngOnInit() {
     this.newsPostForm = new FormGroup({
@@ -48,12 +52,12 @@ export class NewsPostModalWindowComponent {
         Validators.required,
       ]),
       dateControl: new FormControl(this.newsPost?.uploadDate, [
-        Validators.required,
+        Validators.required, MyDateYearValidator.dateValidator
       ]),
       radioControl: this.fb.control({
         newsTags: this.newsTags,
         selectedTag: this.newsPost?.tag,
-      })
+      }),
     });
   }
 
@@ -68,6 +72,8 @@ export class NewsPostModalWindowComponent {
   }
 
   onEditSave() {
+    this.editedTag = this.newsPostForm.get('radioControl')?.value.selectedTag;
+    console.log(this.editedTag);
     const currentEditablePost = new NewsPost();
     currentEditablePost.id = this.newsPost?.id ?? -1;
     currentEditablePost.title =
