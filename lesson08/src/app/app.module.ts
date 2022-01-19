@@ -4,7 +4,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppComponent } from './app.component';
 import { NewsComponent } from './news/news.component';
 import { NewsItemComponent } from './news/news-item/news-item.component';
-import { NewsItemModalComponent } from './news/news-item-modal/news-item-modal.component';
 import { ContextMenuComponent } from './news/context-menu/context-menu.component';
 import { CapitalizePipe } from './news/capitalize.pipe';
 import { MinitagsPipe } from './news/minitags.pipe';
@@ -21,13 +20,15 @@ import { PageNotFoundComponent } from './page-not-found/page-not-found.component
 import { MainComponent } from './main/main.component';
 import { PersonComponent } from './person/person.component';
 import { LoginComponent } from './login/login.component';
+import { StoreModule } from '@ngrx/store';
+import {effects, reducers} from "./store";
+import { EffectsModule } from '@ngrx/effects';
 
 @NgModule({
   declarations: [
     AppComponent,
     NewsComponent,
     NewsItemComponent,
-    NewsItemModalComponent,
     ContextMenuComponent,
     CapitalizePipe,
     MinitagsPipe,
@@ -42,7 +43,12 @@ import { LoginComponent } from './login/login.component';
     LoginComponent
   ],
   imports: [
-    BrowserModule, HttpClientModule, ReactiveFormsModule, AppRoutingModule
+    BrowserModule,
+    HttpClientModule,
+    ReactiveFormsModule,
+    AppRoutingModule,
+    StoreModule.forRoot(reducers, {}),
+    EffectsModule.forRoot(effects)
   ],
   providers: [{
     provide: HTTP_INTERCEPTORS,

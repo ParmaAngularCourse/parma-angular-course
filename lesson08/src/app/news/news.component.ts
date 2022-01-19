@@ -10,17 +10,16 @@ import {NewsItemModel} from "./news-types";
 import {ContextMenuComponent} from "./context-menu/context-menu.component";
 import {NewsItemComponent} from "./news-item/news-item.component";
 import {NewsService} from "./services/news.service";
-import {of, Subject} from "rxjs";
+import {Observable, Subject} from "rxjs";
 import {
-  bufferCount,
-  concatAll,
   debounceTime,
   distinctUntilChanged,
   map,
-  switchMap,
-  takeUntil, toArray
+  takeUntil
 } from "rxjs/operators";
 import {ActivatedRoute, Router} from "@angular/router";
+import * as fromStore from '../store'
+import {select, Store} from "@ngrx/store";
 
 @Component({
   selector: 'app-news',
@@ -31,6 +30,7 @@ import {ActivatedRoute, Router} from "@angular/router";
 export class NewsComponent implements OnInit, OnDestroy {
 
   newsTabs: NewsItemModel[][] = [];
+  newsTabs$!: Observable<NewsItemModel[][]>;
   private readonly _ngUnsubscribe$: Subject<number>;
   private _selectedTag : string = "";
   private _searchVal : string = "";
@@ -38,11 +38,12 @@ export class NewsComponent implements OnInit, OnDestroy {
 
   @ViewChild('contextMenuComponent') menuComponent! : ContextMenuComponent;
   @ViewChildren(NewsItemComponent) newsItemComponents!: QueryList<NewsItemComponent>;
-  get isSomeItemSelected(): boolean {
-    return this.newsTabs.some(row => row.filter(p => p.selected).length > 0);
+  get isSomeItemSelected$(): Observable<boolean> {
+    return this._store.pipe(select(fromStore.selectIsSomeItemSelected))
   }
 
   constructor(private _newsService: NewsService,
+              private _store: Store<fromStore.State>,
               private _route: ActivatedRoute,
               private _cd: ChangeDetectorRef,
               private _router: Router) {
@@ -76,23 +77,8 @@ export class NewsComponent implements OnInit, OnDestroy {
   }
 
   private doSearch() {
-    this._newsService.getNews(this._searchVal, this._selectedTag)
-      .pipe(
-        switchMap(data => {
-          return of(data).pipe(
-            concatAll(),
-            bufferCount(3),
-            toArray()
-          )
-        }),
-        takeUntil(this._ngUnsubscribe$)
-      )
-      .subscribe({
-        next: value => {
-          this.newsTabs = value;
-          this._cd.detectChanges();
-        }
-      });
+    this._store.dispatch(fromStore.loadNews({searchVal: this._searchVal, selectedTag: this._selectedTag}))
+    this.newsTabs$ = this._store.pipe(select(fromStore.selectNewsInThreeColumn));
   }
 
   onEditItem($event: NewsItemModel) {
