@@ -2,7 +2,8 @@
 
 
     <div>
-        <input #search type="text" placeholder="Поиск" class="searchBar" (change)="Search(search.value)">
+        <input #searchLine type="text" placeholder="Поиск" class="searchBar" [formControl]="search">
+      
     </div>
 
     <app-modal-common [operationTitle]="getTitle()">
