@@ -1,3 +1,11 @@
+export type NewsItem = {
+  id: number,
+  date: string,
+  head: string,
+  desc: string,
+  tag: string
+}
+
 export class NewsItemModel {
 
   private timeZoneMinutes : number = 0;

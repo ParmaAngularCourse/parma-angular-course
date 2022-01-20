@@ -10,6 +10,8 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {NewsService} from "../services/news.service";
 import {switchMap, takeUntil} from "rxjs/operators";
 import {Subject} from "rxjs";
+import {select, Store} from "@ngrx/store";
+import * as fromStore from "../../store";
 
 @Component({
   selector: 'app-news-item-modal-reactive',
@@ -38,6 +40,7 @@ export class NewsItemModalReactiveComponent implements OnInit, OnDestroy {
   private _ngUnsubscribe$: Subject<number>;
 
   constructor(private _newsService: NewsService,
+              private _store: Store<fromStore.State>,
               private _cd : ChangeDetectorRef,
               private _route: ActivatedRoute,
               private _router: Router) {
@@ -58,6 +61,9 @@ export class NewsItemModalReactiveComponent implements OnInit, OnDestroy {
       )
       .subscribe(
         (value => {
+          if(value.dateField == null){
+            return;
+          }
           this.editedItem.date = new Date(value.dateField);
           this.editedItem.head = value.headField;
           this.editedItem.desc = value.descField;
@@ -68,7 +74,8 @@ export class NewsItemModalReactiveComponent implements OnInit, OnDestroy {
     this._route.params
       .pipe(
         switchMap(params => {
-          return this._newsService.getItemById(params.id)
+          //return this._newsService.getItemById(params.id)
+          return this._store.pipe(select(fromStore.selectItemById(Number(params.id))))
         }),
         takeUntil(this._ngUnsubscribe$)
       )
@@ -106,14 +113,17 @@ export class NewsItemModalReactiveComponent implements OnInit, OnDestroy {
   }
 
   saveItem() {
-    this._router.navigate([{ outlets: {modal: null}}], {relativeTo: this._route.parent}).then(value => {
-      if(value) {
-        if(this.editedItem.id > 0)
-          this._newsService.editNewsItem(this.editedItem);
-        else
-          this._newsService.addNewsItem(this.editedItem);
-      }
-    });
+    if(this.editedItem.id > 0) {
+      //this._newsService.editNewsItem(this.editedItem);
+      this._store.dispatch(fromStore.editNewsItem({ newsItem: this.editedItem }))
+      //this.editedItem = ({...this.editedItem});
+    }
+    else {
+      this._newsService.addNewsItem(this.editedItem);
+    }
+    this.newsItemFormGroup.reset({options: {emitEvent: false}});
+
+    this._router.navigate([{ outlets: {modal: null}}], {relativeTo: this._route.parent}).then(_ => {});
   }
 
   ngOnDestroy(): void {

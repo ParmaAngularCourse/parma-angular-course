@@ -77,8 +77,15 @@ export class NewsComponent implements OnInit, OnDestroy {
   }
 
   private doSearch() {
-    this._store.dispatch(fromStore.loadNews({searchVal: this._searchVal, selectedTag: this._selectedTag}))
-    this.newsTabs$ = this._store.pipe(select(fromStore.selectNewsInThreeColumn));
+    this._store.dispatch(fromStore.loadNews(
+      {
+        searchVal: this._searchVal,
+        selectedTag: this._selectedTag
+      }
+    ));
+    this.newsTabs$ = this._store.pipe(
+      select(fromStore.selectNewsInThreeColumn)
+    );
   }
 
   onEditItem($event: NewsItemModel) {

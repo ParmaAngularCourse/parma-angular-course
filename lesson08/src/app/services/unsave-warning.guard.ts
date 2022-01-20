@@ -14,7 +14,7 @@ export class UnsaveWarningGuard implements CanDeactivate<PersonComponent | NewsI
     currentState: RouterStateSnapshot,
     nextState?: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
 
-    console.log('canDeactivate');
+    //console.log('canDeactivate');
 
     if(component instanceof PersonComponent)
     {
