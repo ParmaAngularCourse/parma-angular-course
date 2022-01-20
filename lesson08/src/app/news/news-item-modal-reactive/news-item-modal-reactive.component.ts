@@ -4,10 +4,9 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef, OnDestroy,
 } from '@angular/core';
-import {NewsItemModel} from "../news-types";
+import {NewsItem, NewsItemModel} from "../news-types";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {ActivatedRoute, Router} from "@angular/router";
-import {NewsService} from "../services/news.service";
 import {switchMap, takeUntil} from "rxjs/operators";
 import {Subject} from "rxjs";
 import {select, Store} from "@ngrx/store";
@@ -39,8 +38,7 @@ export class NewsItemModalReactiveComponent implements OnInit, OnDestroy {
 
   private _ngUnsubscribe$: Subject<number>;
 
-  constructor(private _newsService: NewsService,
-              private _store: Store<fromStore.State>,
+  constructor(private _store: Store<fromStore.State>,
               private _cd : ChangeDetectorRef,
               private _route: ActivatedRoute,
               private _router: Router) {
@@ -74,7 +72,6 @@ export class NewsItemModalReactiveComponent implements OnInit, OnDestroy {
     this._route.params
       .pipe(
         switchMap(params => {
-          //return this._newsService.getItemById(params.id)
           return this._store.pipe(select(fromStore.selectItemById(Number(params.id))))
         }),
         takeUntil(this._ngUnsubscribe$)
@@ -86,9 +83,9 @@ export class NewsItemModalReactiveComponent implements OnInit, OnDestroy {
       });
   }
 
-  show(item?: NewsItemModel) {
+  show(item?: NewsItem) {
     if(item != undefined){
-      this.editedItem = new NewsItemModel(item.id, item.date, item.head, item.desc, item.tag);
+      this.editedItem = NewsItemModel.create(item);
       this.editedItem.selected = item.selected;
     } else {
       this.editedItem = new NewsItemModel(-1, new Date(), "" , "", "");
@@ -113,16 +110,12 @@ export class NewsItemModalReactiveComponent implements OnInit, OnDestroy {
   }
 
   saveItem() {
-    if(this.editedItem.id > 0) {
-      //this._newsService.editNewsItem(this.editedItem);
-      this._store.dispatch(fromStore.editNewsItem({ newsItem: this.editedItem }))
-      //this.editedItem = ({...this.editedItem});
-    }
-    else {
-      this._newsService.addNewsItem(this.editedItem);
-    }
-    this.newsItemFormGroup.reset({options: {emitEvent: false}});
+    if(this.editedItem.id > 0)
+      this._store.dispatch(fromStore.editNewsItem({ newsItem: this.editedItem.fromModel() }))
+    else
+      this._store.dispatch(fromStore.addNewsItem({ newsItem: this.editedItem.fromModel() }))
 
+    this.newsItemFormGroup.reset({options: {emitEvent: false}});
     this._router.navigate([{ outlets: {modal: null}}], {relativeTo: this._route.parent}).then(_ => {});
   }
 

@@ -3,7 +3,8 @@ export type NewsItem = {
   date: string,
   head: string,
   desc: string,
-  tag: string
+  tag: string,
+  selected: boolean
 }
 
 export class NewsItemModel {
@@ -28,6 +29,23 @@ export class NewsItemModel {
       this.date.getMinutes() + this.timeZoneMinutes,
       this.date.getSeconds()
     ).toISOString().slice(0, 16);
+  }
+
+  public static create(item: NewsItem) : NewsItemModel {
+    let model = new NewsItemModel(item.id, new Date(item.date), item.head, item.desc, item.tag);
+    model.selected = item.selected;
+    return model;
+  }
+
+  public fromModel() : NewsItem {
+    return {
+      id : this.id,
+      date: this.date.toISOString(),
+      head: this.head,
+      desc: this.desc,
+      tag: this.tag,
+      selected: this.selected
+    };
   }
 }
 

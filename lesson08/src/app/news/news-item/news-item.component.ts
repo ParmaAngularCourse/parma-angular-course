@@ -11,6 +11,8 @@ import {NewsItemModel, NewsTag} from "../news-types";
 import {TagsListService} from "../services/tags-list.service";
 import {takeUntil} from "rxjs/operators";
 import {Subject} from "rxjs";
+import {Store} from "@ngrx/store";
+import * as fromStore from "../../store";
 
 @Component({
   selector: 'app-news-item',
@@ -28,7 +30,8 @@ export class NewsItemComponent implements OnInit, OnDestroy {
   @Output() removeItem: EventEmitter<number> = new EventEmitter<number>();
   @Output() editItem: EventEmitter<NewsItemModel> = new EventEmitter<NewsItemModel>();
 
-  constructor(private _cd: ChangeDetectorRef,
+  constructor(private _store: Store<fromStore.State>,
+              private _cd: ChangeDetectorRef,
               private _tagListService: TagsListService) {
     this._ngUnsubscribe$ = new Subject();
   }
@@ -48,7 +51,7 @@ export class NewsItemComponent implements OnInit, OnDestroy {
   }
 
   checkboxChange($event: Event){
-    this.newsItem.selected = ($event.target as HTMLInputElement).checked;
+    this.setSelected(($event.target as HTMLInputElement).checked)
   }
 
   remove() {
@@ -60,8 +63,7 @@ export class NewsItemComponent implements OnInit, OnDestroy {
   }
 
   setSelected(isSelect: boolean){
-    this.newsItem.selected = isSelect;
-    this._cd.markForCheck();
+    this._store.dispatch(fromStore.selectNewsItem( { id: this.newsItem.id, isSelected: isSelect }));
   }
 
   ngOnDestroy(): void {

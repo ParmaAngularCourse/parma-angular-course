@@ -1,6 +1,6 @@
 import * as fromReducer from '../reducers'
 import {createSelector} from "@ngrx/store";
-import {NewsItemModel} from "../../news/news-types";
+import {NewsItem} from "../../news/news-types";
 
 export function selectAllNews(state: fromReducer.State) {
   return state.newsItems.news ?? [];
@@ -24,7 +24,11 @@ export function selectIsSomeItemSelected(state: fromReducer.State) {
 
 export const selectItemById = (id: number) => createSelector(
   selectAllNews,
-  (news : NewsItemModel[]) => {
+  (news : NewsItem[]) => {
     return news.find(item => item.id === id)
   }
 )
+
+export function selectSelectedNewsItemIds(state : fromReducer.State) {
+  return state.newsItems.news?.filter(item => item.selected).map(item => item.id) ?? [];
+}

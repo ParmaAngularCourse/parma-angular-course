@@ -9,7 +9,6 @@ import {
 import {NewsItemModel} from "./news-types";
 import {ContextMenuComponent} from "./context-menu/context-menu.component";
 import {NewsItemComponent} from "./news-item/news-item.component";
-import {NewsService} from "./services/news.service";
 import {Observable, Subject} from "rxjs";
 import {
   debounceTime,
@@ -29,7 +28,6 @@ import {select, Store} from "@ngrx/store";
 })
 export class NewsComponent implements OnInit, OnDestroy {
 
-  newsTabs: NewsItemModel[][] = [];
   newsTabs$!: Observable<NewsItemModel[][]>;
   private readonly _ngUnsubscribe$: Subject<number>;
   private _selectedTag : string = "";
@@ -42,8 +40,7 @@ export class NewsComponent implements OnInit, OnDestroy {
     return this._store.pipe(select(fromStore.selectIsSomeItemSelected))
   }
 
-  constructor(private _newsService: NewsService,
-              private _store: Store<fromStore.State>,
+  constructor(private _store: Store<fromStore.State>,
               private _route: ActivatedRoute,
               private _cd: ChangeDetectorRef,
               private _router: Router) {
@@ -84,7 +81,12 @@ export class NewsComponent implements OnInit, OnDestroy {
       }
     ));
     this.newsTabs$ = this._store.pipe(
-      select(fromStore.selectNewsInThreeColumn)
+      select(fromStore.selectNewsInThreeColumn),
+      map(news =>
+        news.map(row =>
+          row.map(item => NewsItemModel.create(item))
+        )
+      )
     );
   }
 
@@ -97,7 +99,7 @@ export class NewsComponent implements OnInit, OnDestroy {
   }
 
   onRemoveItem($event: number) {
-    this._newsService.removeNewsItem($event);
+    this._store.dispatch(fromStore.removeNewsItem({ id: $event }));
   }
 
   onContextMenu($event: MouseEvent) {
@@ -115,11 +117,14 @@ export class NewsComponent implements OnInit, OnDestroy {
   }
 
   onDeleteSelected() {
-    this.newsTabs.forEach(row => {
-      row.filter(item => item.selected).forEach(selectedItem => {
-        this.onRemoveItem(selectedItem.id);
-      });
-    });
+    this._store
+      .pipe(
+        select(fromStore.selectSelectedNewsItemIds),
+        takeUntil(this._ngUnsubscribe$)
+      )
+      .subscribe(
+        value => value.forEach(id => this.onRemoveItem(id))
+      );
   }
 
   ngOnDestroy() {

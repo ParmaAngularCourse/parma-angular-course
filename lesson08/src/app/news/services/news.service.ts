@@ -1,103 +1,34 @@
-import {Injectable, OnDestroy} from '@angular/core';
-import {NewsItem, NewsItemModel} from "../news-types";
-import {BehaviorSubject, Observable, of, Subject} from "rxjs";
-import {HttpClient, HttpErrorResponse, HttpParams} from "@angular/common/http";
-import {map, takeUntil} from "rxjs/operators";
-
+import {Injectable} from '@angular/core';
+import {NewsItem } from "../news-types";
+import { Observable } from "rxjs";
+import {HttpClient, HttpParams} from "@angular/common/http";
 
 @Injectable({
   providedIn: 'root'
 })
-export class NewsService implements OnDestroy {
+export class NewsService {
 
   private _url: string = "/api/";
-  private _newsSubject?: BehaviorSubject<NewsItemModel[]>;
-  private _ngUnsubscribe$: Subject<number>;
 
-  constructor(private _http: HttpClient) {
-    this._ngUnsubscribe$ = new Subject<number>();
-  }
+  constructor(private _http: HttpClient) { }
 
-  public getNews(searchVal: string, selectedTag : string) : Observable<NewsItemModel[]>{
-    let _params = new HttpParams()
-      .set('s', searchVal)
-      .set('t', selectedTag);
-
+  public getNews(searchVal: string, selectedTag : string) : Observable<NewsItem[]>{
     return this._http.get<NewsItem[]>(this._url + "news", {
-      params: _params
-    })
-      .pipe(
-        map(item => item.map(i => {
-          return new NewsItemModel(i.id, new Date(i.date), i.head, i.desc, i.tag);
-        })),
-        takeUntil(this._ngUnsubscribe$)
-      );
+      params: new HttpParams()
+        .set('s', searchVal)
+        .set('t', selectedTag)
+    });
   }
 
-  public removeNewsItem(id: number) : void {
-    this._http.delete(this._url + "news/" + id)
-      .pipe(
-        takeUntil(this._ngUnsubscribe$)
-      )
-      .subscribe({
-        complete: () =>
-          this.removeItemCompleted(id),
-        error: (error: HttpErrorResponse) =>
-          console.log(error.status + " " + error.message)
-      });
+  public removeNewsItem(id: number) : Observable<void> {
+    return this._http.delete<void>(this._url + "news/" + id);
   }
 
-  private removeItemCompleted(id: number) : void {
-    if(this._newsSubject){
-      let news: NewsItemModel[] = this._newsSubject.getValue();
-      let index = news.findIndex(p => p.id == id);
-      if(index > -1) {
-        news.splice(index, 1);
-      }
-      this._newsSubject?.next(news);
-    }
+  public addNewsItem(item: NewsItem) : Observable<NewsItem> {
+    return this._http.put<NewsItem>(this._url + "news", item);
   }
 
-  public addNewsItem(item: NewsItemModel) : void {
-    this._http.put<NewsItem>(this._url + "news",
-      {
-        id : item.id,
-        date: item.date.toISOString(),
-        head: item.head,
-        desc: item.desc,
-        tag: item.tag
-      })
-      .pipe(
-        takeUntil(this._ngUnsubscribe$)
-      )
-      .subscribe({
-        next: (val) => {
-          item.id = val.id;
-          this.addNewsItemComplete(item);
-        },
-        complete: () => {},
-        error: (error: HttpErrorResponse) =>
-          console.log(error.status + " " + error.message)
-      });
-  }
-
-  private addNewsItemComplete(item: NewsItemModel) : void {
-    if(this._newsSubject) {
-      let news: NewsItemModel[] = this._newsSubject.getValue();
-      news.push(item);
-      this._newsSubject?.next(news);
-    }
-  }
-
-  public editNewsItem(item: NewsItemModel) : Observable<NewsItemModel> {
-     return this._http.post<NewsItemModel>(this._url + "news", item)
-      .pipe(
-        takeUntil(this._ngUnsubscribe$)
-      );
-  }
-
-  ngOnDestroy(): void {
-    this._ngUnsubscribe$.next();
-    this._ngUnsubscribe$.complete();
+  public editNewsItem(item: NewsItem) : Observable<NewsItem> {
+     return this._http.post<NewsItem>(this._url + "news", item);
   }
 }
