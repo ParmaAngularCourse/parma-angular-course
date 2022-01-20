@@ -7,8 +7,6 @@
       id="date"
       name="inputDate"
       formControlName="dateControl"
-      [value]="newsPost?.uploadDate"
-      (change)="onDateInputChanged(date.value)"
     />
     <ng-container
       [ngTemplateOutlet]="error"
@@ -28,8 +26,6 @@
       id="title"
       name="inputTitle"
       formControlName="titleControl"
-      [value]="newsPost?.title ?? 'title'"
-      (change)="onTitleInputChanged(title.value)"
     />
     <ng-container
       [ngTemplateOutlet]="error"
@@ -48,8 +44,6 @@
       id="text"
       name="inputText"
       formControlName="textControl"
-      [value]="newsPost?.text ?? 'text'"
-      (change)="onTextInputChanged(text.value)"
     />
     <ng-container
       [ngTemplateOutlet]="error"

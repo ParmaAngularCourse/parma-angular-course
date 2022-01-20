@@ -14,6 +14,7 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
+import { EMPTY, map, of, switchMap, tap } from 'rxjs';
 import { NewsPost } from 'src/models/NewsPost';
 import { NewsPostTag } from 'src/models/NewsPostTag';
 import { MyDateYearValidator } from 'src/validators/dateYearValidator';
@@ -52,27 +53,46 @@ export class NewsPostModalWindowComponent {
         Validators.required,
       ]),
       dateControl: new FormControl(this.newsPost?.uploadDate, [
-        Validators.required, MyDateYearValidator.dateValidator
+        Validators.required,
+        MyDateYearValidator.dateValidator,
       ]),
       radioControl: this.fb.control({
         newsTags: this.newsTags,
         selectedTag: this.newsPost?.tag,
       }),
     });
+
+    this.newsPostForm.valueChanges
+      .pipe(
+        tap(() => console.log('alive request inner modal change')),
+        switchMap((switchVal) => {
+          return of(switchVal).pipe(
+            map((form) => {
+              this.editedTitle = form.titleControl;
+              this.editedText = form.textControl;
+              this.editedDate = form.dateControl;
+              this.editedTag = form.radioControl?.selectedTag;
+              return form;
+            })
+          );
+        })
+      )
+      .subscribe((form) => console.log('request end inner modal change' + JSON.stringify(form)));
   }
 
   ngOnChanges() {
-    this.newsPostForm?.get('textControl')?.setValue(this.newsPost?.text);
-    this.newsPostForm?.get('titleControl')?.setValue(this.newsPost?.title);
-    this.newsPostForm?.get('dateControl')?.setValue(this.newsPost?.uploadDate);
-    this.newsPostForm?.get('radioControl')?.setValue({
-      newsTags: this.newsTags,
-      selectedTag: this.newsPost?.tag,
+    this.newsPostForm?.setValue({
+      textControl: this.newsPost?.text,
+      titleControl: this.newsPost?.title,
+      dateControl: this.newsPost?.uploadDate,
+      radioControl: {
+        newsTags: this.newsTags,
+        selectedTag: this.newsPost?.tag,
+      },
     });
   }
 
   onEditSave() {
-    this.editedTag = this.newsPostForm.get('radioControl')?.value.selectedTag;
     console.log(this.editedTag);
     const currentEditablePost = new NewsPost();
     currentEditablePost.id = this.newsPost?.id ?? -1;
@@ -85,6 +105,7 @@ export class NewsPostModalWindowComponent {
     currentEditablePost.tag =
       this.editedTag === NewsPostTag.noTag ? NewsPostTag.noTag : this.editedTag;
     const editedNewsPost = new NewsPost(currentEditablePost);
+    console.log(editedNewsPost);
     this.newsPost = null;
     this.editedText = '';
     this.editedTitle = '';
