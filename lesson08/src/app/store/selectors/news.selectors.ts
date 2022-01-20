@@ -32,3 +32,13 @@ export const selectItemById = (id: number) => createSelector(
 export function selectSelectedNewsItemIds(state : fromReducer.State) {
   return state.newsItems.news?.filter(item => item.selected).map(item => item.id) ?? [];
 }
+
+export const selectNewsAllCount = () => createSelector(
+  selectAllNews,
+  (news : NewsItem[]) => news.length
+)
+
+export const selectNewsByTagsCount = (tag: string) => createSelector(
+  selectAllNews,
+  (news) => news.filter(item => item.tag === tag).length
+)

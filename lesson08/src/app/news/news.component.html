@@ -20,6 +20,12 @@
     </ng-container>
   </div>
 </div>
+<div>Все: {{this.newsCount$ | async}} </div>
+<div>Политика: {{this.politicNewsCount$ | async}} </div>
+<div>Туризм: {{this.tourismNewsCount$ | async}} </div>
+<div>Экономика: {{this.economyNewsCount$ | async}} </div>
+<div>Наука: {{this.scienceNewsCount$ | async}} </div>
+<div>Интернет: {{this.internetNewsCount$ | async}} </div>
 
 <app-context-menu
   #contextMenuComponent

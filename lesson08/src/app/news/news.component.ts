@@ -29,6 +29,13 @@ import {select, Store} from "@ngrx/store";
 export class NewsComponent implements OnInit, OnDestroy {
 
   newsTabs$!: Observable<NewsItemModel[][]>;
+  newsCount$!: Observable<number>;
+  politicNewsCount$!: Observable<number>;
+  tourismNewsCount$!: Observable<number>;
+  economyNewsCount$!: Observable<number>;
+  scienceNewsCount$!: Observable<number>;
+  internetNewsCount$!: Observable<number>;
+
   private readonly _ngUnsubscribe$: Subject<number>;
   private _selectedTag : string = "";
   private _searchVal : string = "";
@@ -88,6 +95,12 @@ export class NewsComponent implements OnInit, OnDestroy {
         )
       )
     );
+    this.newsCount$ = this._store.pipe(select(fromStore.selectNewsAllCount()))
+    this.politicNewsCount$ = this._store.pipe(select(fromStore.selectNewsByTagsCount("politic")));
+    this.tourismNewsCount$ = this._store.pipe(select(fromStore.selectNewsByTagsCount("tourism")));
+    this.economyNewsCount$ = this._store.pipe(select(fromStore.selectNewsByTagsCount("economy")));
+    this.scienceNewsCount$ = this._store.pipe(select(fromStore.selectNewsByTagsCount("science")));
+    this.internetNewsCount$ = this._store.pipe(select(fromStore.selectNewsByTagsCount("internet")));
   }
 
   onEditItem($event: NewsItemModel) {
