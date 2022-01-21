@@ -10,6 +10,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../auth.service';
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { select, Store } from '@ngrx/store';
+import * as fromStore from '../store';
 
 @Component({
   selector: 'app-news',
@@ -19,30 +21,33 @@ import { map } from 'rxjs/operators';
 })
 export class NewsComponent implements ComponentCanDeactivate {
 
-  public news: Report[] = [];
-  private ngUnsubscribe$!: Subject<number>;
+  public news$!: Observable<Report[]>;
+  public count$!: Observable<number | undefined>;
+  public typeCounts$!: Observable<any[] | undefined>;
+  //public news: Report[] = [];
+  //private ngUnsubscribe$!: Subject<number>;
   private searchSubject: Subject<string> = new Subject();
 
-  constructor(private authService: AuthService, private _newsService: NewsService, private ref: ChangeDetectorRef, private router: Router, private route: ActivatedRoute) {
-    this.ngUnsubscribe$ = new Subject();
-    this.setSearchSubscription();
-    this._newsService.getNewsSubscription().pipe(
-      takeUntil(this.ngUnsubscribe$),
-      map((r: Report[]) => {
-        let colNum = 0;
-        r.forEach(x => x.colNum = colNum < 3 ? ++colNum : colNum = 1);
-        return r;
-      }))
-      .subscribe((data: any) => this.updateView(data));
-    this._newsService.getNewsSubscription().pipe(
-      takeUntil(this.ngUnsubscribe$),
-      mergeMap(x => of(x).pipe(
-        mergeAll(),
-        bufferCount(3),
-        reduce((acc: any, arr: any) => [...acc, arr], []))))
-      .subscribe((tally: any) => {
-        console.log(tally);
-      });
+  constructor(private store: Store<fromStore.State>, private authService: AuthService, /*private _newsService: NewsService,*/ private ref: ChangeDetectorRef, private router: Router, private route: ActivatedRoute) {
+    //this.ngUnsubscribe$ = new Subject();
+    //this.setSearchSubscription();
+    //this._newsService.getNewsSubscription().pipe(
+    //  takeUntil(this.ngUnsubscribe$),
+    //  map((r: Report[]) => {
+    //    let colNum = 0;
+    //    r.forEach(x => x.colNum = colNum < 3 ? ++colNum : colNum = 1);
+    //    return r;
+    //  }))
+    //  .subscribe((data: any) => this.updateView(data));
+    //this._newsService.getNewsSubscription().pipe(
+    //  takeUntil(this.ngUnsubscribe$),
+    //  mergeMap(x => of(x).pipe(
+    //    mergeAll(),
+    //    bufferCount(3),
+    //    reduce((acc: any, arr: any) => [...acc, arr], []))))
+    //  .subscribe((tally: any) => {
+    //    console.log(tally);
+    //  });
     this.route.queryParams.subscribe(
       (params: any) => {
         this.newsType = params['newsType'] ?? "";
@@ -50,19 +55,23 @@ export class NewsComponent implements ComponentCanDeactivate {
         this.modalIndex = params['modalIndex'] ?? -1;
       }
     );
+    this.store.dispatch(fromStore.loadPosts());
+    this.news$ = this.store.select(fromStore.selectPosts);
+    this.count$ = this.store.select(fromStore.selectPostsCount);
+    this.typeCounts$ = this.store.select(fromStore.filters);
   }
 
   ngOnInit() {
-    this.getNews();
+    //this.getNews();
   }
 
   showModal() {
-    if (this.isModalShow) {
-      if (this.news.length <= this.modalIndex)
-        this.clickAddButton();
-      else this.initReport(this.news[this.modalIndex], this.modalIndex);
-      this.isModalShow = false;
-    }
+    //if (this.isModalShow) {
+    //  if (this.news.length <= this.modalIndex)
+    //    this.clickAddButton();
+    //  else this.initReport(this.news[this.modalIndex], this.modalIndex);
+    //  this.isModalShow = false;
+    //}
   }
 
   @ViewChild('modal') modal!: ModalComponent;
@@ -89,34 +98,35 @@ export class NewsComponent implements ComponentCanDeactivate {
   isModalShow = false;
   isDirty = false;
 
-  getNews() {
-    return this._newsService
-      .getNews(this.searchText ?? "", this.newsType);
-  }
+  //getNews() {
+  //  return this._newsService
+  //    .getNews(this.searchText ?? "", this.newsType);
+  //}
 
-  updateView(data: any) {
-    this.news = data;
-    this.ref.markForCheck();
-    this.showModal();
-  }
+  //updateView(data: Report[]) {
+  //  this.store.dispatch(fromStore.loadPostsSuccess({ posts: data }));
+  //  this.news = data;
+  //  this.ref.markForCheck();
+  //  this.showModal();
+  //}
 
-  setSearchSubscription() {
-    this.searchSubject.pipe(
-      takeUntil(this.ngUnsubscribe$),
-      debounceTime(600),
-      distinctUntilChanged()
-    ).subscribe((searchText: string) => {
-      this.searchText = searchText;
-      this.getNews();
-    });
-  }
+  //setSearchSubscription() {
+  //  this.searchSubject.pipe(
+  //    takeUntil(this.ngUnsubscribe$),
+  //    debounceTime(600),
+  //    distinctUntilChanged()
+  //  ).subscribe((searchText: string) => {
+  //    this.searchText = searchText;
+  //    this.getNews();
+  //  });
+  //}
 
   updateSearch(searchTextValue: any) {
     this.searchSubject.next(searchTextValue.target.value);
   }
 
   updateFilter() {
-    this.getNews();
+    //this.getNews();
     this.router.navigate(['.'], {
       relativeTo: this.route, queryParams:
         { newsType: this.newsType }
@@ -124,19 +134,20 @@ export class NewsComponent implements ComponentCanDeactivate {
   }
 
   clickAddButton() {
-    this.modalIndex = this.news.length;
-    this.modalHeader = "Добавить новость";
-    this.modalData = Object.assign({}, this.defaultReport);
-    this.modal.show();
-    this.isDirty = false;
+    //this.modalIndex = this.news.length;
+    //this.modalHeader = "Добавить новость";
+    //this.modalData = Object.assign({}, this.defaultReport);
+    //this.modal.show();
+    //this.isDirty = false;
   }
 
   clickDeleteButton() {
-    this._newsService.deleteCheckedReports();
+    //this._newsService.deleteCheckedReports();
   }
 
   saveReport($event: Report) {
-    this._newsService.saveReport($event, this.modalIndex);
+    //this._newsService.saveReport($event, this.modalIndex);
+    this.store.dispatch(fromStore.updateReport({ report: $event }));
     this.modal.hide();
   }
 
@@ -149,7 +160,7 @@ export class NewsComponent implements ComponentCanDeactivate {
   }
 
   deleteReport(i: number) {
-    this._newsService.deleteReport(i);
+    //this._newsService.deleteReport(i);
   }
 
   rightClick(e: { clientX: any; clientY: any; }) {
@@ -160,16 +171,16 @@ export class NewsComponent implements ComponentCanDeactivate {
   }
 
   noOneChecked() {
-    return this.news.every(x => !x.isChecked);
+    //return this.news.every(x => !x.isChecked);
   }
 
   clickCheckAllButton() {
-    return this.news.forEach(x => x.isChecked = true);
+    //return this.news.forEach(x => x.isChecked = true);
   }
 
   ngOnDestroy() {
-    this.ngUnsubscribe$.next(0);
-    this.ngUnsubscribe$.complete();
+    //this.ngUnsubscribe$.next(0);
+    //this.ngUnsubscribe$.complete();
   }
 
   canDeactivate(): boolean | Observable<boolean> {

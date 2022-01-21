@@ -20,6 +20,11 @@ import { ProfileComponent } from './profile/profile.component';
 import { EditComponentComponent } from './edit-component/edit-component.component';
 import { LoginComponent } from './login/login.component';
 import { CustomRadioComponent } from './custom-radio/custom-radio.component';
+import { StoreModule } from '@ngrx/store';
+import { reducers } from './store';
+import { EffectsModule } from '@ngrx/effects';
+import { effects } from './store/effects';
+import { SnackbarComponent } from './snackbar/snackbar.component';
 
 @NgModule({
   declarations: [
@@ -37,14 +42,17 @@ import { CustomRadioComponent } from './custom-radio/custom-radio.component';
     ProfileComponent,
     EditComponentComponent,
     LoginComponent,
-    CustomRadioComponent
+    CustomRadioComponent,
+    SnackbarComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     FormsModule,
     ReactiveFormsModule,
-    HttpClientModule
+    HttpClientModule,
+    StoreModule.forRoot(reducers),
+    EffectsModule.forRoot(effects)
   ],
   providers: [{
     provide: HTTP_INTERCEPTORS,

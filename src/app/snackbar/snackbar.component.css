@@ -1,0 +1,10 @@
+.snackBar {
+  position: absolute;
+  bottom: 5%;
+  right: 5%;
+  color: deeppink;
+  padding: 20px;
+  background-color: white;
+  border: double;
+  border-color: deeppink;
+}
