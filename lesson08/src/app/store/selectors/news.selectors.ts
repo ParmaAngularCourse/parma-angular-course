@@ -1,12 +1,14 @@
-import * as fromReducer from '../reducers'
 import {createSelector} from "@ngrx/store";
 import {NewsItem} from "../../news/news-types";
+import * as fromReducer from '../reducers'
+import * as fromNewsReducers from '../reducers/news.reducers'
 
-export function selectAllNews(state: fromReducer.State) {
+/*export function selectAllNews(state: fromReducer.State) {
   return state.newsItems.news ?? [];
-}
+}*/
+export const selectAllNews = createSelector(fromReducer.selectNewsState, fromNewsReducers.selectAll);
 
-export function selectNewsInThreeColumn(state: fromReducer.State) {
+/*export function selectNewsInThreeColumn(state: fromReducer.State) {
   if(!state.newsItems.news)
     return [];
 
@@ -16,11 +18,29 @@ export function selectNewsInThreeColumn(state: fromReducer.State) {
     results.push(old.splice(0, 3));
   }
   return results;
-}
+}*/
+export const selectNewsInThreeColumn =  createSelector(
+  selectAllNews,
+  (news : NewsItem[]) => {
+    if(!news)
+      return [];
 
-export function selectIsSomeItemSelected(state: fromReducer.State) {
+    let old = [...news];
+    let results = [];
+    while (old.length) {
+      results.push(old.splice(0, 3));
+    }
+    return results;
+  }
+)
+
+/*export function selectIsSomeItemSelected(state: fromReducer.State) {
   return state.newsItems.news?.some(item => item.selected) ?? false;
-}
+}*/
+export const selectIsSomeItemSelected = createSelector(
+  selectAllNews,
+  (news : NewsItem[]) => news?.some(item => item.selected) ?? false
+)
 
 export const selectItemById = (id: number) => createSelector(
   selectAllNews,
@@ -29,14 +49,19 @@ export const selectItemById = (id: number) => createSelector(
   }
 )
 
-export function selectSelectedNewsItemIds(state : fromReducer.State) {
+/*export function selectSelectedNewsItemIds(state : fromReducer.State) {
   return state.newsItems.news?.filter(item => item.selected).map(item => item.id) ?? [];
-}
+}*/
+export const selectSelectedNewsItemIds = createSelector(
+  selectAllNews,
+  (news : NewsItem[]) => news.filter(item => item.selected).map(item => item.id)
+)
 
-export const selectNewsAllCount = () => createSelector(
+/*export const selectNewsAllCount = () => createSelector(
   selectAllNews,
   (news : NewsItem[]) => news.length
-)
+)*/
+export const selectNewsAllCount = createSelector(fromReducer.selectNewsState, fromNewsReducers.selectTotal);
 
 export const selectNewsByTagsCount = (tag: string) => createSelector(
   selectAllNews,

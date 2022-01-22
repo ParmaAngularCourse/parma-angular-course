@@ -95,7 +95,7 @@ export class NewsComponent implements OnInit, OnDestroy {
         )
       )
     );
-    this.newsCount$ = this._store.pipe(select(fromStore.selectNewsAllCount()))
+    this.newsCount$ = this._store.pipe(select(fromStore.selectNewsAllCount))
     this.politicNewsCount$ = this._store.pipe(select(fromStore.selectNewsByTagsCount("politic")));
     this.tourismNewsCount$ = this._store.pipe(select(fromStore.selectNewsByTagsCount("tourism")));
     this.economyNewsCount$ = this._store.pipe(select(fromStore.selectNewsByTagsCount("economy")));
