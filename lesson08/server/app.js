@@ -58,7 +58,7 @@ app.delete("/api/news/:id", (req, res) => {
     data.splice(index, 1);
     content = JSON.stringify(data);
     fs.writeFileSync(objectsFileBd, content);
-    return res.send();
+    return res.send(id);
   } else {
     return res.sendStatus(404);
   }

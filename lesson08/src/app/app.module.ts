@@ -23,6 +23,7 @@ import { LoginComponent } from './login/login.component';
 import { StoreModule } from '@ngrx/store';
 import {effects, reducers} from "./store";
 import { EffectsModule } from '@ngrx/effects';
+import { SnackbarComponent } from './controls/snackbar/snackbar.component';
 
 @NgModule({
   declarations: [
@@ -40,7 +41,8 @@ import { EffectsModule } from '@ngrx/effects';
     PageNotFoundComponent,
     MainComponent,
     PersonComponent,
-    LoginComponent
+    LoginComponent,
+    SnackbarComponent
   ],
   imports: [
     BrowserModule,

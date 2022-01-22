@@ -1,10 +1,13 @@
 import {ActionReducerMap} from "@ngrx/store";
 import * as fromNews from './news.reducers'
+import * as fromMain from './main.reducers'
 
 export interface State {
-  newsItems: fromNews.NewsState
+  newsItems: fromNews.NewsState,
+  mainObjects: fromMain.MainState
 }
 
 export const reducers: ActionReducerMap<State> = {
-  newsItems: fromNews.reducer
+  newsItems: fromNews.reducer,
+  mainObjects: fromMain.reducer
 }

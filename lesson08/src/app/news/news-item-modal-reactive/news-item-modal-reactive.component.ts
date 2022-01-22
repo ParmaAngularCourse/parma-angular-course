@@ -104,6 +104,9 @@ export class NewsItemModalReactiveComponent implements OnInit, OnDestroy {
   cancel() {
     this._router.navigate([{ outlets: {modal: null}}], {relativeTo: this._route.parent}).then(value => {
       if(value) {
+        this._store.dispatch(this.editedItem.id > 0
+          ? fromStore.editNewsItemReset()
+          : fromStore.addNewsItemReset());
         this.newsItemFormGroup.reset();
       }
     });

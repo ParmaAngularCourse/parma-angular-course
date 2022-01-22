@@ -20,8 +20,8 @@ export class NewsService {
     });
   }
 
-  public removeNewsItem(id: number) : Observable<void> {
-    return this._http.delete<void>(this._url + "news/" + id);
+  public removeNewsItem(id: number) : Observable<number> {
+    return this._http.delete<number>(this._url + "news/" + id);
   }
 
   public addNewsItem(item: NewsItem) : Observable<NewsItem> {

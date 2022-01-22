@@ -45,7 +45,7 @@ const newsReducer = createReducer(
     news: state.news?.concat(newsItem)
   })),
 
-  on(fromActions.removeNewsItem, (state, { id }) => ({
+  on(fromActions.removeNewsItemSuccess, (state, { id }) => ({
     ...state,
     news: state.news?.filter(item => item.id !== id)
   })),

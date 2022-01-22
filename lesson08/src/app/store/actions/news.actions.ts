@@ -56,7 +56,8 @@ export const removeNewsItem = createAction(
 );
 
 export const removeNewsItemSuccess = createAction(
-  '[News List] Remove News Item Success'
+  '[News List] Remove News Item Success',
+  props<{ id : number }>()
 )
 
 export const removeNewsItemError = createAction(
