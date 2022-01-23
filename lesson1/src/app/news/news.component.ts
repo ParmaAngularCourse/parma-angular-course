@@ -20,17 +20,12 @@ export class NewsComponent implements OnInit {
     checked: false
   }
 
-  public selectNews: newsType = {
-    id: 0,
-    dt: new Date(), 
-    title: "",
-    text: "",
-    subject: subjectType.politics,
-    checked: false
-  }
+  public selectNews: newsType = {...this.emptyNews }
 
   public title!: string;
-  public isVisibleDelete: boolean = false;
+  get isVisibleDelete(): boolean{
+    return this.newsItems.some(news => news.checked);
+  }
 
   public newsItems: newsType[] = [
     {
@@ -91,21 +86,18 @@ export class NewsComponent implements OnInit {
     this.editNews.show();
   }
 
-  public closeModal($event: newsType){
-    console.log("close modal");
-    if ($event.id < this.newsItems.length+1)
-    {
-      this.newsItems[$event.id-1] =  (JSON.parse(JSON.stringify($event)));
-      this.newsItems[$event.id-1].dt = $event.dt;
+  public closeModal($event: newsType): void{
+    let editNewsIndex = this.newsItems.findIndex(item => item.id === $event.id);
+   
+    if (editNewsIndex > -1) {
+      //edit
+      this.newsItems[editNewsIndex] = {...$event}
+    } else {
+      // add
+      this.newsItems.push($event);
     }
-    else
-    {
-      let news: newsType =  (JSON.parse(JSON.stringify($event)));
-      news.dt = $event.dt;
-      this.newsItems.push(news);
-      this.emptyNews.id = 0;
-    }
-      
+
+    this.editNews.hide();      
   }
 
   public deleteItem(id: number){
@@ -113,7 +105,6 @@ export class NewsComponent implements OnInit {
     {
       this.newsItems.splice(id-1, 1);
       this.refreshIds();
-      this.refreshDelete();
     }
   }
 
@@ -135,23 +126,11 @@ export class NewsComponent implements OnInit {
     for (let i=0; i<this.newsItems.length; i++){
       this.newsItems[i].checked = true;
     }
-    this.isVisibleDelete = true;
   }
 
   checkNews(id:number){
     console.log("check news id=",id);
     this.newsItems[id-1].checked = !this.newsItems[id-1].checked;
-    this.refreshDelete();
-  }
-
-  refreshDelete(): void{
-    for (let i=0; i<this.newsItems.length; i++){
-      if (this.newsItems[i].checked){
-        this.isVisibleDelete = true;
-        return;
-      }
-    }
-    this.isVisibleDelete = false;
   }
 
   deleteCheckedNews(){
@@ -162,7 +141,6 @@ export class NewsComponent implements OnInit {
       }
     }
     this.refreshIds();
-    this.refreshDelete();
   }
 
   refreshIds(){

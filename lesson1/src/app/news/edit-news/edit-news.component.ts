@@ -13,9 +13,11 @@ export class EditNewsComponent implements OnInit {
   @Output() cancelModal: EventEmitter<void> = new EventEmitter();
 
   isVisible : boolean = false;
+  selectedSubject: subjectType = 0;
   constructor() { }
 
   ngOnInit(): void {
+    this.selectedSubject = this.news.subject;
     console.log('init edit-news');
   }
 
@@ -24,23 +26,26 @@ export class EditNewsComponent implements OnInit {
     this.isVisible = true;
   }
 
-  clickSave(date:string, title:string, text: string){
-    console.log("save modal");
-    date = date.replace(', ','T');
-    let pattern = /(\d{2})\.(\d{2})\.(\d{4})/;
-    let dt = date.replace(pattern,'$3-$2-$1');
-    this.news.dt = new Date(dt);;
-    console.log(this.news.dt);
-    this.news.title = title;
-    this.news.text = text;
-    let radiobtn = <HTMLInputElement>document.querySelector('input[name="subject"]:checked');
-    this.news.subject = parseInt(radiobtn!.value);
-    this.isVisible = false;
-    this.closeModal.emit(this.news);
+  clickSave(date:string, title:string, text: string): void{
+    this.closeModal.emit({
+      ...this.news,
+      dt: new Date(date),
+      title,
+      text,
+      subject: this.selectedSubject,
+    })
   }
 
   clickCancel(){
     this.isVisible = false;
     this.cancelModal.emit();
+  }
+
+  changeSubject(subject: subjectType): void {
+    this.selectedSubject = subject;
+  }
+
+  hide(): void {
+    this.isVisible = false;
   }
 }
