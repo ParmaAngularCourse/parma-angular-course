@@ -59,13 +59,34 @@ namespace PostsApi.Models
             }
         }
 
-        public Post[] SearchPost(string value)
+        public Post[] SearchPost(SearchModel model)
         {
-            if (!string.IsNullOrWhiteSpace(value))
+            return _posts.FindAll((e) => IsFindModel(e, model))?.ToArray();
+        }
+
+        private bool IsFindModel(Post post, SearchModel searchModel)
+        {
+            if (!string.IsNullOrWhiteSpace(searchModel.Title))
             {
-                return _posts.FindAll((e) => e.Title.Contains(value, StringComparison.OrdinalIgnoreCase))?.ToArray();
+                if (searchModel.PostType.HasValue)
+                {
+                    return post.Title.Contains(searchModel.Title, StringComparison.OrdinalIgnoreCase)
+                    && (post.PostType == searchModel.PostType.Value);
+                }
+                else
+                {
+                    return post.Title.Contains(searchModel.Title, StringComparison.OrdinalIgnoreCase);
+                }
             }
-            return _posts.ToArray();
+            else 
+            {
+                if (searchModel.PostType.HasValue)
+                {
+                    return post.PostType == searchModel.PostType.Value;
+                }
+            }
+
+            return true;
         }
     }
 }
