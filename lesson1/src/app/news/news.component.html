@@ -1,8 +1,23 @@
-<div id="openModal" class="modalDialog" *ngIf = modalVisible>
-    <app-edit-news (closeModal)=closeModal($event) (cancelModal)=cancelModal() [single_news_data]="selectNews"></app-edit-news>
-</div>
-<div class="news-list"> 
-    <div class="btn" (click)=showModal(emptyNews)>Добавить</div>
-    <app-single-news (openModal)=showModal($event) (deleteItem)=deleteItem($event) [single_news_data]="item" *ngFor="let item of newsItems">
-    </app-single-news>
+<div (contextmenu)=onShowContextMenu($event) (click)= onClick()>
+    <div>
+        <app-context-menu #contextMenu (selectAll)=selectAll()>
+        </app-context-menu>
+    </div>
+    <div id="openModal" >
+        <app-edit-news #modalWindow 
+            (closeModal)=closeModal($event) (cancelModal)=cancelModal() 
+            [single_news_data]="selectNews">{{title}}
+        </app-edit-news>
+    </div>
+    <div class="news-list"> 
+        <div class="btn-line">
+            <div class="btn" (click)=showModal(emptyNews)>Добавить</div>
+            <div [class]="isVisibleDelete? 'btn': 'btn_disable'" (click)=deleteCheckedNews()>
+                Удалить
+            </div>
+        </div>
+        <app-single-news (openModal)=showModal($event) (deleteItem)=deleteItem($event) (checkNews)=checkNews($event)
+            [single_news_data]="item" *ngFor="let item of newsItems">
+        </app-single-news>
+    </div>
 </div>

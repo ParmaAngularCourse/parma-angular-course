@@ -1,7 +1,14 @@
-<div class="edit-news modalDialog" id="openModal">
+<div *ngIf= "isVisible" class="edit-news modalDialog" id="openModal">
+    <div class="title">
+        <ng-content></ng-content>
+    </div>
+    <ng-container *ngTemplateOutlet = "news_temp; context: {news: news}"></ng-container>
+    
+ </div>
+ <ng-template #news_temp let-news="news">
     <div>
         <p>Дата</p>
-        <p><input #date type="datetime" autofocus maxlength="18" size="18" value={{news.dt}}></p>
+        <p><input #date type="datetime-local" autofocus maxlength="18" size="18" [value]="news.dt | date: 'yyyy-MM-ddTHH:mm'"></p>
     </div>
     <div>
         <p>Заголовок</p>
@@ -11,8 +18,15 @@
         <p>Текст</p>
         <p><input #text type="text" maxlength="200" size="40" autocomplete="off" value={{news.text}}></p>
     </div>
-    <div class="btn-line">
+    <div style="color: white;">
+        <p><input name="subject" type="radio" value="0" [checked] = "news.subject==0" (change)="changeSubject(0)"><span style="background:green">Политика</span></p>
+        <p><input name="subject" type="radio" value="1" [checked] = "news.subject==1" (change)="changeSubject(1)"><span style="background:cyan">Туризм</span></p>
+        <p><input name="subject" type="radio" value="2" [checked] = "news.subject==2" (change)="changeSubject(2)"><span style="background:orange">Экономика</span></p>
+        <p><input name="subject" type="radio" value="3" [checked] = "news.subject==3" (change)="changeSubject(3)"><span style="background:blue">Наука</span></p>
+        <p><input name="subject" type="radio" value="4" [checked] = "news.subject==4" (change)="changeSubject(4)"><span style="background:gray">Интернет</span></p>
+    </div>
+   <div class="btn-line">
         <div class="btn" (click)="clickSave(date.value, title.value, text.value)">Сохранить</div>
         <div class="btn" (click)=clickCancel()>Отмена</div>
     </div>
-</div>
+ </ng-template>

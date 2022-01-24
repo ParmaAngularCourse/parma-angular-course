@@ -4,6 +4,18 @@
     width: 350px;
     height: auto;
     border: 1px solid #000;
+    position: absolute;
+    top: 50px;
+    left: 250px;
+    z-index: 99999;
+	-webkit-transition: opacity 400ms ease-in;
+	transition: opacity 400ms ease-in;
+	display: block;
+    box-shadow: 4px 4px 4px #4f4f4f;
+}
+
+.title{
+    text-align: center;
 }
 
 .btn {
@@ -43,3 +55,7 @@ div {
     padding: 0px 10px 0px 10px;
 }
 
+span{
+    padding: 0px 10px 0px 10px;
+    border-radius: 5px;
+}

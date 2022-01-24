@@ -1,0 +1,27 @@
+.context-menu {
+    background-color: white;
+    margin: 10px auto;
+    padding: 10px 0px 10px 0px;
+    width: auto;
+    height: auto;
+    border: 1px solid #000;
+    position: absolute;
+    z-index: 99999;
+	-webkit-transition: opacity 400ms ease-in;
+	transition: opacity 400ms ease-in;
+	display: block;
+    box-shadow: 4px 4px 4px #4f4f4f;
+}
+
+.itemSelectAll{
+    padding: 10px 10px 10px 10px;
+    width: auto;
+    height: auto;
+    cursor: pointer;
+    user-select: none;
+}
+
+.itemSelectAll:hover{
+    background-color: #838a91;
+    color: white;
+}
