@@ -21,9 +21,14 @@ import { MainComponent } from './main/main.component';
 import { PersonComponent } from './person/person.component';
 import { LoginComponent } from './login/login.component';
 import { StoreModule } from '@ngrx/store';
-import {effects, reducers} from "./store";
+import {/*CustomRouterStateSerializer,*/effects, reducers} from "./store";
 import { EffectsModule } from '@ngrx/effects';
 import { SnackbarComponent } from './controls/snackbar/snackbar.component';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { environment } from '../environments/environment';
+import {
+  StoreRouterConnectingModule
+} from '@ngrx/router-store';
 
 @NgModule({
   declarations: [
@@ -50,7 +55,9 @@ import { SnackbarComponent } from './controls/snackbar/snackbar.component';
     ReactiveFormsModule,
     AppRoutingModule,
     StoreModule.forRoot(reducers, {}),
-    EffectsModule.forRoot(effects)
+    EffectsModule.forRoot(effects),
+    StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production }),
+    StoreRouterConnectingModule.forRoot({ stateKey: 'router' })
   ],
   providers: [{
     provide: HTTP_INTERCEPTORS,

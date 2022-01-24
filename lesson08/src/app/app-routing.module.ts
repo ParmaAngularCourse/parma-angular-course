@@ -6,7 +6,6 @@ import {MainComponent} from "./main/main.component";
 import {PersonComponent} from "./person/person.component";
 import {LoginComponent} from "./login/login.component";
 import {AuthGuard} from "./services/auth.guard";
-import {TagsListService} from "./news/services/tags-list.service";
 import {UnsaveWarningGuard} from "./services/unsave-warning.guard";
 import {NewsItemModalReactiveComponent} from "./news/news-item-modal-reactive/news-item-modal-reactive.component";
 
@@ -18,9 +17,6 @@ const routes: Routes = [
   },
   {
     path: 'main',
-    resolve: {
-      TagsList: TagsListService
-    },
     component: MainComponent,
     children: [
       {

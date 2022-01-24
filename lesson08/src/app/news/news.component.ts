@@ -48,20 +48,19 @@ export class NewsComponent implements OnInit, OnDestroy {
   }
 
   constructor(private _store: Store<fromStore.State>,
-              private _route: ActivatedRoute,
               private _cd: ChangeDetectorRef,
               private _router: Router) {
     this._ngUnsubscribe$ = new Subject();
   }
 
   ngOnInit(): void {
-    this._route.params
+    this._store
       .pipe(
+        select(fromStore.getSelectedTagId),
         takeUntil(this._ngUnsubscribe$)
       )
-      .subscribe(params => {
-        this._selectedTag = params?.tagsId ?? "";
-        if(this._selectedTag === "all") this._selectedTag = "";
+      .subscribe(value => {
+        this._selectedTag = value;
         this.doSearch();
       });
 

@@ -8,10 +8,9 @@ import {
   Output
 } from '@angular/core';
 import {NewsItemModel, NewsTag} from "../news-types";
-import {TagsListService} from "../services/tags-list.service";
 import {takeUntil} from "rxjs/operators";
 import {Subject} from "rxjs";
-import {Store} from "@ngrx/store";
+import {select, Store} from "@ngrx/store";
 import * as fromStore from "../../store";
 
 @Component({
@@ -31,23 +30,23 @@ export class NewsItemComponent implements OnInit, OnDestroy {
   @Output() editItem: EventEmitter<NewsItemModel> = new EventEmitter<NewsItemModel>();
 
   constructor(private _store: Store<fromStore.State>,
-              private _cd: ChangeDetectorRef,
-              private _tagListService: TagsListService) {
+              private _cd: ChangeDetectorRef) {
     this._ngUnsubscribe$ = new Subject();
   }
 
   ngOnInit(): void {
-    this._tagListService.getTagsList()
+    this._store
       .pipe(
+        select(fromStore.getTagsByTagsId(this.newsItem.tag)),
         takeUntil(this._ngUnsubscribe$)
       )
       .subscribe(
-      (data) => {
-        this.tag = data.find(p => p.tag == this.newsItem.tag);
-        this._cd.detectChanges()
-      },
-      (error) => {console.log(error)}
-    );
+        (data) => {
+          this.tag = data;
+          this._cd.detectChanges()
+        },
+        (error) => {console.log(error)}
+      );
   }
 
   checkboxChange($event: Event){

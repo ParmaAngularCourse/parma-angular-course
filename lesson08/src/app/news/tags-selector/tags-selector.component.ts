@@ -1,10 +1,10 @@
 import {Component, OnInit, ChangeDetectionStrategy, OnDestroy, ChangeDetectorRef} from '@angular/core';
 import {TagsListService} from "../services/tags-list.service";
-import {takeUntil} from "rxjs/operators";
-import {HttpErrorResponse} from "@angular/common/http";
-import {Subject} from "rxjs";
+import {Observable, Subject} from "rxjs";
 import {NewsTag} from "../news-types";
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from "@angular/forms";
+import {select, Store} from "@ngrx/store";
+import * as fromStore from "../../store";
 
 @Component({
   selector: 'app-tags-selector',
@@ -20,7 +20,7 @@ import {ControlValueAccessor, NG_VALUE_ACCESSOR} from "@angular/forms";
 export class TagsSelectorComponent implements OnInit, OnDestroy, ControlValueAccessor {
 
   controlValue: string | null = "";
-  tagsList: NewsTag[] = [];
+  tagsList$!: Observable<NewsTag[]>;
 
   onChange!: (_: string) => {};
   onTouched!: () => {};
@@ -28,24 +28,13 @@ export class TagsSelectorComponent implements OnInit, OnDestroy, ControlValueAcc
   private _ngUnsubscribe$: Subject<number>;
 
   constructor(private _tagsListService: TagsListService,
+              private _store: Store<fromStore.State>,
               private _cd: ChangeDetectorRef) {
     this._ngUnsubscribe$ = new Subject();
   }
 
   ngOnInit(): void {
-    this._tagsListService.getTagsList()
-      .pipe(
-        takeUntil(this._ngUnsubscribe$)
-      )
-      .subscribe(
-        (data) => {
-          this.tagsList = data;
-          this._cd.detectChanges();
-        },
-        (error: HttpErrorResponse) => {
-          console.log(error.status + " " + error.message)
-        }
-      );
+    this.tagsList$ = this._store.pipe(select(fromStore.selectAllTags));
   }
 
   onTagsChange(value: string) {

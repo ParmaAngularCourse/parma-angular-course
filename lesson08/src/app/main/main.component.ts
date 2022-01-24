@@ -1,8 +1,8 @@
-import {Component, OnInit, ChangeDetectionStrategy, OnDestroy} from '@angular/core';
+import {Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import {NewsTag} from "../news/news-types";
-import {ActivatedRoute} from "@angular/router";
-import {takeUntil} from "rxjs/operators";
-import { Subject } from 'rxjs';
+import {Observable} from 'rxjs';
+import {select, Store} from "@ngrx/store";
+import * as fromStore from "../store";
 
 @Component({
   selector: 'app-main',
@@ -10,27 +10,15 @@ import { Subject } from 'rxjs';
   styleUrls: ['./main.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MainComponent implements OnInit, OnDestroy {
+export class MainComponent implements OnInit {
 
-  tagsList: NewsTag[] =[];
-  private readonly _ngUnsubscribe$: Subject<number>;
+  tagsList$!: Observable<NewsTag[]>;
 
-  constructor(private _route: ActivatedRoute) {
-    this._ngUnsubscribe$ = new Subject();
+  constructor(private _store: Store<fromStore.State>) {
   }
 
   ngOnInit(): void {
-    this._route.data
-      .pipe(
-        takeUntil(this._ngUnsubscribe$)
-      )
-      .subscribe(params => {
-        this.tagsList = (params.TagsList as NewsTag[]);
-      });
-  }
-
-  ngOnDestroy() {
-    this._ngUnsubscribe$.next();
-    this._ngUnsubscribe$.complete();
+    this._store.dispatch(fromStore.loadTagsList());
+    this.tagsList$ = this._store.pipe(select(fromStore.selectAllTags));
   }
 }

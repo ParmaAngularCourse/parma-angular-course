@@ -6,7 +6,7 @@ import {
 } from '@angular/core';
 import {NewsItem, NewsItemModel} from "../news-types";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
-import {ActivatedRoute, Router} from "@angular/router";
+import {Router} from "@angular/router";
 import {switchMap, takeUntil} from "rxjs/operators";
 import {Subject} from "rxjs";
 import {select, Store} from "@ngrx/store";
@@ -40,7 +40,6 @@ export class NewsItemModalReactiveComponent implements OnInit, OnDestroy {
 
   constructor(private _store: Store<fromStore.State>,
               private _cd : ChangeDetectorRef,
-              private _route: ActivatedRoute,
               private _router: Router) {
     this._ngUnsubscribe$ = new Subject<number>();
   }
@@ -69,10 +68,11 @@ export class NewsItemModalReactiveComponent implements OnInit, OnDestroy {
         })
       );
 
-    this._route.params
+    this._store
       .pipe(
-        switchMap(params => {
-          return this._store.pipe(select(fromStore.selectItemById(Number(params.id))))
+        select(fromStore.getModalNewsItemId),
+        switchMap(id => {
+          return this._store.pipe(select(fromStore.selectItemById(Number(id))))
         }),
         takeUntil(this._ngUnsubscribe$)
       )
@@ -102,7 +102,7 @@ export class NewsItemModalReactiveComponent implements OnInit, OnDestroy {
   }
 
   cancel() {
-    this._router.navigate([{ outlets: {modal: null}}], {relativeTo: this._route.parent}).then(value => {
+    this._router.navigate([{ outlets: {modal: null}}]/*, {relativeTo: this._route.parent}*/).then(value => {
       if(value) {
         this._store.dispatch(this.editedItem.id > 0
           ? fromStore.editNewsItemReset()
@@ -119,7 +119,7 @@ export class NewsItemModalReactiveComponent implements OnInit, OnDestroy {
       this._store.dispatch(fromStore.addNewsItem({ newsItem: this.editedItem.fromModel() }))
 
     this.newsItemFormGroup.reset({options: {emitEvent: false}});
-    this._router.navigate([{ outlets: {modal: null}}], {relativeTo: this._route.parent}).then(_ => {});
+    this._router.navigate([{ outlets: {modal: null}}]/*, {relativeTo: this._route.parent}*/).then(_ => {});
   }
 
   ngOnDestroy(): void {
