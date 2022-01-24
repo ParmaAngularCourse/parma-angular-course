@@ -1,14 +1,17 @@
 import { ChangeDetectorRef, Component, Input, OnInit, Self } from '@angular/core';
 import { ControlValueAccessor, NgControl, NG_VALIDATORS, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { NewsType } from '../news/news-types';
 
 @Component({
-  selector: 'app-crazy-radio',
-  templateUrl: './crazy-radio.component.html',
-  styleUrls: ['./crazy-radio.component.css']
+  selector: 'app-custom-radio',
+  templateUrl: './custom-radio.component.html',
+  styleUrls: ['./custom-radio.component.css']
 })
-export class CrazyRadioComponent implements OnInit, ControlValueAccessor {
+export class CustomRadioComponent implements OnInit, ControlValueAccessor {
 
   @Input() value: any;
+  @Input() enum = NewsType;
+  @Input() colors!: any;
   model: any;
   onChange = (value: any) => { };
   onTouched = () => { };
@@ -17,6 +20,8 @@ export class CrazyRadioComponent implements OnInit, ControlValueAccessor {
   }
 
   ngOnInit() {
+    console.log(this.value);
+    console.log(this.model);
     this.ngControl?.control?.valueChanges.subscribe((value: any) => {
       this.ref.detectChanges();
       if (this.model === value) return;
@@ -37,7 +42,6 @@ export class CrazyRadioComponent implements OnInit, ControlValueAccessor {
   }
 
   select() {
-    this.model = this.model === this.value ? null : this.value;
     this.onChange(this.model);
   }
 }

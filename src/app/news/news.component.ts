@@ -2,10 +2,14 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChild } from '@angular/core';
 import { ModalComponent } from '../modal/modal.component';
 import { NewsService } from '../news.service';
-import { Report } from './news-types';
+import { ComponentCanDeactivate, NewsType, newsTypeColors, Report } from './news-types';
 import { Role } from './roles';
 import { Subject } from 'rxjs';
-import { debounceTime, takeUntil } from 'rxjs/operators';
+import { bufferCount, debounceTime, distinctUntilChanged, mergeAll, mergeMap, reduce, takeUntil } from 'rxjs/operators';
+import { ActivatedRoute, Router } from '@angular/router';
+import { AuthService } from '../auth.service';
+import { Observable, of } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-news',
@@ -13,21 +17,58 @@ import { debounceTime, takeUntil } from 'rxjs/operators';
   styleUrls: ['./news.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class NewsComponent {
+export class NewsComponent implements ComponentCanDeactivate {
 
-  public news!: Report[];
+  public news: Report[] = [];
   private ngUnsubscribe$!: Subject<number>;
   private searchSubject: Subject<string> = new Subject();
 
-  constructor(private _newsService: NewsService, private ref: ChangeDetectorRef) {
+  constructor(private authService: AuthService, private _newsService: NewsService, private ref: ChangeDetectorRef, private router: Router, private route: ActivatedRoute) {
     this.ngUnsubscribe$ = new Subject();
     this.setSearchSubscription();
-    this._newsService.getNews("").pipe(takeUntil(this.ngUnsubscribe$)).subscribe(((data: any) => { this.news = data; this.ref.markForCheck(); }), (error: HttpErrorResponse) => console.log(error));
+    this._newsService.getNewsSubscription().pipe(
+      takeUntil(this.ngUnsubscribe$),
+      map((r: Report[]) => {
+        let colNum = 0;
+        r.forEach(x => x.colNum = colNum < 3 ? ++colNum : colNum = 1);
+        return r;
+      }))
+      .subscribe((data: any) => this.updateView(data));
+    this._newsService.getNewsSubscription().pipe(
+      takeUntil(this.ngUnsubscribe$),
+      mergeMap(x => of(x).pipe(
+        mergeAll(),
+        bufferCount(3),
+        reduce((acc: any, arr: any) => [...acc, arr], []))))
+      .subscribe((tally: any) => {
+        console.log(tally);
+      });
+    this.route.queryParams.subscribe(
+      (params: any) => {
+        this.newsType = params['newsType'] ?? "";
+        this.isModalShow = params['isModalShow'] ?? false;
+        this.modalIndex = params['modalIndex'] ?? -1;
+      }
+    );
+  }
+
+  ngOnInit() {
+    this.getNews();
+  }
+
+  showModal() {
+    if (this.isModalShow) {
+      if (this.news.length <= this.modalIndex)
+        this.clickAddButton();
+      else this.initReport(this.news[this.modalIndex], this.modalIndex);
+      this.isModalShow = false;
+    }
   }
 
   @ViewChild('modal') modal!: ModalComponent;
 
   defaultReport = {
+    id: 0,
     header: "",
     body: "",
     timestamp: "",
@@ -40,16 +81,33 @@ export class NewsComponent {
   isContextMenuVisible = false;
   contextMenuPosition: { left: number, top: number; } = { left: 0, top: 0 };
   roleEnum = Role;
-  searchText = "";
+  searchText: string | null = null;
+  newsTypeEnum = NewsType;
+  newsTypeColors = newsTypeColors;
+  newsType = "";
+  canSubmit = this.authService.isAuth();
+  isModalShow = false;
+  isDirty = false;
+
+  getNews() {
+    return this._newsService
+      .getNews(this.searchText ?? "", this.newsType);
+  }
+
+  updateView(data: any) {
+    this.news = data;
+    this.ref.markForCheck();
+    this.showModal();
+  }
 
   setSearchSubscription() {
     this.searchSubject.pipe(
-      debounceTime(600)
-    ).subscribe((searchValue: string) => {
-      if (searchValue != this.searchText) {
-        this.searchText = searchValue;
-        this._newsService.getNews(searchValue).pipe(takeUntil(this.ngUnsubscribe$)).subscribe(((data: any) => { this.news = data; this.ref.markForCheck(); }), (error: HttpErrorResponse) => console.log(error));
-      }
+      takeUntil(this.ngUnsubscribe$),
+      debounceTime(600),
+      distinctUntilChanged()
+    ).subscribe((searchText: string) => {
+      this.searchText = searchText;
+      this.getNews();
     });
   }
 
@@ -57,17 +115,20 @@ export class NewsComponent {
     this.searchSubject.next(searchTextValue.target.value);
   }
 
+  updateFilter() {
+    this.getNews();
+    this.router.navigate(['.'], {
+      relativeTo: this.route, queryParams:
+        { newsType: this.newsType }
+    });
+  }
+
   clickAddButton() {
     this.modalIndex = this.news.length;
     this.modalHeader = "Добавить новость";
     this.modalData = Object.assign({}, this.defaultReport);
-    const counts = this.news.reduce((tally: Record<number, number>, x) => {
-      let i = x.colNum ?? 0;
-      if (i > 0) { tally[i] = (tally[i] || 0) + 1; }
-      return tally;
-    }, {1:0, 2:0, 3:0});
-    this.modalData.colNum = (Object.keys(counts) as unknown as Array<number>).find(key => counts[key] === Math.min(...(Object.values(counts) as unknown as Array<number>)));
     this.modal.show();
+    this.isDirty = false;
   }
 
   clickDeleteButton() {
@@ -84,6 +145,7 @@ export class NewsComponent {
     this.modalHeader = "Изменить новость";
     this.modalData = Object.assign({}, $event);
     this.modal.show();
+    this.isDirty = false;
   }
 
   deleteReport(i: number) {
@@ -108,6 +170,13 @@ export class NewsComponent {
   ngOnDestroy() {
     this.ngUnsubscribe$.next(0);
     this.ngUnsubscribe$.complete();
-    this.searchSubject.unsubscribe();
+  }
+
+  canDeactivate(): boolean | Observable<boolean> {
+    return this.modal.isModalVisible && this.isDirty ? confirm("Изменения в открытом модальном окне не сохранены. Вы точно хотите покинуть страницу?") : true;
+  }
+
+  setIsDirty() {
+    this.isDirty = true;
   }
 }

@@ -1,0 +1,4 @@
+<app-edit-component [form]="loginForm" [templates]="templates" (submit)="submit()" submitName="Войти"></app-edit-component>
+<div class="error" *ngIf="isUserNotExists">
+  Пользователь с введеными логином и паролем не существует
+</div>

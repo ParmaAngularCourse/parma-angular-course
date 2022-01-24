@@ -16,6 +16,10 @@ import { TooltipDirective } from './tooltip.directive';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { HttpInterseptorService } from './http-interseptor.service';
 import { CrazyRadioComponent } from './crazy-radio/crazy-radio.component';
+import { ProfileComponent } from './profile/profile.component';
+import { EditComponentComponent } from './edit-component/edit-component.component';
+import { LoginComponent } from './login/login.component';
+import { CustomRadioComponent } from './custom-radio/custom-radio.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +33,11 @@ import { CrazyRadioComponent } from './crazy-radio/crazy-radio.component';
     UpperCaseNamePipePipe,
     NewsTypePipePipe,
     TooltipDirective,
-    CrazyRadioComponent
+    CrazyRadioComponent,
+    ProfileComponent,
+    EditComponentComponent,
+    LoginComponent,
+    CustomRadioComponent
   ],
   imports: [
     BrowserModule,

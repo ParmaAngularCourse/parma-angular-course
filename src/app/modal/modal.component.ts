@@ -16,5 +16,4 @@ export class ModalComponent {
   hide() {
     this.isModalVisible = false;
   }
-
 }
