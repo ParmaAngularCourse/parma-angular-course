@@ -74,7 +74,10 @@ namespace AngularAppDataServer.Repositories
 
         internal Task<IEnumerable<News>> LoadNewsData(Filter filter)
         {
-            var result = newsList.Where(x => x.Title.Contains(filter.SearchTextFilter) || x.Body.Contains(filter.SearchTextFilter));
+            var result = newsList.Where(x => 
+                (x.Title.Contains(filter.SearchTextFilter) || x.Body.Contains(filter.SearchTextFilter))
+                && (filter.NewsTypeFilter == NewsType.Type0_None || x.Type == filter.NewsTypeFilter)
+            );
             return Task.FromResult(result);
         }
     }

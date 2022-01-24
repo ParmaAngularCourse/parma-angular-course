@@ -1,10 +1,14 @@
 import { DatePipe } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { AbstractControl, FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { map, Observable, Subject, switchMap, takeUntil } from 'rxjs';
+import { ICanDeactivateComponent } from 'src/model/ICanDeactivateComponent';
 import { INewsData } from 'src/model/INewsData';
 import { TypeNews } from 'src/model/TypeNews';
-import { NewsDateValidator } from '../Validators/NewsDateValidators';
-import { NotEmptyStringValidator } from '../Validators/NotEmptyStringValidator';
+import { NewsService } from '../../../service/news.service';
+import { NewsDateValidator } from '../../../Validators/NewsDateValidators';
+import { NotEmptyStringValidator } from '../../../Validators/NotEmptyStringValidator';
 
 @Component({
   selector: 'app-news-editor',
@@ -12,11 +16,12 @@ import { NotEmptyStringValidator } from '../Validators/NotEmptyStringValidator';
   styleUrls: ['./news-editor.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class NewsEditorComponent implements OnInit { 
-  @Output() public saveEditForm: EventEmitter<INewsData> = new EventEmitter(); 
-  public currentNews: INewsData;
-  public isVisible: boolean = false;  
-  public editForm!: FormGroup
+export class NewsEditorComponent implements OnInit, OnDestroy, ICanDeactivateComponent {
+  public currentNews: INewsData; 
+  public editForm!: FormGroup;
+  private unsubscriptionSubj!:Subject<void>
+  public headerTitle: string = '';
+  private saved: boolean = true;
 
   public get newsDateControl():FormControl{
     return this.editForm.controls['newsDateControl'] as FormControl;
@@ -34,11 +39,27 @@ export class NewsEditorComponent implements OnInit {
     return this.editForm.controls['newsTypeControl'];
   }
 
-  constructor(private cd:ChangeDetectorRef, private fb: FormBuilder, private datepipe: DatePipe){
+  constructor(
+    private newsService:NewsService,
+    private cd:ChangeDetectorRef,
+    private fb: FormBuilder,
+    private datepipe: DatePipe,
+    private route: ActivatedRoute,
+    private router: Router){
     this.currentNews = this.getDefaultNewsData();
   }
 
+  canDeactivate() : boolean | Observable<boolean>{     
+    if(!this.saved){
+        return confirm("Вы хотите покинуть страницу?");
+    }
+    else{
+        return true;
+    }
+  }
+
   ngOnInit(): void {
+    this.unsubscriptionSubj = new Subject();
     this.editForm = this.fb.group(
       {        
         newsDateControl: [this.getDateToLocalStringFormat(this.currentNews.date), 
@@ -55,15 +76,35 @@ export class NewsEditorComponent implements OnInit {
     this.newsTitleControl.valueChanges.subscribe((value:string)=> this.onChangeNewsTitle(value))
     this.newsBodyControl.valueChanges.subscribe((value:string)=> this.onChangeNewsBody(value))
     this.newsTypeControl.valueChanges.subscribe((value:TypeNews)=> this.onChangeNewsType(value))
+
+    this.route.params
+    .pipe(
+      map(paramObj => paramObj['newsId'] as number),
+      switchMap(newsId => this.newsService.GetNewsById(newsId)),
+      takeUntil(this.unsubscriptionSubj)
+    )
+    .subscribe(news => this.openForm(news))   
+
+    this.route.url.subscribe(url=>{
+      if(url[0]?.path === "add")
+      {
+        this.headerTitle = 'Добавить новость'
+      }
+      else{
+        this.headerTitle = 'Изменить новость'
+      }
+      this.cd.markForCheck()
+    })
+    this.saved = true;
   }
 
   saveForm() {
-    this.saveEditForm.emit(this.currentNews);     
+    this.newsService.addNews(this.currentNews);
+    this.saved = true;     
     this.closeForm();
   }
 
   openForm(newsData:INewsData|null){
-    this.isVisible = true;    
     if(newsData){
       this.currentNews = { ...newsData };
     }
@@ -82,8 +123,7 @@ export class NewsEditorComponent implements OnInit {
   }
 
   closeForm() {
-    this.isVisible = false;
-    this.editForm.reset();
+    this.router.navigate([{ outlets: { editForm: null }}], { relativeTo: this.route.parent, queryParamsHandling: 'merge'});
   }
 
   private getDateToLocalStringFormat(date:Date):string|null{
@@ -93,25 +133,23 @@ export class NewsEditorComponent implements OnInit {
   onChangeNewsDate(value:string){
     if(value){    
       this.currentNews.date = new Date(value);
+      this.saved = false;
     }
-    /*else{
-      this.currentNews.date = new Date(1900,0,1);
-      this.editForm.patchValue({
-        newsDateControl: this.getDateToLocalStringFormat(this.currentNews.date)
-      });
-    }*/
   }
 
   onChangeNewsTitle(value:string){
     this.currentNews.title = value;
+    this.saved = false;
   }
 
   onChangeNewsBody(value:string){
     this.currentNews.body = value;
+    this.saved = false;
   }
 
   onChangeNewsType(value:TypeNews){
     this.currentNews.type = value;
+    this.saved = false;
   }
 
   ngDoCheck(){
@@ -126,5 +164,10 @@ export class NewsEditorComponent implements OnInit {
       body: "Текст",
       type: TypeNews.Type0_None
     }
+  }
+
+  ngOnDestroy(){
+    this.unsubscriptionSubj.next();
+    this.unsubscriptionSubj.complete();
   }
 }

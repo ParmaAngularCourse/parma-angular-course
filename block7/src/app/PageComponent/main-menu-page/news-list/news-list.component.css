@@ -1,4 +1,4 @@
-.control-button{
+.control-button {
     margin-left: 10px;
     background-color: darkblue;
     color: white;
@@ -7,18 +7,31 @@
     text-align: center;
 }
 
-.news-block:after {    
-	margin-right: 60px;
+.news-block:after {
+    margin-right: 60px;
     display: table-column;
     clear: both;
     content: "";
 }
 
-.input-filter-textbox{
+.input-filter-textbox {
     width: calc(100% - 30px);
-    margin-left: 10px; 
+    margin-left: 10px;
     margin-bottom: 10px;
     text-align: left;
     height: 30px;
     font: 1.6em "Fira Sans"
-  }
+}
+
+.news_content {
+    width: auto;
+    height: 88%;
+    position: absolute;
+    overflow: auto;
+    display: inline-block;
+}
+
+.title_header {
+    font: italic 2.0em "Fira Sans";
+    margin-top: 0px;
+}

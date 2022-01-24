@@ -14,10 +14,14 @@ namespace AngularAppDataServer.Repositories
             { 
                 Login = "user1",
                 Password = "password1",
+                Name = "Ivan",
+                Surname = "Ivanovich",
+                Email = "ivan_ivanovich@mail.ru",
                 Permissions = new List<Permission>
                 {
                     new Permission("Delete", true),
                     new Permission("Save", true),
+                    new Permission("Profile", true),
                 }
             }
         };
@@ -27,8 +31,26 @@ namespace AngularAppDataServer.Repositories
             var authUser = usersCollection.FirstOrDefault(x => x.Login == login && x.Password == password);
             if (authUser == null)
             {
-                throw new Exception("Неверно введен логин или пароль");
+                authUser = new User();
+                //throw new Exception("Неверно введен логин или пароль");
             }
+            return Task.FromResult(authUser);
+        }
+
+        internal Task<User> UpdateUserProfile(User user)
+        {
+            var authUser = usersCollection.FirstOrDefault(x => x.Login == user.Login && x.Password == user.Password);
+            if (authUser == null)
+            {
+                throw new Exception("Не удалось найти пользователя");
+            }
+            else
+            {
+                authUser.Name = user.Name;
+                authUser.Surname = user.Surname;
+                authUser.Email = user.Email;                
+            }
+
             return Task.FromResult(authUser);
         }
     }

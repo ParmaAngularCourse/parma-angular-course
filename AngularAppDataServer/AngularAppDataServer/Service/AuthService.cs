@@ -30,12 +30,22 @@ namespace AngularAppDataServer.Service
 
             var login = authParam[0];
             var password = authParam[1];
-            if (string.IsNullOrEmpty(login) || string.IsNullOrEmpty(password))
+            /*if (string.IsNullOrEmpty(login) || string.IsNullOrEmpty(password))
+            {
+                throw new Exception("Неполные авторизационные данные");
+            }*/
+
+            return await usersRepository.GetUserInfo(login, password).ConfigureAwait(false);
+        }
+
+        internal async Task<User> UpdateUserProfile(User user)
+        {
+            if (string.IsNullOrEmpty(user.Login) || string.IsNullOrEmpty(user.Password))
             {
                 throw new Exception("Неполные авторизационные данные");
             }
 
-            return await usersRepository.GetUserInfo(login, password).ConfigureAwait(false);
+            return await usersRepository.UpdateUserProfile(user).ConfigureAwait(false);
         }
     }
 }

@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, map, Observable, of } from 'rxjs';
 import { INewsData } from 'src/model/INewsData';
 import { News } from 'src/model/News';
 import { NewsFilter } from 'src/model/NewsFilter';
@@ -10,16 +10,14 @@ import { ServerResponse } from 'src/model/ServerResponse';
   providedIn: 'root'
 })
 export class NewsService {
-  private newsListSubject?:BehaviorSubject<INewsData[]>;
+  private newsListSubject:BehaviorSubject<INewsData[]>;
 
-  constructor(private httpService:HttpClient){}
+  constructor(private httpService:HttpClient){
+    this.newsListSubject = new BehaviorSubject<INewsData[]>([]);    
+  }
 
   public getNewsList(filter:NewsFilter):Observable<INewsData[]>{
-    if(!this.newsListSubject){
-      this.newsListSubject = new BehaviorSubject<INewsData[]>([]);
-    }
-
-    this.httpService.post<ServerResponse<INewsData[]>>('http://localhost:5000/api/NewsData/GetNews', filter)      
+    this.httpService.post<ServerResponse<INewsData[]>>('/api/NewsData/GetNews', filter)      
     .subscribe({
       next: (response)=> { 
         if (response.isSuccess === false) {
@@ -30,7 +28,7 @@ export class NewsService {
         }
       },
       error:(err)=> { 
-        console.error(`Ошибка при получении данных c сервера: ${err}`)
+        console.error(`Ошибка при получении данных c сервера: ${err.message}`)
         return []
       }        
     });
@@ -39,7 +37,7 @@ export class NewsService {
   }
 
   public addNews(news: INewsData){
-    this.httpService.post<ServerResponse<INewsData>>('http://localhost:5000/api/NewsData/AddNews', news)
+    this.httpService.post<ServerResponse<INewsData>>('/api/NewsData/AddNews', news)
     .subscribe({
       next: (response)=> {
         if (response.isSuccess === false) {
@@ -57,13 +55,13 @@ export class NewsService {
           }
         }           
       },
-      error:(err)=> { console.error(`При попытке изменить список новостей возникла ошибка: ${err}`)}        
+      error:(err)=> { console.error(`При попытке изменить список новостей возникла ошибка: ${err.message}`)}        
     });    
   }  
 
   public deleteNews(news:News){
     var params = new HttpParams().set('newsId',news.id)    
-    this.httpService.delete<ServerResponse<void>>('http://localhost:5000/api/NewsData/DeleteNews',{
+    this.httpService.delete<ServerResponse<void>>('/api/NewsData/DeleteNews',{
       params: params
     })
     .subscribe({
@@ -75,8 +73,18 @@ export class NewsService {
           this.DeleteNewsItem(news);            
         }           
       },        
-      error:(err)=> { console.error(`При попытке удалить новость возникла ошибка: ${err}`)}        
+      error:(err)=> { console.error(`При попытке удалить новость возникла ошибка: ${err.message}`)}        
     });    
+  }
+
+  public GetNewsById(id:number): Observable<INewsData|null>{
+    if(id){
+      return this.newsListSubject.pipe(
+        map(newsArray => newsArray.find(x=>x.id == id) ?? null))
+    }
+    else{
+      return of(null);
+    }
   }
 
   private CreateNewsList(newsDataList: INewsData[]|undefined): void 

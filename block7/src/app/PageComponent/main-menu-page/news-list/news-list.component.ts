@@ -1,11 +1,14 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
-import { bufferCount, debounceTime, distinctUntilChanged, from, fromEvent, map, Observable, startWith, Subject, switchMap, takeUntil, toArray } from 'rxjs';
+import { ActivatedRoute, ActivationStart, Router, RouterOutlet } from '@angular/router';
+import { bufferCount, combineLatest, debounceTime, distinctUntilChanged, from, fromEvent, map, Observable, startWith, Subject, switchMap, takeUntil, toArray } from 'rxjs';
 import { INewsData } from 'src/model/INewsData';
 import { News } from 'src/model/News';
-import { NewsContextMenuComponent } from '../news-context-menu/news-context-menu.component';
+import { NewsFilter } from 'src/model/NewsFilter';
+import { TypeNews } from 'src/model/TypeNews';
+import { NewsContextMenuComponent } from './news-context-menu/news-context-menu.component';
 import { NewsEditorComponent } from '../news-editor/news-editor.component';
-import { NewsService } from '../service/news.service';
+import { NewsService } from '../../../service/news.service';
 import { NewsBlockComponent } from './news-block/news-block.component';
 
 @Component({
@@ -15,31 +18,40 @@ import { NewsBlockComponent } from './news-block/news-block.component';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NewsListComponent implements OnInit, OnDestroy {
-  @ViewChild('newsEditForm') newsEditForm!: NewsEditorComponent
+  @ViewChild(RouterOutlet) outlet!: RouterOutlet;
   @ViewChild('contextMenu') newsContextMenu!: NewsContextMenuComponent
   @ViewChild('newsFilter') newsFilter!: ElementRef
   @ViewChildren(NewsBlockComponent) childrenComponents!:QueryList<NewsBlockComponent>  
   public newsArray: INewsData[][] = [];
-  public editFormCaption: string = "";
   public enableDeleteButton:boolean = false;  
   private unsubscriptionSubj!:Subject<void>
 
-  constructor(private newsService:NewsService, private cd:ChangeDetectorRef)
-  {
-  }
+  constructor(private newsService:NewsService, private cd:ChangeDetectorRef, private route: ActivatedRoute, private router: Router){}
 
   ngOnInit(): void {
-    this.unsubscriptionSubj = new Subject();   
+    this.unsubscriptionSubj = new Subject();
   }
 
   ngAfterViewInit() {
-    fromEvent<Event>(this.newsFilter.nativeElement, 'keyup')
+    let newsTypeFilter$: Observable<TypeNews> = this.route.queryParams
+    .pipe(
+      map(paramObj => paramObj['type'] as TypeNews)
+    );
+
+    let searchTextFilter$: Observable<string> = fromEvent<Event>(this.newsFilter.nativeElement, 'keyup')
     .pipe(
       debounceTime(600),
-      map(event => (event.target as HTMLInputElement).value),
+      map(event => (event.target as HTMLInputElement).value as string),
       startWith(''),
-      distinctUntilChanged(),
-      switchMap(value=> this.newsService.getNewsList({ searchTextFilter: value })),
+      distinctUntilChanged()
+    );
+
+    combineLatest(      
+      [searchTextFilter$, 
+       newsTypeFilter$]
+    ).pipe(
+      map(([searchFilter, typeFilter]) => new NewsFilter(searchFilter, typeFilter)),
+      switchMap(filter=> this.newsService.getNewsList(filter)),
       switchMap(value=> {
         return from(value).pipe(
         bufferCount(3),
@@ -65,15 +77,9 @@ export class NewsListComponent implements OnInit, OnDestroy {
   }
 
   onAddNews(){
-    this.editFormCaption = "Добавить новость";    
-    this.newsEditForm.openForm(null);
+    this.router.navigate([{ outlets: { editForm: ['add'] }}], { relativeTo: this.route, queryParamsHandling: 'merge'});
   }
 
-  onEditNews(news:News){
-    this.editFormCaption = "Изменить новость";
-    this.newsEditForm.openForm(news);
-  }
-  
   onSaveNews(news: INewsData){
     this.newsService.addNews(news);
   }

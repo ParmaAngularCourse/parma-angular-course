@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { News } from 'src/model/News';
 
 @Component({
@@ -11,12 +12,11 @@ export class NewsBlockComponent implements OnInit {
 
   @Input() public currentNews: News;
   @Output() public deleteNews: EventEmitter<News> = new EventEmitter();
-  @Output() public editNews: EventEmitter<News> = new EventEmitter();
   @Output() public selectedNews: EventEmitter<News> = new EventEmitter();
   public checkBoxState: boolean;
   public enableDeleteButton: boolean;       
 
-  constructor() { 
+  constructor(private route: ActivatedRoute, private router: Router) { 
     this.currentNews = new News(-1, new Date, "Новость", "");
     this.checkBoxState = false;
     this.enableDeleteButton = this.checkBoxState;          
@@ -28,7 +28,7 @@ export class NewsBlockComponent implements OnInit {
   onCheckboxChange(checked:boolean){    
     this.checkBoxState = checked;
     this.enableDeleteButton = this.checkBoxState;
-    this.selectedNews.emit(this.currentNews);
+    this.selectedNews.emit(this.currentNews);  
   }
 
   onDeleteNew(){
@@ -36,7 +36,7 @@ export class NewsBlockComponent implements OnInit {
   }
 
   onEditNew(){    
-    this.editNews.emit(this.currentNews); 
+    this.router.navigate([{ outlets: { editForm: ['edit', this.currentNews.id] }}], { relativeTo: this.route, queryParamsHandling: 'merge'}); 
   }
   
   ngDoCheck(){

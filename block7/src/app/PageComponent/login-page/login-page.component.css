@@ -1,0 +1,64 @@
+.input-form {
+    position: fixed;
+    top: 45%;
+    left: 45%;
+    width: 15%;
+}
+
+.input-data-block {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.control-button-block{
+    height: 30px;
+    margin-bottom: 10px;
+}
+
+.input-data-group {
+    margin-bottom: 30px;
+}
+
+.control-button {
+    margin-left: 10px;
+    background-color: darkblue;
+    color: white;
+    height: 30px;
+    width: 100px;
+    text-align: center;
+    line-height: 1em;
+    float: right;
+}
+
+.input-data-label {
+    display: inline-block;
+    width: 90px;
+    text-align: left;
+}
+
+.input-data-textbox {
+    width: 99%;
+}
+
+.ng-dirty.ng-invalid {
+    border-color: red;
+}
+
+::ng-deep .ng-invalid>li.input-data-group {
+    border-color: red;
+    border-left-width: 1px;
+    border-left-style: solid;
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+    border-top-width: 1px;
+    border-top-style: solid;
+    border-right-width: 1px;
+    border-right-style: solid;
+}
+
+.invalid-error-text {
+    margin-bottom: 0px;
+    margin-top: 0px;
+    color: red;
+}

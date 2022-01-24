@@ -6,33 +6,33 @@
   margin-left: 10px;
   margin-bottom: 5px;
   margin-top: 5px;
-  padding-bottom: 10px; 
-  padding-left: 30px; 
+  padding-bottom: 10px;
+  padding-left: 30px;
   position: relative;
 }
 
-.news-body{
+.news-body {
   overflow: auto;
   height: 150px;
 }
 
-.news-block-uncheked{
-    color: black;
+.news-block-uncheked {
+  color: black;
 }
 
-.news-block-cheked{
-    color:darkblue;
+.news-block-cheked {
+  color: darkblue;
 }
 
 .news-header {
   position: relative;
 }
 
-.news-title{
-  display:flex;
+.news-title {
+  display: flex;
 }
 
-.news-title-block{
+.news-title-block {
   width: 95%;
 }
 
@@ -54,31 +54,31 @@
   top: 5px;
 }
 
-.control-button{
+.control-button {
   margin-right: 10px;
   background-color: darkblue;
   color: white;
   height: 30px;
   width: 100px;
-  text-align: center;  
+  text-align: center;
 }
 
-.delete{
+.delete {
   position: absolute;
   right: 10px;
-  bottom: 10px; 
+  bottom: 10px;
 }
 
-.save{
+.save {
   position: absolute;
   right: 120px;
-  bottom: 10px; 
+  bottom: 10px;
 }
 
-.news-type-tag {	
-	height: 30px;
-	width: 30px;
-	color: white;
-	text-align: center;
-	font-size: 1.2em;
+.news-type-tag {
+  height: 30px;
+  width: 30px;
+  color: white;
+  text-align: center;
+  font-size: 1.2em;
 }
