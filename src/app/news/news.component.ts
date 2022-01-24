@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, HostListener, ViewChild } from '@angular/core';
 import { ModalComponent } from '../modal/modal.component';
 import { NewsService } from '../news.service';
 import { ComponentCanDeactivate, NewsType, newsTypeColors, Report } from './news-types';
@@ -22,6 +22,8 @@ export class NewsComponent implements ComponentCanDeactivate {
   public news: Report[] = [];
   private ngUnsubscribe$!: Subject<number>;
   private searchSubject: Subject<string> = new Subject();
+
+  @ViewChild('modal') modal!: ModalComponent;
 
   constructor(private authService: AuthService, private _newsService: NewsService, private ref: ChangeDetectorRef, private router: Router, private route: ActivatedRoute) {
     this.ngUnsubscribe$ = new Subject();
@@ -46,26 +48,32 @@ export class NewsComponent implements ComponentCanDeactivate {
     this.route.queryParams.subscribe(
       (params: any) => {
         this.newsType = params['newsType'] ?? "";
-        this.isModalShow = params['isModalShow'] ?? false;
-        this.modalIndex = params['modalIndex'] ?? -1;
+        this.modalIndex = JSON.parse(params['modalIndex'] ?? "-1");
       }
     );
   }
 
   ngOnInit() {
+    this.updateComponent();
+  }
+
+  updateRoute() {
+    this.router.navigate(['.'], {
+      relativeTo: this.route, queryParams:
+        { newsType: this.newsType, modalIndex: this.modalIndex }
+    });
+  }
+
+  updateComponent() {
+    this.updateRoute();
     this.getNews();
   }
 
   showModal() {
-    if (this.isModalShow) {
-      if (this.news.length <= this.modalIndex)
-        this.clickAddButton();
-      else this.initReport(this.news[this.modalIndex], this.modalIndex);
-      this.isModalShow = false;
-    }
+    if (this.news.length == this.modalIndex)
+      this.clickAddButton();
+    else if (this.news.length >= this.modalIndex && this.modalIndex >= 0) this.initReport(this.news[this.modalIndex], this.modalIndex);
   }
-
-  @ViewChild('modal') modal!: ModalComponent;
 
   defaultReport = {
     id: 0,
@@ -86,7 +94,6 @@ export class NewsComponent implements ComponentCanDeactivate {
   newsTypeColors = newsTypeColors;
   newsType = "";
   canSubmit = this.authService.isAuth();
-  isModalShow = false;
   isDirty = false;
 
   getNews() {
@@ -116,15 +123,12 @@ export class NewsComponent implements ComponentCanDeactivate {
   }
 
   updateFilter() {
-    this.getNews();
-    this.router.navigate(['.'], {
-      relativeTo: this.route, queryParams:
-        { newsType: this.newsType }
-    });
+    this.updateComponent();
   }
 
   clickAddButton() {
     this.modalIndex = this.news.length;
+    this.updateRoute();
     this.modalHeader = "Добавить новость";
     this.modalData = Object.assign({}, this.defaultReport);
     this.modal.show();
@@ -138,10 +142,13 @@ export class NewsComponent implements ComponentCanDeactivate {
   saveReport($event: Report) {
     this._newsService.saveReport($event, this.modalIndex);
     this.modal.hide();
+    this.modalIndex = -1;
+    this.updateRoute();
   }
 
   initReport($event: Report, i: number) {
     this.modalIndex = i;
+    this.updateRoute();
     this.modalHeader = "Изменить новость";
     this.modalData = Object.assign({}, $event);
     this.modal.show();
@@ -172,6 +179,7 @@ export class NewsComponent implements ComponentCanDeactivate {
     this.ngUnsubscribe$.complete();
   }
 
+  @HostListener('window:beforeunload')
   canDeactivate(): boolean | Observable<boolean> {
     return this.modal.isModalVisible && this.isDirty ? confirm("Изменения в открытом модальном окне не сохранены. Вы точно хотите покинуть страницу?") : true;
   }

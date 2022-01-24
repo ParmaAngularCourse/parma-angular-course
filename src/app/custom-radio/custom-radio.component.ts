@@ -20,8 +20,6 @@ export class CustomRadioComponent implements OnInit, ControlValueAccessor {
   }
 
   ngOnInit() {
-    console.log(this.value);
-    console.log(this.model);
     this.ngControl?.control?.valueChanges.subscribe((value: any) => {
       this.ref.detectChanges();
       if (this.model === value) return;
