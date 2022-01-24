@@ -5,6 +5,7 @@ const app = express();
 const jsonParser = express.json();
 
 const filePath = "news.json";
+const usersFilePath = "users.json";
 
 app.use(function (req, res, next) {
     res.setHeader('Access-Control-Allow-Origin', 'http://localhost:4200');
@@ -18,11 +19,15 @@ app.use(function (req, res, next) {
 app.get("/api/news", function(req, res) {  
     console.log("получение списка новостей");
     const searchText = req.query.searchText;
+    const newsType = req.query.newsType;
 
     const content = fs.readFileSync(filePath,"utf8");
     let news = JSON.parse(content);
     if(searchText) {
         news = news.filter(n => n.title.indexOf(searchText) != -1);
+    }
+    if(newsType && newsType !== '') {
+        news = news.filter(n => n.type === newsType);
     }
     res.send(news);
 });
@@ -135,6 +140,145 @@ app.post("/api/news", jsonParser, function(req, res) {
     }
     else {
         res.status(404).send(newsItem);
+    }
+});
+
+// получение информации о пользователе
+app.get("/api/profileInfo", function(req, res) {  
+    console.log("получение информации о пользователе");
+    const login = req.query.login;
+
+    const content = fs.readFileSync(usersFilePath,"utf8");
+    let users = JSON.parse(content);
+    let userInfo = {};
+    if(login && login !== '') {
+        userInfo = users.find(u => u.login === login)?.map(value => {
+            value.firstname,
+            value.lastname,
+            value.email
+        });
+    }
+    res.send(userInfo);
+});
+
+// вход в систему
+app.post("/api/login", jsonParser, function(req, res) {
+
+    console.log("вход в систему");
+    console.log(req.body);
+
+    if(!req.body) return res.sendStatus(400);
+
+    const login = req.body.login;
+    const password = req.body.password;
+      
+    let data = fs.readFileSync(usersFilePath, "utf8");
+    const users = JSON.parse(data);
+    let user = users.find(u => u.login === login && u.password === password);
+
+    if(user) {
+        user.auth = true;
+        data = JSON.stringify(users);
+        fs.writeFileSync("users.json", data);
+        res.send(true);
+    }
+    else {
+        res.status(404).send(login);
+    }
+});
+
+// выход из системы
+app.post("/api/logout", jsonParser, function(req, res) {
+
+    console.log("выход из системы");
+    console.log(req.body);
+
+    if(!req.body) return res.sendStatus(400);
+
+    const login = req.body.login;
+      
+    let data = fs.readFileSync(usersFilePath, "utf8");
+    const users = JSON.parse(data);
+    let user = users.find(u => u.login === login);
+
+    if(user) {
+        user.auth = false;
+        data = JSON.stringify(users);
+        fs.writeFileSync("users.json", data);
+        res.send(true);
+    }
+    else {
+        res.status(404).send(login);
+    }
+});
+
+// проверка авторизации пользователя
+app.get("/api/isAuth", function(req, res) {  
+    console.log("проверка авторизации пользователя");
+    const login = req.query.login;
+
+    const content = fs.readFileSync(usersFilePath,"utf8");
+    const users = JSON.parse(content);
+    let user = users.find(u => u.login === login);
+    let isAuth = user ? user.auth : false;
+    res.send(isAuth);
+});
+
+// получение текущего пользователя
+app.get("/api/currentUser", function(req, res) {  
+    console.log("получение текущего пользователя");
+
+    const content = fs.readFileSync(usersFilePath,"utf8");
+    const users = JSON.parse(content);
+    let user = users.find(u => u.auth);
+    if(user) {
+        res.send({
+            login: user.login,
+            firstname: user.firstname,
+            lastname: user.lastname,
+            email: user.email
+        });
+    }
+    else {
+        res.send({
+            login: ''
+    
+        })
+    };
+});
+
+// изменение профиля
+app.put("/api/users", jsonParser, function(req, res) {
+    
+    console.log("изменение профиля");
+    console.log(req.body);
+
+    if(!req.body) return res.sendStatus(400);
+
+    const login = req.body.login;
+    const firstname = req.body.firstname;
+    const lastname = req.body.lastname;
+    const email = req.body.email;
+      
+    let data = fs.readFileSync(usersFilePath, "utf8");
+    const users = JSON.parse(data);
+    let user = users.find(u => u.login === login);
+
+    if(user) {
+        user.firstname = firstname;
+        user.lastname = lastname;
+        user.email = email;
+        data = JSON.stringify(users);
+        fs.writeFileSync("users.json", data);
+        const userInfo = {
+            firstname: user.firstname,
+            lastname: user.lastname,
+            email: user.email
+        }
+        res.send(userInfo);
+    }
+    else {
+        res.status(404).send(login);
     }
 });
 

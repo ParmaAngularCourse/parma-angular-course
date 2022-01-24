@@ -15,6 +15,11 @@ import { NewsTitlePipe } from './news-title.pipe';
 import { NewsTypeBadgePipe } from './news-type-badge.pipe';
 import { HttpInterceptorService } from './http-interceptor.service';
 import { NewsTypeComponent } from './news-list/news-type/news-type.component';
+import { AppRoutingModule } from './app-routing.module';
+import { ProfileComponent } from './profile/profile.component';
+import { NewsTypeFiltersComponent } from './news-type-filters/news-type-filters.component';
+import { NewsPageComponent } from './news-page/news-page.component';
+import { AuthorizationComponent } from './authorization/authorization.component';
 
 @NgModule({
   declarations: [
@@ -28,12 +33,17 @@ import { NewsTypeComponent } from './news-list/news-type/news-type.component';
     NewsTypeStylesDirective,
     NewsTitlePipe,
     NewsTypeBadgePipe,
-    NewsTypeComponent
+    NewsTypeComponent,
+    ProfileComponent,
+    NewsTypeFiltersComponent,
+    NewsPageComponent,
+    AuthorizationComponent
   ],
   imports: [
     BrowserModule,
     HttpClientModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    AppRoutingModule
   ],
   providers: [
     {

@@ -1,5 +1,4 @@
 import { Directive, OnInit, TemplateRef, ViewContainerRef } from '@angular/core';
-import { currentUser } from './user-types';
 import { UsersService } from './users.service';
 
 @Directive({
@@ -14,7 +13,7 @@ export class ShowByRolesDirective implements OnInit {
   ) { }
 
   ngOnInit() {
-    if(this._usersService.isCurrentUserAdmin())
+    if(this._usersService.hasCurrentUserName())
       this.view.createEmbeddedView(this.template);
   }
 }

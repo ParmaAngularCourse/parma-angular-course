@@ -1,0 +1,41 @@
+.authorization-form {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 14px;
+    padding: 20px;
+    background-color: white;
+    width: 20%;
+    margin: auto;
+    margin-top: 50px;
+}
+  
+.authorization-button {
+    margin-left: 5px;
+}
+  
+.authorization-actions {
+    text-align: end;
+}
+  
+.field {
+    margin: 10px;
+}
+
+.loginError {
+    margin: 10px;
+}
+
+input {
+    width: 100%;
+}
+  
+.alert-danger {
+    color: #721c24;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+    position: relative;
+    padding: 0.5rem 0.75rem;
+    margin-bottom: 1rem;
+    border: 1px solid transparent;
+    border-radius: 0.25rem;
+    width: fit-content;
+}

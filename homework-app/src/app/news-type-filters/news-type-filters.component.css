@@ -1,0 +1,26 @@
+.filters {
+    float: left;
+    padding: 20px;
+}
+
+.optionAll {
+    background-color: lightsalmon;
+    padding: 2px 5px;
+    border-radius: 5px;
+}
+
+.option {
+    margin-bottom: 5px;
+    width: 100px;
+}
+
+.optionText {
+    text-decoration: none;
+    color: black;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 14px;
+}
+
+.activeLink {
+    font-weight: bold;
+}

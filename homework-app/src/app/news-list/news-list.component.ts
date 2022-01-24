@@ -1,10 +1,10 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 import { debounceTime, distinctUntilChanged, forkJoin, Subject, switchMap, takeUntil, from, toArray, bufferCount, startWith } from 'rxjs';
 import { NewsService } from '../news.service';
 import { ContextMenuComponent } from './context-menu/context-menu.component';
-import { NewsEditformComponent } from './news-editform/news-editform.component';
 import { News, NewsType } from './news-types';
 
 @Component({
@@ -15,20 +15,22 @@ import { News, NewsType } from './news-types';
 })
 export class NewsListComponent implements OnInit, OnDestroy {
 
-  public newsToEdit: News = this.generateEmptyNews();
-  public isEditMode: boolean = false;
   public search!: FormControl;
   public searchStr: string = '';
 
   public newsGrid: News[][] = [];
 
-  @ViewChild(NewsEditformComponent) private viewEditForm!: NewsEditformComponent;
   @ViewChild("contextMenuComponent") private viewContextMenu!: ContextMenuComponent;
 
   private ngUnsubscribe$: Subject<boolean>;
+  private newsTypeFilter: NewsType | null = null;
 
-  constructor(private _newsService: NewsService, private cdr: ChangeDetectorRef) {
+  constructor(private _newsService: NewsService, private cdr: ChangeDetectorRef,
+    private route: ActivatedRoute, private router: Router) {
     this.ngUnsubscribe$ = new Subject();
+    route.params.subscribe(params => {
+      this.newsTypeFilter = params['type'] ?? null;
+    });
   }
 
   ngOnInit(): void {
@@ -38,7 +40,30 @@ export class NewsListComponent implements OnInit, OnDestroy {
       distinctUntilChanged(),
       startWith(''),
       switchMap((value) => {
-        return this._newsService.getFilteredNewsList(value);
+        return this._newsService.getFilteredNewsList(value, this.newsTypeFilter);
+      }),
+      switchMap((data) => {
+        return from(data).pipe(
+          bufferCount(3),
+          toArray()
+        );
+      }),
+      takeUntil(this.ngUnsubscribe$)
+    )
+    .subscribe(
+      { next: (data) => {
+        this.newsGrid = data;
+        this.cdr.markForCheck();
+      },
+        error: (error: HttpErrorResponse) => { console.log(`${error.status} ${error.message}`); }
+      }
+    );
+
+    this.route.params
+    .pipe(
+      switchMap((params) => {
+        this.newsTypeFilter = params['type'] ?? null
+        return this._newsService.getFilteredNewsList(this.search.value, this.newsTypeFilter);
       }),
       switchMap((data) => {
         return from(data).pipe(
@@ -69,30 +94,8 @@ export class NewsListComponent implements OnInit, OnDestroy {
     ).subscribe();
   }
 
-  onSaveNews(newsToSave: News) {
-    if(this.isEditMode) {
-      this._newsService.updateNews(newsToSave).pipe(
-        takeUntil(this.ngUnsubscribe$)
-      ).subscribe();
-    }
-    else {
-      newsToSave.id = Math.max(...(this.newsGrid.flat().map(el => el.id))) + 1;
-      this._newsService.addNews(newsToSave).pipe(
-        takeUntil(this.ngUnsubscribe$)
-      ).subscribe();
-    }
-    this.viewEditForm.closeWindow();
-  }
-
-  onCloseEditForm($event: any) {
-    this.newsToEdit = this.generateEmptyNews();
-    this.viewEditForm.closeWindow();
-    this.cdr.markForCheck();
-  }
-
   openAddNewsDialog() {
-    this.isEditMode = false;
-    this.openEditForm(this.generateEmptyNews());
+    this.router.navigate(['', { outlets: { editform: "add-news" } }]);
   }
 
   hasSelectedNews() {
@@ -108,13 +111,7 @@ export class NewsListComponent implements OnInit, OnDestroy {
   }
 
   openEditNewsDialog(newsToEdit: News) {
-    this.isEditMode = true;
-    this.openEditForm(newsToEdit);
-  }
-
-  openEditForm(news: News) {
-    this.newsToEdit = news;
-    this.viewEditForm.showWindow();
+    this.router.navigate(['', { outlets: { editform: "edit-news/" + newsToEdit.id } }]);
   }
 
   openContextMenu($event: any) {
@@ -130,17 +127,5 @@ export class NewsListComponent implements OnInit, OnDestroy {
     this.newsGrid = this.newsGrid.map(row => {
       return row.map(el => { return {...el, selected: true} })
     });
-  }
-
-  private generateEmptyNews() : News {
-    let generatedNews : News = {
-      id: 0,
-      date: new Date(),
-      title: '',
-      text: '',
-      type: NewsType.Politics,
-      selected: false
-    };
-    return generatedNews;
   }
 }

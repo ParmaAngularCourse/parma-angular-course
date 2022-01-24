@@ -1,0 +1,39 @@
+<div [formGroup]="profileForm" class="profile-form">
+    <div class="field">
+        <div>
+            <label for="firstname">Имя</label>
+        </div>
+        <div>
+            <input type="text" id="firstname" formControlName="firstname"/>
+        </div>           
+        <div class="alert-danger" *ngIf="profileForm.get('firstname')?.invalid && profileForm.get('firstname')?.touched">
+            Укажите имя
+        </div>
+    </div>
+    <div class="field">
+        <div>
+            <label for="lastname">Фамилия</label>
+        </div>
+        <div>
+            <input type="text" id="lastname" formControlName="lastname"/>
+        </div>           
+        <div class="alert-danger" *ngIf="profileForm.get('lastname')?.invalid && profileForm.get('lastname')?.touched">
+            Укажите фамилию
+        </div>
+    </div>
+    <div class="field">
+        <div>
+            <label for="email">E-mail</label>
+        </div>
+        <div>
+            <input type="text" id="email" formControlName="email"/>
+        </div>           
+        <div class="alert-danger" *ngIf="profileForm.get('email')?.invalid && profileForm.get('email')?.touched">
+            Укажите E-mail
+        </div>
+    </div>
+    <div class="profile-actions">
+        <button class="profile-button" (click)="save()" [disabled]="!profileForm.valid">Сохранить</button>
+        <button class="profile-button" (click)="cancel()">Отмена</button>
+    </div>
+</div>

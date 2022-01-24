@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Router } from '@angular/router';
 import { News } from '../news-types';
 
 @Component({
@@ -13,7 +14,7 @@ export class NewsComponent implements OnInit {
   @Output() removeNews : EventEmitter<number> = new EventEmitter();
   @Output() editNews : EventEmitter<News> = new EventEmitter();
 
-  constructor() { }
+  constructor(private router: Router) { }
 
   ngOnInit(): void {
   }
@@ -28,5 +29,6 @@ export class NewsComponent implements OnInit {
 
   openEditNewsDialog($event: any, newsItem: News) {
     this.editNews.emit(newsItem);
+    this.router.navigate(['', { outlets: { editform: "edit-news/"+ newsItem.id } }]);
   }
 }

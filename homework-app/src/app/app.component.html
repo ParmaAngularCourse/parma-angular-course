@@ -1,1 +1,16 @@
-<app-news-list></app-news-list>
+<div class="top-menu">
+    <div class="top-menu-item">
+        <a routerLink="news" routerLinkActive="activeLink" class="top-menu-link">Новости</a>
+    </div> 
+    <div class="top-menu-item">
+        <a routerLink="profile" routerLinkActive="activeLink" class="top-menu-link">Профиль</a>
+    </div>
+    <div class="top-menu-item authorization" *ngIf="!hasAuthorizedUser()">
+        <a routerLink="auth" class="top-menu-link">Вход</a>
+    </div> 
+    <div class="top-menu-item authorization" *ngIf="hasAuthorizedUser()">
+        <a class="top-menu-link" (click)="logout()">Выход</a>
+    </div> 
+</div>
+<router-outlet></router-outlet>
+<router-outlet name="editform"></router-outlet>
