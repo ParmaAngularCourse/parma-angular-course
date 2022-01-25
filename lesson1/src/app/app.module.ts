@@ -11,7 +11,11 @@ import { PopupDialogComponent } from './news/popup-dialog/popup-dialog.component
 import { ContextMenuComponent } from './news/context-menu/context-menu.component';
 import { AdThemeDirective } from './news/ad-theme.directive';
 import { SdRightsToChangeDirective } from './news/sd-rights-to-change.directive';
-import { ThemePipePipe } from './news/theme-pipe.pipe';
+import { ThemePipe } from './news/theme.pipe';
+import { CaptionPipe } from './news/caption.pipe';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { HttpInterceptorService } from './http-interceptor.service';
+
 
 @NgModule({
   declarations: [
@@ -25,12 +29,18 @@ import { ThemePipePipe } from './news/theme-pipe.pipe';
     ContextMenuComponent,
     AdThemeDirective,
     SdRightsToChangeDirective,
-    ThemePipePipe
+    ThemePipe,
+    CaptionPipe
   ],
   imports: [
-    BrowserModule
+    BrowserModule,
+    HttpClientModule
   ],
-  providers: [],
+  providers: [{
+    provide: HTTP_INTERCEPTORS,
+    useClass: HttpInterceptorService,
+    multi: true 
+  }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

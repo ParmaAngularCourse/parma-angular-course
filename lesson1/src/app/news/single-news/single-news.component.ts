@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy } from '@angular/core';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { NewsItem, NewsObj } from '../news-types';
+import { NewsItem, NewsContent } from '../news-types';
 
 
 @Component({
@@ -13,7 +13,7 @@ export class SingleNewsComponent implements OnInit {
 
 @Input()singleNews!: NewsItem ;
 @Input()canDelete!: boolean;
-@Output() saveNews = new EventEmitter<NewsObj> ();
+@Output() saveNews = new EventEmitter<NewsContent> ();
 @Output() editNews =  new EventEmitter();
 @Output() deleteNews = new EventEmitter();
 @Output() markNews =  new EventEmitter();
@@ -30,7 +30,7 @@ public isEdisNewsShowed: boolean = false;
     this.markNews.emit();
   }
 
-  onSaveNews(eventObj: NewsObj){
+  onSaveNews(eventObj: NewsContent){
     this.saveNews.emit(eventObj);
   }
 

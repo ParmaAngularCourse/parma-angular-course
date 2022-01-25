@@ -2,11 +2,11 @@
  <button (click)="onShowAddNewsDialog()">Добавить новость</button>
  <button (click)="onDeleteNews()" *appSdRightsToChange="currentUser.Rights.CanDelete" [disabled]="!isDeleteButtonAvailable"> Удалить </button>
 
- <div (click)="currentUser.Rights.CanDelete = !currentUser.Rights.CanDelete">
-    Кликни, чтоб изменить CanDelete = {{currentUser.Rights.CanDelete}}
+ <div >
+    <button (click)="currentUser.Rights.CanDelete = !currentUser.Rights.CanDelete"> Изменить CanDelete = {{currentUser.Rights.CanDelete}}</button>
 </div>
- <div (click)="currentUser.Rights.CanSave = !currentUser.Rights.CanSave">
-    Кликни, чтоб изменить CanSave =  {{currentUser.Rights.CanSave}}
+ <div>
+    <button (click)="currentUser.Rights.CanSave = !currentUser.Rights.CanSave"> Изменить CanSave = {{currentUser.Rights.CanSave}}</button>
 </div>
 
 <!-- содержимое popup  -->
@@ -17,14 +17,14 @@
             <span class="closeIcon" (click)="onClickClosePopupButton()" title="Закрыть"> × </span>
         </legend>
        
-        <ng-container *ngTemplateOutlet="dataInpTemplate; context: {inpValue: editDialogNewsItem.news.date
+        <ng-container *ngTemplateOutlet="dataInpTemplate; context: {inpValue: editDialogNewsItem.content.date
                 , inpCaption: 'Дата', fieldName: 'date'}"></ng-container>
-        <ng-container *ngTemplateOutlet="textInpTemplate; context: {inpValue: editDialogNewsItem.news.caption
+        <ng-container *ngTemplateOutlet="textInpTemplate; context: {inpValue: editDialogNewsItem.content.caption
                 , inpCaption: 'Заголовок', fieldName:'caption'}"></ng-container>
-        <ng-container *ngTemplateOutlet="textareaTemplate; context: {inpValue: editDialogNewsItem.news.text
+        <ng-container *ngTemplateOutlet="textareaTemplate; context: {inpValue: editDialogNewsItem.content.text
                 , inpCaption: 'Текст', fieldName: 'text'}"></ng-container>
         
-        <ng-container *ngTemplateOutlet="radioTemplate; context: {currentValue: editDialogNewsItem.news.theme,
+        <ng-container *ngTemplateOutlet="radioTemplate; context: {currentValue: editDialogNewsItem.content.theme,
              name: 'newsTheme', caption: 'Тип:'}"></ng-container>    
 
         <ng-container *ngTemplateOutlet="buttonTemplate; context: {buttons: 
@@ -38,7 +38,7 @@
         <div>
             {{inputCaption}}
         </div>
-        <input type="date" [valueAsDate]="inputValue" class="dialogInput" (change)="onDialogInpChange($event, field)" >     
+        <input type="date" [value]="inputValue | date :'yyyy-MM-dd'" class="dialogInput" (change)="onDialogInpChange($event, field)" >    
    </ng-template>
 
    <ng-template #textInpTemplate let-inputValue="inpValue" let-inputCaption="inpCaption" let-field="fieldName" >    
@@ -74,7 +74,7 @@
         <div *ngFor="let enum of ThemeEnum | keyvalue" >            
             <label [appAdTheme]="enum.key" >
                  <input type="radio" name="name" [value]="enum.key" (click)="onRadioButChange(enum.value)"
-                     [checked]="currentValue == enum.value"> {{enum.value}} 
+                     [checked]="currentValue == enum.key"> {{enum.value}} 
              </label>            
         </div>
     </div>

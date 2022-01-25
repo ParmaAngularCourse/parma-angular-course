@@ -1,11 +1,10 @@
 export type NewsItem =  {
     id: number,
-    news: NewsObj,
+    content: NewsContent,
     checked: boolean, 
-  //  allThemes: []
   }
 
-export type NewsObj = {
+export type NewsContent = {
   caption: string,
   text: string,
   date: Date
@@ -21,9 +20,27 @@ export enum Theme {
     Internet = "Интернет"
 } 
 
-export function getThemeKey(value: string){
-  return Object.entries(Theme).find(([key, val]) => val === value)?.[0];
+export function getThemeKey (value: string){
+  return  (Object.entries(Theme).find(([key, val]) => val === value)?.[0]);
 }
 
+export function getThemeByKey(keyOrValue: string | undefined) : Theme {  
+  switch (keyOrValue) {
+    case 'Politics':
+      return Theme.Politics;     
+    case 'Tourism':
+      return Theme.Tourism;
+    case 'Economics':
+      return Theme.Economics;  
+    case 'Science':
+      return Theme.Science;
+    case 'Internet':
+      return Theme.Internet;
+    default:
+      return Theme.Unknown;    
+  }
+}
 
-
+export function getTheme(keyOrValue :string) : Theme{
+  return getThemeByKey(getThemeKey(keyOrValue));
+}
