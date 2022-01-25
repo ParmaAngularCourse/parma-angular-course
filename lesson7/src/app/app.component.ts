@@ -8,10 +8,4 @@ import { PostType } from './all-posts/post-types';
 })
 export class AppComponent {
   title = 'lesson7';
-
-  filterPostType: PostType | null = null;
-
-  selectPostTypeFilter(value: PostType | string | null) {
-    this.filterPostType = value as PostType;
-  }
 }

@@ -8,10 +8,4 @@ import { PostType } from '../all-posts/post-types';
 })
 export class MainMenuComponent {
   constructor() {}
-
-  @Input() filterPostType: PostType | null = null;
-
-  selectPostTypeFilter(value: PostType | null) {
-    this.filterPostType = value;
-  }
 }

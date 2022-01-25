@@ -1,5 +1,5 @@
 <div class="mainMenu">
-  <button routerLink="posts" [queryParams]="filterPostType !== null ? {filter:filterPostType} : null"
+  <button routerLink="posts"
     routerLinkActive="btnMainMenuActive" class="btnMainMenu">Новости</button>
   <button routerLink="profile" class="btnMainMenu" routerLinkActive="btnMainMenuActive">Профиль</button>
   <div class="rightBlockMainMenu">
@@ -8,4 +8,4 @@
     <a class="refMainMenu">Выход</a>
   </div>
 </div>
-<!-- <ng-content (selectPostTypeFilterEvent)="selectPostTypeFilter($event)"></ng-content> -->
+<ng-content (selectPostTypeFilterEvent)="selectPostTypeFilter($event)"></ng-content>

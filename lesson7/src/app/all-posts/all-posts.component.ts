@@ -40,7 +40,7 @@ import {
   switchAll,
 } from 'rxjs';
 import { FormControl } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-all-posts',
@@ -67,9 +67,9 @@ export class AllPostsComponent implements OnInit {
 
   postTypes: string[] = [];
   selectPostTypeValue: PostType | null = null;
-  @Output() selectPostTypeFilterEvent = new EventEmitter<PostType | null>();
 
   private ngUnsubscribe$!: Subject<void>;
+  private subjectPostTypeMenu: Subject<PostType | null>;
 
   searchControl!: FormControl;
   searchValue: string = '';
@@ -78,9 +78,11 @@ export class AllPostsComponent implements OnInit {
     private postService: PostsService,
     private userInfoService: UserInfoService,
     private cdr: ChangeDetectorRef,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private router: Router
   ) {
     this.ngUnsubscribe$ = new Subject<void>();
+    this.subjectPostTypeMenu = new Subject<PostType | null>();
 
     this.postService
       .getPostsOberverble()
@@ -142,12 +144,27 @@ export class AllPostsComponent implements OnInit {
     for (const item in PostType) {
       this.postTypes.push(item);
     }
+    //Тут важен порядок подписки
+    this.subjectPostTypeMenu.pipe(
+      switchMap((value) => {
+        return this.postService
+        .searchPosts2({
+          title: this.searchControl?.value as string || '',
+          postType: this.selectPostTypeValue,
+        });
+      }),
+      takeUntil(this.ngUnsubscribe$)).subscribe(
+        (value) => {
+          this.postService.setResultSearch(value);
+        }
+    );
 
     this.route.queryParams
       .pipe(takeUntil(this.ngUnsubscribe$))
       .subscribe((params) => {
-        this.selectPostTypeValue = params['filter'] as PostType;
+        this.setValuePostType(params['filter'] as PostType);
       });
+
   }
 
   splitArray(array: PostObj[]): PostObj[][] {
@@ -284,17 +301,19 @@ export class AllPostsComponent implements OnInit {
     this.userInfoService.loadUser(userName);
   }
 
-  setValuePostType(value: PostType) {
+  setValuePostType(value: PostType | null) {
     this.selectPostTypeValue = value;
-    this.postService
-      .searchPosts2({
-        title: this.searchControl.value as string,
-        postType: this.selectPostTypeValue,
-      })
-      .pipe(takeUntil(this.ngUnsubscribe$))
-      .subscribe((value) => this.postService.setResultSearch(value));
+    // this.postService
+    //   .searchPosts2({
+    //     title: this.searchControl?.value as string || '',
+    //     postType: this.selectPostTypeValue,
+    //   })
+    //   .pipe(takeUntil(this.ngUnsubscribe$))
+    //   .subscribe((value) => this.postService.setResultSearch(value));
 
-    this.selectPostTypeFilterEvent.emit(value);
+    this.subjectPostTypeMenu.next(value);
+
+    this.router.navigate(['/posts'], {relativeTo: this.route, queryParams: value !== null ? {filter: value} : null});
   }
 
   selectPostTypeFilter(value: PostType | string) {
@@ -315,9 +334,10 @@ export class AllPostsComponent implements OnInit {
         this.setValuePostType(value as PostType);
         break;
       default:
-        this.selectPostTypeValue = null;
-        this.postService.loadPosts();
-        this.selectPostTypeFilterEvent.emit(null);
+        // this.selectPostTypeValue = null;
+        // this.subjectPostTypeMenu.next(null);
+        // this.postService.loadPosts();
+        this.setValuePostType(null);
         break;
     }
   }
