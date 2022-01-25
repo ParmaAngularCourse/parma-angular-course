@@ -1,1 +1,3 @@
-<app-all-posts></app-all-posts>
+<app-main-menu [filterPostType]="filterPostType">
+</app-main-menu>
+<router-outlet (selectPostTypeFilterEvent)="selectPostTypeFilter('internet')"></router-outlet>

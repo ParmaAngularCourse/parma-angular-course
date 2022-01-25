@@ -1,28 +1,35 @@
-import { HttpEvent, HttpHandler, HttpHeaders, HttpInterceptor, HttpRequest } from '@angular/common/http';
+import {
+  HttpEvent,
+  HttpHandler,
+  HttpHeaders,
+  HttpInterceptor,
+  HttpRequest,
+} from '@angular/common/http';
 import { Injectable, Injector } from '@angular/core';
 import { Observable } from 'rxjs';
 import { UserInfoService } from './user-info.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class HttpInterseptorService implements HttpInterceptor {
+  constructor(private injector: Injector) {}
 
-  constructor(private injector: Injector) { }
-
-  intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-
+  intercept(
+    req: HttpRequest<any>,
+    next: HttpHandler
+  ): Observable<HttpEvent<any>> {
     let headers = req.headers;
     headers = headers.set('Authorization', 'Bearer ggggggg');
-    if (req.url && (req.url.indexOf('UserInfo') === -1)) {
+    if (req.url && req.url.indexOf('UserInfo') === -1) {
       let userInfoService = this.injector.get(UserInfoService);
       if (userInfoService) {
         const currentUser = userInfoService.userCurrent;
-        headers = headers.set('username', currentUser.name);
+        headers = headers.set('username', currentUser.login);
       }
     }
     let reqClone = req.clone({
-      headers: headers
+      headers: headers,
     });
     return next.handle(reqClone);
   }

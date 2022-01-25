@@ -54,7 +54,7 @@ namespace PostsApi.Controllers
         [HttpGet]
         public UserInfo GetUserInfoByName(string name)
         {
-            return _userInfo.FirstOrDefault(e => string.Equals(e.Name, name, System.StringComparison.OrdinalIgnoreCase));
+            return _userInfo.FirstOrDefault(e => string.Equals(e.Login, name, System.StringComparison.OrdinalIgnoreCase));
         }
 
         [HttpPost]

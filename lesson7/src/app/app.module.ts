@@ -18,6 +18,10 @@ import { PostTypeControlComponent } from './all-posts/post-type-control/post-typ
 import { ReactiveFormsModule } from '@angular/forms';
 import { ValidationErrorsPipe } from './validation-errors.pipe';
 import { PostTypeBtnStylePipe } from './post-type-btn-style.pipe';
+import { AppRoutingModule } from './app-routing.module';
+import { ProfileComponent } from './profile/profile.component';
+import { AuthComponent } from './auth/auth.component';
+import { MainMenuComponent } from './main-menu/main-menu.component';
 
 @NgModule({
   declarations: [
@@ -34,21 +38,24 @@ import { PostTypeBtnStylePipe } from './post-type-btn-style.pipe';
     PostPermissionSaveDirective,
     PostTypeControlComponent,
     ValidationErrorsPipe,
-    PostTypeBtnStylePipe
+    PostTypeBtnStylePipe,
+    ProfileComponent,
+    AuthComponent,
+    MainMenuComponent,
   ],
   imports: [
     BrowserModule,
     HttpClientModule,
     ReactiveFormsModule,
-    
+    AppRoutingModule,
   ],
   providers: [
     {
       provide: HTTP_INTERCEPTORS,
       useClass: HttpInterseptorService,
-      multi: true
-    }
+      multi: true,
+    },
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

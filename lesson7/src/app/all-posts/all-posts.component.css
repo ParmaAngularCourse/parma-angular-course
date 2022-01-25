@@ -1,16 +1,27 @@
-.buttonStyle {
-    color: white;
-    background-color: dodgerblue;
-    margin: 10px;
-    padding: 6px;
-    border: 1px solid gray;
-    border-radius: 5px;
+.leftPostsFilterMenu {
+  position: absolute;
+  left: 10px;
+  width: 150px;
 }
 
-.buttonStyle:disabled {
-    color: white;
-    background-color: darkgrey;
-    border-radius: 5px;
+.rightPostsContent {
+  position: absolute;
+  left: 150px;
+}
+
+.buttonContentStyle {
+  color: white;
+  background-color: dodgerblue;
+  margin: 10px;
+  padding: 6px;
+  border: 1px solid gray;
+  border-radius: 5px;
+}
+
+.buttonContentStyle:disabled {
+  color: white;
+  background-color: darkgrey;
+  border-radius: 5px;
 }
 
 .inputStyle {
@@ -19,10 +30,10 @@
   height: 16px;
   padding: 5px;
   width: 200%px;
-  margin: auto 10px auto auto
+  margin: auto 10px auto auto;
 }
 
-.userNameCurrentStyle{
+.userNameCurrentStyle {
   display: inline;
 }
 
@@ -30,4 +41,46 @@
   display: inline-table;
   width: 300px;
   margin: 10px;
+}
+
+.buttonStyle {
+  background-color: brown;
+  color: white;
+  border: 0px;
+  border-radius: 4px;
+  padding: 1px 10px;
+  margin: 3px;
+  display: block;
+  width: 120px;
+  opacity: 0.75;
+}
+
+.politic {
+  background-color: green;
+}
+
+.economic {
+  background-color: coral;
+}
+
+.internet {
+  background-color: gray;
+}
+
+.science {
+  background-color: royalblue;
+}
+
+.tourism {
+  background-color: darkcyan;
+}
+
+.selectedStyle {
+  border: 2px black solid;
+  opacity: 1;
+}
+
+.buttonStyle:hover {
+  opacity: 0.35;
+  cursor: pointer;
 }

@@ -1,11 +1,10 @@
 export type UserType = {
-    name: string,
-    permissions: PermissionUser[]
-}
+  login: string;
+  permissions: PermissionUser[];
+};
 
 export enum PermissionUser {
-    view = 'view',
-    save = 'save',
-    delete = 'delete'
+  view = 'view',
+  save = 'save',
+  delete = 'delete',
 }
-

@@ -1,0 +1,11 @@
+<div class="mainMenu">
+  <button routerLink="posts" [queryParams]="filterPostType !== null ? {filter:filterPostType} : null"
+    routerLinkActive="btnMainMenuActive" class="btnMainMenu">Новости</button>
+  <button routerLink="profile" class="btnMainMenu" routerLinkActive="btnMainMenuActive">Профиль</button>
+  <div class="rightBlockMainMenu">
+    <a routerLink="auth" class="refMainMenu">Вход</a>
+    <span></span>
+    <a class="refMainMenu">Выход</a>
+  </div>
+</div>
+<!-- <ng-content (selectPostTypeFilterEvent)="selectPostTypeFilter($event)"></ng-content> -->

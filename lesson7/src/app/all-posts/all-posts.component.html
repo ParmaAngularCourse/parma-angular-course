@@ -1,37 +1,53 @@
-
-<div>
-  <label [attr.for]="userNameControl">Имя пользователя:</label>
-  <input #userNameControl class="inputStyle" type="text" />
-  <button class="buttonStyle" (click)="changeUser(userNameControl.value)">Сменить пользователя</button>
-  <div class="userNameCurrentStyle">Текущее имя пользователя:{{user.name}}</div>
+<div class="leftPostsFilterMenu">
+  <button class="buttonStyle" (click)="selectPostTypeFilter('')"
+    [class]="(selectPostTypeValue === null) ? 'buttonStyle selectedStyle' : 'buttonStyle'">Все</button>
+  <ng-container *ngFor="let item of postTypes">
+    <button [appPostTypeStyles]="item" [class]="((selectPostTypeValue === item) ? (item | postTypeBtnStyle) + ' selectedStyle' : item |
+      postTypeBtnStyle)" (click)="selectPostTypeFilter(item)">{{item | postTypePipe}}</button>
+  </ng-container>
 </div>
-<div>
-  <label [attr.for]="findControl">Найти:</label>
-  <input #findControl class="inputStyle" type="text" [formControl]="searchControl" />
+<div class="rightPostsContent">
+  <div>
+    <label [attr.for]="userNameControl">Имя пользователя:</label>
+    <input #userNameControl class="inputStyle" type="text" />
+    <button class="buttonContentStyle" (click)="changeUser(userNameControl.value)">Сменить пользователя</button>
+    <div class="userNameCurrentStyle">Текущее имя пользователя:{{user.login}}</div>
+  </div>
+  <div>
+    <label [attr.for]="findControl">Найти:</label>
+    <input #findControl class="inputStyle" type="text" [formControl]="searchControl" />
+  </div>
+  <div>
+    <button class="buttonContentStyle" (click)="addNewPostHandler()">Добавить</button>
+    <button *appPostPermissionDelete="user.permissions" class="buttonContentStyle" [disabled]="!isActiveDeletePostBtn"
+      (click)="deletePostsHandler()">Удалить</button>
+  </div>
+  <div class="columsStyle">
+    <app-single-post [user]="user" *ngFor="let item of posts" [post]="item"
+      (deletePostEvent)="deletePostHandler($event)" (editPostEvent)="editPostHandler($event)"
+      (contextmenu)="rightClickHandler($event)" (click)="disableContextMenuHandler()"
+      (selectPostEvent)="selectPostHandler($event)">
+    </app-single-post>
+  </div>
+  <div class="columsStyle">
+    <app-single-post [user]="user" *ngFor="let item of posts2" [post]="item"
+      (deletePostEvent)="deletePostHandler($event)" (editPostEvent)="editPostHandler($event)"
+      (contextmenu)="rightClickHandler($event)" (click)="disableContextMenuHandler()"
+      (selectPostEvent)="selectPostHandler($event)">
+    </app-single-post>
+  </div>
+  <div class="columsStyle">
+    <app-single-post [user]="user" *ngFor="let item of posts3" [post]="item"
+      (deletePostEvent)="deletePostHandler($event)" (editPostEvent)="editPostHandler($event)"
+      (contextmenu)="rightClickHandler($event)" (click)="disableContextMenuHandler()"
+      (selectPostEvent)="selectPostHandler($event)">
+    </app-single-post>
+  </div>
+  <app-header-post-detail #popupPostDetailWindow (closeDialogHeaderEvent)="closePopupPostDetailsHandler()"
+    [titleDialog]="titleDialog">
+    <app-single-post-detail [user]="user" #postDetailContent (saveNewPostEvent)="saveNewPostHandler($event)"
+      (closePopupEvent)="closePopupPostDetailsHandler()"></app-single-post-detail>
+  </app-header-post-detail>
+  <app-context-menu *ngIf="isVisibleContextMenu" [x]="contextMenuX" [y]="contextMenuY"
+    (selectAllItems)="selectAllPostsHandler()"></app-context-menu>
 </div>
-<div>
-  <button class="buttonStyle" (click)="addNewPostHandler()">Добавить</button>
-  <button *appPostPermissionDelete="user.permissions" class="buttonStyle" [disabled] ="!isActiveDeletePostBtn" (click)="deletePostsHandler()">Удалить</button>
-</div>
-<div class="columsStyle">
-  <app-single-post [user]="user" *ngFor="let item of posts" [post]="item" (deletePostEvent)="deletePostHandler($event)"
-  (editPostEvent)="editPostHandler($event)" (contextmenu)="rightClickHandler($event)"
-  (click)="disableContextMenuHandler()" (selectPostEvent)="selectPostHandler($event)">
-  </app-single-post>
-</div>
-<div class="columsStyle">
-  <app-single-post [user]="user" *ngFor="let item of posts2" [post]="item" (deletePostEvent)="deletePostHandler($event)"
-  (editPostEvent)="editPostHandler($event)" (contextmenu)="rightClickHandler($event)"
-  (click)="disableContextMenuHandler()" (selectPostEvent)="selectPostHandler($event)">
-  </app-single-post>
-</div>
-<div class="columsStyle">
-  <app-single-post [user]="user" *ngFor="let item of posts3" [post]="item" (deletePostEvent)="deletePostHandler($event)"
-  (editPostEvent)="editPostHandler($event)" (contextmenu)="rightClickHandler($event)"
-  (click)="disableContextMenuHandler()" (selectPostEvent)="selectPostHandler($event)">
-  </app-single-post>
-</div>
-<app-header-post-detail #popupPostDetailWindow (closeDialogHeaderEvent)="closePopupPostDetailsHandler()" [titleDialog]="titleDialog" >
-    <app-single-post-detail [user]="user" #postDetailContent (saveNewPostEvent)="saveNewPostHandler($event)" (closePopupEvent)="closePopupPostDetailsHandler()"></app-single-post-detail>
-</app-header-post-detail>
-<app-context-menu *ngIf="isVisibleContextMenu" [x]="contextMenuX" [y]="contextMenuY" (selectAllItems)="selectAllPostsHandler()"></app-context-menu>
