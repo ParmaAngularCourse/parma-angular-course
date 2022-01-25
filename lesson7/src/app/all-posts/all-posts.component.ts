@@ -167,31 +167,6 @@ export class AllPostsComponent implements OnInit {
 
   }
 
-  splitArray(array: PostObj[]): PostObj[][] {
-    let result: PostObj[][];
-    result = [];
-    const arrCount = 3;
-    let countSearch = 0;
-    const mod3 = array.length % arrCount;
-    if (mod3 === 0) {
-      countSearch = array.length / arrCount;
-    } else {
-      countSearch = Math.trunc(array.length / arrCount) + 1;
-    }
-    let next = 0;
-    for (let i = 0; i < arrCount; i++) {
-      result[i] = [];
-      for (let j = 0; j < countSearch; j++) {
-        if (array.length > next) {
-          const element = array[next++];
-          result[i][j] = element;
-        }
-      }
-    }
-
-    return result;
-  }
-
   ngOnInit(): void {
     this.searchControl = new FormControl(this.searchValue);
     this.searchControl.valueChanges
@@ -303,16 +278,7 @@ export class AllPostsComponent implements OnInit {
 
   setValuePostType(value: PostType | null) {
     this.selectPostTypeValue = value;
-    // this.postService
-    //   .searchPosts2({
-    //     title: this.searchControl?.value as string || '',
-    //     postType: this.selectPostTypeValue,
-    //   })
-    //   .pipe(takeUntil(this.ngUnsubscribe$))
-    //   .subscribe((value) => this.postService.setResultSearch(value));
-
     this.subjectPostTypeMenu.next(value);
-
     this.router.navigate(['/posts'], {relativeTo: this.route, queryParams: value !== null ? {filter: value} : null});
   }
 
@@ -334,9 +300,6 @@ export class AllPostsComponent implements OnInit {
         this.setValuePostType(value as PostType);
         break;
       default:
-        // this.selectPostTypeValue = null;
-        // this.subjectPostTypeMenu.next(null);
-        // this.postService.loadPosts();
         this.setValuePostType(null);
         break;
     }
