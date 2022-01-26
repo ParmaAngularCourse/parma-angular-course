@@ -27,7 +27,7 @@ export class EditReportFormComponent {
   roleEnum = Role;
   canSubmit = this.authService.isAuth();
 
-  ngOnChanges() { this.editReportForm.patchValue(this.report); }
+  ngOnChanges() { this.editReportForm.reset(); this.editReportForm.patchValue(this.report); }
 
   editReportForm: FormGroup = this.fb.group({
     header: ["", Validators.required],

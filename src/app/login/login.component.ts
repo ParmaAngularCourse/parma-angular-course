@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { users } from '../news/roles';
 
 @Component({
   selector: 'app-login',
@@ -12,7 +13,6 @@ export class LoginComponent {
   constructor(private fb: FormBuilder, private router: Router) { }
 
   creds = { login: "", password: "" };
-  users = [{ login: "mvd", password: "123" }];
   isUserNotExists = false;
 
   ngOnChanges() { this.loginForm.patchValue(this.creds); }
@@ -28,8 +28,9 @@ export class LoginComponent {
   ];
 
   submit() {
-    if (this.users.some(x => x.login == this.loginForm.value.login && x.password == this.loginForm.value.password)) {
-      localStorage.setItem('currentUser', JSON.stringify(this.loginForm.value));
+    var user = users.find(x => x.login == this.loginForm.value.login && x.password == this.loginForm.value.password);
+    if (user != null) {
+      localStorage.setItem('currentUser', JSON.stringify(user));
       this.router.navigateByUrl('/news?newsType=');
     }
     else this.isUserNotExists = true;
