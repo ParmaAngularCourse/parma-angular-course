@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, HostListener, Input, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ComponentCanDeactivate, User } from '../news/news-types';
 import { Observable } from 'rxjs';
@@ -38,6 +38,7 @@ export class ProfileComponent implements ComponentCanDeactivate {
     this.userForm.patchValue(this.user);
   }
 
+  @HostListener('window:beforeunload')
   canDeactivate(): boolean | Observable<boolean> {
     return this.userForm.dirty ? confirm("Изменения не сохранены. Вы точно хотите покинуть страницу?") : true;
   }
