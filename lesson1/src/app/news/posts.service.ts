@@ -39,9 +39,15 @@ export class PostsService {
   ];*/
 
 
-  public getPosts()
+  public getPosts (): Observable<Information[]>
   {  
-      return this.postSubject?.value;
+    if(!this.postSubject){
+      this.postSubject = new BehaviorSubject<Information[]>([]);
+      this.getNewsFromServer().pipe(takeUntil(this.ngUnsubscribe$)).subscribe((value)=> {this.postSubject?.next(value)});
+    }
+    return this.postSubject.asObservable();
+
+      //return this.postSubject?.value;
   }
 
   public savePost(param: Information){    
@@ -77,7 +83,8 @@ export class PostsService {
   }
 
   constructor(private _http: HttpClient) {     
-    this.updateNewsWithBuffer();
+    this.ngUnsubscribe$ = new Subject();
+    //this.updateNewsWithBuffer();
   }
  
   public updateNewsWithBuffer()

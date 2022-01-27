@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Subject, takeUntil } from 'rxjs';
 import { ContextMenuComponent } from './context-menu/context-menu.component';
 import { Information, UserRightsObj } from './news-types';
 import { PostEditorComponent } from './post-editor/post-editor.component';
@@ -11,11 +12,13 @@ import { PostsService } from './posts.service';
   styleUrls: ['./news.component.css'], 
   changeDetection: ChangeDetectionStrategy.Default
 })
-export class NewsComponent implements OnInit {
+export class NewsComponent implements OnInit, OnDestroy  {
 
+  public posts: Information[] = [];
   public editedPost!: Information;
   public editorTitle?: string;
 
+  private ngUnsubscribe$: Subject<void> = new Subject();
 
   public userRights: UserRightsObj = {isUsercanDeleteNews: true, isUsercanEditNews: true};
 
@@ -32,6 +35,14 @@ getPosts(){
 }
 
   ngOnInit(): void {
+    this._postService.getPosts().pipe(takeUntil(this.ngUnsubscribe$)).subscribe(posts => {
+      this.posts = posts;
+    });
+  }
+
+  ngOnDestroy(){
+    this.ngUnsubscribe$.next();
+    this.ngUnsubscribe$.complete();
   }
 
   ngDoCheck(){

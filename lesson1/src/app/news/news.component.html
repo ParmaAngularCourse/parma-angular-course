@@ -6,7 +6,7 @@
             <button *appUserRightsStr=userRights.isUsercanDeleteNews (click)="onDeleteSelected()" [disabled]="getIsAnySelect()? null : true"class="blueButton" >Удалить</button>
             <br><br>
         </div>
-        <app-single-post (editPost)="onEditPost($event)" (deletePost)="onDeletePost($event)" (checkPost)="onCheckPost($event)" *ngFor="let item of getPosts()" [single_post_data]="item" ></app-single-post>
+        <app-single-post (editPost)="onEditPost($event)" (deletePost)="onDeletePost($event)" (checkPost)="onCheckPost($event)" *ngFor="let item of posts" [single_post_data]="item" ></app-single-post>
     </div>
 
 
