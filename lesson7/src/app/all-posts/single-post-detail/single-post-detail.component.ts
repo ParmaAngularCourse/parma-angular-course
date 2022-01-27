@@ -49,7 +49,7 @@ export class SinglePostDetailComponent {
 
   PostType: PostType = PostType.politic;
 
-  @Input() user!: UserType;
+  @Input() user!: UserType | null;
 
   groupPostControl!: FormGroup;
 

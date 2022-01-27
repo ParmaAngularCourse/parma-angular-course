@@ -63,7 +63,7 @@ export class AllPostsComponent implements OnInit {
   contextMenuY = 0;
   isActiveDeletePostBtn: boolean = false;
 
-  user: UserType = {
+  user: UserType | null = {
     name: '',
     surname: '',
     email: '',
@@ -278,7 +278,7 @@ export class AllPostsComponent implements OnInit {
   }
 
   changeUser(userName: string) {
-    this.userInfoService.loadUser(userName);
+    this.userInfoService.loadUser({name: '', surname: '', email:'', login: userName, permissions:[]});
   }
 
   setValuePostType(value: PostType | null) {

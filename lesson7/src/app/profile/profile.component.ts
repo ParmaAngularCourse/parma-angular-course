@@ -26,18 +26,21 @@ export class ProfileComponent implements OnInit {
   @Output() closeProfileEvent: EventEmitter<void> = new EventEmitter<void>();
 
   constructor(private userInfoService: UserInfoService) {
-    this.user = this.userInfoService.userCurrent;
+    if (this.userInfoService.userCurrent)
+    {
+      this.user = this.userInfoService.userCurrent;
+    }
   }
 
   ngOnInit(): void {
     this.formGroupProfile = new FormGroup({
-      profileNameUserControl: new FormControl(this.user.name, [
+      profileNameUserControl: new FormControl(this.user?.name, [
         required('Имя'),
       ]),
-      profileSurnameUserControl: new FormControl(this.user.surname, [
+      profileSurnameUserControl: new FormControl(this.user?.surname, [
         required('Фамилия'),
       ]),
-      profileEmailUserControl: new FormControl(this.user.email, [
+      profileEmailUserControl: new FormControl(this.user?.email, [
         required('Email'),
       ]),
     });
@@ -47,9 +50,11 @@ export class ProfileComponent implements OnInit {
       .subscribe((value) => {
         console.log(value);
         console.log(value['profileNameUserControl']);
-        this.user.name = value['profileNameUserControl'];
-        this.user.surname = value['profileSurnameUserControl'];
-        this.user.email = value['profileEmailUserControl'];
+        if (this.user !== null) {
+          this.user.name = value['profileNameUserControl'];
+          this.user.surname = value['profileSurnameUserControl'];
+          this.user.email = value['profileEmailUserControl'];
+        }
       });
   }
 

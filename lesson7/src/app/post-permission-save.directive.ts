@@ -7,8 +7,8 @@ import { PermissionUser } from './all-posts/users';
 export class PostPermissionSaveDirective {
 
   private _permissions: PermissionUser[] = [];
-  @Input() set appPostPermissionSave(permissions: PermissionUser[]) {
-    this._permissions = permissions;
+  @Input() set appPostPermissionSave(permissions: PermissionUser[] | null | undefined) {
+    this._permissions = permissions || [];
     if (!this.hasPermissionSave()) {
       this.view.clear();
     }

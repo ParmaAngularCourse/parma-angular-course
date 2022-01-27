@@ -11,7 +11,7 @@
     <label [attr.for]="userNameControl">Имя пользователя:</label>
     <input #userNameControl class="inputStyle" type="text" />
     <button class="buttonContentStyle" (click)="changeUser(userNameControl.value)">Сменить пользователя</button>
-    <div class="userNameCurrentStyle">Текущее имя пользователя:{{user.login}}</div>
+    <div class="userNameCurrentStyle">Текущее имя пользователя:{{user?.login || ''}}</div>
   </div>
   <div>
     <label [attr.for]="findControl">Найти:</label>
@@ -19,7 +19,7 @@
   </div>
   <div>
     <button class="buttonContentStyle" (click)="addNewPostHandler()">Добавить</button>
-    <button *appPostPermissionDelete="user.permissions" class="buttonContentStyle" [disabled]="!isActiveDeletePostBtn"
+    <button *appPostPermissionDelete="user?.permissions" class="buttonContentStyle" [disabled]="!isActiveDeletePostBtn"
       (click)="deletePostsHandler()">Удалить</button>
   </div>
   <div class="columsStyle">

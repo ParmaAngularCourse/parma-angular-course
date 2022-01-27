@@ -12,7 +12,7 @@ export class SinglePostComponent {
 
   @Input() post!:PostObj;
 
-  @Input() user!: UserType;
+  @Input() user!: UserType | null;
 
   @Output() deletePostEvent = new EventEmitter<PostObj>();
   @Output() editPostEvent = new EventEmitter<PostObj>();

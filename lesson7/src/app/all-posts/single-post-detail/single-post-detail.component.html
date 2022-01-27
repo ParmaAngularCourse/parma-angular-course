@@ -22,7 +22,7 @@
   </div>
   <app-post-type-control formControlName="typePostControl"></app-post-type-control>
   <div class="divButtonsStyle">
-    <button *appPostPermissionSave="user.permissions" class="buttonStyle" (click)="savePostHandler()">Сохранить</button>
+    <button *appPostPermissionSave="user?.permissions" class="buttonStyle" (click)="savePostHandler()">Сохранить</button>
     <button class="buttonStyle" (click)="cancelSavePostHandler()">Отмена</button>
   </div>
 </div>

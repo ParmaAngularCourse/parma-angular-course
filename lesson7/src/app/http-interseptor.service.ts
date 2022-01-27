@@ -23,7 +23,7 @@ export class HttpInterseptorService implements HttpInterceptor {
     headers = headers.set('Authorization', 'Bearer ggggggg');
     if (req.url && req.url.indexOf('UserInfo') === -1) {
       let userInfoService = this.injector.get(UserInfoService);
-      if (userInfoService) {
+      if (userInfoService && userInfoService.userCurrent !== null) {
         const currentUser = userInfoService.userCurrent;
         headers = headers.set('username', currentUser.login);
       }

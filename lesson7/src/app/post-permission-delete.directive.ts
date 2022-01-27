@@ -7,8 +7,8 @@ import { PermissionUser } from './all-posts/users';
 export class PostPermissionDeleteDirective {
 
   private _permissions: PermissionUser[] = [];
-  @Input() set appPostPermissionDelete(permissions: PermissionUser[]) {
-    this._permissions = permissions;
+  @Input() set appPostPermissionDelete(permissions: PermissionUser[] | null | undefined) {
+    this._permissions = permissions || [];
     if (!this.hasPermissionDelete()) {
       this.view.clear();
     }

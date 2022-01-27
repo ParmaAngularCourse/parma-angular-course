@@ -11,7 +11,7 @@
     </div>
     <div class="divButtonStyle">
         <button class="buttonStyle" (click)="editPostHandler()" >Редактировать</button>
-        <button *appPostPermissionDelete="user.permissions" class="buttonStyle" [disabled]="!post.isSelected" (click)="deletePostHandler()">Удалить</button>
+        <button *appPostPermissionDelete="user?.permissions" class="buttonStyle" [disabled]="!post.isSelected" (click)="deletePostHandler()">Удалить</button>
     </div>
 </div>
 

@@ -26,34 +26,32 @@ type dateUserType = {
   providedIn: 'root',
 })
 export class UserInfoService {
-  userCurrent: UserType = {
+  userCurrent: UserType | null = null/* {
     name: '',
     surname: '',
     email: '',
     login: 'user1',
     permissions: [],
-  };
+  }*/;
 
-  private userSubject: BehaviorSubject<UserType> =
-    new BehaviorSubject<UserType>({
+  private userSubject: BehaviorSubject<UserType | null> =
+    new BehaviorSubject<UserType | null>(null/*{
       name: '',
       surname: '',
       email: '',
       login: '',
       permissions: [],
-    });
+    }*/);
   constructor(private httpClient: HttpClient) {
-    this.loadUser(this.userCurrent.login);
+    //this.loadUser(this.userCurrent.login);
   }
 
-  public getUserObserverble(): Observable<UserType> {
+  public getUserObserverble(): Observable<UserType | null> {
     return this.userSubject.asObservable();
   }
-  public loadUser(userName: string) {
+  public loadUser(user: UserType) {
     this.httpClient
-      .get<dateUserType>('/UserInfo/GetUserInfoByName', {
-        params: { name: userName },
-      })
+      .post<dateUserType>('/UserInfo/UpdateUserInfoByLogin', this.mapToDataUserType(user))
       .pipe(map((item) => this.mapToUserType(item)))
       .subscribe((data) => {
         this.userCurrent = data;
@@ -72,7 +70,7 @@ export class UserInfoService {
         error: (error: HttpErrorResponse) =>
           console.log(error.status + ' ' + error.message),
         complete: () => {
-          this.loadUser(user.login);
+          this.loadUser(user);
           console.log('update userInfo complete');
         },
       });
