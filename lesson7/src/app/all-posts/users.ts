@@ -1,4 +1,7 @@
 export type UserType = {
+  name: string;
+  surname: string;
+  email: string;
   login: string;
   permissions: PermissionUser[];
 };

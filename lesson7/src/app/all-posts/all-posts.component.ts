@@ -63,7 +63,13 @@ export class AllPostsComponent implements OnInit {
   contextMenuY = 0;
   isActiveDeletePostBtn: boolean = false;
 
-  user: UserType = { login: '', permissions: [] };
+  user: UserType = {
+    name: '',
+    surname: '',
+    email: '',
+    login: '',
+    permissions: [],
+  };
 
   postTypes: string[] = [];
   selectPostTypeValue: PostType | null = null;
@@ -145,26 +151,25 @@ export class AllPostsComponent implements OnInit {
       this.postTypes.push(item);
     }
     //Тут важен порядок подписки
-    this.subjectPostTypeMenu.pipe(
-      switchMap((value) => {
-        return this.postService
-        .searchPosts2({
-          title: this.searchControl?.value as string || '',
-          postType: this.selectPostTypeValue,
-        });
-      }),
-      takeUntil(this.ngUnsubscribe$)).subscribe(
-        (value) => {
-          this.postService.setResultSearch(value);
-        }
-    );
+    this.subjectPostTypeMenu
+      .pipe(
+        switchMap((value) => {
+          return this.postService.searchPosts2({
+            title: (this.searchControl?.value as string) || '',
+            postType: this.selectPostTypeValue,
+          });
+        }),
+        takeUntil(this.ngUnsubscribe$)
+      )
+      .subscribe((value) => {
+        this.postService.setResultSearch(value);
+      });
 
     this.route.queryParams
       .pipe(takeUntil(this.ngUnsubscribe$))
       .subscribe((params) => {
         this.setValuePostType(params['filter'] as PostType);
       });
-
   }
 
   ngOnInit(): void {
@@ -279,7 +284,10 @@ export class AllPostsComponent implements OnInit {
   setValuePostType(value: PostType | null) {
     this.selectPostTypeValue = value;
     this.subjectPostTypeMenu.next(value);
-    this.router.navigate(['/posts'], {relativeTo: this.route, queryParams: value !== null ? {filter: value} : null});
+    this.router.navigate(['/posts'], {
+      relativeTo: this.route,
+      queryParams: value !== null ? { filter: value } : null,
+    });
   }
 
   selectPostTypeFilter(value: PostType | string) {

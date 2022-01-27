@@ -8,7 +8,11 @@ import {
   BehaviorSubject,
 } from 'rxjs';
 import { UserType, PermissionUser } from './all-posts/users';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import {
+  HttpClient,
+  HttpErrorResponse,
+  HttpParams,
+} from '@angular/common/http';
 
 type dateUserType = {
   email: string;
@@ -22,10 +26,22 @@ type dateUserType = {
   providedIn: 'root',
 })
 export class UserInfoService {
-  userCurrent: UserType = { login: 'user1', permissions: [] };
+  userCurrent: UserType = {
+    name: '',
+    surname: '',
+    email: '',
+    login: 'user1',
+    permissions: [],
+  };
 
   private userSubject: BehaviorSubject<UserType> =
-    new BehaviorSubject<UserType>({ login: '', permissions: [] });
+    new BehaviorSubject<UserType>({
+      name: '',
+      surname: '',
+      email: '',
+      login: '',
+      permissions: [],
+    });
   constructor(private httpClient: HttpClient) {
     this.loadUser(this.userCurrent.login);
   }
@@ -45,11 +61,42 @@ export class UserInfoService {
       });
   }
 
+  public updateUser(user: UserType) {
+    this.httpClient
+      .post<UserType>(
+        '/UserInfo/UpdateUserInfoByLogin',
+        this.mapToDataUserType(user)
+      )
+      .subscribe({
+        next: (_) => {},
+        error: (error: HttpErrorResponse) =>
+          console.log(error.status + ' ' + error.message),
+        complete: () => {
+          this.loadUser(user.login);
+          console.log('update userInfo complete');
+        },
+      });
+  }
+
   private mapToUserType(item: dateUserType): UserType {
     let result = {
+      name: item.name,
+      surname: item.surname,
+      email: item.email,
       login: item.login,
       permissions: [...item.permissions],
     } as UserType;
+    return result;
+  }
+
+  private mapToDataUserType(item: UserType): dateUserType {
+    let result = {
+      name: item.name,
+      surname: item.surname,
+      email: item.email,
+      login: item.login,
+      permissions: [...item.permissions],
+    } as dateUserType;
     return result;
   }
 }
