@@ -51,13 +51,15 @@ namespace PostsApi.Controllers
             return _userInfo[1];
         }
 
-        [HttpGet]
-        public UserInfo GetUserInfoByName(string name)
+        [HttpPost]
+        [Authorize]
+        public UserInfo GetUserInfoByLogin(string login)
         {
-            return _userInfo.FirstOrDefault(e => string.Equals(e.Login, name, System.StringComparison.OrdinalIgnoreCase));
+            return _userInfo.FirstOrDefault(e => string.Equals(e.Login, login, System.StringComparison.OrdinalIgnoreCase));
         }
 
         [HttpPost]
+        [Authorize]
         public void UpdateUserInfoByLogin(UserInfo userInfo)
         {
             var findUser = _userInfo.FirstOrDefault(e => string.Equals(e.Login, userInfo.Login, System.StringComparison.OrdinalIgnoreCase));

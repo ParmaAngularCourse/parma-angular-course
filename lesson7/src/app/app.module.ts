@@ -22,6 +22,9 @@ import { AppRoutingModule } from './app-routing.module';
 import { ProfileComponent } from './profile/profile.component';
 import { AuthComponent } from './auth/auth.component';
 import { MainMenuComponent } from './main-menu/main-menu.component';
+import { EditDialogComponent } from './all-posts/edit-dialog/edit-dialog.component';
+import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
+import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
 
 @NgModule({
   declarations: [
@@ -42,6 +45,9 @@ import { MainMenuComponent } from './main-menu/main-menu.component';
     ProfileComponent,
     AuthComponent,
     MainMenuComponent,
+    EditDialogComponent,
+    PageNotFoundComponent,
+    ConfirmDialogComponent,
   ],
   imports: [
     BrowserModule,

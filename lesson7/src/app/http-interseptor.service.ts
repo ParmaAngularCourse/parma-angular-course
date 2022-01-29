@@ -20,12 +20,12 @@ export class HttpInterseptorService implements HttpInterceptor {
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
     let headers = req.headers;
-    headers = headers.set('Authorization', 'Bearer ggggggg');
-    if (req.url && req.url.indexOf('UserInfo') === -1) {
+    if (req.url && req.url.indexOf('token') === -1) {
       let userInfoService = this.injector.get(UserInfoService);
-      if (userInfoService && userInfoService.userCurrent !== null) {
-        const currentUser = userInfoService.userCurrent;
-        headers = headers.set('username', currentUser.login);
+      if (userInfoService && userInfoService.dataAuth !== null) {
+        const dataAuth = userInfoService.dataAuth;
+        headers = headers.set('username', dataAuth.username);
+        headers = headers.set('Authorization', `Bearer ${dataAuth.access_token}`);
       }
     }
     let reqClone = req.clone({

@@ -1,0 +1,11 @@
+<div *ngIf="isVisible" class="b-popup">
+  <div class="b-popup-content">
+      <div>
+      <div class="contentStyle">Вы действительно хотите перейти на другую страницу? Все изменения будут потеряны</div>
+      <div>
+        <button class="buttonStyle" (click)="yesDialogHandler()" >Да</button>
+        <button class="buttonStyle" (click)="noDialogHandler()" >Нет</button>
+    </div>
+    </div>
+  </div>
+</div>

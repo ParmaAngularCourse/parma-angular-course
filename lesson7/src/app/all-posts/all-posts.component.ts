@@ -2,42 +2,22 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  EventEmitter,
   OnInit,
-  Output,
-  ViewChild,
 } from '@angular/core';
 import { PostsService } from '../posts.service';
-import { HeaderPostDetailComponent } from './header-post-detail/header-post-detail.component';
 import { PostObj, PostType } from './post-types';
-import { SinglePostDetailComponent } from './single-post-detail/single-post-detail.component';
 import { UserType } from './users';
 import { UserInfoService } from '../user-info.service';
 import {
   bufferCount,
   concatAll,
   debounceTime,
-  from,
   map,
-  merge,
-  mergeAll,
-  mergeMap,
   of,
-  reduce,
-  scan,
   Subject,
   switchMap,
   takeUntil,
-  tap,
-  toArray,
-  windowCount,
-  zip,
-  Observable,
-  EMPTY,
   distinctUntilChanged,
-  filter,
-  concatMap,
-  switchAll,
 } from 'rxjs';
 import { FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -53,23 +33,12 @@ export class AllPostsComponent implements OnInit {
   public posts2: PostObj[] = [];
   public posts3: PostObj[] = [];
 
-  //editPost!:PostObj; Через свойство не работает, если есть вложенный компонент
-  titleDialog: string = '';
-  @ViewChild('popupPostDetailWindow')
-  popupPostDetailWindow!: HeaderPostDetailComponent;
-  @ViewChild('postDetailContent') postDetailContent!: SinglePostDetailComponent;
   isVisibleContextMenu: boolean = false;
   contextMenuX = 0;
   contextMenuY = 0;
   isActiveDeletePostBtn: boolean = false;
 
-  user: UserType | null = {
-    name: '',
-    surname: '',
-    email: '',
-    login: '',
-    permissions: [],
-  };
+  user: UserType | null = null;
 
   postTypes: string[] = [];
   selectPostTypeValue: PostType | null = null;
@@ -150,26 +119,7 @@ export class AllPostsComponent implements OnInit {
     for (const item in PostType) {
       this.postTypes.push(item);
     }
-    //Тут важен порядок подписки
-    this.subjectPostTypeMenu
-      .pipe(
-        switchMap((value) => {
-          return this.postService.searchPosts2({
-            title: (this.searchControl?.value as string) || '',
-            postType: this.selectPostTypeValue,
-          });
-        }),
-        takeUntil(this.ngUnsubscribe$)
-      )
-      .subscribe((value) => {
-        this.postService.setResultSearch(value);
-      });
 
-    this.route.queryParams
-      .pipe(takeUntil(this.ngUnsubscribe$))
-      .subscribe((params) => {
-        this.setValuePostType(params['filter'] as PostType);
-      });
   }
 
   ngOnInit(): void {
@@ -192,6 +142,29 @@ export class AllPostsComponent implements OnInit {
       });
   }
 
+  ngAfterViewInit(): void {
+    //Тут важен порядок подписки
+    this.subjectPostTypeMenu
+    .pipe(
+      switchMap((value) => {
+        return this.postService.searchPosts2({
+          title: (this.searchControl?.value as string) || '',
+          postType: this.selectPostTypeValue,
+        });
+      }),
+      takeUntil(this.ngUnsubscribe$)
+    )
+    .subscribe((value) => {
+      this.postService.setResultSearch(value);
+    });
+
+    this.route.queryParams
+    .pipe(takeUntil(this.ngUnsubscribe$))
+    .subscribe((params) => {
+      this.setValuePostType(params['filter'] as PostType);
+    });
+  }
+
   ngDoCheck() {
     //console.log('all-posts');
   }
@@ -205,36 +178,13 @@ export class AllPostsComponent implements OnInit {
   }
 
   addNewPostHandler() {
-    this.popupPostDetailWindow.show(true);
-    let editPost = {
-      id: -1,
-      date: '',
-      title: '',
-      text: '',
-      isSelected: false,
-      postType: null,
-    };
-    this.postDetailContent.post = editPost;
-    this.titleDialog = 'Добавить новость';
-  }
-
-  saveNewPostHandler(post: PostObj) {
-    if (post.id === -1) {
-      this.postService.addPost(post);
-    } else {
-      this.postService.updatePost(post);
-    }
-    this.popupPostDetailWindow.show(false);
-  }
-
-  closePopupPostDetailsHandler() {
-    this.popupPostDetailWindow.show(false);
+    this.router.navigate(['/posts/add']);
   }
 
   editPostHandler(post: PostObj) {
-    this.postDetailContent.post = post;
-    this.titleDialog = 'Изменить новость';
-    this.popupPostDetailWindow.show(true);
+    this.router.navigate(['/posts/edit', post.id], {
+      relativeTo: this.route,
+    });
   }
 
   rightClickHandler(event: MouseEvent): boolean {
@@ -278,16 +228,13 @@ export class AllPostsComponent implements OnInit {
   }
 
   changeUser(userName: string) {
-    this.userInfoService.loadUser({name: '', surname: '', email:'', login: userName, permissions:[]});
+    this.userInfoService.loadUser(userName);
   }
 
   setValuePostType(value: PostType | null) {
     this.selectPostTypeValue = value;
     this.subjectPostTypeMenu.next(value);
-    this.router.navigate(['/posts'], {
-      relativeTo: this.route,
-      queryParams: value !== null ? { filter: value } : null,
-    });
+
   }
 
   selectPostTypeFilter(value: PostType | string) {
@@ -311,5 +258,9 @@ export class AllPostsComponent implements OnInit {
         this.setValuePostType(null);
         break;
     }
+    this.router.navigate(['/posts'], {
+      relativeTo: this.route,
+      queryParams: !(value === '' || value === null) ? { filter: value } : null,
+    });
   }
 }

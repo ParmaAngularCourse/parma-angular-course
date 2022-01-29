@@ -1,11 +1,11 @@
 <div class="mainMenu">
   <button routerLink="posts"
     routerLinkActive="btnMainMenuActive" class="btnMainMenu">Новости</button>
-  <button routerLink="profile" class="btnMainMenu" routerLinkActive="btnMainMenuActive">Профиль</button>
+  <button routerLink="profile" class="btnMainMenu" routerLinkActive="btnMainMenuActive" [hidden]="!isAuth">Профиль</button>
   <div class="rightBlockMainMenu">
-    <a routerLink="auth" class="refMainMenu">Вход</a>
+    <a routerLink="auth" class="refMainMenu" [hidden]="isAuth">Вход</a>
     <span></span>
-    <a class="refMainMenu">Выход</a>
+    <a class="refMainMenu" [hidden]="!isAuth" (click)="logout()">Выход</a>
   </div>
 </div>
 <ng-content (selectPostTypeFilterEvent)="selectPostTypeFilter($event)"></ng-content>

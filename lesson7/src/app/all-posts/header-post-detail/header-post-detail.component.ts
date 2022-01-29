@@ -12,7 +12,7 @@ export class HeaderPostDetailComponent {
   @Output() closeDialogHeaderEvent: EventEmitter<void> = new EventEmitter();
   @Output() closePopupEvent = new EventEmitter<void>();
   private _isVisible: boolean = false;
-  get isVisible():boolean { 
+  get isVisible():boolean {
     return this._isVisible;
   }
 
@@ -24,6 +24,7 @@ export class HeaderPostDetailComponent {
   show(isShow:boolean) {
     this._isVisible = isShow;
     this.cdr.markForCheck();
+    this.cdr.detectChanges();
   }
 
   ngDoCheck() {

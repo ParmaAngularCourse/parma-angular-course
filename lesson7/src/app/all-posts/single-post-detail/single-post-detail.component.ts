@@ -23,6 +23,8 @@ import { required } from '../validators';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SinglePostDetailComponent {
+
+  private isChangeForm: boolean = false;
   private ngUnsubscribe$: Subject<void> = new Subject();
 
   private _post: PostObj = {
@@ -66,10 +68,12 @@ export class SinglePostDetailComponent {
 
   savePostHandler() {
     this.saveNewPostEvent.emit(this.post);
+    this.isChangeForm = false;
   }
 
   cancelSavePostHandler() {
     this.closePopupEvent.emit();
+    this.isChangeForm = false;
   }
   ngOnInit() {
     this.groupPostControl = new FormGroup({
@@ -92,6 +96,7 @@ export class SinglePostDetailComponent {
         this.post.postType = value['typePostControl'];
         this.post.title = value['titlePostControl'];
         this.post.text = value['textPostControl'];
+        this.isChangeForm = true;
       });
   }
 
@@ -102,5 +107,12 @@ export class SinglePostDetailComponent {
   ngOnDestroy() {
     this.ngUnsubscribe$.next();
     this.ngUnsubscribe$.complete();
+  }
+
+  canDeactivate():boolean {
+    if (this.isChangeForm) {
+      return confirm('Все изменения будут потеряны! Вы действительно хотите перейти на другую страницу?');
+    }
+    return true;
   }
 }
