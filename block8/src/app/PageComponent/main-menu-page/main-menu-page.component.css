@@ -1,0 +1,56 @@
+.main_block {
+    border: 10px groove #3306af;
+    position: fixed;
+    padding: 0;
+    margin: 0;
+
+    top: 0;
+    left: 0;
+
+    width: 99%;
+    height: 98%;
+}
+
+.main_menu {    
+    background-color: #3306af;
+    width: 100%;
+    position: fixed;
+}
+
+.main_menu_button{
+    background-color: #3306af;
+    border-left-style: solid;
+    border-top-width: 0px;
+    border-top-style: solid;
+    border-right-width: 0px;
+    border-right-style: solid;
+    color: white;
+    height: 30px;
+    width: 100px;
+    text-align: center;
+    float: left;
+    transition-duration: 0.4s; 
+    border-radius: 12px;   
+}
+
+.main_menu_button:hover {
+    background-color: darkblue;
+    color: white;
+  }
+
+.main_menu_button_active{
+    border-bottom-width: 4px;
+    border-bottom-color: yellow;  
+}
+
+.tab{
+    margin-top: 40px;
+}
+
+#log-link {
+	float: right;
+	margin-right: 30px;
+	color: white;
+    border-bottom-width: 2px;
+    border-bottom-style: solid;
+}

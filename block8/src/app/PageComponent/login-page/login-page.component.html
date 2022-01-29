@@ -1,0 +1,18 @@
+<div [formGroup]="editForm" class="input-form">
+    <ul class="input-data-block">
+        <li class="input-data-group">              
+            <label class ="input-data-label">Логин:</label><br> 
+            <input formControlName="userLogin" type="text" class="input-data-textbox">
+            <p class="invalid-error-text" *ngIf="userLogin.invalid && userLogin.dirty">{{userLogin?.errors?.['message']}}</p>
+        </li>
+        <li class="input-data-group">              
+            <label class ="input-data-label">Пароль:</label><br> 
+            <input formControlName="userPassword" type="text" class="input-data-textbox">
+            <p class="invalid-error-text" *ngIf="userPassword.invalid && userPassword.dirty">{{userPassword?.errors?.['message']}}</p>
+        </li>            
+    </ul>
+    <div class="control-button-block">
+        <button [disabled]="!editForm.valid" class="control-button" (click)="LogIn()">Войти</button>   
+    </div>
+    <app-auto-hide-status-msg #statusMsg></app-auto-hide-status-msg>
+</div>  

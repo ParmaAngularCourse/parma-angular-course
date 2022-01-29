@@ -1,0 +1,1 @@
+<p *ngIf="statusMsg.message" [ngClass]="{'error-text': !statusMsg.status, 'success-text': statusMsg.status}">{{statusMsg.message}}</p>

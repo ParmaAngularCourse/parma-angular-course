@@ -1,0 +1,9 @@
+<li class="input-data-group">              
+    <label class ="input-data-label">Тип:</label><br> 
+    <ul id="input-type-block" *ngFor="let item of radioDataSource | keyvalue; let i = index">
+        <li>
+            <input #typeControl type="radio" id="item.key" [value]="item.value" (blur)="onBlur()" (change)="onChangeNewsType(item.value)" [checked]="item.value == newsType">
+            <label for="item.key" class="type-label" [appNewsTypeColor]="item.key | getNewsColorByTypeKey">{{item.value}}</label>
+        </li>
+    </ul>
+</li>
