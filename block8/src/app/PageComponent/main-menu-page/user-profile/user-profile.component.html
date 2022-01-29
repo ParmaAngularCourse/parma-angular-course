@@ -1,0 +1,24 @@
+<div [formGroup]="editForm" class="input-form">
+    <ul class="input-data-block">
+        <li class="input-data-group">              
+            <label class ="input-data-label">Имя:</label><br> 
+            <input formControlName="userName" type="text" class="input-data-textbox">
+            <p class="invalid-error-text" *ngIf="userName.invalid && userName.dirty">{{userName?.errors?.['message']}}</p>
+        </li>
+        <li class="input-data-group">              
+            <label class ="input-data-label">Фамилия:</label><br> 
+            <input formControlName="userSurname" type="text" class="input-data-textbox">
+            <p class="invalid-error-text" *ngIf="userSurname.invalid && userSurname.dirty">{{userSurname?.errors?.['message']}}</p>
+        </li>
+        <li class="input-data-group">              
+            <label class ="input-data-label">E-mail:</label><br> 
+            <input formControlName="userEMail" type="email" [email]="true" class="input-data-textbox">
+            <p class="invalid-error-text" *ngIf="userEMail.invalid && userEMail.dirty">Введен некорректный e-mail адресс</p>
+        </li>            
+    </ul>
+    <div class="control-button-block">
+        <button class="control-button" (click)="cancelForm()">Отмена</button>
+        <button [disabled]="!editForm.valid" class="control-button" (click)="saveForm()">Сохранить</button>   
+    </div>    
+    <app-auto-hide-status-msg #statusMsg></app-auto-hide-status-msg>
+</div>    

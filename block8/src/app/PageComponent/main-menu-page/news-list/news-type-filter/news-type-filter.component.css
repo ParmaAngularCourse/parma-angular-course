@@ -1,0 +1,25 @@
+.filter-data-group {
+    margin-bottom: 10px;
+    display: inline-block;
+}
+
+#type-list {
+    list-style-type: none;
+    padding-left: 0px;
+    margin-bottom: 0px;
+    margin-top: 0px;
+}
+
+.type-link {
+    color: white;
+    padding-left: 10px;
+    padding-right: 10px;
+    width: 80px;
+}
+
+.active-type-link {
+    color: yellow;
+    padding-left: 10px;
+    padding-right: 10px;
+    width: 80px;
+}

@@ -1,0 +1,20 @@
+<div [appNewsStyles]="{ size: '5px', style: 'solid', color: currentNews.type | getNewsColor}" class="news-block">
+    <div>
+      <div class="news-header" [ngClass]="{'news-block-uncheked': !checkBoxState, 'news-block-cheked': checkBoxState}">
+        <div class="timeline" [style.border-left-color]="currentNews.type | getNewsColor" *ngIf="checkBoxState"></div>
+        <div class="circle" *ngIf="checkBoxState" [style.background-color]="currentNews.type | getNewsColor"></div>
+        <div class="news-title">
+            <input #newsCheckBox type="checkbox" (change)="onCheckboxChange(newsCheckBox.checked)" [checked]="checkBoxState">
+            <div class="news-title-block">
+              <h3>{{currentNews.date | date:'dd MMMM yyyy':'':'ru-Ru'}} {{currentNews.title | firstLetterUppercase}}</h3>
+            </div>            
+            <span class="news-type-tag" [title]="currentNews.type" [appNewsTypeColor]="currentNews.type | getNewsColor">{{currentNews.type | getFirstLetter | firstLetterUppercase}}</span>
+        </div>
+      </div>
+      <div class="news-body">
+        {{currentNews.body}}
+      </div>     
+    </div>
+    <button class="control-button save" name="EditButton" (click)="onEditNew()">Редактировать</button>        
+    <button *appCheckAccess = "'Delete'" class="control-button delete" name="DeleteButton" [disabled]="!enableDeleteButton" (click)="onDeleteNew()">Удалить</button> 
+  </div>
