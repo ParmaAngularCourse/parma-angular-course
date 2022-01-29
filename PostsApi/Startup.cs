@@ -16,12 +16,14 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using PostsApi.Convertors;
 using PostsApi.Models;
+using PostsApi.Service;
 
 namespace PostsApi
 {
     public class Startup
     {
         private PostService _postService;
+        private UserInfoService _userInfoService;
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -50,6 +52,15 @@ namespace PostsApi
                 }
                 return _postService;
             });
+
+            services.AddTransient<UserInfoService>(f => {
+                if (_userInfoService == null)
+                {
+                    _userInfoService = new UserInfoService();
+                }
+                return _userInfoService;
+            });
+
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(
                 options =>
                     {

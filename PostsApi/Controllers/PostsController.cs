@@ -4,6 +4,7 @@ using System.Linq;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PostsApi.Models;
+using PostsApi.Service;
 
 namespace PostsApi.Controllers
 {

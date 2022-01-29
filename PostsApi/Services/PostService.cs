@@ -1,8 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using PostsApi.Models;
 
-namespace PostsApi.Models
+namespace PostsApi.Service
 {
     public class PostService
     {
