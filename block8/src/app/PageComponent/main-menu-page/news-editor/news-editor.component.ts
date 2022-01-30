@@ -9,6 +9,8 @@ import { TypeNews } from 'src/model/TypeNews';
 import { NewsService } from '../../../service/news.service';
 import { NewsDateValidator } from '../../../Validators/NewsDateValidators';
 import { NotEmptyStringValidator } from '../../../Validators/NotEmptyStringValidator';
+import { select, Store } from '@ngrx/store'
+import * as fromStore from '../../../store';
 
 @Component({
   selector: 'app-news-editor',
@@ -45,7 +47,8 @@ export class NewsEditorComponent implements OnInit, OnDestroy, ICanDeactivateCom
     private fb: FormBuilder,
     private datepipe: DatePipe,
     private route: ActivatedRoute,
-    private router: Router){
+    private router: Router,
+    private store: Store<fromStore.State>){
     this.currentNews = this.getDefaultNewsData();
   }
 
@@ -99,7 +102,8 @@ export class NewsEditorComponent implements OnInit, OnDestroy, ICanDeactivateCom
   }
 
   saveForm() {
-    this.newsService.addNews(this.currentNews);
+    //this.newsService.addNews(this.currentNews);
+    this.store.dispatch(fromStore.editNews({editNews: this.currentNews}));
     this.saved = true;     
     this.closeForm();
   }

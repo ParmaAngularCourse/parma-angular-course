@@ -25,6 +25,10 @@ import { UserProfileComponent } from './PageComponent/main-menu-page/user-profil
 import { LoginPageComponent } from './PageComponent/login-page/login-page.component';
 import { MainMenuPageComponent } from './PageComponent/main-menu-page/main-menu-page.component';
 import { AutoHideStatusMsgComponent } from './PageComponent/ShareComponent/auto-hide-status-msg/auto-hide-status-msg.component';
+import { StoreModule } from '@ngrx/store';
+import { effects, reducers } from './store';
+import { EffectsModule } from '@ngrx/effects';
+
 
 @NgModule({
   declarations: [
@@ -52,7 +56,9 @@ import { AutoHideStatusMsgComponent } from './PageComponent/ShareComponent/auto-
     BrowserModule,
     HttpClientModule,
     ReactiveFormsModule,
-    AppRoutingModule
+    AppRoutingModule,
+    StoreModule.forRoot(reducers),
+    EffectsModule.forRoot(effects)
   ],
   providers: [
     {
