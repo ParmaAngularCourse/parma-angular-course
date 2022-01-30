@@ -19,6 +19,13 @@ import {
 } from '@angular/common/http';
 import { AuthInterseptorService } from './auth-interseptor.service';
 import { NewsRadioControlComponent } from './news-radio-control/news-radio-control.component';
+import { RouterModule, Routes } from '@angular/router';
+import { ProfileComponent } from './profile/profile.component';
+import { HeaderPageSwitcherComponent } from './header-page-switcher/header-page-switcher.component';
+import { AppRoutingModule } from './app-routing/app-routing.module';
+
+
+
 
 @NgModule({
   declarations: [
@@ -33,8 +40,10 @@ import { NewsRadioControlComponent } from './news-radio-control/news-radio-contr
     FirstLetterPipePipe,
     NewsTagStyleDirectiveDirective,
     NewsRadioControlComponent,
+    ProfileComponent,
+    HeaderPageSwitcherComponent,
   ],
-  imports: [BrowserModule, FormsModule, HttpClientModule, ReactiveFormsModule],
+  imports: [BrowserModule, FormsModule, HttpClientModule, ReactiveFormsModule, AppRoutingModule],
   providers: [
     {
       provide: HTTP_INTERCEPTORS,

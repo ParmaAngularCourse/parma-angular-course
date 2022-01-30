@@ -1,0 +1,41 @@
+<div>
+  <ng-container
+    [ngTemplateOutlet]="profileInput"
+    [ngTemplateOutletContext]="{
+      id: 'name',
+      labelValue: 'Имя',
+      inputValue: name
+    }"
+  >
+  </ng-container>
+  <ng-container
+  [ngTemplateOutlet]="profileInput"
+  [ngTemplateOutletContext]="{
+    id: 'secondName',
+    labelValue: 'Фамилия',
+    inputValue: secondName
+  }"
+>
+</ng-container>
+<ng-container
+[ngTemplateOutlet]="profileInput"
+[ngTemplateOutletContext]="{
+  id: 'email',
+  labelValue: 'E-mail',
+  inputValue: email
+}"
+>
+</ng-container>
+</div>
+
+<ng-template
+  #profileInput
+  let-id="id"
+  let-labelValue="labelValue"
+  let-inputValue="inputValue"
+>
+  <div>
+    <label for="id">{{labelValue}}</label>
+    <input id="id" type="text" value="{{inputValue}}" />
+  </div>
+</ng-template>
