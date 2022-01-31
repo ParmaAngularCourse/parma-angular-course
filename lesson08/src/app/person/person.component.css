@@ -1,0 +1,23 @@
+.ng-untouched {
+  border-color: inherit !important;
+}
+
+.ng-invalid {
+  border-color: red;
+}
+
+.validation-error-message {
+  font-size: 0.6em;
+  color: red;
+  margin-top: -5px;
+}
+
+.person .person-field {
+  margin-bottom: 5px;
+}
+
+
+.person .person-field input {
+  margin-bottom: 5px;
+}
+

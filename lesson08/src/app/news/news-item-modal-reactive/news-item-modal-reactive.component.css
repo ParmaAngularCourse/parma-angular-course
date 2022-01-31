@@ -1,0 +1,26 @@
+label {
+}
+
+input[type=text],
+input[type=datetime-local] {
+  margin-bottom: 5px;
+  width: 100%;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.validation-error-message {
+  font-size: 0.6em;
+  color: red;
+  margin-top: -5px;
+}
+
+.ng-untouched {
+  border-color: inherit !important;
+}
+
+.ng-invalid {
+  border-color: red;
+}
+
+

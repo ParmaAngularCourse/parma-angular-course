@@ -1,0 +1,41 @@
+<div class="person" [formGroup]="this.personFormGroup">
+  <div class="person-field">
+    <div>
+      <label for="nm">Имя</label>
+    </div>
+    <input id="nm" type="text" formControlName="personName" autocomplete = "off" />
+    <div class="validation-error-message" *ngIf="this.personName?.errors?.required && !this.personName?.untouched">
+      Поле обязательно для заполнения
+    </div>
+    <div class="validation-error-message" *ngIf="this.personName?.errors?.mess">
+      {{ this.personName?.errors?.mess }}
+    </div>
+  </div>
+  <div class="person-field">
+    <div>
+      <label for="fm">Фамилия</label>
+    </div>
+    <input id="fm" type="text" formControlName="personFamily" autocomplete = "off" />
+    <div class="validation-error-message" *ngIf="this.personFamily?.errors?.required && !this.personFamily?.untouched">
+      Поле обязательно для заполнения
+    </div>
+    <div class="validation-error-message" *ngIf="this.personFamily?.errors?.mess">
+      {{ this.personFamily?.errors?.mess }}
+    </div>
+  </div>
+  <div class="person-field">
+    <div>
+      <label for="email">E-mail</label>
+    </div>
+    <input id="email" type="text" formControlName="personEmail" autocomplete = "off" />
+    <div class="validation-error-message" *ngIf="this.personEmail?.errors?.required && !this.personEmail?.untouched">
+      Поле обязательно для заполнения
+    </div>
+    <div class="validation-error-message" *ngIf="this.personEmail?.errors?.email">
+      Некорректно введен Email
+    </div>
+  </div>
+
+  <button (click)="this.onSave()" [disabled]="!this.personFormGroup.valid" >Сохранить</button>
+  <button (click)="this.onCancel()" >Отмена</button>
+</div>

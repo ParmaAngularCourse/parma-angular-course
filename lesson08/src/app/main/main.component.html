@@ -1,0 +1,20 @@
+<div class="tags-menu">
+  <div class="tags-menu-item">
+    <a [routerLink] = "['news', 'all']"
+       routerLinkActive="selected"
+       [routerLinkActiveOptions]="{exact: true}"
+       [appColorizedLabel]="'pink'">
+      Все
+    </a>
+  </div>
+  <div class="tags-menu-item"
+    *ngFor="let tag of this.tagsList$ | async">
+    <a [routerLink] = "['news', tag.tag]"
+       routerLinkActive="selected"
+       [appColorizedLabel]="tag.color">
+      {{tag.text}}
+    </a>
+  </div>
+</div>
+
+<router-outlet></router-outlet>

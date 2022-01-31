@@ -1,0 +1,11 @@
+.snackBar {
+  width: 230px;
+  height: 80px;
+  border: 1px solid black;
+  position: absolute;
+  bottom: 5%;
+  right: 5%;
+  border-radius: 10px;
+  background-color: aliceblue;
+  padding: 10px;
+}

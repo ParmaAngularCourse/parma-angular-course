@@ -1,0 +1,39 @@
+<app-modal-window
+  (modalClose)="this.cancel()"
+>
+  <ng-container ngProjectAs="modal-title">{{this.editedItem.id != -1 ? "Изменить новость" : "Добавить новость"}}</ng-container>
+  <ng-container ngProjectAs="modal-inner">
+
+    <ng-container [formGroup]="this.newsItemFormGroup">
+      <label>Дата:</label>
+      <input type='datetime-local' formControlName="dateField" />
+      <div class="validation-error-message" *ngIf="this.dateField?.errors?.required && !this.dateField?.untouched">
+        Поле обязательно для заполнения
+      </div>
+      <div class="validation-error-message" *ngIf="this.dateField?.errors?.mess">
+        {{ this.dateField?.errors?.mess }}
+      </div>
+
+      <label>Заголовок:</label>
+      <input type='text' formControlName="headField" />
+      <div class="validation-error-message" *ngIf="this.headField?.errors?.required && !this.headField?.untouched">
+        Поле обязательно для заполнения
+      </div>
+
+      <label>Описание:</label>
+      <input type='text' formControlName="descField" />
+      <div class="validation-error-message" *ngIf="this.descField?.errors?.required && !this.descField?.untouched">
+        Поле обязательно для заполнения
+      </div>
+
+      <label>Тип:</label>
+      <app-tags-selector formControlName="tagsField"></app-tags-selector>
+      <div class="validation-error-message" *ngIf="this.tagsField?.errors?.required">
+        Поле обязательно для заполнения
+      </div>
+    </ng-container>
+
+    <button (click)="this.saveItem()" [disabled]="!this.newsItemFormGroup.valid" *appPermission="'edit'">Сохранить</button>
+    <button (click)="this.cancel()">Отмена</button>
+  </ng-container>
+</app-modal-window>

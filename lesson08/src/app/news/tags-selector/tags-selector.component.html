@@ -1,0 +1,8 @@
+<ng-container *ngFor="let tagItem of this.tagsList$ | async">
+  <div class="tags">
+    <input type="radio" [id]="tagItem.tag" name="tags" [value]="tagItem.tag"
+           [checked]="controlValue == tagItem.tag" #tag (change)="this.onTagsChange(tag.value)" />
+    <label class="tags-label" [appColorizedLabel]="tagItem.color" [for]="tagItem.tag">{{tagItem.text}}</label>
+  </div>
+</ng-container>
+

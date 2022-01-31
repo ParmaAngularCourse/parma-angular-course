@@ -1,0 +1,23 @@
+.news-item {
+  border: 1px solid navy;
+  width: 300px;
+  margin: 5px;
+  padding: 10px;
+}
+
+.active {
+  background-color: lightgray;
+}
+
+.news-item button {
+  margin-right: 5px;
+}
+
+.tags-span {
+  float: right;
+  cursor: default;
+  padding: 2px 4px 2px 4px;
+  border-radius: 5px;
+  font-weight: bold;
+  color: white;
+}
