@@ -1,0 +1,46 @@
+.buttonStyle {
+  background-color: brown;
+  color:white;
+  border: 0px;
+  border-radius:4px;
+  padding: 1px 10px;
+  margin: 3px;
+  display: block;
+  width: 120px;
+  opacity: 0.75;
+}
+
+.politic {
+  background-color: green;
+}
+
+.economic {
+  background-color: coral;
+}
+
+.internet {
+  background-color: gray;
+}
+
+.science {
+  background-color: royalblue;
+}
+
+.tourism {
+  background-color: darkcyan;
+}
+
+.selectedStyle {
+  border: 2px black solid;
+  opacity: 1;
+}
+
+.buttonStyle:hover {
+  opacity: 0.35;
+  cursor: pointer;
+}
+
+.divError {
+  color: red;
+  font-size: small;
+}
