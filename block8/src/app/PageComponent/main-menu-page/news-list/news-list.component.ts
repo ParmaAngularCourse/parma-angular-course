@@ -1,12 +1,10 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
 import { bufferCount, combineLatest, debounceTime, distinctUntilChanged, from, fromEvent, map, Observable, startWith, Subject, switchMap, takeUntil, toArray } from 'rxjs';
-import { INewsData } from 'src/model/INewsData';
 import { News } from 'src/model/News';
 import { NewsFilter } from 'src/model/NewsFilter';
 import { TypeNews } from 'src/model/TypeNews';
 import { NewsContextMenuComponent } from './news-context-menu/news-context-menu.component';
-import { NewsService } from '../../../service/news.service';
 import { NewsBlockComponent } from './news-block/news-block.component';
 
 import { select, Store } from '@ngrx/store'
@@ -23,13 +21,13 @@ export class NewsListComponent implements OnInit, OnDestroy {
   @ViewChild('contextMenu') newsContextMenu!: NewsContextMenuComponent
   @ViewChild('newsFilter') newsFilter!: ElementRef
   @ViewChildren(NewsBlockComponent) childrenComponents!:QueryList<NewsBlockComponent>  
-  public newsArray: INewsData[][] = [];
+  public newsArray: News[][] = [];
   public newsTypesArray$!: { [key in TypeNews]?: Observable<number> }//Observable<number>;
   public newsCount$!: Observable<number>;
   public enableDeleteButton:boolean = false;  
   private unsubscriptionSubj!:Subject<void>
 
-  constructor(private newsService:NewsService,
+  constructor(
     private store: Store<fromStore.State>,
     private cd:ChangeDetectorRef,
     private route: ActivatedRoute,
@@ -53,25 +51,6 @@ export class NewsListComponent implements OnInit, OnDestroy {
       distinctUntilChanged()
     );
 
-    /*combineLatest(      
-      [searchTextFilter$, 
-       newsTypeFilter$]
-    ).pipe(
-      map(([searchFilter, typeFilter]) => new NewsFilter(searchFilter, typeFilter)),
-      switchMap(filter=> this.newsService.getNewsList(filter)),
-      switchMap(value=> {
-        return from(value).pipe(
-        bufferCount(3),
-        toArray()
-        )
-      }),
-      takeUntil(this.unsubscriptionSubj)
-    )
-    .subscribe({
-      next: (data) => this.store.dispatch(new fromStore.LoadNewsSuccess(data))/*this.setNewsData(data),
-      error: (error: HttpErrorResponse) => console.log(error.status + ' ' + error.message)
-    });*/
-
     combineLatest(      
       [searchTextFilter$, 
        newsTypeFilter$]
@@ -85,12 +64,14 @@ export class NewsListComponent implements OnInit, OnDestroy {
     this.store.pipe(select(fromStore.selectNews))
     .pipe(        
         switchMap(value=> {
-        return from(value.news)
+        return from(value)
               .pipe(                
                 bufferCount(3),
                 toArray()
                )
-    }))
+    }),
+    takeUntil(this.unsubscriptionSubj)
+    )
     .subscribe(data=> this.setNewsData(data));
     this.newsCount$= this.store.pipe(select(fromStore.selectNewsCount));
     this.getNewsTypeCount();
@@ -109,23 +90,18 @@ export class NewsListComponent implements OnInit, OnDestroy {
     this.newsTypesArray$[TypeNews.Type5_Internet] = this.store.pipe(select(fromStore.selectNewsByType(TypeNews.Type5_Internet)));
   }
 
-  private setNewsData(data:INewsData[][] | undefined):void{
+  private setNewsData(data:News[][] | undefined):void{
     this.newsArray = data ?? [];
     this.childrenComponents.forEach(x=>x.onCheckboxChange(false));
     this.cd.markForCheck();
   }
 
   onDeleteNews(news:News){
-    this.newsService.deleteNews(news);
+    this.store.dispatch(fromStore.deleteNews({deletingNews: news}));
   }
 
   onAddNews(){
     this.router.navigate([{ outlets: { editForm: ['add'] }}], { relativeTo: this.route, queryParamsHandling: 'merge'});
-  }
-
-  onSaveNews(news: INewsData){
-    //this.newsService.addNews(news);
-    this.store.dispatch(fromStore.editNews({editNews:news}));
   }
 
   ngDoCheck(){
@@ -154,7 +130,7 @@ export class NewsListComponent implements OnInit, OnDestroy {
 
   onDeleteAllSelectedNews(){
     var components = this.childrenComponents.filter(x=>x.checkBoxState);
-    components.forEach(component => {
+    components.forEach(component => {      
       component.onDeleteNew();
     });
     this.enableDeleteButton = false;

@@ -1,6 +1,6 @@
 import { createAction, props } from "@ngrx/store"
 import { NewsFilter } from "../../..//model/NewsFilter";
-import { INewsData } from "../../../model/INewsData";
+import { News } from "../../../model/News";
 
 export const loadNews = createAction(
     '[News list] Load News',
@@ -9,7 +9,7 @@ export const loadNews = createAction(
 
 export const loadNewsSuccess = createAction(
     '[News list] Load News Success',
-    props<{ newsData: INewsData[], filter: NewsFilter }>()
+    props<{ newsData: News[], filter: NewsFilter }>()
 );
 
 export const loadNewsError = createAction(
@@ -19,12 +19,12 @@ export const loadNewsError = createAction(
 
 export const editNews = createAction(
     '[News list] Edit News',    
-    props<{ editNews: INewsData }>()
+    props<{ editNews: News }>()
 );
 
 export const editNewsSuccess = createAction(
     '[News list] Edit News Success',
-    props<{ editNews: INewsData }>()
+    props<{ editNews: News }>()
 );
 
 export const editNewsError = createAction(
@@ -34,5 +34,20 @@ export const editNewsError = createAction(
 
 export const addNewsSuccess = createAction(
     '[News list] Add News Success',
-    props<{ editNews: INewsData }>()
+    props<{ editNews: News }>()
+);
+
+export const deleteNews = createAction(
+    '[News list] Delete News',    
+    props<{ deletingNews: News }>()
+);
+
+export const deleteNewsSuccess = createAction(
+    '[News list] Delete News Success',
+    props<{ deletingNewsId: number }>()
+);
+
+export const deleteNewsError = createAction(
+    '[News list] Delete News Error',
+    props<{ error: string }>()
 );

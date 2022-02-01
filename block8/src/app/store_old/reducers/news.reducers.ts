@@ -1,9 +1,9 @@
-import { INewsData } from "../../../model/INewsData";
+import { News } from "../../../model/News";
 import { News } from "../../../model/News";
 import * as fromActions from '../actions'
 
 export interface NewsState{
-    news: INewsData[][]
+    news: News[][]
 }
 
 const initialState: NewsState = {

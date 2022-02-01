@@ -1,8 +1,7 @@
 import '@angular/common/locales/global/ru';
-import { INewsData } from './INewsData';
 import { TypeNews } from './TypeNews';
 
-export class News implements INewsData {
+export class News {
     public id:number = 0;
     public date:Date;
     public title:string = "";

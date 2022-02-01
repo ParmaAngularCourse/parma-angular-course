@@ -64,9 +64,9 @@ export class UserProfileComponent implements OnInit, ICanDeactivateComponent {
       }
     );    
 
-    this.userName.valueChanges.subscribe((value:string)=> this.onChangeUserName(value))
-    this.userSurname.valueChanges.subscribe((value:string)=> this.onChangeUserSurname(value))
-    this.userEMail.valueChanges.subscribe((value:string)=> this.onChangeUserEMail(value))
+    this.userName.valueChanges.pipe(takeUntil(this.unsubscriptionSubj)).subscribe((value:string)=> this.onChangeUserName(value))
+    this.userSurname.valueChanges.pipe(takeUntil(this.unsubscriptionSubj)).subscribe((value:string)=> this.onChangeUserSurname(value))
+    this.userEMail.valueChanges.pipe(takeUntil(this.unsubscriptionSubj)).subscribe((value:string)=> this.onChangeUserEMail(value))
 
     this.authService.GetCurrentUser()
     .pipe(takeUntil(this.unsubscriptionSubj))
@@ -90,7 +90,8 @@ export class UserProfileComponent implements OnInit, ICanDeactivateComponent {
 
   saveForm() {
     this.authService.UpdateUserProfile(this.currentUser)
-      .subscribe(result=> {
+    .pipe(takeUntil(this.unsubscriptionSubj))
+    .subscribe(result=> {
         this.statusMsg.ShowStatusMessage(result);
         this.saved = true;
       }

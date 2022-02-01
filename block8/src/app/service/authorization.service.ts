@@ -1,6 +1,6 @@
 import { HttpClient, HttpEvent, HttpHandler, HttpHeaders, HttpInterceptor, HttpParams, HttpRequest } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { AsyncSubject, BehaviorSubject, map, Observable, switchMap } from 'rxjs';
+import { AsyncSubject, BehaviorSubject, map, Observable, Subject, switchMap, takeUntil } from 'rxjs';
 import { ServerResponse } from 'src/model/ServerResponse';
 import { StatusMsg } from 'src/model/StatusMsg';
 import { User } from 'src/model/User';
@@ -9,13 +9,16 @@ import { User } from 'src/model/User';
   providedIn: 'root'
 })
 export class AuthorizationService implements HttpInterceptor {
+  private unsubscriptionSubj!:Subject<void>
   private userSubject?:BehaviorSubject<User>;
   private login:string = '';
   private password:string = '';
   readonly LoginMetaDataKey:string = 'InterceptorMetaDataLogin';
   readonly PasswordMetaDataKey:string = 'InterceptorMetaDataPassword';
   
-  constructor(private httpService:HttpClient){}
+  constructor(private httpService:HttpClient){
+    this.unsubscriptionSubj = new Subject();
+  }
   
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     //Интерцептор создает новый инстанс! синглтон!! сервиса!!!, из-за этого приходится приплясывать с лишними параметрами в запросах что бы передать ему новые значение лоигна и пароля
@@ -43,6 +46,9 @@ export class AuthorizationService implements HttpInterceptor {
     if(!this.userSubject){
       this.userSubject = new BehaviorSubject<User>(new User());
       this.GetCurrentUserFromServer()
+      .pipe(
+        takeUntil(this.unsubscriptionSubj)
+      )
       .subscribe({
         next: (response)=> { 
           var user:User = new User();
@@ -69,6 +75,7 @@ export class AuthorizationService implements HttpInterceptor {
   public UpdateUserProfile(user:User):Observable<StatusMsg>{
     var resultSubject = new AsyncSubject<StatusMsg>();
     this.httpService.post<ServerResponse<User>>('/api/Auth/UpdateUserProfile', user)
+    .pipe(takeUntil(this.unsubscriptionSubj))
     .subscribe({
       next: (response)=> {
         if (response.isSuccess === false) {
@@ -92,7 +99,8 @@ export class AuthorizationService implements HttpInterceptor {
   public LogOn(login:string, password:string):Observable<StatusMsg>{
     var resultSubject = new AsyncSubject<StatusMsg>();
     this.SetAuthorizationData(login, password);
-    this.GetCurrentUserFromServer()    
+    this.GetCurrentUserFromServer()
+    .pipe(takeUntil(this.unsubscriptionSubj))    
     .subscribe({
       next: (response)=> { 
         var user:User = new User();
@@ -151,5 +159,10 @@ export class AuthorizationService implements HttpInterceptor {
   private SetAuthorizationData(login:string, password:string){
     this.login = login;
     this.password = password;
+  }
+
+  ngOnDestroy(){
+    this.unsubscriptionSubj.next();
+    this.unsubscriptionSubj.complete();
   }
 }

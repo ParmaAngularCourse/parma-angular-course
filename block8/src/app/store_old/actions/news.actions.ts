@@ -1,6 +1,6 @@
 import {Action} from '@ngrx/store'
 import { NewsFilter } from '../../../model/NewsFilter';
-import { INewsData } from '../../../model/INewsData';
+import { News } from '../../../model/News';
 
 export const LOAD_NEWS = '[News list] Load News';
 export const LOAD_NEWS_SUCCESS = '[News list] Load News Success';
@@ -13,7 +13,7 @@ export class LoadNews implements Action{
 
 export class LoadNewsSuccess implements Action{
     readonly type = LOAD_NEWS_SUCCESS;
-    constructor(public payload: INewsData[][]){}
+    constructor(public payload: News[][]){}
 }
 
 export class LoadError implements Action{

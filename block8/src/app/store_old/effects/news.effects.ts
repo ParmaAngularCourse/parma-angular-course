@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { Actions, Effect, ofType } from "@ngrx/effects";
 import { Action } from "@ngrx/store";
 import { bufferCount, from, map, Observable, switchMap, toArray } from "rxjs";
-import { INewsData } from "src/model/INewsData";
+import { News } from "src/model/News";
 import { NewsService } from "../../service/news.service";
 import * as fromActions from '../actions'
 
@@ -24,7 +24,7 @@ export class NewsEffects{
                     toArray()
                     )
                 }),            
-                map((_newsObjs: INewsData[][]) =>{ return new fromActions.LoadNewsSuccess(_newsObjs)
+                map((_newsObjs: News[][]) =>{ return new fromActions.LoadNewsSuccess(_newsObjs)
             })
         ))
     )
