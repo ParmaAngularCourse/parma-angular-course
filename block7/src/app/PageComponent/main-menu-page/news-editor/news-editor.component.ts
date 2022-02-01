@@ -72,10 +72,10 @@ export class NewsEditorComponent implements OnInit, OnDestroy, ICanDeactivateCom
       }
     );
     
-    this.newsDateControl.valueChanges.subscribe((value:string)=> this.onChangeNewsDate(value))
-    this.newsTitleControl.valueChanges.subscribe((value:string)=> this.onChangeNewsTitle(value))
-    this.newsBodyControl.valueChanges.subscribe((value:string)=> this.onChangeNewsBody(value))
-    this.newsTypeControl.valueChanges.subscribe((value:TypeNews)=> this.onChangeNewsType(value))
+    this.newsDateControl.valueChanges.pipe(takeUntil(this.unsubscriptionSubj)).subscribe((value:string)=> this.onChangeNewsDate(value))
+    this.newsTitleControl.valueChanges.pipe(takeUntil(this.unsubscriptionSubj)).subscribe((value:string)=> this.onChangeNewsTitle(value))
+    this.newsBodyControl.valueChanges.pipe(takeUntil(this.unsubscriptionSubj)).subscribe((value:string)=> this.onChangeNewsBody(value))
+    this.newsTypeControl.valueChanges.pipe(takeUntil(this.unsubscriptionSubj)).subscribe((value:TypeNews)=> this.onChangeNewsType(value))
 
     this.route.params
     .pipe(
@@ -85,7 +85,9 @@ export class NewsEditorComponent implements OnInit, OnDestroy, ICanDeactivateCom
     )
     .subscribe(news => this.openForm(news))   
 
-    this.route.url.subscribe(url=>{
+    this.route.url
+    .pipe(takeUntil(this.unsubscriptionSubj))
+    .subscribe(url=>{
       if(url[0]?.path === "add")
       {
         this.headerTitle = 'Добавить новость'

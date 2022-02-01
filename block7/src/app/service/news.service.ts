@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, map, Observable, of } from 'rxjs';
+import { BehaviorSubject, map, Observable, of, Subject, takeUntil } from 'rxjs';
 import { INewsData } from 'src/model/INewsData';
 import { News } from 'src/model/News';
 import { NewsFilter } from 'src/model/NewsFilter';
@@ -10,14 +10,17 @@ import { ServerResponse } from 'src/model/ServerResponse';
   providedIn: 'root'
 })
 export class NewsService {
+  private unsubscriptionSubj!:Subject<void>
   private newsListSubject:BehaviorSubject<INewsData[]>;
 
   constructor(private httpService:HttpClient){
-    this.newsListSubject = new BehaviorSubject<INewsData[]>([]);    
+    this.unsubscriptionSubj = new Subject(); 
+    this.newsListSubject = new BehaviorSubject<INewsData[]>([]);   
   }
 
   public getNewsList(filter:NewsFilter):Observable<INewsData[]>{
-    this.httpService.post<ServerResponse<INewsData[]>>('/api/NewsData/GetNews', filter)      
+    this.httpService.post<ServerResponse<INewsData[]>>('/api/NewsData/GetNews', filter)
+    .pipe(takeUntil(this.unsubscriptionSubj))      
     .subscribe({
       next: (response)=> { 
         if (response.isSuccess === false) {
@@ -38,6 +41,7 @@ export class NewsService {
 
   public addNews(news: INewsData){
     this.httpService.post<ServerResponse<INewsData>>('/api/NewsData/AddNews', news)
+    .pipe(takeUntil(this.unsubscriptionSubj))
     .subscribe({
       next: (response)=> {
         if (response.isSuccess === false) {
@@ -64,6 +68,7 @@ export class NewsService {
     this.httpService.delete<ServerResponse<void>>('/api/NewsData/DeleteNews',{
       params: params
     })
+    .pipe(takeUntil(this.unsubscriptionSubj))
     .subscribe({
       next: (response)=> {                 
         if (response.isSuccess === false) {
@@ -144,5 +149,10 @@ export class NewsService {
 
   private SortNewsList(newsList: News[]):News[]{
     return newsList.sort((newsF, newsS)=>newsS.date.getTime() - newsF.date.getTime());
+  }
+
+  ngOnDestroy(){
+    this.unsubscriptionSubj.next();
+    this.unsubscriptionSubj.complete();
   }
 }

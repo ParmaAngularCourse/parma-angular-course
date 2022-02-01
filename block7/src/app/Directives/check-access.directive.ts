@@ -16,9 +16,7 @@ export class CheckAccessDirective implements OnInit, OnDestroy {
   ngOnInit(){
     this.unsubscriptionSubj = new Subject();
     this.authService.GetCurrentUser()
-    .pipe(
-      takeUntil(this.unsubscriptionSubj)
-    )
+    .pipe(takeUntil(this.unsubscriptionSubj))
     .subscribe({
       next: (currentUser) => {        
         var permission = currentUser.permissions?.find(x=>x.key === this.AccessKey);
