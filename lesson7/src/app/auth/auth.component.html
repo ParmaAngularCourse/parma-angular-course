@@ -1,0 +1,28 @@
+<div class="mainClass" [formGroup]="formGroupAuth">
+  <div>
+    <label [attr.for]="authInputLogin">Логин:</label>
+    <input class="inputStyle" type="text" #authInputLogin formControlName="loginControl" />
+    <div *ngIf="formGroupAuth.get('loginControl')?.errors">
+      <div class="divError"
+        *ngFor="let error of formGroupAuth.get('loginControl')?.errors | validationErrors">
+        {{error.message}}</div>
+    </div>
+  </div>
+  <div>
+    <label [attr.for]="authInputPassword">Пароль:</label>
+    <input class="inputStyle" type="password" #authInputPassword formControlName="passwordControl" />
+    <div *ngIf="formGroupAuth.get('passwordControl')?.errors">
+      <div class="divError"
+        *ngFor="let error of formGroupAuth.get('passwordControl')?.errors | validationErrors">
+        {{error.message}}</div>
+    </div>
+  </div>
+  <div *ngIf="formGroupAuth.errors">
+    <div class="divError"
+        *ngFor="let error of formGroupAuth.errors | validationErrors">
+        {{error.message}}</div>
+  </div>
+  <div class="divButtonsStyle">
+    <button class="buttonStyle" (click)="authenticate(authInputLogin.value, authInputPassword.value)">Войти</button>
+  </div>
+</div>

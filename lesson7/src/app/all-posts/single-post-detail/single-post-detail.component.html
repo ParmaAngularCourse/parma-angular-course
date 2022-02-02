@@ -1,0 +1,29 @@
+<div [formGroup]="groupPostControl">
+  <div>
+    <label [attr.for]="inputDate">Дата:</label>
+    <input #inputDate class="inputStyle" type="datetime-local" formControlName="datePostControl" />
+    <div *ngIf="groupPostControl.get('datePostControl')?.errors">
+      <div class="divError" *ngFor="let error of groupPostControl.get('datePostControl')?.errors | validationErrors">{{error.message}}</div>
+    </div>
+  </div>
+  <div>
+    <label [attr.for]="inputTitle">Заголовок:</label>
+    <input #inputTitle class="inputStyle" type="text" formControlName="titlePostControl" />
+    <div *ngIf="groupPostControl.get('titlePostControl')?.errors">
+      <div class="divError" *ngFor="let error of groupPostControl.get('titlePostControl')?.errors  | validationErrors">{{error.message}}</div>
+    </div>
+  </div>
+  <div>
+    <label [attr.for]="inputText">Текст:</label>
+    <input #inputText class="inputStyle" type="text" formControlName="textPostControl" />
+    <div *ngIf="groupPostControl.get('textPostControl')?.errors">
+      <div class="divError" *ngFor="let error of groupPostControl.get('textPostControl')?.errors | validationErrors">{{error.message}}</div>
+    </div>
+  </div>
+  <app-post-type-control formControlName="typePostControl"></app-post-type-control>
+  <div class="divButtonsStyle">
+    <button *appPostPermissionSave="user?.permissions" class="buttonStyle" (click)="savePostHandler()">Сохранить</button>
+    <button class="buttonStyle" (click)="cancelSavePostHandler()">Отмена</button>
+  </div>
+</div>
+

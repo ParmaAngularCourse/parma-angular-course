@@ -1,0 +1,5 @@
+<app-header-post-detail #popupPostDetailWindow (closeDialogHeaderEvent)="closePopupPostDetailsHandler()"
+    [titleDialog]="titleDialog">
+    <app-single-post-detail [user]="user" #postDetailContent (saveNewPostEvent)="saveNewPostHandler($event)"
+      (closePopupEvent)="closePopupPostDetailsHandler()"></app-single-post-detail>
+</app-header-post-detail>

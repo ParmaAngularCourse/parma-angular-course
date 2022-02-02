@@ -1,0 +1,8 @@
+<div *ngIf="isVisible" class="b-popup">
+    <div class="b-popup-content">
+        <div><div class="headerStyle">{{titleDialog}}</div><button class="buttonStyle" (click)="closeDialogHandler()" >X</button></div>
+        <ng-content (closePopupEvent)="closePopupHandler()"></ng-content>  
+    </div>
+</div>
+
+
