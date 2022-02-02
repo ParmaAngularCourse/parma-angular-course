@@ -8,11 +8,7 @@
 /bazel-out
 
 # dependencies
-<<<<<<< HEAD
-node_modules
-=======
 node_modules/
->>>>>>> origin/gafurov
 
 # profiling files
 chrome-profiler-events*.json
@@ -35,11 +31,7 @@ chrome-profiler-events*.json
 .history/*
 
 # misc
-<<<<<<< HEAD
-.angular/cache
-=======
 .angular/cache/
->>>>>>> origin/gafurov
 /.sass-cache
 /connect.lock
 /coverage
