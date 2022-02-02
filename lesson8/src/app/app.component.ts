@@ -7,5 +7,5 @@ import { PostType } from './all-posts/post-types';
   styleUrls: ['./app.component.css'],
 })
 export class AppComponent {
-  title = 'lesson8';
+  title = 'lesson7';
 }

@@ -1,4 +1,13 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  HostListener,
+  Input,
+  OnInit,
+  Output,
+} from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
 import { UserType } from '../all-posts/users';
@@ -12,7 +21,6 @@ import { UserInfoService } from '../user-info.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProfileComponent implements OnInit {
-
   private isChangeForm: boolean = false;
   private defaultUser: UserType = {
     name: '',
@@ -37,18 +45,21 @@ export class ProfileComponent implements OnInit {
     new EventEmitter<UserType>();
   @Output() closeProfileEvent: EventEmitter<void> = new EventEmitter<void>();
 
-  constructor(private userInfoService: UserInfoService,
-    private cdr: ChangeDetectorRef) {
-    this.userInfoService.userSubject.pipe(takeUntil(this.ngUnsubscribe$)).subscribe(
-      (value) => {
-        if (value)
-        {
-          this.user = {...value};
-          this.defaultUser = {...value};
+  constructor(
+    private userInfoService: UserInfoService,
+    private cdr: ChangeDetectorRef
+  ) {
+    this.userInfoService
+      .getUserObserverble()
+      .pipe(takeUntil(this.ngUnsubscribe$))
+      .subscribe((value) => {
+        if (value) {
+          this.user = { ...value };
+          this.defaultUser = { ...value };
+          this.setValueControl();
           this.cdr.markForCheck();
         }
-      }
-    );
+      });
   }
 
   ngOnInit(): void {
@@ -78,6 +89,14 @@ export class ProfileComponent implements OnInit {
       });
   }
 
+  private setValueControl() {
+    this.formGroupProfile.setValue({
+      profileNameUserControl: this.user?.name,
+      profileSurnameUserControl: this.user?.surname,
+      profileEmailUserControl: this.user?.email,
+    });
+  }
+
   saveProfileHandler() {
     this.saveChangesProfileEvent.emit(this.user);
     this.userInfoService.updateUser(this.user);
@@ -90,7 +109,9 @@ export class ProfileComponent implements OnInit {
 
   canDeactivate(): boolean {
     if (this.isChangeForm) {
-      const isRedirect = confirm('Все изменения будут потеряны! Вы действительно хотите перейти на другую страницу?');
+      const isRedirect = confirm(
+        'Все изменения будут потеряны! Вы действительно хотите перейти на другую страницу?'
+      );
       if (isRedirect) {
         this.user = this.defaultUser;
         return true;
@@ -101,7 +122,7 @@ export class ProfileComponent implements OnInit {
     return true;
   }
 
-  isRedirectUserHandler(value:boolean):boolean {
+  isRedirectUserHandler(value: boolean): boolean {
     return value;
   }
 
@@ -109,5 +130,13 @@ export class ProfileComponent implements OnInit {
     this.ngUnsubscribe$.next();
     this.ngUnsubscribe$.complete();
     this.ngUnsubscribe$.unsubscribe();
+  }
+
+  @HostListener('window:beforeunload', ['$event'])
+  public onBeforeUnload(e: Event): void {
+    if (e && !this.canDeactivate()) {
+      e.preventDefault();
+      e.returnValue = false;
+    }
   }
 }
