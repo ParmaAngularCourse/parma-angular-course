@@ -66,6 +66,7 @@ export class AllPostsComponent implements OnInit {
           let t1: PostObj[] = [];
           let t2: PostObj[] = [];
           let t3: PostObj[] = [];
+          //TODO: здесь не выводятся данные, если массив пустой, нужно подумать как поправить
           return of(value).pipe(
             concatAll(),
             bufferCount(3),
@@ -119,7 +120,6 @@ export class AllPostsComponent implements OnInit {
     for (const item in PostType) {
       this.postTypes.push(item);
     }
-
   }
 
   ngOnInit(): void {
@@ -145,24 +145,24 @@ export class AllPostsComponent implements OnInit {
   ngAfterViewInit(): void {
     //Тут важен порядок подписки
     this.subjectPostTypeMenu
-    .pipe(
-      switchMap((value) => {
-        return this.postService.searchPosts2({
-          title: (this.searchControl?.value as string) || '',
-          postType: this.selectPostTypeValue,
-        });
-      }),
-      takeUntil(this.ngUnsubscribe$)
-    )
-    .subscribe((value) => {
-      this.postService.setResultSearch(value);
-    });
+      .pipe(
+        switchMap((value) => {
+          return this.postService.searchPosts2({
+            title: (this.searchControl?.value as string) || '',
+            postType: this.selectPostTypeValue,
+          });
+        }),
+        takeUntil(this.ngUnsubscribe$)
+      )
+      .subscribe((value) => {
+        this.postService.setResultSearch(value);
+      });
 
     this.route.queryParams
-    .pipe(takeUntil(this.ngUnsubscribe$))
-    .subscribe((params) => {
-      this.setValuePostType(params['filter'] as PostType);
-    });
+      .pipe(takeUntil(this.ngUnsubscribe$))
+      .subscribe((params) => {
+        this.setValuePostType(params['filter'] as PostType);
+      });
   }
 
   ngDoCheck() {
@@ -234,7 +234,6 @@ export class AllPostsComponent implements OnInit {
   setValuePostType(value: PostType | null) {
     this.selectPostTypeValue = value;
     this.subjectPostTypeMenu.next(value);
-
   }
 
   selectPostTypeFilter(value: PostType | string) {

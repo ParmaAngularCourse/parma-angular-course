@@ -14,6 +14,7 @@ import {
   HttpParams,
 } from '@angular/common/http';
 import { CookieService } from 'ngx-cookie-service';
+import { AUTH_COOKIE_NAME, NAME_USER_COOKIE } from './consts';
 
 type dataUserType = {
   email: string;
@@ -23,7 +24,7 @@ type dataUserType = {
   permissions: PermissionUser[];
 };
 
-type dataAuth = {
+export type dataAuth = {
   access_token: string;
   username: string;
 };
@@ -32,9 +33,6 @@ type dataAuth = {
   providedIn: 'root',
 })
 export class UserInfoService {
-  private authCookieName: string = 'Authorization';
-  private userNameCookie: string = 'username';
-
   dataAuth: dataAuth | null = null;
   userCurrent: UserType | null = null;
 
@@ -52,19 +50,19 @@ export class UserInfoService {
 
   private GetCookieAuth() {
     if (this.cookieService) {
-      let access_token = this.cookieService.get(this.authCookieName);
-      let username = this.cookieService.get(this.userNameCookie);
+      let access_token = this.cookieService.get(AUTH_COOKIE_NAME);
+      let username = this.cookieService.get(NAME_USER_COOKIE);
       if (access_token && username) {
         this.dataAuth = { access_token: access_token, username: username };
-        //this.loadUser(this.dataAuth.username); // Выходит циклическая зависимость
+        this.loadUser(this.dataAuth.username); // Выходит циклическая зависимость
       }
     }
   }
 
   private SetCookieAuth() {
     if (this.cookieService && this.dataAuth) {
-      this.cookieService.set(this.authCookieName, this.dataAuth.access_token);
-      this.cookieService.set(this.userNameCookie, this.dataAuth.username);
+      this.cookieService.set(AUTH_COOKIE_NAME, this.dataAuth.access_token);
+      this.cookieService.set(NAME_USER_COOKIE, this.dataAuth.username);
     }
   }
 
@@ -136,7 +134,7 @@ export class UserInfoService {
   }
 
   public isAuth(): boolean {
-    return this.userCurrent !== null;
+    return this.dataAuth !== null;
   }
 
   public authenticate(login: string, password: string) {

@@ -3,6 +3,7 @@ import {
   ChangeDetectorRef,
   Component,
   EventEmitter,
+  HostListener,
   Input,
   OnInit,
   Output,
@@ -55,6 +56,7 @@ export class ProfileComponent implements OnInit {
         if (value) {
           this.user = { ...value };
           this.defaultUser = { ...value };
+          this.setValueControl();
           this.cdr.markForCheck();
         }
       });
@@ -85,6 +87,14 @@ export class ProfileComponent implements OnInit {
           this.isChangeForm = true;
         }
       });
+  }
+
+  private setValueControl() {
+    this.formGroupProfile.setValue({
+      profileNameUserControl: this.user?.name,
+      profileSurnameUserControl: this.user?.surname,
+      profileEmailUserControl: this.user?.email,
+    });
   }
 
   saveProfileHandler() {
@@ -120,5 +130,13 @@ export class ProfileComponent implements OnInit {
     this.ngUnsubscribe$.next();
     this.ngUnsubscribe$.complete();
     this.ngUnsubscribe$.unsubscribe();
+  }
+
+  @HostListener('window:beforeunload', ['$event'])
+  public onBeforeUnload(e: Event): void {
+    if (e && !this.canDeactivate()) {
+      e.preventDefault();
+      e.returnValue = false;
+    }
   }
 }

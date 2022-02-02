@@ -30,10 +30,6 @@ export class MainMenuComponent {
       .subscribe((value) => {
         this.cdr.markForCheck();
       });
-
-    if (this.userInfoService.dataAuth) {
-      this.userInfoService.loadUser(this.userInfoService.dataAuth.username);
-    }
   }
 
   logout() {

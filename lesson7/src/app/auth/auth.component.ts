@@ -21,7 +21,14 @@ export class AuthComponent implements OnInit {
     private userInfoService: UserInfoService,
     private route: ActivatedRoute,
     private router: Router
-  ) {
+  ) {}
+
+  ngOnInit(): void {
+    this.formGroupAuth = new FormGroup({
+      loginControl: new FormControl(this.user?.login, [required('Логин')]),
+      passwordControl: new FormControl(this.password, [required('Пароль')]),
+    });
+
     this.userInfoService
       .getUserObserverble()
       .pipe(takeUntil(this.ngUnsubscribe$))
@@ -38,13 +45,6 @@ export class AuthComponent implements OnInit {
         error: (error) => this.formGroupAuth.setErrors([error]),
         complete: () => {},
       });
-  }
-
-  ngOnInit(): void {
-    this.formGroupAuth = new FormGroup({
-      loginControl: new FormControl(this.user?.login, [required('Логин')]),
-      passwordControl: new FormControl(this.password, [required('Пароль')]),
-    });
 
     this.userInfoService.errorSubject
       .pipe(takeUntil(this.ngUnsubscribe$))
