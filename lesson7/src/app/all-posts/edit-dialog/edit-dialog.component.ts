@@ -9,16 +9,15 @@ import { SinglePostDetailComponent } from '../single-post-detail/single-post-det
 import { UserInfoService } from '../../user-info.service';
 
 type paramRequest = {
-  id: number
-}
+  id: number;
+};
 
 @Component({
   selector: 'app-edit-dialog',
   templateUrl: './edit-dialog.component.html',
-  styleUrls: ['./edit-dialog.component.css']
+  styleUrls: ['./edit-dialog.component.css'],
 })
 export class EditDialogComponent implements OnInit {
-
   private ngUnsubscribe$: Subject<void> = new Subject();
   private posts: PostObj[] = [];
   private id: number | null = null;
@@ -28,16 +27,12 @@ export class EditDialogComponent implements OnInit {
   popupPostDetailWindow!: HeaderPostDetailComponent;
   @ViewChild('postDetailContent') postDetailContent!: SinglePostDetailComponent;
 
-
-  constructor(private postService: PostsService,
+  constructor(
+    private postService: PostsService,
     private route: ActivatedRoute,
     private userInfoService: UserInfoService,
     private router: Router
-    ) {
-
-
-
-    }
+  ) {}
 
   ngOnInit(): void {
     //this.popupPostDetailWindow.show(true);
@@ -45,17 +40,21 @@ export class EditDialogComponent implements OnInit {
 
   ngAfterViewInit(): void {
     this.postService
-      .getPostsOberverble().pipe(takeUntil(this.ngUnsubscribe$))
+      .getPostsOberverble()
+      .pipe(takeUntil(this.ngUnsubscribe$))
       .subscribe((value) => {
         this.posts = value;
         this.ResolvePost();
       });
-      this.userInfoService.userSubject.pipe(takeUntil(this.ngUnsubscribe$))
+    this.userInfoService
+      .getUserObserverble()
+      .pipe(takeUntil(this.ngUnsubscribe$))
       .subscribe((value) => {
         this.user = value;
       });
-    this.route.params.pipe(takeUntil(this.ngUnsubscribe$)).subscribe(
-      (params) => {
+    this.route.params
+      .pipe(takeUntil(this.ngUnsubscribe$))
+      .subscribe((params) => {
         const valueParam = params as paramRequest;
         if (valueParam && valueParam.id) {
           this.id = +valueParam.id;
@@ -75,20 +74,19 @@ export class EditDialogComponent implements OnInit {
           }
         }
         this.popupPostDetailWindow.show(true);
-      }
-    );
+      });
   }
 
   private ResolvePost() {
     let post = this.posts.find((e) => e.id === this.id);
     if (post && this.popupPostDetailWindow) {
-      this.postDetailContent.post = {...post};
+      this.postDetailContent.post = { ...post };
       this.titleDialog = 'Изменить новость';
     }
   }
 
   closePopupPostDetailsHandler() {
-    this.router.navigate(['/posts'], {relativeTo: this.route});
+    this.router.navigate(['/posts'], { relativeTo: this.route });
   }
 
   show(isVisible: boolean) {
@@ -102,7 +100,7 @@ export class EditDialogComponent implements OnInit {
       this.postService.updatePost(post);
     }
     this.popupPostDetailWindow.show(false);
-    this.router.navigate(['/posts'], {relativeTo: this.route});
+    this.router.navigate(['/posts'], { relativeTo: this.route });
   }
 
   ngOnDestroy() {
@@ -114,5 +112,4 @@ export class EditDialogComponent implements OnInit {
   canDeactivate(): boolean {
     return this.postDetailContent.canDeactivate();
   }
-
 }

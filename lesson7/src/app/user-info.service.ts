@@ -13,6 +13,7 @@ import {
   HttpErrorResponse,
   HttpParams,
 } from '@angular/common/http';
+import { CookieService } from 'ngx-cookie-service';
 
 type dataUserType = {
   email: string;
@@ -31,39 +32,63 @@ type dataAuth = {
   providedIn: 'root',
 })
 export class UserInfoService {
+  private authCookieName: string = 'Authorization';
+  private userNameCookie: string = 'username';
 
   dataAuth: dataAuth | null = null;
-  userCurrent: UserType | null = null/* {
-    name: '',
-    surname: '',
-    email: '',
-    login: 'user1',
-    permissions: [],
-  }*/;
+  userCurrent: UserType | null = null;
 
   userSubject: BehaviorSubject<UserType | null> =
-    new BehaviorSubject<UserType | null>(null/*{
-      name: '',
-      surname: '',
-      email: '',
-      login: '',
-      permissions: [],
-    }*/);
+    new BehaviorSubject<UserType | null>(null);
+
   errorSubject: BehaviorSubject<string> = new BehaviorSubject<string>('');
-  constructor(private httpClient: HttpClient) {
-    //this.loadUser(this.userCurrent.login);
+
+  constructor(
+    private httpClient: HttpClient,
+    private cookieService: CookieService
+  ) {
+    this.GetCookieAuth();
+  }
+
+  private GetCookieAuth() {
+    if (this.cookieService) {
+      let access_token = this.cookieService.get(this.authCookieName);
+      let username = this.cookieService.get(this.userNameCookie);
+      if (access_token && username) {
+        this.dataAuth = { access_token: access_token, username: username };
+        //this.loadUser(this.dataAuth.username); // Выходит циклическая зависимость
+      }
+    }
+  }
+
+  private SetCookieAuth() {
+    if (this.cookieService && this.dataAuth) {
+      this.cookieService.set(this.authCookieName, this.dataAuth.access_token);
+      this.cookieService.set(this.userNameCookie, this.dataAuth.username);
+    }
+  }
+
+  private ClearAllCookie() {
+    if (this.cookieService) {
+      this.cookieService.deleteAll();
+    }
   }
 
   public getUserObserverble(): Observable<UserType | null> {
     return this.userSubject.asObservable();
   }
+
   public loadUser(login: string) {
     this.httpClient
-      .post<dataUserType>('/UserInfo/GetUserInfoByLogin', {}, {
-        params: {
-          login: login
+      .post<dataUserType>(
+        '/UserInfo/GetUserInfoByLogin',
+        {},
+        {
+          params: {
+            login: login,
+          },
         }
-      })
+      )
       .pipe(map((item) => this.mapToUserType(item)))
       .subscribe((data) => {
         this.userCurrent = data;
@@ -115,25 +140,37 @@ export class UserInfoService {
   }
 
   public authenticate(login: string, password: string) {
-    this.httpClient.post('/token', {}, { params: {
-      login: login,
-      password: password
-    }}).subscribe({
-      next: (value) => {
-        let authData = value as dataAuth;
-        if (authData !== null) {
-          this.dataAuth = authData;
-          this.loadUser(authData.username);
+    this.httpClient
+      .post(
+        '/token',
+        {},
+        {
+          params: {
+            login: login,
+            password: password,
+          },
         }
-      },
-      error: (error: HttpErrorResponse) => {this.errorSubject.next("Не верное имя пользователя или пароль");},
-      complete: () => {}
-    });
+      )
+      .subscribe({
+        next: (value) => {
+          let authData = value as dataAuth;
+          if (authData !== null) {
+            this.dataAuth = authData;
+            this.SetCookieAuth();
+            this.loadUser(authData.username);
+          }
+        },
+        error: (error: HttpErrorResponse) => {
+          this.errorSubject.next('Не верное имя пользователя или пароль');
+        },
+        complete: () => {},
+      });
   }
 
   public logout() {
     this.userCurrent = null;
     this.dataAuth = null;
+    this.ClearAllCookie();
     this.userSubject.next(null);
   }
 }

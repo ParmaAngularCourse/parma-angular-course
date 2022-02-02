@@ -9,44 +9,48 @@ import { ActivatedRoute, Router } from '@angular/router';
 @Component({
   selector: 'app-auth',
   templateUrl: './auth.component.html',
-  styleUrls: ['./auth.component.css']
+  styleUrls: ['./auth.component.css'],
 })
 export class AuthComponent implements OnInit {
-
   private user: UserType | null = null;
   private password: string = '';
   formGroupAuth!: FormGroup;
   private ngUnsubscribe$: Subject<void> = new Subject();
 
-  constructor(private userInfoService: UserInfoService,
+  constructor(
+    private userInfoService: UserInfoService,
     private route: ActivatedRoute,
-    private router: Router) {
-    this.userInfoService.userSubject.pipe( takeUntil(this.ngUnsubscribe$)).subscribe(
-      {
+    private router: Router
+  ) {
+    this.userInfoService
+      .getUserObserverble()
+      .pipe(takeUntil(this.ngUnsubscribe$))
+      .subscribe({
         next: (value) => {
           if (value !== null) {
             this.formGroupAuth.setErrors(null);
             this.router.navigate(['/posts'], {
-              relativeTo: this.route
+              relativeTo: this.route,
             });
             this.user = this.userInfoService.userCurrent;
           }
         },
         error: (error) => this.formGroupAuth.setErrors([error]),
-        complete: ()=> {}
-      }
-    );
-
+        complete: () => {},
+      });
   }
 
   ngOnInit(): void {
     this.formGroupAuth = new FormGroup({
-      loginControl: new FormControl(this.user?.login, [required("Логин")]),
-      passwordControl: new FormControl(this.password, [required("Пароль")])
+      loginControl: new FormControl(this.user?.login, [required('Логин')]),
+      passwordControl: new FormControl(this.password, [required('Пароль')]),
     });
 
-    this.userInfoService.errorSubject.pipe(takeUntil(this.ngUnsubscribe$))
-    .subscribe((error) => this.formGroupAuth.setErrors({valid: {message: error}}));
+    this.userInfoService.errorSubject
+      .pipe(takeUntil(this.ngUnsubscribe$))
+      .subscribe((error) =>
+        this.formGroupAuth.setErrors({ valid: { message: error } })
+      );
   }
 
   authenticate(login: string, password: string) {
@@ -58,5 +62,4 @@ export class AuthComponent implements OnInit {
     this.ngUnsubscribe$.complete();
     this.ngUnsubscribe$.unsubscribe();
   }
-
 }
