@@ -25,6 +25,7 @@ import { MainMenuComponent } from './main-menu/main-menu.component';
 import { EditDialogComponent } from './all-posts/edit-dialog/edit-dialog.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
+import { CookieService } from 'ngx-cookie-service';
 
 @NgModule({
   declarations: [
@@ -61,6 +62,7 @@ import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.componen
       useClass: HttpInterseptorService,
       multi: true,
     },
+    { provide: CookieService },
   ],
   bootstrap: [AppComponent],
 })

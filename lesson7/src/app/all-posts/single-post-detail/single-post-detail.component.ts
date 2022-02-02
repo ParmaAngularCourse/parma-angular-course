@@ -3,6 +3,7 @@ import {
   ChangeDetectorRef,
   Component,
   EventEmitter,
+  HostListener,
   Input,
   Output,
 } from '@angular/core';
@@ -73,8 +74,8 @@ export class SinglePostDetailComponent {
 
   cancelSavePostHandler() {
     this.closePopupEvent.emit();
-    this.isChangeForm = false;
   }
+
   ngOnInit() {
     this.groupPostControl = new FormGroup({
       datePostControl: new FormControl(this.post.date, [required('Дата')]),
@@ -114,5 +115,13 @@ export class SinglePostDetailComponent {
       return confirm('Все изменения будут потеряны! Вы действительно хотите перейти на другую страницу?');
     }
     return true;
+  }
+
+  @HostListener('window:beforeunload', ['$event'])
+  public onBeforeUnload(e: Event): void {
+    if (e && !this.canDeactivate()) {
+      e.preventDefault();
+      e.returnValue = false;
+    }
   }
 }
