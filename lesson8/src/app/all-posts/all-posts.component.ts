@@ -22,6 +22,10 @@ import {
 import { FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
+import { select, Store } from '@ngrx/store';
+import * as fromStore from '../store';
+import { Observable } from 'rxjs';
+
 @Component({
   selector: 'app-all-posts',
   templateUrl: './all-posts.component.html',
@@ -29,7 +33,9 @@ import { ActivatedRoute, Router } from '@angular/router';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AllPostsComponent implements OnInit {
-  public posts: PostObj[] = [];
+
+  public count$: Observable<number>;
+  public posts$: Observable<PostObj[]>;
   public posts2: PostObj[] = [];
   public posts3: PostObj[] = [];
 
@@ -54,52 +60,61 @@ export class AllPostsComponent implements OnInit {
     private userInfoService: UserInfoService,
     private cdr: ChangeDetectorRef,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private store: Store<fromStore.State>
   ) {
     this.ngUnsubscribe$ = new Subject<void>();
     this.subjectPostTypeMenu = new Subject<PostType | null>();
 
     this.postService
       .getPostsOberverble()
-      .pipe(
-        switchMap((value) => {
-          let t1: PostObj[] = [];
-          let t2: PostObj[] = [];
-          let t3: PostObj[] = [];
-          //TODO: здесь не выводятся данные, если массив пустой, нужно подумать как поправить
-          return of(value).pipe(
-            concatAll(),
-            bufferCount(3),
-            map((data) => {
-              if (data[0]) {
-                t1.push(data[0]);
-              }
-              if (data[1]) {
-                t2.push(data[1]);
-              }
-              if (data[2]) {
-                t3.push(data[2]);
-              }
-              return [t1, t2, t3];
-            })
-          );
-        }),
-        takeUntil(this.ngUnsubscribe$)
-      )
-      .subscribe({
-        next: (data) => {
-          this.posts = data[0];
-          this.posts2 = data[1];
-          this.posts3 = data[2];
-          this.cdr.markForCheck();
-        },
-        error: (e) => {
-          console.log(e.status + ' ' + e.message);
-        },
-        complete: () => {
-          console.info('complete getPosts all-post component');
-        },
-      });
+      .pipe(takeUntil(this.ngUnsubscribe$))
+      .subscribe(results => this.store.dispatch(fromStore.actionPostsSuccess({posts:results})));
+
+    this.posts$ = this.store.pipe(select(fromStore.selectorPosts));
+    this.count$ = this.store.pipe(select(fromStore.selectorCountPosts));
+
+    // this.postService
+    //   .getPostsOberverble()
+    //   .pipe(
+    //     switchMap((value) => {
+    //       let t1: PostObj[] = [];
+    //       let t2: PostObj[] = [];
+    //       let t3: PostObj[] = [];
+    //       //TODO: здесь не выводятся данные, если массив пустой, нужно подумать как поправить
+    //       return of(value).pipe(
+    //         concatAll(),
+    //         bufferCount(3),
+    //         map((data) => {
+    //           if (data[0]) {
+    //             t1.push(data[0]);
+    //           }
+    //           if (data[1]) {
+    //             t2.push(data[1]);
+    //           }
+    //           if (data[2]) {
+    //             t3.push(data[2]);
+    //           }
+    //           return [t1, t2, t3];
+    //         })
+    //       );
+    //     }),
+    //     takeUntil(this.ngUnsubscribe$)
+    //   )
+    //   .subscribe({
+    //     next: (data) => {
+    //       this.posts = data[0];
+    //       this.posts2 = data[1];
+    //       this.posts3 = data[2];
+    //       this.cdr.markForCheck();
+    //     },
+    //     error: (e) => {
+    //       console.log(e.status + ' ' + e.message);
+    //     },
+    //     complete: () => {
+    //       console.info('complete getPosts all-post component');
+    //     },
+    //   });
 
     this.userInfoService
       .getUserObserverble()
@@ -170,7 +185,8 @@ export class AllPostsComponent implements OnInit {
   }
 
   deletePostsHandler() {
-    this.postService.deleteSelectedPosts(this.posts);
+    //TODO: здесь меняется тип на Observeble
+    //this.postService.deleteSelectedPosts(this.posts$);
   }
 
   deletePostHandler(post: PostObj) {
@@ -204,22 +220,24 @@ export class AllPostsComponent implements OnInit {
   }
 
   selectAllPostsHandler() {
-    this.posts = this.posts?.map((e) => {
-      if (!e.isSelected) {
-        e.isSelected = true;
-        return { ...e };
-      } else return e;
-    });
+    //TODO: здесь меняется тип на Observeble
+    // this.posts$ = this.posts$?.map((e) => {
+    //   if (!e.isSelected) {
+    //     e.isSelected = true;
+    //     return { ...e };
+    //   } else return e;
+    // });
     this.isActiveDeletePostBtn = true;
     this.disableContextMenuHandler();
   }
 
   selectPostHandler(post: PostObj) {
-    if (this.posts) {
-      this.isActiveDeletePostBtn = Boolean(
-        this.posts.find((e) => e.isSelected)
-      );
-    }
+    //TODO: здесь меняется тип на Observeble
+    // if (this.posts$) {
+    //   this.isActiveDeletePostBtn = Boolean(
+    //     this.posts$.find((e) => e.isSelected)
+    //   );
+    // }
   }
 
   ngOnDestroy() {

@@ -22,8 +22,11 @@
     <button *appPostPermissionDelete="user?.permissions" class="buttonContentStyle" [disabled]="!isActiveDeletePostBtn"
       (click)="deletePostsHandler()">Удалить</button>
   </div>
+  <div>
+    <span>Количество новостей: {{count$ | async}}</span>
+  </div>
   <div class="columsStyle">
-    <app-single-post [user]="user" *ngFor="let item of posts" [post]="item"
+    <app-single-post [user]="user" *ngFor="let item of posts$ | async" [post]="item"
       (deletePostEvent)="deletePostHandler($event)" (editPostEvent)="editPostHandler($event)"
       (contextmenu)="rightClickHandler($event)" (click)="disableContextMenuHandler()"
       (selectPostEvent)="selectPostHandler($event)">
