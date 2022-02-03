@@ -30,6 +30,9 @@ import { StoreModule } from '@ngrx/store';
 import { reducers, metaReducers } from './store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { environment } from '../environments/environment';
+import * as fromPost from './store/reducers/post.reducer';
+import { EffectsModule } from '@ngrx/effects';
+import { PostEffects } from './store/effects/post.effects';
 
 @NgModule({
   declarations: [
@@ -61,6 +64,8 @@ import { environment } from '../environments/environment';
     AppRoutingModule,
     StoreModule.forRoot(reducers, { metaReducers }),
     !environment.production ? StoreDevtoolsModule.instrument() : [],
+    StoreModule.forFeature(fromPost.postFeatureKey, fromPost.reducer),
+    EffectsModule.forRoot([PostEffects]),
   ],
   providers: [
     {
