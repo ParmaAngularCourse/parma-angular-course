@@ -1,14 +1,13 @@
 import {
   HttpEvent,
   HttpHandler,
-  HttpHeaders,
   HttpInterceptor,
   HttpRequest,
 } from '@angular/common/http';
 import { Injectable, Injector } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
 import { Observable } from 'rxjs';
-import { AUTH_COOKIE_NAME, NAME_USER_COOKIE } from './consts';
+import { AUTH_COOKIE_NAME, NAME_USER_COOKIE } from '../consts';
 import { dataAuth, UserInfoService } from './user-info.service';
 
 @Injectable({

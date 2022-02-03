@@ -7,24 +7,24 @@ import { SinglePostDetailComponent } from './all-posts/single-post-detail/single
 import { SinglePostComponent } from './all-posts/single-post/single-post.component';
 
 import { AppComponent } from './app.component';
-import { PostTitleCasePipePipe } from './post-title-case-pipe.pipe';
-import { PostTypePipePipe } from './post-type-pipe.pipe';
-import { PostTypeStylesDirective } from './post-type-styles.directive';
-import { PostPermissionDeleteDirective } from './post-permission-delete.directive';
-import { PostPermissionSaveDirective } from './post-permission-save.directive';
+import { PostTitleCasePipePipe } from './shared/pipes/post-title-case-pipe.pipe';
+import { PostTypePipePipe } from './shared/pipes/post-type-pipe.pipe';
+import { PostTypeStylesDirective } from './shared/directives/post-type-styles.directive';
+import { PostPermissionDeleteDirective } from './shared/directives/post-permission-delete.directive';
+import { PostPermissionSaveDirective } from './shared/directives/post-permission-save.directive';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { HttpInterseptorService } from './http-interseptor.service';
+import { HttpInterseptorService } from './services/http-interseptor.service';
 import { PostTypeControlComponent } from './all-posts/post-type-control/post-type-control.component';
 import { ReactiveFormsModule } from '@angular/forms';
-import { ValidationErrorsPipe } from './validation-errors.pipe';
-import { PostTypeBtnStylePipe } from './post-type-btn-style.pipe';
+import { ValidationErrorsPipe } from './shared/pipes/validation-errors.pipe';
+import { PostTypeBtnStylePipe } from './shared/pipes/post-type-btn-style.pipe';
 import { AppRoutingModule } from './app-routing.module';
-import { ProfileComponent } from './profile/profile.component';
-import { AuthComponent } from './auth/auth.component';
-import { MainMenuComponent } from './main-menu/main-menu.component';
+import { ProfileComponent } from './shared/components/profile/profile.component';
+import { AuthComponent } from './shared/components/auth/auth.component';
+import { MainMenuComponent } from './shared/components/main-menu/main-menu.component';
 import { EditDialogComponent } from './all-posts/edit-dialog/edit-dialog.component';
-import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
-import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
+import { PageNotFoundComponent } from './shared/components/page-not-found/page-not-found.component';
+import { ConfirmDialogComponent } from './shared/components/confirm-dialog/confirm-dialog.component';
 import { CookieService } from 'ngx-cookie-service';
 
 @NgModule({

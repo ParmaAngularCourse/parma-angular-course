@@ -7,12 +7,7 @@ import {
   Input,
   Output,
 } from '@angular/core';
-import {
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  Validators,
-} from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
 import { PostObj, PostType } from '../post-types';
 import { UserType } from '../users';
@@ -24,7 +19,6 @@ import { required } from '../validators';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SinglePostDetailComponent {
-
   private isChangeForm: boolean = false;
   private ngUnsubscribe$: Subject<void> = new Subject();
 
@@ -43,6 +37,7 @@ export class SinglePostDetailComponent {
   @Input() set post(value) {
     this._post = value;
     this.setControlValues(this._post);
+    this.isChangeForm = false;
     this.cdr.markForCheck();
   }
 
@@ -110,9 +105,11 @@ export class SinglePostDetailComponent {
     this.ngUnsubscribe$.complete();
   }
 
-  canDeactivate():boolean {
+  canDeactivate(): boolean {
     if (this.isChangeForm) {
-      return confirm('Все изменения будут потеряны! Вы действительно хотите перейти на другую страницу?');
+      return confirm(
+        'Все изменения будут потеряны! Вы действительно хотите перейти на другую страницу?'
+      );
     }
     return true;
   }

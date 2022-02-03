@@ -3,8 +3,7 @@ import {
   Component,
   ChangeDetectorRef,
 } from '@angular/core';
-import { PostType } from '../all-posts/post-types';
-import { UserInfoService } from '../user-info.service';
+import { UserInfoService } from '../../../services/user-info.service';
 import { Subject, takeUntil } from 'rxjs';
 
 @Component({

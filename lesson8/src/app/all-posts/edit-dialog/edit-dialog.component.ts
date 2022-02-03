@@ -2,11 +2,11 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { HeaderPostDetailComponent } from '../header-post-detail/header-post-detail.component';
 import { PostObj } from '../post-types';
 import { UserType } from '../users';
-import { PostsService } from '../../posts.service';
+import { PostsService } from '../../services/posts.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { SinglePostDetailComponent } from '../single-post-detail/single-post-detail.component';
-import { UserInfoService } from '../../user-info.service';
+import { UserInfoService } from '../../services/user-info.service';
 
 type paramRequest = {
   id: number;

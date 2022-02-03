@@ -1,20 +1,9 @@
-import { Injectable, Pipe } from '@angular/core';
-import {
-  AsyncSubject,
-  first,
-  map,
-  Observable,
-  single,
-  BehaviorSubject,
-} from 'rxjs';
-import { UserType, PermissionUser } from './all-posts/users';
-import {
-  HttpClient,
-  HttpErrorResponse,
-  HttpParams,
-} from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { map, Observable, BehaviorSubject } from 'rxjs';
+import { UserType, PermissionUser } from '../all-posts/users';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { CookieService } from 'ngx-cookie-service';
-import { AUTH_COOKIE_NAME, NAME_USER_COOKIE } from './consts';
+import { AUTH_COOKIE_NAME, NAME_USER_COOKIE } from '../consts';
 
 type dataUserType = {
   email: string;

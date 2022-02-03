@@ -1,12 +1,8 @@
 import { Injectable } from '@angular/core';
-import { PostObj, PostType } from './all-posts/post-types';
-import {
-  HttpClient,
-  HttpErrorResponse,
-  HttpHeaders,
-} from '@angular/common/http';
-import { AsyncSubject, BehaviorSubject, map, Observable } from 'rxjs';
-import { searchModel } from './all-posts/searchModel';
+import { PostObj, PostType } from '../all-posts/post-types';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { BehaviorSubject, map, Observable } from 'rxjs';
+import { searchModel } from '../all-posts/searchModel';
 
 type DataObj = {
   id: number;

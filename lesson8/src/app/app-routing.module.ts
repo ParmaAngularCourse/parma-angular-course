@@ -1,13 +1,13 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AllPostsComponent } from './all-posts/all-posts.component';
-import { AuthComponent } from './auth/auth.component';
-import { ProfileComponent } from './profile/profile.component';
+import { AuthComponent } from './shared/components/auth/auth.component';
+import { ProfileComponent } from './shared/components/profile/profile.component';
 import { EditDialogComponent } from './all-posts/edit-dialog/edit-dialog.component';
-import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
-import { AuthGuard } from './auth.guard';
-import { EditPostGuard } from './edit-post.guard';
-import { EditProfileGuard } from './edit-profile.guard';
+import { PageNotFoundComponent } from './shared/components/page-not-found/page-not-found.component';
+import { AuthGuard } from './shared/guards/auth.guard';
+import { EditPostGuard } from './shared/guards/edit-post.guard';
+import { EditProfileGuard } from './shared/guards/edit-profile.guard';
 
 const routes: Routes = [
   {
@@ -43,12 +43,12 @@ const routes: Routes = [
   },
   {
     path: '**',
-    component: PageNotFoundComponent
-  }
+    component: PageNotFoundComponent,
+  },
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes, {enableTracing: true})],
+  imports: [RouterModule.forRoot(routes, { enableTracing: true })],
   exports: [RouterModule],
 })
 export class AppRoutingModule {}

@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
-import { UserType } from '../all-posts/users';
-import { required } from '../all-posts/validators';
-import { UserInfoService } from '../user-info.service';
+import { UserType } from '../../../all-posts/users';
+import { required } from '../../../all-posts/validators';
+import { UserInfoService } from '../../../services/user-info.service';
 import { catchError, Subject, takeUntil } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 

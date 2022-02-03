@@ -4,10 +4,10 @@ import {
   Component,
   OnInit,
 } from '@angular/core';
-import { PostsService } from '../posts.service';
+import { PostsService } from '../services/posts.service';
 import { PostObj, PostType } from './post-types';
 import { UserType } from './users';
-import { UserInfoService } from '../user-info.service';
+import { UserInfoService } from '../services/user-info.service';
 import {
   bufferCount,
   concatAll,

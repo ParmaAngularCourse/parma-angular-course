@@ -10,9 +10,9 @@ import {
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
-import { UserType } from '../all-posts/users';
-import { required } from '../all-posts/validators';
-import { UserInfoService } from '../user-info.service';
+import { UserType } from '../../../all-posts/users';
+import { required } from '../../../all-posts/validators';
+import { UserInfoService } from '../../../services/user-info.service';
 
 @Component({
   selector: 'app-profile',
