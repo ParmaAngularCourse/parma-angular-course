@@ -33,6 +33,8 @@ import { environment } from '../environments/environment';
 import * as fromPost from './store/reducers/post.reducer';
 import { EffectsModule } from '@ngrx/effects';
 import { PostEffects } from './store/effects/post.effects';
+import { effects } from './store/effects/index';
+import { SnackbarComponent } from './shared/components/snackbar/snackbar.component';
 
 @NgModule({
   declarations: [
@@ -56,6 +58,7 @@ import { PostEffects } from './store/effects/post.effects';
     EditDialogComponent,
     PageNotFoundComponent,
     ConfirmDialogComponent,
+    SnackbarComponent,
   ],
   imports: [
     BrowserModule,
@@ -64,8 +67,7 @@ import { PostEffects } from './store/effects/post.effects';
     AppRoutingModule,
     StoreModule.forRoot(reducers, { metaReducers }),
     !environment.production ? StoreDevtoolsModule.instrument() : [],
-    StoreModule.forFeature(fromPost.postFeatureKey, fromPost.reducer),
-    EffectsModule.forRoot([PostEffects]),
+    EffectsModule.forRoot(effects),
   ],
   providers: [
     {

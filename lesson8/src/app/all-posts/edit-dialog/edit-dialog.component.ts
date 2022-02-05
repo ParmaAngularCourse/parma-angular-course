@@ -7,6 +7,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { SinglePostDetailComponent } from '../single-post-detail/single-post-detail.component';
 import { UserInfoService } from '../../services/user-info.service';
+import { Store } from '@ngrx/store';
+import * as fromStore from '../../store';
 
 type paramRequest = {
   id: number;
@@ -31,7 +33,8 @@ export class EditDialogComponent implements OnInit {
     private postService: PostsService,
     private route: ActivatedRoute,
     private userInfoService: UserInfoService,
-    private router: Router
+    private router: Router,
+    private store$: Store<fromStore.State>
   ) {}
 
   ngOnInit(): void {
@@ -87,6 +90,7 @@ export class EditDialogComponent implements OnInit {
 
   closePopupPostDetailsHandler() {
     this.router.navigate(['/posts'], { relativeTo: this.route });
+    this.store$.dispatch(fromStore.actionEditPostCancel());
   }
 
   show(isVisible: boolean) {
@@ -97,7 +101,8 @@ export class EditDialogComponent implements OnInit {
     if (post.id === -1) {
       this.postService.addPost(post);
     } else {
-      this.postService.updatePost(post);
+      //this.postService.updatePost(post);
+      this.store$.dispatch(fromStore.actionEditPost({editPost: post}));
     }
     this.popupPostDetailWindow.show(false);
     this.router.navigate(['/posts'], { relativeTo: this.route });

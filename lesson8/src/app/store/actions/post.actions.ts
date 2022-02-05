@@ -14,3 +14,22 @@ export const actionPostsFailure = createAction(
   '[Post] Action Posts Failure',
   props<{ error: string }>()
 );
+
+export const actionEditPost = createAction(
+  '[Post] Action Edit Post',
+  props<{ editPost: PostObj}>()
+);
+
+export const actionEditPostSuccess = createAction(
+  '[Post] Action Edit Post Success',
+  props<{ editPost: PostObj}>()
+);
+
+export const actionEditPostFailure = createAction(
+  '[Post] Action Edit Post Failure',
+  props<{ error: string }>()
+);
+
+export const actionEditPostCancel = createAction(
+  '[Post] Action Edit Post Cancel'
+);

@@ -1,14 +1,17 @@
 import { ActionReducerMap, MetaReducer } from '@ngrx/store';
-import * as fromPosts from './post.reducer';
+import * as fromPostsReducer from './post.reducer';
+import * as fromMainReducer from './main.reducer';
 import { environment } from '../../../environments/environment.prod';
 
 
 export interface State {
-  postObjects: fromPosts.PostState
+  postObjects: fromPostsReducer.PostState,
+  mainObjects: fromMainReducer.MainState
 }
 
 export const reducers: ActionReducerMap<State> = {
-  postObjects: fromPosts.reducer
+  postObjects: fromPostsReducer.reducer,
+  mainObjects: fromMainReducer.reducer
 }
 
 export const metaReducers: MetaReducer<State>[] = !environment.production ? [] : [];

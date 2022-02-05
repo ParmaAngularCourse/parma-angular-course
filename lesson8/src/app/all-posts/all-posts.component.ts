@@ -25,6 +25,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { select, Store } from '@ngrx/store';
 import * as fromStore from '../store';
 import { Observable } from 'rxjs';
+import { CountPostTypes } from './count-post-types';
 
 @Component({
   selector: 'app-all-posts',
@@ -34,8 +35,9 @@ import { Observable } from 'rxjs';
 })
 export class AllPostsComponent implements OnInit {
 
-  public count$: Observable<number>;
-  public posts$: Observable<PostObj[]>;
+  public countPostTypes$: Observable<CountPostTypes[] | undefined>
+  public count$: Observable<number | undefined>;
+  public posts$: Observable<PostObj[] | undefined>;
   public posts2: PostObj[] = [];
   public posts3: PostObj[] = [];
 
@@ -66,13 +68,17 @@ export class AllPostsComponent implements OnInit {
     this.ngUnsubscribe$ = new Subject<void>();
     this.subjectPostTypeMenu = new Subject<PostType | null>();
 
-    this.postService
-      .getPostsOberverble()
-      .pipe(takeUntil(this.ngUnsubscribe$))
-      .subscribe(results => this.store.dispatch(fromStore.actionPostsSuccess({posts:results})));
+
+    // this.postService
+    //   .getPostsOberverble()
+    //   .pipe(takeUntil(this.ngUnsubscribe$))
+    //   .subscribe(results => this.store.dispatch(fromStore.actionPostsSuccess({posts:results})));
+
+    this.store.dispatch(fromStore.actionLoadPosts());
 
     this.posts$ = this.store.pipe(select(fromStore.selectorPosts));
     this.count$ = this.store.pipe(select(fromStore.selectorCountPosts));
+    this.countPostTypes$ = this.store.pipe(select(fromStore.selectorPostTypesCount));
 
     // this.postService
     //   .getPostsOberverble()

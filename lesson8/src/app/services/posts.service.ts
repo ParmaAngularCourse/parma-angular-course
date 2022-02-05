@@ -31,10 +31,10 @@ export class PostsService {
   }
 
   public loadPosts() {
-    this.httpClient
+    return this.httpClient
       .post<DataObj[]>(`${this.api}/GetPosts`, null)
-      .pipe(map((item) => this.mapToPostObj(item)))
-      .subscribe({
+      .pipe(map((item) => this.mapToPostObj(item)));
+      /*.subscribe({
         next: (value) => {
           this.postSubject.next(value);
         },
@@ -44,7 +44,7 @@ export class PostsService {
         complete: () => {
           console.log('Complite GetPosts');
         },
-      });
+      });*/
   }
 
   private mapToPostObj(items: DataObj[]): PostObj[] {
@@ -100,22 +100,24 @@ export class PostsService {
 
   updatePost(post: PostObj) {
     let dataObjects = this.mapToDataObj([post]);
-    this.httpClient.post(`${this.api}/UpdatePost`, dataObjects[0]).subscribe({
-      next: (value) => {
-        // let posts = this.postSubject.getValue();
-        // if (posts) {
-        //   let findIndex = posts.findIndex(e => e.id === post.id);
-        //   posts[findIndex] = post;
-        // }
-        // this.postSubject.next(posts); // Здесь можно отключить обновление всего списка
-      },
-      error: (error: HttpErrorResponse) =>
-        console.log(error.status + ' ' + error.message),
-      complete: () => {
-        this.loadPosts();
-        console.log('update post complite');
-      },
-    });
+    return this.httpClient.post(`${this.api}/UpdatePost`, dataObjects[0]);
+    // this.httpClient.post(`${this.api}/UpdatePost`, dataObjects[0])
+    // .subscribe({
+    //   next: (value) => {
+    //     // let posts = this.postSubject.getValue();
+    //     // if (posts) {
+    //     //   let findIndex = posts.findIndex(e => e.id === post.id);
+    //     //   posts[findIndex] = post;
+    //     // }
+    //     // this.postSubject.next(posts); // Здесь можно отключить обновление всего списка
+    //   },
+    //   error: (error: HttpErrorResponse) =>
+    //     console.log(error.status + ' ' + error.message),
+    //   complete: () => {
+    //     this.loadPosts();
+    //     console.log('update post complite');
+    //   },
+    // });
   }
 
   public deleteSelectedPosts(posts: PostObj[]) {
