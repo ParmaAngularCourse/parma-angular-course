@@ -1,7 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Directive, Input, OnDestroy, OnInit, TemplateRef, ViewContainerRef } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
-import { User } from 'src/model/User';
 import { AuthorizationService } from '../service/authorization.service';
 
 
@@ -17,20 +16,22 @@ export class CheckAccessDirective implements OnInit, OnDestroy {
   ngOnInit(){
     this.unsubscriptionSubj = new Subject();
     this.authService.GetCurrentUser()
-    .pipe(
-      takeUntil(this.unsubscriptionSubj)
-    )
+    .pipe(takeUntil(this.unsubscriptionSubj))
     .subscribe({
-      next: (data) => {
-        var currentUser = data;
-        var permission = currentUser.permissions.find(x=>x.key === this.AccessKey);
+      next: (currentUser) => {        
+        var permission = currentUser.permissions?.find(x=>x.key === this.AccessKey);
         if(permission){
           if(permission.access){
-            this.view.createEmbeddedView(this.template);        
+            if(this.view.length === 0){
+              this.view.createEmbeddedView(this.template);  
+            }      
           }
           else{
             this.view.clear();
           }
+        }
+        else{
+          this.view.clear();
         }        
       },
       error: (error: HttpErrorResponse) => 

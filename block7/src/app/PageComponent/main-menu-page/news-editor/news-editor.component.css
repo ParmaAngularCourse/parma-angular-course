@@ -10,6 +10,7 @@
     background: #fff;
     margin: 0px;
     padding: 20px;
+    padding-bottom: 40px;
 }
 
 .mmodal-background {
@@ -24,13 +25,14 @@
 }
 
 .control-button{
-    margin-right: 10px;
+    margin-left: 10px;
     background-color: darkblue;
     color: white;
     height: 30px;
     width: 100px;
     text-align: center;
     line-height: 1em;
+    float: right;
 }
 
 .control-button:disabled,

@@ -1,0 +1,10 @@
+<li class="filter-data-group">              
+    <ul id="type-list" *ngFor="let item of typeDataSource | keyvalue; let i = index">
+        <li>
+            <!--Если сделать обязательный параметр для перехода по типам, то пересоздавался компонент со списком новостей
+                но если параметр не обязательный то пересоздания нет. Почему?-->
+            <!--<button class="type-link" routerLinkActive="active-type-link" [routerLinkActiveOptions]="{exact: true}" [routerLink]="['/news-list', item.key]" [appNewsTypeColor]="item.key | getNewsColorByTypeKey">{{item.value}}</button>-->
+            <button class="type-link" routerLinkActive="active-type-link" [routerLink]="['/main/news-list']" [queryParams]="{type: item.key}" [appNewsTypeColor]="item.key | getNewsColorByTypeKey">{{item.value}}</button>
+        </li>
+    </ul>
+</li>

@@ -1,7 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { AbstractControl, ControlValueAccessor, NG_VALIDATORS, NG_VALUE_ACCESSOR, ValidationErrors, Validator } from '@angular/forms';
 import { TypeNews } from 'src/model/TypeNews';
-import { TypeNewsColorDictionary } from 'src/model/TypeNewsColorDictionary';
 
 @Component({
   selector: 'app-news-type',
@@ -15,13 +14,13 @@ import { TypeNewsColorDictionary } from 'src/model/TypeNewsColorDictionary';
     provide: NG_VALIDATORS,
     useExisting: NewsTypeComponent,
     multi: true
-  }]
+  }],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 export class NewsTypeComponent implements OnInit, ControlValueAccessor, Validator {
   public radioDataSource: typeof TypeNews = TypeNews;
   public newsType:TypeNews = TypeNews.Type0_None;
-  public newsTypeColorDict: typeof TypeNewsColorDictionary = TypeNewsColorDictionary;
   private OnFormChange!: (_val:TypeNews) => {}
   private OnFormTouched!: () => {}
 
@@ -29,7 +28,7 @@ export class NewsTypeComponent implements OnInit, ControlValueAccessor, Validato
 
   validate(control: AbstractControl): ValidationErrors | null {
     if(control.value === TypeNews.Type0_None){
-      return { message: 'Нельзя указывать "Пустой" тип новости'}
+      return { message: 'Нельзя указывать тип новости "Все"'}
     }
     else{
       return null;
@@ -58,16 +57,5 @@ export class NewsTypeComponent implements OnInit, ControlValueAccessor, Validato
   onChangeNewsType(value:TypeNews){
     this.newsType = value;
     this.OnFormChange(value);
-  }
-
-  getNewsTypeColor(value:string):string{
-    var key = value as keyof typeof TypeNews;
-    if(key){
-      var typeNews = TypeNews[key];
-      return TypeNewsColorDictionary.get(typeNews) ?? "";
-    }
-    else{
-      return "";
-    }
   }
 }

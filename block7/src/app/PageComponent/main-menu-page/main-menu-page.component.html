@@ -1,0 +1,10 @@
+<div class="main_block">
+    <div class="main_menu">
+        <button class="main_menu_button" routerLinkActive="main_menu_button_active" routerLink="/main/news-list">Новости</button>
+        <button *appCheckAccess="'Profile'" class="main_menu_button" routerLinkActive="main_menu_button_active" routerLink="/main/user-profile">Профиль</button>
+        <a id="log-link" routerLink="/login">{{logLinkText}}</a>
+    </div>
+    <div class="tab"> 
+        <router-outlet></router-outlet>
+    </div>
+</div>

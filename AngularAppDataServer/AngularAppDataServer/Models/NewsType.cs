@@ -5,8 +5,8 @@ namespace AngularAppDataServer.Models
 {
     public enum NewsType
     {
-        [EnumMember(Value = "Пусто")]
-        [Description("Пусто")]
+        [EnumMember(Value = "Все")]
+        [Description("Все")]
         Type0_None,
 
         [EnumMember(Value = "Политика")]

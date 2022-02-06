@@ -24,5 +24,11 @@ namespace AngularAppDataServer.Controllers
             string authHeader = HttpContext.Request.Headers["Authorization"];
             return await executeService.TryExecute(() => authService.GetUserInfo(authHeader));
         }
+
+        [HttpPost]
+        public async Task<ServiceResponse<User>> UpdateUserProfile(User user)
+        {            
+            return await executeService.TryExecute(() => authService.UpdateUserProfile(user));
+        }
     }
 }
