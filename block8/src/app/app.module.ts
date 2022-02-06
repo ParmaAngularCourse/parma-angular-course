@@ -25,6 +25,14 @@ import { UserProfileComponent } from './PageComponent/main-menu-page/user-profil
 import { LoginPageComponent } from './PageComponent/login-page/login-page.component';
 import { MainMenuPageComponent } from './PageComponent/main-menu-page/main-menu-page.component';
 import { AutoHideStatusMsgComponent } from './PageComponent/ShareComponent/auto-hide-status-msg/auto-hide-status-msg.component';
+import { StoreModule } from '@ngrx/store';
+import { CustomRouterStateSerializer, effects, reducers } from './store';
+import { EffectsModule } from '@ngrx/effects';
+import { SnackbarComponent } from './PageComponent/ShareComponent/snackbar/snackbar.component';
+import { StoreRouterConnectingModule } from '@ngrx/router-store';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { environment } from '../environments/environment';
+
 
 @NgModule({
   declarations: [
@@ -46,13 +54,18 @@ import { AutoHideStatusMsgComponent } from './PageComponent/ShareComponent/auto-
     UserProfileComponent,
     LoginPageComponent,
     MainMenuPageComponent,
-    AutoHideStatusMsgComponent
+    AutoHideStatusMsgComponent,
+    SnackbarComponent
   ],
   imports: [
     BrowserModule,
     HttpClientModule,
     ReactiveFormsModule,
-    AppRoutingModule
+    AppRoutingModule,
+    StoreModule.forRoot(reducers),
+    EffectsModule.forRoot(effects),
+    StoreRouterConnectingModule.forRoot({ stateKey: 'router', serializer: CustomRouterStateSerializer}),
+    StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production })
   ],
   providers: [
     {

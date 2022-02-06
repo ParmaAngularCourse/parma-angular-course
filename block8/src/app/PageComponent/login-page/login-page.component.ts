@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnInit, ViewChild } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Subject, switchMap } from 'rxjs';
+import { Subject, switchMap, takeUntil } from 'rxjs';
 import { AutoHideStatusMsgComponent } from '../ShareComponent/auto-hide-status-msg/auto-hide-status-msg.component';
 import { AuthorizationService } from '../../service/authorization.service';
 import { NeedNubmerAndCharacters } from '../../Validators/NeedNubmerAndCharacters';
@@ -43,8 +43,8 @@ export class LoginPageComponent implements OnInit {
       }      
     );    
 
-    this.userLogin.valueChanges.subscribe((value:string)=> this.onChangeUserLogin(value))
-    this.userPassword.valueChanges.subscribe((value:string)=> this.onChangeUserPassword(value))
+    this.userLogin.valueChanges.pipe(takeUntil(this.unsubscriptionSubj)).subscribe((value:string)=> this.onChangeUserLogin(value))
+    this.userPassword.valueChanges.pipe(takeUntil(this.unsubscriptionSubj)).subscribe((value:string)=> this.onChangeUserPassword(value))
   }
 
   onChangeUserPassword(value: string) {
@@ -58,7 +58,8 @@ export class LoginPageComponent implements OnInit {
   LogIn() {
     this.authService.LogOn(this.login, this.password)
       .pipe(
-        switchMap(result => this.statusMsg.ShowStatusMessage(result))
+        switchMap(result => this.statusMsg.ShowStatusMessage(result)),
+        takeUntil(this.unsubscriptionSubj)
       )
       .subscribe(result=> this.router.navigate(['/main/news-list'], { queryParams: {type: "Type0_None"}})      
     );

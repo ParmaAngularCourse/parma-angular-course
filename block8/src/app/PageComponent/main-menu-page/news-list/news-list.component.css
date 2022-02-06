@@ -7,11 +7,16 @@
     text-align: center;
 }
 
-.news-block:after {
+/*.news-block:after {
     margin-right: 60px;
     display: table-column;
     clear: both;
     content: "";
+}*/
+
+.news-list{
+    overflow-y: auto;
+    height: 85%;
 }
 
 .input-filter-textbox {
@@ -34,4 +39,13 @@
 .title_header {
     font: italic 2.0em "Fira Sans";
     margin-top: 0px;
+}
+
+.count-table {
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.count-td{
+    width: 200px;
 }

@@ -26,8 +26,7 @@ const routes: Routes = [
       { 
         path: 'news-list',
         component: NewsListComponent,
-        children:[
-          /*Работает хотя говорили что именованные аутлеты можно размещать на самом верхнем уровне*/      
+        children:[              
           { 
             path: 'add',
             component: NewsEditorComponent,
@@ -42,11 +41,6 @@ const routes: Routes = [
           }
         ]  
       },
-      //К вопросу из news-type-filter.component.html
-      /*{ 
-        path: 'news-list/:newsType',
-        component: NewsListComponent
-      },*/
       { 
         path: 'user-profile',
         component: UserProfileComponent,
@@ -55,12 +49,6 @@ const routes: Routes = [
       }
     ]
   },
-  /*Не работает, меняется строка адреса, но не создается компонент*/
-  /*{ 
-    path: 'add',
-    component: NewsEditorComponent,
-    outlet: 'editForm'
-  },*/   
   { 
     path: '**',
     component: PageNotFoundComponent 

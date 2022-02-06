@@ -1,0 +1,17 @@
+.msg-status {
+	z-index: 100;
+	width: auto;
+	position: fixed;
+	top: 60px;
+	left: 105px;
+    font: italic 1.5em "Fira Sans";
+    font-weight: 800
+}
+
+.error-text{
+    color: red;
+}
+
+.success-text{
+    color: green;
+}

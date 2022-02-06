@@ -4,11 +4,13 @@ import { AbstractControl, FormBuilder, FormControl, FormGroup } from '@angular/f
 import { ActivatedRoute, Router } from '@angular/router';
 import { map, Observable, Subject, switchMap, takeUntil } from 'rxjs';
 import { ICanDeactivateComponent } from 'src/model/ICanDeactivateComponent';
-import { INewsData } from 'src/model/INewsData';
+import { News } from 'src/model/News';
 import { TypeNews } from 'src/model/TypeNews';
 import { NewsService } from '../../../service/news.service';
 import { NewsDateValidator } from '../../../Validators/NewsDateValidators';
 import { NotEmptyStringValidator } from '../../../Validators/NotEmptyStringValidator';
+import { select, Store } from '@ngrx/store'
+import * as fromStore from '../../../store';
 
 @Component({
   selector: 'app-news-editor',
@@ -17,7 +19,7 @@ import { NotEmptyStringValidator } from '../../../Validators/NotEmptyStringValid
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NewsEditorComponent implements OnInit, OnDestroy, ICanDeactivateComponent {
-  public currentNews: INewsData; 
+  public currentNews: News; 
   public editForm!: FormGroup;
   private unsubscriptionSubj!:Subject<void>
   public headerTitle: string = '';
@@ -45,7 +47,8 @@ export class NewsEditorComponent implements OnInit, OnDestroy, ICanDeactivateCom
     private fb: FormBuilder,
     private datepipe: DatePipe,
     private route: ActivatedRoute,
-    private router: Router){
+    private router: Router,
+    private store: Store<fromStore.State>){
     this.currentNews = this.getDefaultNewsData();
   }
 
@@ -72,10 +75,10 @@ export class NewsEditorComponent implements OnInit, OnDestroy, ICanDeactivateCom
       }
     );
     
-    this.newsDateControl.valueChanges.subscribe((value:string)=> this.onChangeNewsDate(value))
-    this.newsTitleControl.valueChanges.subscribe((value:string)=> this.onChangeNewsTitle(value))
-    this.newsBodyControl.valueChanges.subscribe((value:string)=> this.onChangeNewsBody(value))
-    this.newsTypeControl.valueChanges.subscribe((value:TypeNews)=> this.onChangeNewsType(value))
+    this.newsDateControl.valueChanges.pipe(takeUntil(this.unsubscriptionSubj)).subscribe((value:string)=> this.onChangeNewsDate(value))
+    this.newsTitleControl.valueChanges.pipe(takeUntil(this.unsubscriptionSubj)).subscribe((value:string)=> this.onChangeNewsTitle(value))
+    this.newsBodyControl.valueChanges.pipe(takeUntil(this.unsubscriptionSubj)).subscribe((value:string)=> this.onChangeNewsBody(value))
+    this.newsTypeControl.valueChanges.pipe(takeUntil(this.unsubscriptionSubj)).subscribe((value:TypeNews)=> this.onChangeNewsType(value))
 
     this.route.params
     .pipe(
@@ -85,7 +88,11 @@ export class NewsEditorComponent implements OnInit, OnDestroy, ICanDeactivateCom
     )
     .subscribe(news => this.openForm(news))   
 
-    this.route.url.subscribe(url=>{
+    this.route.url
+    .pipe(
+      takeUntil(this.unsubscriptionSubj)
+    )
+    .subscribe(url=>{
       if(url[0]?.path === "add")
       {
         this.headerTitle = 'Добавить новость'
@@ -99,12 +106,13 @@ export class NewsEditorComponent implements OnInit, OnDestroy, ICanDeactivateCom
   }
 
   saveForm() {
-    this.newsService.addNews(this.currentNews);
+    //this.newsService.addNews(this.currentNews);
+    this.store.dispatch(fromStore.editNews({editNews: this.currentNews}));
     this.saved = true;     
     this.closeForm();
   }
 
-  openForm(newsData:INewsData|null){
+  openForm(newsData:News|null){
     if(newsData){
       this.currentNews = { ...newsData };
     }
@@ -156,7 +164,7 @@ export class NewsEditorComponent implements OnInit, OnDestroy, ICanDeactivateCom
     console.log('app-news-editor - ' + this.currentNews.title);
   }
 
-  private getDefaultNewsData():INewsData{
+  private getDefaultNewsData():News{
     return {
       id: -1,
       date: new Date(),
