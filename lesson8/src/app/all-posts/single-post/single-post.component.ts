@@ -1,6 +1,8 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angular/core';
+import { Store } from '@ngrx/store';
 import { PostObj } from '../post-types';
 import { PermissionUser, UserType } from '../users';
+import * as fromStore from './../../store'
 
 @Component({
   selector: 'app-single-post',
@@ -18,11 +20,12 @@ export class SinglePostComponent {
   @Output() editPostEvent = new EventEmitter<PostObj>();
   @Output() selectPostEvent = new EventEmitter<PostObj>();
 
-  constructor(private cdr: ChangeDetectorRef) { }
+  constructor(private cdr: ChangeDetectorRef,
+    private store$: Store<fromStore.State>) { }
 
   selectedPostHandler(checked:boolean, post: PostObj)
   {
-    post.isSelected=checked;
+    this.store$.dispatch(fromStore.actionPostSelected({selectedPost: post}));
     this.selectPostEvent.emit(post);
   }
 

@@ -33,3 +33,8 @@ export const actionEditPostFailure = createAction(
 export const actionEditPostCancel = createAction(
   '[Post] Action Edit Post Cancel'
 );
+
+export const actionPostSelected = createAction(
+  '[Post] Action Post Selected',
+  props<{ selectedPost: PostObj}>()
+);

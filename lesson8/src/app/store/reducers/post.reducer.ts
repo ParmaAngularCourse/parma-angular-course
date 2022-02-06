@@ -34,6 +34,17 @@ const postsReducer = createReducer(
         }
       }
     )
+  })),
+  on(fromActions.actionPostSelected, (state, { selectedPost }) =>({
+    ...state,
+    posts: state.posts?.map(_post => {
+      if (_post.id === selectedPost.id) {
+        return {..._post, isSelected: _post.isSelected ? false : true};
+      }
+      else {
+        return _post;
+      }
+    })
   }))
 );
 
