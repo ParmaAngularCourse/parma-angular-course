@@ -28,9 +28,6 @@ export class NewsListComponent implements OnInit, OnDestroy {
   constructor(private _newsService: NewsService, private cdr: ChangeDetectorRef,
     private route: ActivatedRoute, private router: Router) {
     this.ngUnsubscribe$ = new Subject();
-    route.params.subscribe(params => {
-      this.newsTypeFilter = params['type'] ?? null;
-    });
   }
 
   ngOnInit(): void {

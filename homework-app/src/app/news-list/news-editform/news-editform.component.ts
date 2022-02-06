@@ -70,7 +70,6 @@ export class NewsEditformComponent implements OnInit {
   }
 
   save() {
-    //this.router.navigate(['', { outlets: { editform: null } }]).then(value => {
       const newsToSave = {
         ...this.news,
         ...this.editForm.value
@@ -79,7 +78,6 @@ export class NewsEditformComponent implements OnInit {
         this._newsService.updateNews(newsToSave).pipe(
           takeUntil(this.ngUnsubscribe$)
         ).subscribe(v => {
-          this.cdr.markForCheck();
           this.router.navigate(['', { outlets: { editform: null } }])
         });
       }
@@ -88,15 +86,12 @@ export class NewsEditformComponent implements OnInit {
         this._newsService.addNews(newsToSave).pipe(
           takeUntil(this.ngUnsubscribe$)
         ).subscribe(v => {
-          this.cdr.markForCheck();
           this.router.navigate(['', { outlets: { editform: null } }])
         });
       }
-   // })
   }
 
   close() {
-    this.cdr.markForCheck();
     this.router.navigate(['', { outlets: { editform: null } }]);
   }
 
