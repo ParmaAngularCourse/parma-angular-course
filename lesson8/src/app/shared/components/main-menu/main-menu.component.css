@@ -1,0 +1,56 @@
+.mainMenu {
+  display: block;
+  position: relative;
+  background-color: black;
+  color: white;
+  height: 35px;
+  width: 100%;
+}
+
+.btnMainMenu {
+  background-color: transparent;
+  color: white;
+  width: 100px;
+  height: 35px;
+  border: 0px;
+}
+
+.btnMainMenu:hover {
+  background-color: cadetblue;
+  color: black;
+  cursor: pointer;
+}
+
+.btnMainMenuActive,
+.btnMainMenu:active {
+  background-color: blanchedalmond;
+  color: black;
+}
+
+.btnMainMenu::selection {
+  background-color: blanchedalmond;
+  color: black;
+}
+
+.rightBlockMainMenu {
+  display: inline-block;
+  width: 100px;
+  position: absolute;
+  right: 0px;
+  text-align: center;
+}
+
+.refMainMenu {
+  position: relative;
+  color: white;
+  top: 8px;
+}
+
+.refMainMenu:hover {
+  color: blueviolet;
+  cursor: pointer;
+}
+
+.refMainMenu:active {
+  color: chartreuse;
+}

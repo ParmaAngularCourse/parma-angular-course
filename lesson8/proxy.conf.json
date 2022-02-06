@@ -1,0 +1,20 @@
+{
+    "/Posts/*": {
+      "target": "http://localhost:5000",
+      "secure": false,
+      "logLevel": "debug",
+      "changeOrigin": true
+    },
+    "/UserInfo/*": {
+      "target": "http://localhost:5000",
+      "secure": false,
+      "logLevel": "debug",
+      "changeOrigin": true
+    },
+    "/token": {
+      "target": "http://localhost:5000",
+      "secure": false,
+      "logLevel": "debug",
+      "changeOrigin": true
+    }
+  }
