@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy, Self, Optional } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, Self, Optional, ChangeDetectorRef } from '@angular/core';
 import { ControlValueAccessor, NgControl, AbstractControl, ValidationErrors } from '@angular/forms';
 import { NewsType } from '../news-types';
 
@@ -14,7 +14,7 @@ export class NewsTypeComponent implements OnInit, ControlValueAccessor {
   onChange!: (_val: NewsType | null) => {}
   onTouched!: () => {}
 
-  constructor(@Self() @Optional() public ngControl: NgControl) {
+  constructor(@Self() @Optional() public ngControl: NgControl, private cdr: ChangeDetectorRef,) {
     if (ngControl) {
       ngControl.valueAccessor = this;
     }
@@ -33,6 +33,7 @@ export class NewsTypeComponent implements OnInit, ControlValueAccessor {
 
   writeValue(_val: NewsType) {
     this.typeValue = _val;
+    this.cdr.markForCheck();
   }
 
   registerOnChange(onChange: any) {

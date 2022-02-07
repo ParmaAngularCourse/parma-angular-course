@@ -23,8 +23,8 @@ export class NewsService {
   constructor(private http: HttpClient) { }
 
   public getNewsList(): Observable<News[]> {
-    if(!this.newsSubject) {
-      this.newsSubject = new BehaviorSubject<News[]>([]);
+    if (!this.newsSubject) {
+    this.newsSubject = new BehaviorSubject<News[]>([]);
 
     this.http.get<NewsObj[]>(`${this.serverUrl}/api/news`).pipe(
         map(item => item.map(news => {
@@ -42,13 +42,18 @@ export class NewsService {
         this.newsSubject?.next(value);
       });
     }
-    return this.newsSubject.asObservable();
+    return this.newsSubject.asObservable();   
   }
 
-  public getFilteredNewsList(searchText: string): Observable<News[]> {
+  public getFilteredNewsList(searchText: string, newsType: NewsType | null): Observable<News[]> {
     this.newsSubject = new BehaviorSubject<News[]>([]);
 
-    let params = new HttpParams().set('searchText', searchText);
+    var newsTypeKeyValue = newsType ? (Object.entries(NewsType).find(item => item[0] === newsType)) : null;
+    var newsTypeText = newsTypeKeyValue ? newsTypeKeyValue[1] : '';
+
+    let params = new HttpParams()
+      .set('searchText', searchText)
+      .set('newsType', newsTypeText);
     this.http.get<NewsObj[]>(
         `${this.serverUrl}/api/news`,
         { params: params }

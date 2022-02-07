@@ -1,0 +1,24 @@
+.top-menu {
+    background-color: grey;
+}
+
+.top-menu-item {
+    display: inline-block;
+    margin: 10px;
+}
+
+.top-menu-link {
+    color: white;
+    text-decoration: none;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.authorization {
+    float: right;
+}
+
+.activeLink {
+    font-weight: bold;
+}

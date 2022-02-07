@@ -1,0 +1,10 @@
+<div class="filters">
+    <div class="option optionAll">
+        <a routerLink="all" routerLinkActive="activeLink" class="optionText" [routerLinkActiveOptions]="{exact: true}">Все</a>
+    </div>
+
+    <div [newsTypeStyles]="type.name" class="option" *ngFor="let type of newsTypeFilters">
+        <a routerLink="{{type.value}}" routerLinkActive="activeLink" class="optionText">{{type.name}}</a>
+    </div>  
+</div>
+<router-outlet></router-outlet>

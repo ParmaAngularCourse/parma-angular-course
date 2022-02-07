@@ -12,8 +12,5 @@
             </div>
         </div>
     </div>
-    <app-news-editform [initialNews]='newsToEdit' (saveNews)='onSaveNews($event)' (closeNews)='onCloseEditForm($event)'>
-        <app-header-editform [title]='isEditMode ? "Изменить новость" : "Добавить новость"' (closeNews)='onCloseEditForm($event)'></app-header-editform>
-    </app-news-editform>
     <app-context-menu #contextMenuComponent (selectAll)="onSelectAll()"></app-context-menu>
 </div>

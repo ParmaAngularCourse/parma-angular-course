@@ -1,6 +1,6 @@
-<div class="modal" *ngIf='showEditForm'>
+<div class="modal">
     <div [formGroup]="editForm" class="edit-form">
-        <ng-content></ng-content>
+        <app-header-editform [title]='showEditForm ? "Изменить новость" : "Добавить новость"' (closeNews)='close()'></app-header-editform>
         <div class="field">
             <div>
                 <label for="date">Дата</label>
