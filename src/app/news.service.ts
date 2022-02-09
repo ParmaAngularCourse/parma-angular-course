@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Report } from './news/news-types';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { BehaviorSubject } from 'rxjs';
 
@@ -29,6 +29,10 @@ export class NewsService {
     return this.newsSubject.asObservable();
   }
 
+  public getPosts() {
+    return this.http.get<Report[]>(this.newsGetApi, { params: { filter: "", type: "" } });
+  }
+
   public saveReport(report: Report, i: number) {
     if (this.newsSubject) {
       let news = this.newsSubject.value;
@@ -40,6 +44,10 @@ export class NewsService {
         this.http.post<Report>(this.newsGetApi, report).subscribe((x: Report) => this.newsSubject.next([...news, x]));
       }
     }
+  }
+
+  public updateReport(report: Report) {
+    return this.http.post("api/NewsUpdate", report);
   }
 
   public deleteReport(i: number) {
