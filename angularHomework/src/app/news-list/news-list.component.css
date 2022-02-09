@@ -13,3 +13,12 @@ button[disabled]{
   background-color: lightgray;
   cursor: default;
 }
+
+.search {
+  margin: 1em;
+  font-size: larger;
+}
+
+.search input {
+  margin: 0.5em;
+}

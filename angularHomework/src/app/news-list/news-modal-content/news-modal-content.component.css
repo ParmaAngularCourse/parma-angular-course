@@ -7,3 +7,9 @@ button {
     border-radius: 5px;
     cursor:pointer;
   }
+
+button:disabled,
+button[disabled]{
+  background-color: lightgray;
+  cursor: default;
+}

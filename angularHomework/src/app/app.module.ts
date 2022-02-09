@@ -5,7 +5,7 @@ import { NewsListComponent } from './news-list/news-list.component';
 import { NewsComponent } from './news-list/news/news.component';
 import { ModalComponent } from './shared/modal/modal.component';
 import { ContextMenuComponent } from './shared/context-menu/context-menu.component';
-import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { NewsModalContentComponent } from './news-list/news-modal-content/news-modal-content.component';
 import { FirstCapitalLetterPipe } from './pipes/first-capital-letter.pipe';
 import { FirstLetterLowerPipe } from './pipes/first-letter-lower.pipe';
@@ -13,6 +13,7 @@ import { NewsTypeStyleDirective } from './news-list/directives/news-type-style.d
 import { UserPermissionsDirective } from './directives/user-permissions.directive';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from './auth.interceptor';
+import { NewsTypeInputComponent } from './news-list/news-modal-content/news-type-input/news-type-input.component';
 
 @NgModule({
   declarations: [
@@ -25,12 +26,13 @@ import { AuthInterceptor } from './auth.interceptor';
     FirstCapitalLetterPipe,
     FirstLetterLowerPipe,
     NewsTypeStyleDirective,
-    UserPermissionsDirective
+    UserPermissionsDirective,
+    NewsTypeInputComponent
   ],
   imports: [
     BrowserModule,
-    FormsModule,
-    HttpClientModule
+    HttpClientModule,
+    ReactiveFormsModule
   ],
   providers: [{
     provide: HTTP_INTERCEPTORS,

@@ -1,0 +1,10 @@
+<div>
+    <p><label>Тип новости:</label></p>
+    <div *ngFor="let item of newsTypes">
+        <button (click)="onButtonClick(item.id)" [appNewsTypeStyle]="item.color"
+        [ngClass]="selectedNewsType && selectedNewsType.id === item.id ? 'selected' : 'unselected'">{{item.text}}</button>
+    </div>
+</div>
+ <div > <!--*ngIf="ngControl.control?.errors"-->
+    {{ngControl.control?.errors | json}}
+</div>
