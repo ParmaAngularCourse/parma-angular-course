@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Information, JsonInformationListData, NewsTypes } from './news-types';
 import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams } from '@angular/common/http';
-import { BehaviorSubject, map, Observable, ReplaySubject, Subject, Subscription, takeLast, takeUntil } from 'rxjs';
+import { BehaviorSubject, delay, map, Observable, ReplaySubject, Subject, Subscription, takeLast, takeUntil } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -39,12 +39,14 @@ export class PostsService {
   ];*/
 
 
-  public getPosts (): Observable<Information[]>
+  public getPosts (searchString?: string): Observable<Information[]>
   {  
-    if(!this.postSubject){
+    //if(!this.postSubject){
       this.postSubject = new BehaviorSubject<Information[]>([]);
-      this.getNewsFromServer().pipe(takeUntil(this.ngUnsubscribe$)).subscribe((value)=> {this.postSubject?.next(value)});
-    }
+      this.getNewsFromServer(searchString)
+          .pipe(takeUntil(this.ngUnsubscribe$))
+          .subscribe((value)=> {this.postSubject?.next(value)});
+    //}
     return this.postSubject.asObservable();
 
       //return this.postSubject?.value;
@@ -87,7 +89,7 @@ export class PostsService {
     //this.updateNewsWithBuffer();
   }
  
-  public updateNewsWithBuffer()
+  public updateNewsWithBuffer(searchString: string)
   {
 
     this.ngUnsubscribe$ = new Subject();
@@ -98,7 +100,7 @@ export class PostsService {
 
     //this.getNewsFromServer().subscribe((value)=> {this.postSubject?.next(value)});  // без takeUntil
 
-    this.postSubjectSubscription = this.getNewsFromServer().pipe(
+    this.postSubjectSubscription = this.getNewsFromServer(searchString).pipe(
                                           takeUntil(this.ngUnsubscribe$)
                                         ).subscribe((value)=> {this.postSubject?.next(value)});
 
@@ -115,9 +117,12 @@ export class PostsService {
 
 
 
-  public getNewsFromServer(): Observable<Information[]>
+  public getNewsFromServer(searchString?: string): Observable<Information[]>
   {
-    let params = new HttpParams().set('test','value');
+
+    let params;
+    if(searchString)
+      params = new HttpParams().set('searchString', searchString);
 
     /*
       // вариант для POST-запроса

@@ -12,6 +12,8 @@ import { NewsTypeStylesDirective } from './news/news-type-styles.directive';
 import { UserRightsStrDirective } from './user-rights-str.directive';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { HttpInterceptorService } from './http-interceptor.service';
+import { ReactiveFormsModule } from '@angular/forms';
+import { NewsTypeComponent } from './news/news-type/news-type.component';
 
 @NgModule({
   declarations: [
@@ -23,11 +25,13 @@ import { HttpInterceptorService } from './http-interceptor.service';
     NewsHeaderPipePipe,
     NewsTypePipePipe,
     NewsTypeStylesDirective,
-    UserRightsStrDirective
+    UserRightsStrDirective,
+    NewsTypeComponent
   ],
   imports: [
     BrowserModule,
-    HttpClientModule
+    HttpClientModule,
+    ReactiveFormsModule
   ],
   providers: [{
     provide: HTTP_INTERCEPTORS,
