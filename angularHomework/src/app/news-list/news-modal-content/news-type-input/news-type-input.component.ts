@@ -25,11 +25,9 @@ export class NewsTypeInputComponent implements OnInit, ControlValueAccessor {
   ngOnInit(): void {
     this.ngControl.control?.addValidators(validate);
     this.ngControl.control?.updateValueAndValidity();
-    console.log("oninit", this.ngControl.control);
   }
 
   writeValue(obj: NewsType | null): void {
-    console.log("writeValue",obj)
     this.selectedNewsType = obj;
   }
 
@@ -50,9 +48,7 @@ export class NewsTypeInputComponent implements OnInit, ControlValueAccessor {
 }
 
 function validate(ctrl: AbstractControl): ValidationErrors | null {
-  console.log("value in validate", ctrl.value);
   let val = Validators.required(ctrl);
-  console.log("val", val);
   if (val) {
     console.log("Необходимо выбрать тип");
     return { message: "Необходимо выбрать тип" };

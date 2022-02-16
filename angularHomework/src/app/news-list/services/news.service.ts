@@ -16,6 +16,7 @@ export class NewsService {
   private newsSubject?: BehaviorSubject<News[]>
   public getNews(): Observable<News[]> {
 
+    console.log("getNews");
     if (!this.newsSubject) {
     this.newsSubject = new BehaviorSubject<News[]>([]);
 
@@ -89,5 +90,17 @@ export class NewsService {
           this.newsSubject.next(newslist);
       }})
     );
+  }
+
+  public searchNews(searchString: string):  Observable<News[]> {
+    return this.httpNewsService.searchNews(searchString).pipe(
+      map(item => item.map(item1 => { return {
+        id: item1.id,
+        title: item1.title,
+        dateTime: item1.dateTime,
+        text: item1.text,
+        newsType: Object.values(NewsTypeObjectEnum).find(t => t.id === item1.newsType)!
+      }})
+    ));
   }
 }

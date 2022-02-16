@@ -5,6 +5,6 @@
         [ngClass]="selectedNewsType && selectedNewsType.id === item.id ? 'selected' : 'unselected'">{{item.text}}</button>
     </div>
 </div>
- <div > <!--*ngIf="ngControl.control?.errors"-->
+ <div *ngIf="ngControl.control?.errors">
     {{ngControl.control?.errors | json}}
 </div>

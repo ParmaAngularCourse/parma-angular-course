@@ -22,3 +22,8 @@ button[disabled]{
 .search input {
   margin: 0.5em;
 }
+
+.newsGroup {
+  display: flex;
+  flex-direction: row;
+}

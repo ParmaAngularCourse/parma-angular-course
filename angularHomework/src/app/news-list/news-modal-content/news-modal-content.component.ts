@@ -36,15 +36,11 @@ export class NewsModalContentComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    
-  }
-
-  ngOnChanges(): void {
     this.newsForm = this.fb.group({
-      date: [this.news?.dateTime, [Validators.required]],
-      title: [this.news?.title, [Validators.required]],
-      text: [this.news?.text, [Validators.required]],
-      newsType: [this.news?.newsType],
+      date: [new Date()],
+      title: ["", [Validators.required]],
+      text: ["", [Validators.required]],
+      newsType: [],
     })
 
     this.newsForm.valueChanges.pipe(filter(() => this.newsForm.valid)).subscribe((value) =>
@@ -58,6 +54,17 @@ export class NewsModalContentComponent implements OnInit {
         };
       }
     );
+  }
+
+  ngOnChanges(): void {
+    if (this.newsForm) {
+      this.newsForm.setValue({
+        title: this.news?.title,
+        text: this.news?.text,
+        date: this.news?.dateTime,
+        newsType: this.news?.newsType,
+      });
+    }
   }
 
   clickSaveNews() {
