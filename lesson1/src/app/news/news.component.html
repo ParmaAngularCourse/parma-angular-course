@@ -1,4 +1,14 @@
 <div (contextmenu) = "contextMenuShow($event)" (click)="contextMenuClose()">
+
+    <div  style="width: max-content; border: 0px solid gray; margin-left: 10px; padding: 10px; " title="Поиск">
+        <div style="margin-bottom: 5px;">Заголовок новости:</div>
+        <input type="text" [formControl] = "searchTitle"  style="border-radius: 5px; width: 300px; font-size: 20px; color: gray; ">
+        <div *ngIf=searchTitle.errors style="color: red;">
+            {{searchTitle.errors['notOneValidator'].message}}
+        </div>
+    </div>
+    <br>
+
     <div style="width: max-content; border: 2px solid gray; margin-left: 10px; padding: 10px; ">
         <div style="display: inline-block;">
             <button (click)="onNewPost()" class="blueButton">Добавить</button>
@@ -6,7 +16,7 @@
             <button *appUserRightsStr=userRights.isUsercanDeleteNews (click)="onDeleteSelected()" [disabled]="getIsAnySelect()? null : true"class="blueButton" >Удалить</button>
             <br><br>
         </div>
-        <app-single-post (editPost)="onEditPost($event)" (deletePost)="onDeletePost($event)" (checkPost)="onCheckPost($event)" *ngFor="let item of informationList" [single_post_data]="item" ></app-single-post>
+        <app-single-post (editPost)="onEditPost($event)" (deletePost)="onDeletePost($event)" (checkPost)="onCheckPost($event)" *ngFor="let item of posts" [single_post_data]="item" ></app-single-post>
     </div>
 
 

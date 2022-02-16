@@ -1,4 +1,6 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { filter } from 'rxjs';
 import { Information, NewsTypes, UserRightsObj } from '../news-types';
 
 @Component({
@@ -8,6 +10,7 @@ import { Information, NewsTypes, UserRightsObj } from '../news-types';
   changeDetection: ChangeDetectionStrategy.Default
 })
 export class PostEditorComponent implements OnInit {
+
 
   @Input("edit_post_data") edit_post!: Information;
   @Input("user_data") userRights!: UserRightsObj;
@@ -21,11 +24,50 @@ export class PostEditorComponent implements OnInit {
     text: "",
   };
 
+  editForm!: FormGroup;
+
   public isEditorOpen: boolean = false;
 
   constructor() { }
 
+
   ngOnInit(): void {
+
+    this.initFormGroup();
+  }
+
+  get date() { return this.editForm.get('date'); }
+  get title() { return this.editForm.get('title'); }
+  get text() { return this.editForm.get('text'); }
+  get newsType() { return this.editForm.get('newsType'); }
+  get newsTypeError() {
+    
+    let errors = this.editForm.controls['newsType'].errors;
+    if(errors!= null)
+      return  errors['message'];
+
+      return null;
+  }
+
+  initFormGroup()
+  {
+    this.editForm = new FormGroup({
+      date: new FormControl(this.localData.date, [Validators.required]),
+      title: new FormControl(this.localData.title, [Validators.required]),
+      text: new FormControl(this.localData.text, [Validators.minLength(5)]),
+      newsType: new FormControl(this.localData.newsType, []),
+    }/*, {updateOn: 'blur'}*/);
+
+    this.editForm.valueChanges.subscribe((value)=>{
+      this.localData.date = value.date;
+      this.localData.title = value.title;
+      this.localData.text = value.text == undefined ? "": value.text;
+      this.localData.newsType = value.newsType == undefined ? NewsTypes.Politic: value.newsType;
+    });
+
+            //console.log(this.editForm.value);
+            //this.editForm.valueChanges.pipe(filter(()=> this.editForm.valid)).subscribe((value)=> console.log(this.editForm.value));
+            this.editForm.statusChanges.subscribe((status)=> console.log(status));
 
   }
 
@@ -36,10 +78,13 @@ export class PostEditorComponent implements OnInit {
 
 
   ngOnChanges(): void {
+
     this.localData.date = this.edit_post?.date;
     this.localData.title = this.edit_post?.title;
     this.localData.text = this.edit_post?.text == undefined ? "": this.edit_post?.text;
     this.localData.newsType = this.edit_post?.newsType == undefined ? NewsTypes.Politic: this.edit_post?.newsType;
+
+    this.initFormGroup();
   }
 
   clickPostEditorSaveButton(param: Information){
@@ -53,21 +98,6 @@ export class PostEditorComponent implements OnInit {
 
   clickPostEditorCancelButton(){
     this.cancelEditPost.emit();
-  }
-
-
-  textChange($event: Event, localData: Information){
-    localData.text = ($event.target as HTMLInputElement).value;;
-  }
-  titleChange($event: Event, localData: Information){
-    localData.title = ($event.target as HTMLInputElement).value;;
-  }
-  dateChange($event: Event, localData: Information){
-    localData.date = ($event.target as HTMLInputElement).value;
-  }
-
-  newsTypeChange($event: number){
-    this.localData.newsType = $event;
   }
 
 }

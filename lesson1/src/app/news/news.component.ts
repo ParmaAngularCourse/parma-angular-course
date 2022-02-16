@@ -1,7 +1,15 @@
-import { ChangeDetectionStrategy, Component, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AbstractControl, FormControl } from '@angular/forms';
+import { debounceTime, filter, Observable, of, Subject, takeUntil } from 'rxjs';
 import { ContextMenuComponent } from './context-menu/context-menu.component';
-import { Information, NewsTypes, UserRightsObj } from './news-types';
+import { Information, UserRightsObj } from './news-types';
 import { PostEditorComponent } from './post-editor/post-editor.component';
+import { PostsService } from './posts.service';
+
+
+type errorValidate = {
+  notOneValidator: {message: string}
+}
 
 
 @Component({
@@ -10,46 +18,63 @@ import { PostEditorComponent } from './post-editor/post-editor.component';
   styleUrls: ['./news.component.css'], 
   changeDetection: ChangeDetectionStrategy.Default
 })
-export class NewsComponent implements OnInit {
+export class NewsComponent implements OnInit, OnDestroy  {
 
+  public posts: Information[] = [];
   public editedPost!: Information;
   public editorTitle?: string;
 
+  private ngUnsubscribe$: Subject<void> = new Subject();
+  searchTitle!: FormControl;
+  searchTitleValue: string = "Поиск...";
+  searchTitleStatus: string = "";
 
   public userRights: UserRightsObj = {isUsercanDeleteNews: true, isUsercanEditNews: true};
 
-  public informationList: Information[] = [
-    {
-      date: "1900-01-01",
-      title: "Новость 1", 
-      newsType: NewsTypes.Politic,
-      text: "знайка шел гулять на речку, перепрыгнул через овечку"
-    },
-    {
-      date: "1900-12-01",
-      title: "Новость 2", 
-      newsType: NewsTypes.Travel,
-    },
-    {
-      date: "2000-01-01",
-      title: "Новость 3", 
-      newsType: NewsTypes.Economic,
-    },
-    {
-      date: "2000-12-01",
-      title: "Новость 4", 
-      newsType: NewsTypes.Since,
-    }    
-  ];
+  constructor(private _postService: PostsService) { 
 
-  constructor() { }
+  }
 
 @ViewChild('modalWindowPostEdit') modalWindowPost!: PostEditorComponent;
 @ViewChild('contextMenuNews') contextMenu!: ContextMenuComponent;
 
+/*getPosts(searchString: string){
+  return this._postService.getPosts(searchString);
+}*/
 
-  ngOnInit(): void 
-  {
+  ngOnInit(): void {
+    
+    this._postService.getPosts()
+                      .pipe(takeUntil(this.ngUnsubscribe$))
+                      .subscribe(posts => {this.posts = posts;});
+
+    //this.searchTitle = new FormControl(this.searchTitleValue, [Validators.required, Validators.minLength(5)], [notOneAsyncValidator] );
+    this.searchTitle = new FormControl(this.searchTitleValue, [], [notOneAsyncValidator] );
+
+    this.searchTitleValue = this.searchTitle.value;
+    this.searchTitleStatus = this.searchTitle.status;
+
+    this.searchTitle.valueChanges   
+                .pipe(debounceTime(600))
+                .pipe(filter(() => this.searchTitle.valid))
+                .subscribe((value)=>{
+                                      if(this.searchTitleValue != value){
+                                        this.searchTitleValue = value;
+                                      
+                                        this._postService.getPosts(value)
+                                                          .pipe(takeUntil(this.ngUnsubscribe$))
+                                                          .subscribe(posts => {this.posts = posts;});
+                                      }
+                });
+
+      /*this.searchTitle.statusChanges.subscribe((value)=>{
+        this.searchTitleStatus = value;
+    });*/
+  }
+
+  ngOnDestroy(){
+    this.ngUnsubscribe$.next();
+    this.ngUnsubscribe$.complete();
   }
 
   ngDoCheck(){
@@ -64,11 +89,11 @@ export class NewsComponent implements OnInit {
   }
 
   onDeletePost($event: Information){    
-    this.informationList.splice(this.informationList.indexOf($event), 1);
+    this._postService.deletePost($event);
   }
 
   onCheckPost($event: Information){    
-    $event.isCheck = !$event.isCheck;
+    this._postService.checkPost($event);
   }
 
   onNewPost(){    
@@ -79,13 +104,7 @@ export class NewsComponent implements OnInit {
 
 
   onSavePost($event: Information){    
-
-    let currentPostIndex = this.informationList.indexOf($event);
-    if(currentPostIndex == -1)
-    {
-      this.informationList.push($event);
-    }
-
+    this._postService.savePost($event);
     this.modalWindowPost.show(false);
   }
 
@@ -93,22 +112,20 @@ export class NewsComponent implements OnInit {
     this.modalWindowPost.show(false);
   } 
 
-
-  onCheckAll(){    
-    this.informationList.map(i=> i.isCheck = true);
+  onCheckAll(){   
+    this._postService.checkAll(); 
   }
 
   onDeleteSelected(){
-    this.informationList = this.informationList.filter(i=> !i.isCheck)
+    this._postService.deleteSelected(); 
   }
 
   getIsAnySelect(){
-    return this.informationList.filter(i=> i.isCheck).length > 0;
+    return this._postService.getIsAnySelect();
   }
 
 
   contextMenuShow($event: MouseEvent){
-
     this.contextMenu.show({top: $event.clientY + 15, left: $event.clientX + 15});
     return false;
   }
@@ -118,4 +135,25 @@ export class NewsComponent implements OnInit {
   }
 
 
+}
+
+
+/*function notOneValidator(formControl: FormControl): null| errorValidate{
+  if(formControl.value == 'Петров') {
+    return {notOneValidator: {message: 'Нельзя вводить'}}
+  }
+  
+  return null;
+}*/
+
+function notOneAsyncValidator(formControl: AbstractControl): Observable<null| errorValidate>{
+
+  
+  if(formControl.value){
+    if(formControl.value.length < 4) {
+      return of({notOneValidator: {message: 'Для поиска необходимо ввести больше 3х символов'}})
+    }
+  }
+  
+  return of(null);
 }

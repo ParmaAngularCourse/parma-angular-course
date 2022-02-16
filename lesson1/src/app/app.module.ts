@@ -10,6 +10,10 @@ import { NewsHeaderPipePipe } from './news/news-header-pipe.pipe';
 import { NewsTypePipePipe } from './news/news-type-pipe.pipe';
 import { NewsTypeStylesDirective } from './news/news-type-styles.directive';
 import { UserRightsStrDirective } from './user-rights-str.directive';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { HttpInterceptorService } from './http-interceptor.service';
+import { ReactiveFormsModule } from '@angular/forms';
+import { NewsTypeComponent } from './news/news-type/news-type.component';
 
 @NgModule({
   declarations: [
@@ -21,12 +25,19 @@ import { UserRightsStrDirective } from './user-rights-str.directive';
     NewsHeaderPipePipe,
     NewsTypePipePipe,
     NewsTypeStylesDirective,
-    UserRightsStrDirective
+    UserRightsStrDirective,
+    NewsTypeComponent
   ],
   imports: [
-    BrowserModule
+    BrowserModule,
+    HttpClientModule,
+    ReactiveFormsModule
   ],
-  providers: [],
+  providers: [{
+    provide: HTTP_INTERCEPTORS,
+    useClass: HttpInterceptorService,
+    multi: true
+  }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

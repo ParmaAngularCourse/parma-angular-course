@@ -5,6 +5,7 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
   templateUrl: './context-menu.component.html',
   styleUrls: ['./context-menu.component.css']
 })
+
 export class ContextMenuComponent implements OnInit {
 
   isVisible: boolean = false;
