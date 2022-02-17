@@ -7,7 +7,7 @@ import { NewsService } from './services/news.service';
 import { UserAuthService } from '../user-authservice';
 import { UserPermissions } from '../model/userPermissions';
 import { FormControl } from '@angular/forms';
-import { bufferCount, concatAll, debounceTime, distinctUntilChanged, from, tap, toArray } from 'rxjs';
+import { bufferCount, concatAll, debounceTime, distinctUntilChanged, from, map, mergeAll, mergeMap, of, switchMap, take, tap, toArray } from 'rxjs';
 
 @Component({
   selector: 'app-news-list',
@@ -16,8 +16,6 @@ import { bufferCount, concatAll, debounceTime, distinctUntilChanged, from, tap, 
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NewsListComponent implements OnInit {
-
-  public news: Array<News> = [];
 
   public groupedNews: Array<Array<News>> = [];
 
@@ -36,17 +34,12 @@ export class NewsListComponent implements OnInit {
     private cdr: ChangeDetectorRef,
     private _userAuthService: UserAuthService) {
 
-    // this._newsService.getNews().subscribe({
-    //     next: (data) => { this.news = data; this.cdr.markForCheck();},
-    //     error: (error: HttpErrorResponse) => {console.log(error.status)}
-    // });
-
     this._newsService.getNews().pipe(
-      concatAll(),
+      switchMap(value => of(value).pipe(concatAll(),
       bufferCount(3),
-      toArray(),
+      toArray()))
     ).subscribe({
-      next: (data) => { console.log(data); this.groupedNews = data; this.cdr.markForCheck(); },
+      next: (data) => { this.groupedNews = data; this.cdr.markForCheck(); },
       error: (error: HttpErrorResponse) => { console.log(error) }
     });
 
@@ -56,53 +49,17 @@ export class NewsListComponent implements OnInit {
   ngOnInit(): void {
     this.searchControl = new FormControl();
 
-    // this.searchControl.valueChanges.pipe(
-    //   debounceTime(600),
-    //   distinctUntilChanged()
-    // ).subscribe(
-    //   (value) => {
-    //     console.log(value);
-    //     if (value) {
-    //       this._newsService.searchNews(value).subscribe({
-    //         next: (data) => { this.news = data; this.cdr.markForCheck(); },
-    //         error: (error: HttpErrorResponse) => { console.log(error.status) }
-    //       });
-    //     } else {
-    //       this._newsService.getNews().subscribe({
-    //         next: (data) => { this.news = data; this.cdr.markForCheck(); },
-    //         error: (error: HttpErrorResponse) => { console.log(error.status) }
-    //       });
-    //     }
-    //   });
-
     this.searchControl.valueChanges.pipe(
       debounceTime(600),
       distinctUntilChanged(),
-    ).subscribe(
-      (value) => {
-        console.log(value);
-        if (value) {
-          this._newsService.searchNews(value).pipe(
-            concatAll(),
-            bufferCount(3),
-            toArray()
-          ).subscribe({
-            next: (data) => {console.log(data); this.groupedNews = data; this.cdr.markForCheck(); },
-            error: (error: HttpErrorResponse) => { console.log(error.status) },
-            complete: () => {console.log("complete search")}
-          });
-        } else {
-          this._newsService.getNews().pipe(
-            concatAll(),
-            bufferCount(3),
-            toArray()
-          ).subscribe({
-            next: (data) => {console.log(data); this.groupedNews = data; this.cdr.markForCheck(); },
-            error: (error: HttpErrorResponse) => { console.log(error.status) },
-            complete: () => {console.log("complete all")}
-          });
-        }
-      });
+      switchMap(value => this._newsService.searchNews(value)),
+      switchMap(value => of(value).pipe(concatAll(),
+      bufferCount(3),
+      toArray()))
+    ).subscribe({
+            next: (data) => {this.groupedNews = data; this.cdr.markForCheck(); },
+            error: (error: HttpErrorResponse) => { console.log(error.status) }
+    });
   }
 
   OnDeleteNews($event: number) {
@@ -122,9 +79,10 @@ export class NewsListComponent implements OnInit {
   }
 
   OnEditNews($event: number) {
-    const index = this.news.findIndex(item => item.id === $event);
+    let allNews = this.groupedNews.flat();
+    const index = allNews.findIndex(item => item.id === $event);
     if (index > -1) {
-      this.selectedNews = this.news[index];
+      this.selectedNews = allNews[index];
       this.modalComponent?.open();
     }
   }
@@ -157,9 +115,7 @@ export class NewsListComponent implements OnInit {
   }
 
   OnClickDeleteButton() {
-    let newsToDelete = this.news.filter(item => this.chechedNewsIds.includes(item.id)).map(item => item.id);
-
-    this._newsService.deleteSeveralNews(newsToDelete).subscribe(
+    this._newsService.deleteSeveralNews(this.chechedNewsIds).subscribe(
       (isOk) => {
         if (isOk) {
           this.chechedNewsIds = [];
@@ -172,7 +128,7 @@ export class NewsListComponent implements OnInit {
   }
 
   onSelectAllNews() {
-    this.chechedNewsIds = this.news.map(item => item.id);
+    this.chechedNewsIds = this.groupedNews.flat().map(item => item.id);
   }
 
   onContextMenu($event: MouseEvent) {

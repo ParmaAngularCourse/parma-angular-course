@@ -3,10 +3,7 @@
     <button (click)=OnClickAddButton()>Добавить</button>
     <button (click)=OnClickDeleteButton() [disabled]="!chechedNewsIds.length" 
     *appUserPermissions="{currUser: currUser, permission: 'allowDelete'}">Удалить</button>
-    <div class="search">Поиск по заголовкам:<input type="text" [formControl]="searchControl"></div>
-    <!-- <app-news *ngFor="let item of news" [isChecked]="chechedNewsIds.includes(item.id)" [news]="item" (deleteNews)="OnDeleteNews($event)"
-        (editNews)="OnEditNews($event)" (checkedNews)="onCheckedNews($event)"></app-news> -->
-    
+    <div class="search">Поиск по заголовкам:<input type="text" [formControl]="searchControl"></div>    
     <div class="newsGroup" *ngFor="let group of groupedNews">
         <app-news *ngFor="let item of group" [isChecked]="chechedNewsIds.includes(item.id)" [news]="item" (deleteNews)="OnDeleteNews($event)"
         (editNews)="OnEditNews($event)" (checkedNews)="onCheckedNews($event)"></app-news>
