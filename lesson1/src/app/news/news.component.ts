@@ -1,9 +1,15 @@
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { Subject, takeUntil } from 'rxjs';
+import { AbstractControl, FormControl } from '@angular/forms';
+import { debounceTime, distinctUntilChanged, filter, Observable, of, Subject, switchMap, takeUntil } from 'rxjs';
 import { ContextMenuComponent } from './context-menu/context-menu.component';
 import { Information, UserRightsObj } from './news-types';
 import { PostEditorComponent } from './post-editor/post-editor.component';
 import { PostsService } from './posts.service';
+
+
+type errorValidate = {
+  notOneValidator: {message: string}
+}
 
 
 @Component({
@@ -19,6 +25,9 @@ export class NewsComponent implements OnInit, OnDestroy  {
   public editorTitle?: string;
 
   private ngUnsubscribe$: Subject<void> = new Subject();
+  searchTitle!: FormControl;
+  searchTitleValue: string = "Поиск...";
+  searchTitleStatus: string = "";
 
   public userRights: UserRightsObj = {isUsercanDeleteNews: true, isUsercanEditNews: true};
 
@@ -29,15 +38,32 @@ export class NewsComponent implements OnInit, OnDestroy  {
 @ViewChild('modalWindowPostEdit') modalWindowPost!: PostEditorComponent;
 @ViewChild('contextMenuNews') contextMenu!: ContextMenuComponent;
 
-
-getPosts(){
-  return this._postService.getPosts();
-}
+/*getPosts(searchString: string){
+  return this._postService.getPosts(searchString);
+}*/
 
   ngOnInit(): void {
-    this._postService.getPosts().pipe(takeUntil(this.ngUnsubscribe$)).subscribe(posts => {
-      this.posts = posts;
-    });
+    
+    this._postService.getPosts()
+                      .pipe(takeUntil(this.ngUnsubscribe$))
+                      .subscribe(posts => {this.posts = posts;});
+
+    //this.searchTitle = new FormControl(this.searchTitleValue, [Validators.required, Validators.minLength(5)], [notOneAsyncValidator] );
+    this.searchTitle = new FormControl(this.searchTitleValue, [], [notOneAsyncValidator] );
+
+    this.searchTitleValue = this.searchTitle.value;
+    this.searchTitleStatus = this.searchTitle.status;
+
+    this.searchTitle.valueChanges   
+                .pipe(debounceTime(600),
+                      distinctUntilChanged(),
+                      filter(() => this.searchTitle.valid),
+                      switchMap(value => this._postService.getPosts(value)),
+                      takeUntil(this.ngUnsubscribe$))
+                .subscribe(
+                  posts => {
+                    this.posts = posts;
+                  });
   }
 
   ngOnDestroy(){
@@ -103,4 +129,22 @@ getPosts(){
   }
 
 
+}
+
+
+/*function notOneValidator(formControl: FormControl): null| errorValidate{
+  if(formControl.value == 'Петров') {
+    return {notOneValidator: {message: 'Нельзя вводить'}}
+  }
+  
+  return null;
+}*/
+
+function notOneAsyncValidator(formControl: AbstractControl): Observable<null| errorValidate>{
+
+    if(formControl.value?.length < 4) {
+      return of({notOneValidator: {message: 'Для поиска необходимо ввести больше 3х символов'}})
+    }
+  
+  return of(null);
 }

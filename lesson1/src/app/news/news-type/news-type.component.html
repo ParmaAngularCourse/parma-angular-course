@@ -1,0 +1,8 @@
+<div>
+    <div *ngFor="let item of nTypes" >
+        <div style="padding: 1px; display: inline-block; border-radius: 3px;" [class]="item.isCheck?'newsTypeCheked':'newsTypeUnCheked'">
+            <div (click)="onClick(item)" style = "display: inline-block; color: white;" [style.background-color]= 'item.color' class="newsTypeRadio" >{{item.name}}</div>
+        </div>
+        <br>
+    </div>
+</div> 
