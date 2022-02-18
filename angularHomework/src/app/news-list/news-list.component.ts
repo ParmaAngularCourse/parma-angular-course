@@ -7,7 +7,7 @@ import { NewsService } from './services/news.service';
 import { UserAuthService } from '../user-authservice';
 import { UserPermissions } from '../model/userPermissions';
 import { FormControl } from '@angular/forms';
-import { bufferCount, concatAll, debounceTime, distinctUntilChanged, from, map, mergeAll, mergeMap, of, switchMap, take, tap, toArray } from 'rxjs';
+import { bufferCount, concatAll, debounceTime, distinctUntilChanged, from, map, mergeAll, mergeMap, of, Subject, switchMap, take, takeUntil, tap, toArray } from 'rxjs';
 
 @Component({
   selector: 'app-news-list',
@@ -25,6 +25,8 @@ export class NewsListComponent implements OnInit {
 
   public selectedNews: News | undefined;
 
+  private ngUnsubscribe$!: Subject<void>;
+
   @ViewChild(ContextMenuComponent) menuComponent: ContextMenuComponent | undefined;
   @ViewChild(ModalComponent) modalComponent: ModalComponent | undefined;
 
@@ -37,13 +39,16 @@ export class NewsListComponent implements OnInit {
     this._newsService.getNews().pipe(
       switchMap(value => of(value).pipe(concatAll(),
       bufferCount(3),
-      toArray()))
+      toArray())),
+      takeUntil(this.ngUnsubscribe$)
     ).subscribe({
       next: (data) => { this.groupedNews = data; this.cdr.markForCheck(); },
       error: (error: HttpErrorResponse) => { console.log(error) }
     });
 
     this.currUser = this._userAuthService.getUserPermissions();
+
+    this.ngUnsubscribe$ = new Subject();
   }
 
   ngOnInit(): void {
@@ -55,7 +60,8 @@ export class NewsListComponent implements OnInit {
       switchMap(value => this._newsService.searchNews(value)),
       switchMap(value => of(value).pipe(concatAll(),
       bufferCount(3),
-      toArray()))
+      toArray())),
+      takeUntil(this.ngUnsubscribe$)
     ).subscribe({
             next: (data) => {this.groupedNews = data; this.cdr.markForCheck(); },
             error: (error: HttpErrorResponse) => { console.log(error.status) }
@@ -151,5 +157,10 @@ export class NewsListComponent implements OnInit {
           console.log('Failed to update the news');
         }
       });
+  }
+
+  ngOnDestroy() {
+    this.ngUnsubscribe$.next();
+    this.ngUnsubscribe$.complete();
   }
 }
