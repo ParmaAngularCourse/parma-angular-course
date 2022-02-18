@@ -1,6 +1,6 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { filter } from 'rxjs';
+import { filter, Subject, Subscription, takeUntil } from 'rxjs';
 import { Information, NewsTypes, UserRightsObj } from '../news-types';
 
 @Component({
@@ -9,7 +9,7 @@ import { Information, NewsTypes, UserRightsObj } from '../news-types';
   styleUrls: ['./post-editor.component.css'], 
   changeDetection: ChangeDetectionStrategy.Default
 })
-export class PostEditorComponent implements OnInit {
+export class PostEditorComponent implements OnInit, OnDestroy  {
 
 
   @Input("edit_post_data") edit_post!: Information;
@@ -27,13 +27,19 @@ export class PostEditorComponent implements OnInit {
   editForm!: FormGroup;
 
   public isEditorOpen: boolean = false;
-
+  private ngUnsubscribeValueChange$: Subject<void> = new Subject();
+  
   constructor() { }
 
 
   ngOnInit(): void {
 
     this.initFormGroup();
+  }
+
+  ngOnDestroy() {
+    this.ngUnsubscribeValueChange$.next();
+    this.ngUnsubscribeValueChange$.complete();
   }
 
   get date() { return this.editForm.get('date'); }
@@ -58,17 +64,14 @@ export class PostEditorComponent implements OnInit {
       newsType: new FormControl(this.localData.newsType, []),
     }/*, {updateOn: 'blur'}*/);
 
-    this.editForm.valueChanges.subscribe((value)=>{
-      this.localData.date = value.date;
-      this.localData.title = value.title;
-      this.localData.text = value.text == undefined ? "": value.text;
-      this.localData.newsType = value.newsType == undefined ? NewsTypes.Politic: value.newsType;
-    });
-
-            //console.log(this.editForm.value);
-            //this.editForm.valueChanges.pipe(filter(()=> this.editForm.valid)).subscribe((value)=> console.log(this.editForm.value));
-            this.editForm.statusChanges.subscribe((status)=> console.log(status));
-
+    this.editForm.valueChanges
+                .pipe(takeUntil(this.ngUnsubscribeValueChange$))
+                .subscribe((value)=>{
+                  this.localData.date = value.date;
+                  this.localData.title = value.title;
+                  this.localData.text = value.text == undefined ? "": value.text;
+                  this.localData.newsType = value.newsType == undefined ? NewsTypes.Politic: value.newsType;
+                });
   }
 
   show(isShow: boolean)

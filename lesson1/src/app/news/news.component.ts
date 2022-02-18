@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { AbstractControl, FormControl } from '@angular/forms';
-import { debounceTime, filter, Observable, of, Subject, takeUntil } from 'rxjs';
+import { debounceTime, distinctUntilChanged, filter, Observable, of, Subject, switchMap, takeUntil } from 'rxjs';
 import { ContextMenuComponent } from './context-menu/context-menu.component';
 import { Information, UserRightsObj } from './news-types';
 import { PostEditorComponent } from './post-editor/post-editor.component';
@@ -55,21 +55,15 @@ export class NewsComponent implements OnInit, OnDestroy  {
     this.searchTitleStatus = this.searchTitle.status;
 
     this.searchTitle.valueChanges   
-                .pipe(debounceTime(600))
-                .pipe(filter(() => this.searchTitle.valid))
-                .subscribe((value)=>{
-                                      if(this.searchTitleValue != value){
-                                        this.searchTitleValue = value;
-                                      
-                                        this._postService.getPosts(value)
-                                                          .pipe(takeUntil(this.ngUnsubscribe$))
-                                                          .subscribe(posts => {this.posts = posts;});
-                                      }
-                });
-
-      /*this.searchTitle.statusChanges.subscribe((value)=>{
-        this.searchTitleStatus = value;
-    });*/
+                .pipe(debounceTime(600),
+                      distinctUntilChanged(),
+                      filter(() => this.searchTitle.valid),
+                      switchMap(value => this._postService.getPosts(value)),
+                      takeUntil(this.ngUnsubscribe$))
+                .subscribe(
+                  posts => {
+                    this.posts = posts;
+                  });
   }
 
   ngOnDestroy(){
@@ -148,12 +142,9 @@ export class NewsComponent implements OnInit, OnDestroy  {
 
 function notOneAsyncValidator(formControl: AbstractControl): Observable<null| errorValidate>{
 
-  
-  if(formControl.value){
-    if(formControl.value.length < 4) {
+    if(formControl.value?.length < 4) {
       return of({notOneValidator: {message: 'Для поиска необходимо ввести больше 3х символов'}})
     }
-  }
   
   return of(null);
 }
