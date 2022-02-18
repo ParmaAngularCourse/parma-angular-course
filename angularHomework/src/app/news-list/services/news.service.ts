@@ -90,4 +90,37 @@ export class NewsService {
       }})
     );
   }
+
+  public searchNews(searchString: string): Observable<News[]> {
+    if (!this.newsSubject)
+      this.newsSubject = new BehaviorSubject<News[]>([]);
+
+    if (searchString && searchString.trim()) {
+      this.httpNewsService.searchNews(searchString).pipe(
+        map(item => item.map(item1 => {
+          return {
+            id: item1.id,
+            title: item1.title,
+            dateTime: item1.dateTime,
+            text: item1.text,
+            newsType: Object.values(NewsTypeObjectEnum).find(t => t.id === item1.newsType)!
+          }
+        })
+      )).subscribe((value) => this.newsSubject?.next(value));
+
+    } else {
+      this.httpNewsService.getNews().pipe(
+        map(item => item.map(item1 => {
+          return {
+            id: item1.id,
+            title: item1.title,
+            dateTime: item1.dateTime,
+            text: item1.text,
+            newsType: Object.values(NewsTypeObjectEnum).find(t => t.id === item1.newsType)!
+          }
+        })
+      )).subscribe((value) => this.newsSubject?.next(value));
+    }
+    return this.newsSubject.asObservable();
+  }
 }

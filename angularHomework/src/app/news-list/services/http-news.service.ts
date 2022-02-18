@@ -27,4 +27,8 @@ export class HttpNewsService {
   public deleteSeveralNews(ids: number[]): Observable<boolean> {
     return this.http.post<boolean>(this.rootUrl + 'News/deleteSeveral', ids);
   }
+
+  public searchNews(searchString: string): Observable<NewsObj[]> {
+    return this.http.get<NewsObj[]>(this.rootUrl + 'News/search?search=' + searchString);
+  }
 }

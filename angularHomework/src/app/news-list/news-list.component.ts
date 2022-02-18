@@ -6,6 +6,8 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { NewsService } from './services/news.service';
 import { UserAuthService } from '../user-authservice';
 import { UserPermissions } from '../model/userPermissions';
+import { FormControl } from '@angular/forms';
+import { bufferCount, concatAll, debounceTime, distinctUntilChanged, from, map, mergeAll, mergeMap, of, Subject, switchMap, take, takeUntil, tap, toArray } from 'rxjs';
 
 @Component({
   selector: 'app-news-list',
@@ -15,7 +17,7 @@ import { UserPermissions } from '../model/userPermissions';
 })
 export class NewsListComponent implements OnInit {
 
-  public news: Array<News> = [];
+  public groupedNews: Array<Array<News>> = [];
 
   public chechedNewsIds: number[] = [];
 
@@ -23,22 +25,47 @@ export class NewsListComponent implements OnInit {
 
   public selectedNews: News | undefined;
 
+  private ngUnsubscribe$!: Subject<void>;
+
   @ViewChild(ContextMenuComponent) menuComponent: ContextMenuComponent | undefined;
   @ViewChild(ModalComponent) modalComponent: ModalComponent | undefined;
+
+  searchControl!: FormControl;
 
   constructor(private _newsService: NewsService, 
     private cdr: ChangeDetectorRef,
     private _userAuthService: UserAuthService) {
 
-    this._newsService.getNews().subscribe({
-        next: (data) => { this.news = data; this.cdr.markForCheck();},
-        error: (error: HttpErrorResponse) => {console.log(error.status)}
+    this._newsService.getNews().pipe(
+      switchMap(value => of(value).pipe(concatAll(),
+      bufferCount(3),
+      toArray())),
+      takeUntil(this.ngUnsubscribe$)
+    ).subscribe({
+      next: (data) => { this.groupedNews = data; this.cdr.markForCheck(); },
+      error: (error: HttpErrorResponse) => { console.log(error) }
     });
 
     this.currUser = this._userAuthService.getUserPermissions();
+
+    this.ngUnsubscribe$ = new Subject();
   }
 
   ngOnInit(): void {
+    this.searchControl = new FormControl();
+
+    this.searchControl.valueChanges.pipe(
+      debounceTime(600),
+      distinctUntilChanged(),
+      switchMap(value => this._newsService.searchNews(value)),
+      switchMap(value => of(value).pipe(concatAll(),
+      bufferCount(3),
+      toArray())),
+      takeUntil(this.ngUnsubscribe$)
+    ).subscribe({
+            next: (data) => {this.groupedNews = data; this.cdr.markForCheck(); },
+            error: (error: HttpErrorResponse) => { console.log(error.status) }
+    });
   }
 
   OnDeleteNews($event: number) {
@@ -58,9 +85,10 @@ export class NewsListComponent implements OnInit {
   }
 
   OnEditNews($event: number) {
-    const index = this.news.findIndex(item => item.id === $event);
+    let allNews = this.groupedNews.flat();
+    const index = allNews.findIndex(item => item.id === $event);
     if (index > -1) {
-      this.selectedNews = this.news[index];
+      this.selectedNews = allNews[index];
       this.modalComponent?.open();
     }
   }
@@ -93,9 +121,7 @@ export class NewsListComponent implements OnInit {
   }
 
   OnClickDeleteButton() {
-    let newsToDelete = this.news.filter(item => this.chechedNewsIds.includes(item.id)).map(item => item.id);
-
-    this._newsService.deleteSeveralNews(newsToDelete).subscribe(
+    this._newsService.deleteSeveralNews(this.chechedNewsIds).subscribe(
       (isOk) => {
         if (isOk) {
           this.chechedNewsIds = [];
@@ -108,7 +134,7 @@ export class NewsListComponent implements OnInit {
   }
 
   onSelectAllNews() {
-    this.chechedNewsIds = this.news.map(item => item.id);
+    this.chechedNewsIds = this.groupedNews.flat().map(item => item.id);
   }
 
   onContextMenu($event: MouseEvent) {
@@ -131,5 +157,10 @@ export class NewsListComponent implements OnInit {
           console.log('Failed to update the news');
         }
       });
+  }
+
+  ngOnDestroy() {
+    this.ngUnsubscribe$.next();
+    this.ngUnsubscribe$.complete();
   }
 }

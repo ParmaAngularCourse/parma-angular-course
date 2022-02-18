@@ -1,7 +1,9 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { UserPermissions } from '../../model/userPermissions';
 import { UserAuthService } from '../../user-authservice';
-import { News, NewsType, NewsTypeObjectEnum } from '../../model/news-type';
+import { News } from '../../model/news-type';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { filter } from 'rxjs';
 
 @Component({
   selector: 'app-news-modal-content',
@@ -11,14 +13,13 @@ import { News, NewsType, NewsTypeObjectEnum } from '../../model/news-type';
 })
 export class NewsModalContentComponent implements OnInit {
 
-  public newsTypes: NewsType[] = Object.values(NewsTypeObjectEnum);
-
-  public newNews: News | undefined;
   
   public title: string = '';
   private _news: News | undefined;
 
   readonly currUser: UserPermissions;
+
+  newsForm!: FormGroup;
 
   @Input()
   get news(): News | undefined { return this._news}
@@ -30,51 +31,47 @@ export class NewsModalContentComponent implements OnInit {
   @Output() saveNews: EventEmitter<News> = new EventEmitter();
   @Output() cancel = new EventEmitter();
   
-  constructor(private _userAuthService: UserAuthService) { 
+  constructor(private _userAuthService: UserAuthService, private fb: FormBuilder) { 
     this.currUser = this._userAuthService.getUserPermissions();
   }
 
   ngOnInit(): void {
+    this.newsForm = this.fb.group({
+      date: [new Date()],
+      title: ["", [Validators.required]],
+      text: ["", [Validators.required]],
+      newsType: [],
+    })
+
+    this.newsForm.valueChanges.pipe(filter(() => this.newsForm.valid)).subscribe((value) =>
+      {        
+        this.news = {
+          id: this.news ? this.news.id : 0,
+          title: value['title'],
+          text: value['text'],
+          dateTime: value['date'],
+          newsType: value['newsType'],
+        };
+      }
+    );
   }
 
-  ngOnChanges() {
-    if (this.news) {
-      this.newNews = {
-        id: this.news.id,
-        title: this.news.title,
-        text: this.news.text,
-        dateTime: this.news.dateTime,
-        newsType: this.news.newsType
-      }} else {
-        this.newNews = undefined;
-      }
+  ngOnChanges(): void {
+    if (this.newsForm) {
+      this.newsForm.setValue({
+        title: this.news?.title,
+        text: this.news?.text,
+        date: this.news?.dateTime,
+        newsType: this.news?.newsType,
+      });
+    }
   }
 
   clickSaveNews() {
-    this.saveNews.emit(this.newNews);
+    this.saveNews.emit(this.news);
   }
 
   clickCancel() {
     this.cancel.emit();
-  }
-
-  onChangeInput($event: Event, type: string) {
-    if (this.newNews) {
-      let newValue = ($event.target as HTMLInputElement).value;
-      switch (type) {
-        case "date":
-          this.newNews.dateTime = newValue;
-          break;
-        case "title":
-          this.newNews.title = newValue;
-          break;
-        case "text":
-          this.newNews.text = newValue;
-          break;
-        case "newsType":
-          this.newNews.newsType = this.newsTypes.find(t => t.id === Number(newValue))!;
-          break;
-      }
-    }
   }
 }
