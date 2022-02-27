@@ -4,6 +4,7 @@ import {
   ChangeDetectionStrategy,
   Input,
 } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-profile',
@@ -19,5 +20,21 @@ export class ProfileComponent implements OnInit {
   @Input() email: string = '';
   @Input() hasPermission: boolean = false;
 
-  ngOnInit(): void {}
+  profileForm!: FormGroup;
+
+  ngOnInit(): void {
+    this.profileForm = new FormGroup({
+      nameControl: new FormControl(this.name, [Validators.required]),
+      secondNameControl: new FormControl(this.secondName, [Validators.required]),
+      emailControl: new FormControl(this.email, [Validators.required]),
+    });
+  }
+
+  onSave(){
+
+  }
+
+  onCancel(){
+    
+  }
 }

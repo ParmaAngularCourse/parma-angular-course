@@ -23,6 +23,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { ProfileComponent } from './profile/profile.component';
 import { HeaderPageSwitcherComponent } from './header-page-switcher/header-page-switcher.component';
 import { AppRoutingModule } from './app-routing/app-routing.module';
+import { LoginComponent } from './login/login.component';
 
 
 
@@ -42,6 +43,7 @@ import { AppRoutingModule } from './app-routing/app-routing.module';
     NewsRadioControlComponent,
     ProfileComponent,
     HeaderPageSwitcherComponent,
+    LoginComponent,
   ],
   imports: [BrowserModule, FormsModule, HttpClientModule, ReactiveFormsModule, AppRoutingModule],
   providers: [
