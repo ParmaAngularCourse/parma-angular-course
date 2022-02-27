@@ -1,0 +1,11 @@
+<div class="left-side">
+  <div *ngFor="let item of newsTags | keyvalue; let i = index">
+    <div
+      class="tag-filter-item"
+      (click)="onTagClick(i)"
+      [class.font-weight-bold]="selectedTagKey == i ? true : false"
+    >
+      {{ item.value }}
+    </div>
+  </div>
+</div>

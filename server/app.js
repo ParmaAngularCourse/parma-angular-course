@@ -7,6 +7,7 @@ app.use(cors());
 
 const jsonParser = express.json();
 const filePath = "news.json";
+const userPath = "users.json";
 
 // Получение новостей
 app.get("/api/news", jsonParser, function (req, res) {
@@ -108,6 +109,17 @@ app.put("/api/news", jsonParser, function (req, res) {
   fs.writeFileSync(filePath, data); // отправляем удаленную новость
   res.sendStatus(200);
 });
+
+
+
+// Получение пользователя
+app.get("/api/user", jsonParser, function (req, res) {
+  const content = fs.readFileSync(userPath, "utf8");
+  const user = JSON.parse(content);
+  console.log("User. Read " + JSON.stringify(user));
+  res.send(user);
+});
+
 
 const PORT = 8080;
 app.listen(PORT, () => console.log(`server running on port ${PORT}`));

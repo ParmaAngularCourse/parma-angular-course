@@ -15,3 +15,18 @@
   width: 50%;
   margin-left: 25%;
 }
+
+
+.left-side {
+  background-color: blanchedalmond;
+  position: fixed;
+  width: 150px;
+  height: 100%;
+  float: left;
+}
+
+.main-side {
+  position: fixed;
+  left: 10%;
+  width: 85%;
+}

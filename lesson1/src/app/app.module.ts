@@ -24,6 +24,8 @@ import { ProfileComponent } from './profile/profile.component';
 import { HeaderPageSwitcherComponent } from './header-page-switcher/header-page-switcher.component';
 import { AppRoutingModule } from './app-routing/app-routing.module';
 import { LoginComponent } from './login/login.component';
+import { TagSwitcherComponent } from './tag-switcher/tag-switcher.component';
+import { MainComponent } from './main/main.component';
 
 
 
@@ -44,6 +46,8 @@ import { LoginComponent } from './login/login.component';
     ProfileComponent,
     HeaderPageSwitcherComponent,
     LoginComponent,
+    TagSwitcherComponent,
+    MainComponent,
   ],
   imports: [BrowserModule, FormsModule, HttpClientModule, ReactiveFormsModule, AppRoutingModule],
   providers: [

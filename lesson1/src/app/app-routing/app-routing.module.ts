@@ -4,11 +4,29 @@ import { RouterModule, Routes } from '@angular/router';
 import { AllNewsComponent } from '../all-news/all-news.component';
 import { ProfileComponent } from '../profile/profile.component';
 import { LoginComponent } from '../login/login.component';
+import { AuthGuard } from '../auth-guard.guard';
+import { MainComponent } from '../main/main.component';
 
 const appRoutes: Routes = [
-  { path: '', component: AllNewsComponent, pathMatch: 'full' },
+  { path: '', redirectTo: 'news', pathMatch: 'full' },
   { path: 'auth', component: LoginComponent },
-  { path: 'profile', component: ProfileComponent },
+  {
+    path: '',
+    component: MainComponent,
+    canActivate: [AuthGuard],
+    children: [
+      {
+        path: 'profile',
+        component: ProfileComponent,
+        canActivate: [AuthGuard],
+      },
+      {
+        path: 'news',
+        component: AllNewsComponent,
+        canActivate: [AuthGuard],
+      },
+    ],
+  },
 ];
 
 @NgModule({
