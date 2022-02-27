@@ -1,0 +1,36 @@
+<div>
+  <div *ngFor="let item of controlValue.newsTags | keyvalue; let i = index">
+    <div
+      class="tag"
+      [class.font-weight-bold]="selectedTagKey == i ? true : false"
+      (click)="onRadioChange(i)"
+      name="radioControl"
+      id="radioTag"
+      [(ngModel)]="controlValue.selectedTag"
+      ngDefaultControl
+      #radioTag
+    >
+      <span [appNewsTagStyleDirective]="item.value" class="tag-short">
+        {{ item.value | firstLetterPipe }}</span
+      >
+      <span
+        class="tooltip"
+        [ngClass]="selectedTagKey == i ? 'selectedTag' : 'tag'"
+      >
+        {{ item.value }}</span
+      >
+    </div>
+</div>
+<ng-container
+  [ngTemplateOutlet]="error"
+  [ngTemplateOutletContext]="{
+    show: ngControl?.control?.errors
+  }"
+>
+</ng-container>
+</div>
+<ng-template #error let-show="show">
+<div *ngIf="show">
+  <span class="errorText">Должен быть выбран один тип новости</span>
+</div>
+</ng-template>

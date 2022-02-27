@@ -16,6 +16,18 @@ app.get("/api/news", jsonParser, function (req, res) {
   res.send(news);
 });
 
+// Получение новостей по фильтру
+app.get("/api/news/find", jsonParser, function (req, res) {
+  if (!req.query) return res.sendStatus(400);
+  let clause = req.query.clause;
+  console.log(clause);
+  const content = fs.readFileSync(filePath, "utf8");
+  const news = JSON.parse(content);
+  const newsFiltered = news.filter((x) => x.title.includes(clause));
+  console.log("Read " + JSON.stringify(newsFiltered));
+  res.send(newsFiltered);
+});
+
 // Добавление новости
 app.post("/api/news", jsonParser, function (req, res) {
   if (!req.body) return res.sendStatus(400);

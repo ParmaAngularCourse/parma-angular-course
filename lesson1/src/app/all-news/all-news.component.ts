@@ -3,9 +3,21 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  OnInit,
   ViewChild,
 } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { FormControl, Validators } from '@angular/forms';
+import {
+  bufferCount,
+  debounceTime,
+  distinctUntilChanged,
+  from,
+  startWith,
+  Subscription,
+  switchMap,
+  tap,
+  toArray,
+} from 'rxjs';
 import { UserHasPemission } from 'src/models/userPermissions';
 import { NewsService } from 'src/services/newsService';
 import { NewsPost } from '../../models/NewsPost';
@@ -16,12 +28,24 @@ import { ModalCommonComponent } from '../modal-common/modal-common.component';
   styleUrls: ['./all-news.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AllNewsComponent {
+export class AllNewsComponent implements OnInit {
   constructor(
     private _newsService: NewsService,
     private cdr: ChangeDetectorRef
   ) {
-    this.PullData(); 
+    this.PullData();
+  }
+
+  ngOnInit(): void {
+    this.search = new FormControl(this.searchClause, Validators.required);
+    this.search.valueChanges
+      .pipe(
+        tap(() => console.log('alive request')),
+        debounceTime(600),
+        distinctUntilChanged(),
+        switchMap(async (val) => this._newsService.Find(val))
+      )
+      .subscribe(() => console.log('request end'));
   }
 
   @ViewChild(ModalCommonComponent) public modalComponent!: ModalCommonComponent;
@@ -34,13 +58,15 @@ export class AllNewsComponent {
   postToEdit: NewsPost = new NewsPost();
   userPermission: boolean = UserHasPemission;
   private subscrition!: Subscription;
+  public search!: FormControl;
 
+  searchClause: string = '';
   onDeletePost(postId: number) {
     this._newsService.Delete([postId]);
   }
 
   onEditPost(postId: number) {
-    this.postToEdit = this.news.find(x=>x.id==postId)!;
+    this.postToEdit = this.news.find((x) => x.id == postId)!;
     this.modalComponent.Open();
   }
 
@@ -87,10 +113,15 @@ export class AllNewsComponent {
       x = new NewsPost(x);
       x.isSelected = true;
       return x;
-    });  }
+    });
+  }
 
   getTitle(): string {
     return this.postToEdit.id === -1 ? 'Добавление' : 'Редактирование';
+  }
+
+  Search(clause: string) {
+    //  this._newsService.Find(clause);
   }
 
   onPermissionToggleClick() {
@@ -116,7 +147,6 @@ export class AllNewsComponent {
   private PushToRefresh() {
     this.cdr.markForCheck();
   }
-
 
   public isAnySelected(): boolean {
     return this.news.some((x) => x.isSelected);

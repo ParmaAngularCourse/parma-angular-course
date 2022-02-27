@@ -5,8 +5,10 @@ import { Pipe, PipeTransform } from '@angular/core';
 })
 export class CapitalLetterPipePipe implements PipeTransform {
 
-  transform(value: string, ...args: unknown[]): string {
+  transform(value: string | null, ...args: unknown[]): string  | null{
+    if(value)
     return value.charAt(0).toUpperCase() + value.slice(1)
+    else return null;
   }
 
 }

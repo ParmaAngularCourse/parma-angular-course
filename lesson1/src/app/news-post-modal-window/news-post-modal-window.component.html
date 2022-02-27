@@ -1,39 +1,80 @@
-<div class="post-modal-window">
-    <div>
-        <ng-container [ngTemplateOutlet]="inputPost" #date [ngTemplateOutletContext]="{label:'Дата',
-             type:'datetime-local', 
-             val:newsPost?.uploadDate,
-            id: 'date', action:onDateInputChanged}">
-        </ng-container>
+<div class="post-modal-window" [formGroup]="newsPostForm">
+  <div>
+    <label for="inputDate">Дата</label>
+    <input
+      type="datetime-local"
+      #date
+      id="date"
+      name="inputDate"
+      formControlName="dateControl"
+    />
+    <ng-container
+      [ngTemplateOutlet]="error"
+      [ngTemplateOutletContext]="{
+        show: newsPostForm.get('dateControl')?.errors,
+        error: newsPostForm.get('dateControl')?.errors
+      }"
+    >
+    </ng-container>
+  </div>
 
-        <ng-container [ngTemplateOutlet]="inputPost" #title
-            [ngTemplateOutletContext]="{label:'Заголовок', type:'text', val:newsPost?.title??'title', id: 'title', action:onTitleInputChanged}">
-        </ng-container>
+  <div>
+    <label for="inputTitle">Заголовок</label>
+    <input
+      type="text"
+      #title
+      id="title"
+      name="inputTitle"
+      formControlName="titleControl"
+    />
+    <ng-container
+      [ngTemplateOutlet]="error"
+      [ngTemplateOutletContext]="{
+        show: newsPostForm.get('titleControl')?.errors
+      }"
+    >
+    </ng-container>
+  </div>
 
-        <ng-container [ngTemplateOutlet]="inputPost" #text
-            [ngTemplateOutletContext]="{label:'Текст', type:'text', val:newsPost?.text??'text' , id: 'text', action:onTextInputChanged}">
-        </ng-container>
+  <div>
+    <label for="inputText">Текст</label>
+    <input
+      type="text"
+      #text
+      id="text"
+      name="inputText"
+      formControlName="textControl"
+    />
+    <ng-container
+      [ngTemplateOutlet]="error"
+      [ngTemplateOutletContext]="{
+        show: newsPostForm.get('textControl')?.errors
+      }"
+    >
+    </ng-container>
+  </div>
 
-        <ng-container [ngTemplateOutlet]="radioPostTag"
-            [ngTemplateOutletContext]="{enum:newsTags, val:newsPost?.tag, name:'radioTag'}"></ng-container>
+  <div>
+    <app-news-radio-control
+      formControlName="radioControl"
+    ></app-news-radio-control>
+  </div>
 
-    </div>
-    <div>
-        <input class="button" type="button" (click)="onEditSave()" value="Сохранить" *appPermissionDirective="userPermissions" />
-        <input class="button" type="button" (click)="onCancel()" value="Отмена" />
-    </div>
+  <div>
+    <input
+      class="button"
+      type="button"
+      (click)="onEditSave()"
+      value="Сохранить"
+      *appPermissionDirective="userPermissions"
+      [disabled]="!newsPostForm.valid"
+    />
+    <input class="button" type="button" (click)="onCancel()" value="Отмена" />
+  </div>
 </div>
 
-
-<ng-template #radioPostTag let-enum="enum" let-val="val" let-name="name">
-    <div *ngFor="let item of enum| keyvalue; let i = index ">
-        <input [id]="name" name="name" type="radio" [value]="item" [checked]="item.value === val"
-            (change)="onRadioChange(i)" >
-        <label for="name" [appNewsTagStyleDirective]="item.value">{{item.value}}</label>
-    </div>
-</ng-template>
-
-<ng-template #inputPost let-label='label' let-type='type' let-val='val' let-id='id' let-action='action'>
-    <label for="input">{{label}}</label>
-    <input [type]='type' #input id="input" [value]='val' (change)=action(input.value)>
+<ng-template #error let-show="show" let-error="error">
+  <div *ngIf="show">
+    <span class="errorText">{{error?.message ?? "Поле должно быть заполнено"}}</span>
+  </div>
 </ng-template>

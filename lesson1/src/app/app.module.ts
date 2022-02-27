@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { AppComponent } from './app.component';
 import { AllNewsComponent } from './all-news/all-news.component';
@@ -18,6 +18,7 @@ import {
   HTTP_INTERCEPTORS,
 } from '@angular/common/http';
 import { AuthInterseptorService } from './auth-interseptor.service';
+import { NewsRadioControlComponent } from './news-radio-control/news-radio-control.component';
 
 @NgModule({
   declarations: [
@@ -31,8 +32,9 @@ import { AuthInterseptorService } from './auth-interseptor.service';
     PermissionDirectiveDirective,
     FirstLetterPipePipe,
     NewsTagStyleDirectiveDirective,
+    NewsRadioControlComponent,
   ],
-  imports: [BrowserModule, FormsModule, HttpClientModule],
+  imports: [BrowserModule, FormsModule, HttpClientModule, ReactiveFormsModule],
   providers: [
     {
       provide: HTTP_INTERCEPTORS,

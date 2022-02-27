@@ -1,19 +1,27 @@
 .button {
-    margin: 16px;
-    cursor: pointer;
+  margin: 16px;
+  cursor: pointer;
 }
 .post-modal-window {
-    background-color: whitesmoke;
-    margin-left: auto;
-    margin-right: auto;
-    width: 100%;
-    height: 100%;
+  background-color: whitesmoke;
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+  height: 100%;
 }
 
 .flex-container {
-    display: flex;
+  display: flex;
 }
 
 span {
-    font-weight: bold;
+  font-weight: bold;
+}
+
+.errorText {
+  color: red;
+}
+
+.ng-invalid {
+  border-color: red;
 }
