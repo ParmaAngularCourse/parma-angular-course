@@ -1,6 +1,7 @@
 li {
   display: inline-block;
   margin: 10px;
+  cursor: pointer;
 }
 a {
   color: wheat;
@@ -16,3 +17,11 @@ a:hover {
   color: wheat;
   background-color: darkblue;
 }
+
+.enter-button,
+.exit-button {
+  color: rgb(228, 202, 155);
+  position: fixed;
+  right: 10%;
+}
+

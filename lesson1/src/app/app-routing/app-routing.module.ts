@@ -6,6 +6,7 @@ import { ProfileComponent } from '../profile/profile.component';
 import { LoginComponent } from '../login/login.component';
 import { AuthGuard } from '../auth-guard.guard';
 import { MainComponent } from '../main/main.component';
+import { ClosePageGuard } from '../close-page.guard';
 
 const appRoutes: Routes = [
   { path: '', redirectTo: 'news', pathMatch: 'full' },
@@ -19,6 +20,7 @@ const appRoutes: Routes = [
         path: 'profile',
         component: ProfileComponent,
         canActivate: [AuthGuard],
+        canDeactivate:[ ClosePageGuard]
       },
       {
         path: 'news',

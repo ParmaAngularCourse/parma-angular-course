@@ -7,11 +7,15 @@ import {
   ViewChild,
 } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import {
   bufferCount,
   debounceTime,
   distinctUntilChanged,
+  filter,
   from,
+  Observable,
+  of,
   startWith,
   Subscription,
   switchMap,
@@ -31,7 +35,8 @@ import { ModalCommonComponent } from '../modal-common/modal-common.component';
 export class AllNewsComponent implements OnInit {
   constructor(
     private _newsService: NewsService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private activatedRoute: ActivatedRoute
   ) {
     this.PullData();
   }
@@ -45,7 +50,22 @@ export class AllNewsComponent implements OnInit {
         distinctUntilChanged(),
         switchMap(async (val) => this._newsService.Find(val))
       )
-      .subscribe(() => console.log('request end'));
+      .subscribe(() => {
+        if (this.tagTitle)
+          this.news = this.news.filter(
+            (x) => x.tag.toString() === this.tagTitle
+          );
+      });
+
+    this.activatedRoute.queryParams.subscribe((params) => {
+      if (typeof params['tag'] !== 'undefined') {
+        this.tagTitle = params['tag'];
+      } else {
+        this.tagTitle = null;
+      }
+
+      this.PullData();
+    });
   }
 
   @ViewChild(ModalCommonComponent) public modalComponent!: ModalCommonComponent;
@@ -59,7 +79,7 @@ export class AllNewsComponent implements OnInit {
   userPermission: boolean = UserHasPemission;
   private subscrition!: Subscription;
   public search!: FormControl;
-
+  private tagTitle: string | null = null;
   searchClause: string = '';
   onDeletePost(postId: number) {
     this._newsService.Delete([postId]);
@@ -136,6 +156,10 @@ export class AllNewsComponent implements OnInit {
     this.subscrition = this._newsService.GetAll().subscribe({
       next: (data) => {
         this.news = data;
+        if (this.tagTitle)
+          this.news = this.news.filter(
+            (x) => x.tag.toString() === this.tagTitle
+          );
         this.PushToRefresh();
       },
       error: (error: HttpErrorResponse) => {

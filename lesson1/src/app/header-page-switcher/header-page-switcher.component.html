@@ -1,11 +1,17 @@
 <div class="header-main">
-    <ul>
-        <li>
-            <a routerLink="news">Новости</a>
-        </li>
-        
-        <li>
-            <a routerLink="profile">Профиль</a>
-        </li>
-    </ul>
+  <ul>
+    <li>
+      <a routerLink="news">Новости</a>
+    </li>
+
+    <li>
+      <a routerLink="profile">Профиль</a>
+    </li>
+
+    <li>
+        <div class="enter-button" (click)="logOut()">
+          <button>Выход</button>
+        </div>
+    </li>
+  </ul>
 </div>

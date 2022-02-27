@@ -1,6 +1,16 @@
-import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, HostBinding, Input } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  HostBinding,
+  Input,
+} from '@angular/core';
+import { Router } from '@angular/router';
+import { of } from 'rxjs';
 import { NewsPostTag } from 'src/models/NewsPostTag';
 import { GetStyleFromTag } from 'src/services/tagStyleService';
+import { AllNewsComponent } from '../all-news/all-news.component';
 
 @Component({
   selector: 'app-tag-switcher',
@@ -9,15 +19,17 @@ import { GetStyleFromTag } from 'src/services/tagStyleService';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TagSwitcherComponent implements OnInit {
-  constructor(private cdr: ChangeDetectorRef) {}
-  selectedTagKey!: number;
+  constructor(
+    private cdr: ChangeDetectorRef,
+    private newsComponent: AllNewsComponent,
+    private router: Router
+  ) {}
 
   newsTags = Object.values(NewsPostTag);
   ngOnInit(): void {}
 
   onTagClick(i: number) {
-    this.selectedTagKey = i;
-    console.log(i)
-    this.cdr.markForCheck();
+    const params = i !== 0 ? { tag: this.newsTags[i] } : null;
+    this.router.navigate([], { queryParams: params });
   }
 }

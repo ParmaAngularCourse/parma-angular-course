@@ -43,6 +43,10 @@ export class AuthServiceService {
     return true;
   }
 
+  public LogOut() {
+    this.user = null;
+  }
+
   public GetUserData(): User | null {
     return this.user;
   }

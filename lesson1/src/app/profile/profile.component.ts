@@ -5,7 +5,9 @@ import {
   Input,
 } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { AuthServiceService } from '../auth-service.service';
+import { IDeactivateComponent } from '../close-page.guard';
 
 @Component({
   selector: 'app-profile',
@@ -13,11 +15,10 @@ import { AuthServiceService } from '../auth-service.service';
   styleUrls: ['./profile.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ProfileComponent implements OnInit {
-  constructor(private authService: AuthServiceService) {
-
+export class ProfileComponent implements OnInit, IDeactivateComponent {
+  constructor(private authService: AuthServiceService, private router: Router) {
     const user = this.authService.GetUserData();
-    if(user){
+    if (user) {
       this.name = user.name ?? '';
       this.secondName = user.surname ?? '';
       this.email = user.email ?? '';
@@ -30,7 +31,7 @@ export class ProfileComponent implements OnInit {
   hasPermission: boolean = false;
 
   profileForm!: FormGroup;
-
+  hasChanged = false;
   ngOnInit(): void {
     this.profileForm = new FormGroup({
       nameControl: new FormControl(this.name, [Validators.required]),
@@ -39,9 +40,23 @@ export class ProfileComponent implements OnInit {
       ]),
       emailControl: new FormControl(this.email, [Validators.required]),
     });
+
+    this.profileForm.valueChanges.subscribe((_) => {
+      this.hasChanged = true;
+    });
   }
 
-  onSave() {}
+  onSave() {
+    this.hasChanged = false;
+  }
 
-  onCancel() {}
+  onCancel() {
+    this.router.navigate(['..']);
+  }
+
+  canDeactivate(): boolean {
+    return this.hasChanged
+      ? confirm('Имеются несохраненные изменения. Выйти со страницы?')
+      : true;
+  }
 }
