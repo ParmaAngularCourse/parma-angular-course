@@ -1,8 +1,16 @@
-<div class="tag-filter-item" (click)="onTagClick(0)">Все</div>
+<div
+  [ngClass]="selectedTagKey == 0 ? 'selected' : 'tag-filter-item'"
+  (click)="onTagClick(0)"
+>
+  Все
+</div>
 
 <div class="left-side">
   <div *ngFor="let item of newsTags | keyvalue; let i = index">
-    <div class="tag-filter-item" (click)="onTagClick(i)">
+    <div
+      [ngClass]="selectedTagKey == i ? 'selected' : 'tag-filter-item'"
+      (click)="onTagClick(i)"
+    >
       {{ item.value }}
     </div>
   </div>

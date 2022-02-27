@@ -27,8 +27,9 @@ export class TagSwitcherComponent implements OnInit {
 
   newsTags = Object.values(NewsPostTag);
   ngOnInit(): void {}
-
+  selectedTagKey: number = 0;
   onTagClick(i: number) {
+    this.selectedTagKey = i;
     const params = i !== 0 ? { tag: this.newsTags[i] } : null;
     this.router.navigate([], { queryParams: params });
   }
