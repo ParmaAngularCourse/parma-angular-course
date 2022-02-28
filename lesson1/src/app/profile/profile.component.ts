@@ -1,12 +1,7 @@
-import {
-  Component,
-  OnInit,
-  ChangeDetectionStrategy,
-  Input,
-} from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AuthServiceService } from '../auth-service.service';
+import { AuthServiceService, User } from '../auth-service.service';
 import { IDeactivateComponent } from '../close-page.guard';
 
 @Component({
@@ -40,14 +35,29 @@ export class ProfileComponent implements OnInit, IDeactivateComponent {
       ]),
       emailControl: new FormControl(this.email, [Validators.required]),
     });
-
+    const user = this.authService.GetUserData();
+    if (user) {
+      this.name = user.name ?? '';
+      this.secondName = user.surname ?? '';
+      this.email = user.email ?? '';
+    }
     this.profileForm.valueChanges.subscribe((_) => {
       this.hasChanged = true;
     });
   }
 
   onSave() {
+    const user = {
+      name: this.profileForm.controls['nameControl'].value,
+      surname: this.profileForm.controls['secondNameControl'].value,
+      email: this.profileForm.controls['emailControl'].value,
+    } as User;
+    console.log(user);
+    this.authService.Update(user);
+
     this.hasChanged = false;
+
+    this.router.navigate(['..']);
   }
 
   onCancel() {

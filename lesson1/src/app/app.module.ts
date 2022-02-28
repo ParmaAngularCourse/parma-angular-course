@@ -17,7 +17,7 @@ import {
   HttpClientModule,
   HTTP_INTERCEPTORS,
 } from '@angular/common/http';
-import { AuthInterseptorService } from './auth-interseptor.service';
+//import { AuthInterseptorService } from './auth-interseptor.service';
 import { NewsRadioControlComponent } from './news-radio-control/news-radio-control.component';
 import { RouterModule, Routes } from '@angular/router';
 import { ProfileComponent } from './profile/profile.component';
@@ -26,9 +26,6 @@ import { AppRoutingModule } from './app-routing/app-routing.module';
 import { LoginComponent } from './login/login.component';
 import { TagSwitcherComponent } from './tag-switcher/tag-switcher.component';
 import { MainComponent } from './main/main.component';
-
-
-
 
 @NgModule({
   declarations: [
@@ -49,14 +46,20 @@ import { MainComponent } from './main/main.component';
     TagSwitcherComponent,
     MainComponent,
   ],
-  imports: [BrowserModule, FormsModule, HttpClientModule, ReactiveFormsModule, AppRoutingModule],
-  providers: [
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: AuthInterseptorService,
-      multi: true,
-    },
+  imports: [
+    BrowserModule,
+    FormsModule,
+    HttpClientModule,
+    ReactiveFormsModule,
+    AppRoutingModule,
   ],
+  // providers: [
+  //   {
+  //     provide: HTTP_INTERCEPTORS,
+  //     useClass: AuthInterseptorService,
+  //     multi: true,
+  //   },
+  // ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

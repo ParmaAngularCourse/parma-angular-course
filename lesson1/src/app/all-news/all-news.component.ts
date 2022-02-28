@@ -24,7 +24,9 @@ import {
 } from 'rxjs';
 import { UserHasPemission } from 'src/models/userPermissions';
 import { NewsService } from 'src/services/newsService';
+import { UserService } from 'src/services/userService';
 import { NewsPost } from '../../models/NewsPost';
+import { User } from '../auth-service.service';
 import { ModalCommonComponent } from '../modal-common/modal-common.component';
 @Component({
   selector: 'app-all-news',
@@ -35,10 +37,14 @@ import { ModalCommonComponent } from '../modal-common/modal-common.component';
 export class AllNewsComponent implements OnInit {
   constructor(
     private _newsService: NewsService,
+    private userService: UserService,
     private cdr: ChangeDetectorRef,
     private activatedRoute: ActivatedRoute
   ) {
     this.PullData();
+
+    this.userService.IsAdmin().subscribe((x) => (this.userPermission = x));
+    this.userService.GetAll().subscribe((x) => (this.user = x));
   }
 
   ngOnInit(): void {
@@ -76,11 +82,12 @@ export class AllNewsComponent implements OnInit {
   contextmenuY = 0;
   news!: NewsPost[];
   postToEdit: NewsPost = new NewsPost();
-  userPermission: boolean = UserHasPemission;
+  userPermission!: boolean;
   private subscrition!: Subscription;
   public search!: FormControl;
   private tagTitle: string | null = null;
   searchClause: string = '';
+  private user!: User;
   onDeletePost(postId: number) {
     this._newsService.Delete([postId]);
   }
@@ -140,12 +147,9 @@ export class AllNewsComponent implements OnInit {
     return this.postToEdit.id === -1 ? 'Добавление' : 'Редактирование';
   }
 
-  Search(clause: string) {
-    //  this._newsService.Find(clause);
-  }
-
   onPermissionToggleClick() {
-    this.userPermission = !this.userPermission;
+    this.user.admin = !this.userPermission;
+    this.userService.Update(this.user);
   }
 
   ngOnDestroy() {

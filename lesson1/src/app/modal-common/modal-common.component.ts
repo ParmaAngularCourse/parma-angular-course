@@ -1,16 +1,20 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  Input,
+  OnInit,
+} from '@angular/core';
+import { IDeactivateComponent } from '../close-page.guard';
 
 @Component({
   selector: 'app-modal-common',
   templateUrl: './modal-common.component.html',
   styleUrls: ['./modal-common.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ModalCommonComponent {
-
-  constructor(private changeDetection: ChangeDetectorRef){
-
-  }
+  constructor(private changeDetection: ChangeDetectorRef) {}
   @Input() isModalOpen!: boolean;
   @Input() operationTitle!: string;
 
@@ -24,7 +28,7 @@ export class ModalCommonComponent {
     this.changeDetectionForce();
   }
 
-  changeDetectionForce(){
+  changeDetectionForce() {
     this.changeDetection.markForCheck();
   }
 }

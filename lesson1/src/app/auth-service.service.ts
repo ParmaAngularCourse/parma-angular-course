@@ -1,24 +1,17 @@
 import { Injectable } from '@angular/core';
 import { UserHasPemission } from 'src/models/userPermissions';
+import { UserService } from 'src/services/userService';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthServiceService {
-  private user: User | null = null;
+  private user!: User | null;
+  constructor(private userService: UserService) {}
 
-  constructor() {
-    this.user = {
-      login: 'a',
-      password: 'a',
-      name: 'Максим',
-      surname: 'Гильман',
-      email: 'mail@mail.ru',
-    } as User;
-  }
-  IsLoggedIn() {
+  IsLoggedIn(): boolean {
     console.log(this.user);
-    return !!this.user;
+    return !!this.user && !!this.user?.login;
   }
 
   public AuthString(): string {
@@ -30,25 +23,28 @@ export class AuthServiceService {
   }
 
   public LogIn(login: string, password: string): boolean {
-    if (this.user) {
-      this.user.login = login;
-      this.user.password = password;
-    } else
-      this.user = {
-        login: login,
-        password: password,
-      } as User;
+    this.userService.GetAll().subscribe({
+      next: (data) => {
+        this.user = data;
+      },
+    });
+    if (this.user?.login === login && this.user?.password === password) {
+      return true;
+    } else this.user = null;
 
-    console.log(this.user);
-    return true;
+    return false;
   }
 
   public LogOut() {
-    this.user = null;
+    this.user = {} as User;
   }
 
   public GetUserData(): User | null {
     return this.user;
+  }
+
+  public Update(user:User){
+    this.userService.Update(user);
   }
 }
 

@@ -36,5 +36,6 @@ export class LoginComponent implements OnInit {
 
     if (this.authService.LogIn(loginVal, passVal))
       this.router.navigate(['/news']);
+    else this.loginForm.setErrors({ 'Неверный логин или пароль': true });
   }
 }

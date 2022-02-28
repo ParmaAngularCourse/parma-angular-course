@@ -14,17 +14,18 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
-import { EMPTY, map, of, switchMap, tap } from 'rxjs';
+import { EMPTY, map, of, skip, switchMap, tap } from 'rxjs';
 import { NewsPost } from 'src/models/NewsPost';
 import { NewsPostTag } from 'src/models/NewsPostTag';
 import { MyDateYearValidator } from 'src/validators/dateYearValidator';
+import { IDeactivateComponent } from '../close-page.guard';
 @Component({
   selector: 'app-news-post-modal-window',
   templateUrl: './news-post-modal-window.component.html',
   styleUrls: ['./news-post-modal-window.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class NewsPostModalWindowComponent {
+export class NewsPostModalWindowComponent implements IDeactivateComponent {
   @Input()
   newsPost: NewsPost | null | undefined;
   @Input() isOpen = false;
@@ -43,7 +44,7 @@ export class NewsPostModalWindowComponent {
   private editedTitle = '';
   private editedDate!: string;
   private editedTag = NewsPostTag.noTag;
-
+  private hasChanged!: boolean;
   constructor(private fb: FormBuilder) {}
 
   ngOnInit() {
@@ -77,7 +78,14 @@ export class NewsPostModalWindowComponent {
           );
         })
       )
-      .subscribe((form) => console.log('request end inner modal change' + JSON.stringify(form)));
+      .subscribe((form) =>
+        console.log('request end inner modal change' + JSON.stringify(form))
+      );
+
+    this.newsPostForm.valueChanges.subscribe((_) => {
+      console.log('changed');
+      this.hasChanged = true;
+    });
   }
 
   ngOnChanges() {
@@ -112,13 +120,16 @@ export class NewsPostModalWindowComponent {
     this.editedDate = '';
     this.editedTag = NewsPostTag.noTag;
     this.saveNews.emit(editedNewsPost);
+    this.hasChanged = false;
     this.onCancel();
   }
 
   onCancel() {
-    this.isOpen = false;
-    this.newsPost = null;
-    this.cancel.emit();
+    if (this.canDeactivate()) {
+      this.isOpen = false;
+      this.newsPost = null;
+      this.cancel.emit();
+    }
   }
 
   onTextInputChanged = (value: string) => {
@@ -137,4 +148,10 @@ export class NewsPostModalWindowComponent {
   onDateInputChanged = (value: string) => {
     this.editedDate = value;
   };
+
+  canDeactivate(): boolean {
+    return this.hasChanged
+      ? confirm('Имеются несохраненные изменения. Выйти со страницы?')
+      : true;
+  }
 }

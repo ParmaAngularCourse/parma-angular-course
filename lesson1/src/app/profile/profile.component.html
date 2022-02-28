@@ -54,7 +54,7 @@
   </ng-container>
 
   <div>
-    <input class="button" type="button" (click)="onSave()" value="Сохранить" [disabled]="!profileForm.valid"/>
+    <input class="button" type="button" (click)="onSave()" value="Сохранить" [disabled]="!profileForm.valid || !hasChanged"/>
     <input class="button" type="button" (click)="onCancel()" value="Отмена" />
   </div>
 </div>

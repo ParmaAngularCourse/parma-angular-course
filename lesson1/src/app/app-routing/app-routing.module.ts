@@ -9,7 +9,8 @@ import { MainComponent } from '../main/main.component';
 import { ClosePageGuard } from '../close-page.guard';
 
 const appRoutes: Routes = [
-  { path: '', redirectTo: 'news', pathMatch: 'full' },
+  { path: '', redirectTo: 'auth', pathMatch: 'full' },
+
   { path: 'auth', component: LoginComponent },
   {
     path: '',
@@ -20,7 +21,7 @@ const appRoutes: Routes = [
         path: 'profile',
         component: ProfileComponent,
         canActivate: [AuthGuard],
-        canDeactivate:[ ClosePageGuard]
+        canDeactivate: [ClosePageGuard],
       },
       {
         path: 'news',
@@ -29,6 +30,7 @@ const appRoutes: Routes = [
       },
     ],
   },
+  { path: '**', redirectTo: 'auth', pathMatch: 'full' },
 ];
 
 @NgModule({

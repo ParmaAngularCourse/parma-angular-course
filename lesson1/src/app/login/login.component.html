@@ -44,6 +44,15 @@
       [disabled]="!loginForm.valid"
     />
   </div>
+  <ng-container
+    [ngTemplateOutlet]="error"
+    [ngTemplateOutletContext]="{
+      show: loginForm?.errors,
+      error: {message:'Неверный логин или пароль'}
+    }"
+  >
+  </ng-container>
+
 </div>
 
 <ng-template
