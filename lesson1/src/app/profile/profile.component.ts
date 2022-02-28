@@ -1,6 +1,12 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+} from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { filter } from 'rxjs';
 import { AuthServiceService, User } from '../auth-service.service';
 import { IDeactivateComponent } from '../close-page.guard';
 
@@ -11,13 +17,20 @@ import { IDeactivateComponent } from '../close-page.guard';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProfileComponent implements OnInit, IDeactivateComponent {
-  constructor(private authService: AuthServiceService, private router: Router) {
-    const user = this.authService.GetUserData();
-    if (user) {
-      this.name = user.name ?? '';
-      this.secondName = user.surname ?? '';
-      this.email = user.email ?? '';
-    }
+  constructor(
+    private authService: AuthServiceService,
+    private router: Router,
+    private cdr: ChangeDetectorRef
+  ) {
+    this.authService
+      .GetUserData()
+      .pipe(filter((x) => !!x && Object.keys(x).length !== 0))
+      .subscribe((x) => { 
+        this.name = x?.name ?? '';
+        this.secondName = x?.surname ?? '';
+        this.email = x?.email ?? '';
+        console.log(x);
+      });
   }
 
   name: string = '';
@@ -35,12 +48,7 @@ export class ProfileComponent implements OnInit, IDeactivateComponent {
       ]),
       emailControl: new FormControl(this.email, [Validators.required]),
     });
-    const user = this.authService.GetUserData();
-    if (user) {
-      this.name = user.name ?? '';
-      this.secondName = user.surname ?? '';
-      this.email = user.email ?? '';
-    }
+
     this.profileForm.valueChanges.subscribe((_) => {
       this.hasChanged = true;
     });
@@ -57,11 +65,11 @@ export class ProfileComponent implements OnInit, IDeactivateComponent {
 
     this.hasChanged = false;
 
-    this.router.navigate(['..']);
+    this.router.navigate(['/news']);
   }
 
   onCancel() {
-    this.router.navigate(['..']);
+    this.router.navigate(['/news']);
   }
 
   canDeactivate(): boolean {

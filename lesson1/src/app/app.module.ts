@@ -26,6 +26,7 @@ import { AppRoutingModule } from './app-routing/app-routing.module';
 import { LoginComponent } from './login/login.component';
 import { TagSwitcherComponent } from './tag-switcher/tag-switcher.component';
 import { MainComponent } from './main/main.component';
+import { CookieService } from 'ngx-cookie-service';
 
 @NgModule({
   declarations: [
@@ -53,13 +54,14 @@ import { MainComponent } from './main/main.component';
     ReactiveFormsModule,
     AppRoutingModule,
   ],
-  // providers: [
-  //   {
-  //     provide: HTTP_INTERCEPTORS,
-  //     useClass: AuthInterseptorService,
-  //     multi: true,
-  //   },
-  // ],
+  providers: [/*
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterseptorService,
+      multi: true,
+    },*/
+    CookieService 
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

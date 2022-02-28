@@ -44,7 +44,7 @@ export class NewsPostModalWindowComponent implements IDeactivateComponent {
   private editedTitle = '';
   private editedDate!: string;
   private editedTag = NewsPostTag.noTag;
-  private hasChanged!: boolean;
+  private hasChanged: boolean = false;
   constructor(private fb: FormBuilder) {}
 
   ngOnInit() {
@@ -73,6 +73,8 @@ export class NewsPostModalWindowComponent implements IDeactivateComponent {
               this.editedText = form.textControl;
               this.editedDate = form.dateControl;
               this.editedTag = form.radioControl?.selectedTag;
+              this.hasChanged = false;
+
               return form;
             })
           );

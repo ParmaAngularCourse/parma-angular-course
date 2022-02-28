@@ -1,17 +1,33 @@
 import { Injectable } from '@angular/core';
 import { UserHasPemission } from 'src/models/userPermissions';
 import { UserService } from 'src/services/userService';
+import { CookieService } from 'ngx-cookie-service';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthServiceService {
   private user!: User | null;
-  constructor(private userService: UserService) {}
+  constructor(
+    private userService: UserService,
+    private cookieService: CookieService
+  ) {
+    this.userService.GetAll().subscribe({
+      next: (data) => {
+        this.user = data;
+
+        this.cookieService.set('IsLoggedIn', 'true');
+      },
+    });
+  }
 
   IsLoggedIn(): boolean {
-    console.log(this.user);
-    return !!this.user && !!this.user?.login;
+    const hasSomeValueInCookie = this.cookieService.get('IsLoggedIn');
+    
+    return !!hasSomeValueInCookie;
+    // console.log(this.user);
+    // return !!this.user && !!this.user?.login;
   }
 
   public AuthString(): string {
@@ -26,6 +42,8 @@ export class AuthServiceService {
     this.userService.GetAll().subscribe({
       next: (data) => {
         this.user = data;
+
+        this.cookieService.set('IsLoggedIn', 'true');
       },
     });
     if (this.user?.login === login && this.user?.password === password) {
@@ -37,13 +55,15 @@ export class AuthServiceService {
 
   public LogOut() {
     this.user = {} as User;
+    this.cookieService.delete('IsLoggedIn');
   }
 
-  public GetUserData(): User | null {
-    return this.user;
+  public GetUserData(): Observable<User | null> {
+   
+    return this.userService.GetAll();
   }
 
-  public Update(user:User){
+  public Update(user: User) {
     this.userService.Update(user);
   }
 }

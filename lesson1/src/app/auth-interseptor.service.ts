@@ -25,7 +25,7 @@ import { AuthServiceService } from './auth-service.service';
 //   ): Observable<HttpEvent<any>> {
 //     return next.handle(
 //       req.clone({
-//         headers: new HttpHeaders().set('Authorization', this.AuthString),
+//         headers: new HttpHeaders().set('Authorization', this.authService.IsUserAdmin().toString()),
 //       })
 //     );
 //   }
