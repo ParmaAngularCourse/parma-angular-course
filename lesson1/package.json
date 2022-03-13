@@ -18,6 +18,7 @@
     "@angular/platform-browser": "~13.0.0",
     "@angular/platform-browser-dynamic": "~13.0.0",
     "@angular/router": "~13.0.0",
+    "@ngrx/effects": "^13.0.2",
     "@ngrx/store": "^13.0.2",
     "moment": "^2.29.1",
     "ngx-cookie-service": "^13.1.2",

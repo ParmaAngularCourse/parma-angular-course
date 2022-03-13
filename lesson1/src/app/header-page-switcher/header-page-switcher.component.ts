@@ -1,12 +1,9 @@
 import {
-  Component,
-  OnInit,
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  OnDestroy,
+  ChangeDetectorRef, Component, OnDestroy, OnInit
 } from '@angular/core';
 import { Router } from '@angular/router';
-import { Subscription, tap } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { UserService } from 'src/services/userService';
 import { AuthService } from '../auth-service.service';
 

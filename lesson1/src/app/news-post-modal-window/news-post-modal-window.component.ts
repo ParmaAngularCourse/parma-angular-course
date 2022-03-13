@@ -97,24 +97,21 @@ export class NewsPostModalWindowComponent
 
   onEditSave() {
     console.log(this.editedTag);
+
     const currentEditablePost = new NewsPost();
-    currentEditablePost.id = this.newsPost?.id ?? -1;
-    currentEditablePost.title =
-      this.editedTitle === '' ? this.newsPost?.title ?? '' : this.editedTitle;
-    currentEditablePost.text =
-      this.editedText === '' ? this.newsPost?.text ?? '' : this.editedText;
-    currentEditablePost.uploadDate =
-      this.editedDate === '' ? this.newsPost!.uploadDate : this.editedDate;
+    currentEditablePost.id = -1;
+    currentEditablePost.title = this.newsPostForm.get('titleControl')?.value;
+    currentEditablePost.text = this.newsPostForm.get('textControl')?.value;
+    currentEditablePost.uploadDate = this.newsPostForm.get('dateControl')?.value;
     currentEditablePost.tag =
-      this.editedTag === NewsPostTag.noTag ? NewsPostTag.noTag : this.editedTag;
-    const editedNewsPost = new NewsPost(currentEditablePost);
-    console.log(editedNewsPost);
+      this.newsPostForm.get('radioControl')?.value.selectedTag;
+    console.log(currentEditablePost);
     this.newsPost = null;
     this.editedText = '';
     this.editedTitle = '';
     this.editedDate = '';
     this.editedTag = NewsPostTag.noTag;
-    this.saveNews.emit(editedNewsPost);
+    this.saveNews.emit(currentEditablePost);
     this.hasChanged = false;
     this.onCancel();
   }

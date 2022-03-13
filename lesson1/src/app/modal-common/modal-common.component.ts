@@ -17,7 +17,6 @@ export class ModalCommonComponent {
   constructor(private changeDetection: ChangeDetectorRef) {}
   @Input() isModalOpen!: boolean;
   @Input() operationTitle!: string;
-  @Input() changed!: Observable<boolean>;
 
   Open() {
     this.isModalOpen = true;

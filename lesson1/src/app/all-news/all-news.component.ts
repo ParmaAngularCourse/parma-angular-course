@@ -1,4 +1,3 @@
-import { HttpErrorResponse } from '@angular/common/http';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -9,21 +8,23 @@ import {
 } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { select, Store } from '@ngrx/store';
 import {
   debounceTime,
   distinctUntilChanged,
+  map,
   Observable,
+  pipe,
   Subscription,
   switchMap,
 } from 'rxjs';
+import { NewsPostTag } from 'src/models/NewsPostTag';
 import { NewsService } from 'src/services/newsService';
 import { UserService } from 'src/services/userService';
 import { NewsPost } from '../../models/NewsPost';
 import { User } from '../auth-service.service';
 import { ModalCommonComponent } from '../modal-common/modal-common.component';
-import { select, Store } from '@ngrx/store';
 import * as fromStore from '../store';
-import { NewsPostTag } from 'src/models/NewsPostTag';
 
 @Component({
   selector: 'app-all-news',
@@ -36,6 +37,7 @@ export class AllNewsComponent implements OnInit, OnDestroy {
 
   public search!: FormControl;
   public Tags = NewsPostTag;
+  news!: NewsPost[];
 
   private subscritionAdmin$!: Subscription;
   private subscritionUser$!: Subscription;
@@ -45,7 +47,6 @@ export class AllNewsComponent implements OnInit, OnDestroy {
   contextmenu = false;
   contextmenuX = 0;
   contextmenuY = 0;
-  news!: NewsPost[];
   postToEdit: NewsPost = new NewsPost();
   userPermission!: boolean;
   private subscrition!: Subscription;
@@ -53,8 +54,8 @@ export class AllNewsComponent implements OnInit, OnDestroy {
   searchClause: string = '';
   private user!: User;
 
-  storeNews$!: Observable<NewsPost[]>;
-  storeNewsCount$!: Observable<number>;
+  storeNews$!: Observable<NewsPost[] | undefined>;
+  storeNewsCount$!: Observable<number | undefined>;
 
   constructor(
     private _newsService: NewsService,
@@ -132,12 +133,7 @@ export class AllNewsComponent implements OnInit, OnDestroy {
   }
 
   onAddNewsPost(newsPost: NewsPost) {
-    const existedPostIndex = this.news.findIndex((x) => x.id === newsPost.id);
-    if (existedPostIndex > -1) {
-      this._newsService.Update(newsPost);
-    } else {
-      this._newsService.Add(newsPost);
-    }
+    this.store.dispatch(fromStore.addNewsPost({ post: newsPost }));
   }
 
   onDeleteSelected() {
@@ -186,34 +182,14 @@ export class AllNewsComponent implements OnInit, OnDestroy {
   }
 
   private PullData() {
+    this.store.dispatch(fromStore.loadPost());
+
     this._newsService.GetAll().subscribe((result) => {
       this.store.dispatch(fromStore.loadPostSuccess({ news: result }));
     });
-
-    this.subscrition = this._newsService.GetAll().subscribe({
-      next: (data) => {
-        this.news = data;
-        if (this.tagTitle)
-          this.news = this.news.filter(
-            (x) => x.tag.toString() === this.tagTitle
-          );
-        this.PushToRefresh();
-      },
-      error: (error: HttpErrorResponse) => {
-        console.log(error.status);
-      },
-    });
   }
 
-  private PushToRefresh() {
-    this.cdr.markForCheck();
-  }
-
-  public isAnySelected(): boolean {
-    return this.news.some((x) => x.isSelected);
-  }
-
-  public GetCountByTag(tag: NewsPostTag): Observable<number> {
+  public GetCountByTag(tag: NewsPostTag): Observable<number | undefined> {
     return this.store.pipe(select(fromStore.selectPostsByTag(tag)));
   }
 }

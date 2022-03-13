@@ -6,8 +6,8 @@ export function selectPosts(state: fromReducers.State) {
   return state.news.news;
 }
 export function selectPostsCount(state: fromReducers.State) {
-  return state.news.news.length;
+  return state.news.news?.length;
 }
 
 export const selectPostsByTag = (tag: NewsPostTag) =>
-  createSelector(selectPosts, (news) => news.filter((x) => x.tag == tag).length);
+  createSelector(selectPosts, (news) => news?.filter((x) => x.tag == tag).length);

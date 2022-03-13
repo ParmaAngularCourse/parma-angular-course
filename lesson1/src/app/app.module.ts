@@ -17,7 +17,6 @@ import {
   HttpClientModule,
   HTTP_INTERCEPTORS,
 } from '@angular/common/http';
-//import { AuthInterseptorService } from './auth-interseptor.service';
 import { NewsRadioControlComponent } from './news-radio-control/news-radio-control.component';
 import { RouterModule, Routes } from '@angular/router';
 import { ProfileComponent } from './profile/profile.component';
@@ -28,7 +27,8 @@ import { TagSwitcherComponent } from './tag-switcher/tag-switcher.component';
 import { MainComponent } from './main/main.component';
 import { CookieService } from 'ngx-cookie-service';
 import { StoreModule } from '@ngrx/store';
-import { reducers } from './store';
+import { effects, reducers } from './store';
+import { EffectsModule } from '@ngrx/effects';
 
 @NgModule({
   declarations: [
@@ -56,6 +56,7 @@ import { reducers } from './store';
     ReactiveFormsModule,
     AppRoutingModule,
     StoreModule.forRoot(reducers),
+    EffectsModule.forRoot(effects),
   ],
   providers: [/*
     {
