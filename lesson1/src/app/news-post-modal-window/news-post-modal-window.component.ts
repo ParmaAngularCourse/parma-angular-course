@@ -17,6 +17,7 @@ import {
 } from '@angular/forms';
 import {
   EMPTY,
+  filter,
   map,
   of,
   skip,
@@ -77,24 +78,7 @@ export class NewsPostModalWindowComponent
       }),
     });
 
-    this.newsPostForm.valueChanges.pipe(
-      tap(() => console.log('alive request inner modal change')),
-      switchMap((switchVal) => {
-        return of(switchVal).pipe(
-          map((form) => {
-            this.editedTitle = form.titleControl;
-            this.editedText = form.textControl;
-            this.editedDate = form.dateControl;
-            this.editedTag = form.radioControl?.selectedTag;
-            this.hasChanged = false;
-
-            return form;
-          })
-        );
-      })
-    );
-
-    this.subscription = this.newsPostForm.valueChanges.subscribe((_) => {
+    this.subscription = this.newsPostForm.valueChanges.subscribe((x) => {
       this.hasChanged = true;
     });
   }
@@ -142,23 +126,6 @@ export class NewsPostModalWindowComponent
       this.cancel.emit();
     }
   }
-
-  onTextInputChanged = (value: string) => {
-    this.editedText = value;
-    console.log(value);
-  };
-
-  onTitleInputChanged = (value: string) => {
-    this.editedTitle = value;
-  };
-
-  onRadioChange = (index: number) => {
-    this.editedTag = this.newsTags[index];
-  };
-
-  onDateInputChanged = (value: string) => {
-    this.editedDate = value;
-  };
 
   canDeactivate(): boolean {
     return this.hasChanged
