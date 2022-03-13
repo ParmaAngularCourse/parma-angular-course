@@ -9,9 +9,9 @@
     </li>
 
     <li>
-        <div class="enter-button" (click)="logOut()">
-          <button>Выход</button>
-        </div>
+      <div class="enter-button" (click)="logOut()">
+        <button>{{ userPermission ? "Выход" : "Вход" }}</button>
+      </div>
     </li>
   </ul>
 </div>
