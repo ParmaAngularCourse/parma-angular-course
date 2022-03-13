@@ -1,13 +1,17 @@
 import { Injectable } from '@angular/core';
+import { CookieService } from 'ngx-cookie-service';
 import { map, Observable } from 'rxjs';
-import { User } from 'src/app/auth-service.service';
+import { AuthService, User } from 'src/app/auth-service.service';
 import { UserRequestService } from './userRequestService';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UserService {
-  constructor(private readonly requestService: UserRequestService) {}
+  constructor(
+    private readonly requestService: UserRequestService,
+    private cookieService: CookieService
+  ) {}
 
   public GetAll(): Observable<User> {
     return this.requestService.Get();
@@ -30,6 +34,8 @@ export class UserService {
   }
 
   public Update(item: User) {
+    console.log(JSON.stringify(item));
     this.requestService.Update(item);
+    if (!item?.admin) this.cookieService.deleteAll('IsLoggedIn');
   }
 }

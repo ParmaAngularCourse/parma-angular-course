@@ -134,7 +134,6 @@ app.post("/api/user", jsonParser, function (req, res) {
 // обновление пользователя
 app.put("/api/user", jsonParser, function (req, res) {
   if (!req.body) return res.sendStatus(400);
-
   let data = fs.readFileSync(userPath, "utf8");
   const user = JSON.parse(data);
 

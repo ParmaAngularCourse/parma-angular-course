@@ -55,7 +55,7 @@ export class AuthService {
 
   public LogOut() {
     this.user = {} as User;
-    this.cookieService.delete('IsLoggedIn');
+    this.cookieService.deleteAll('IsLoggedIn');
     this.subscrition.unsubscribe();
   }
 

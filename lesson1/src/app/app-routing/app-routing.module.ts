@@ -10,7 +10,6 @@ import { ClosePageGuard } from '../close-page.guard';
 
 const appRoutes: Routes = [
   { path: '', redirectTo: 'news', pathMatch: 'full' },
-
   { path: 'auth', component: LoginComponent },
   {
     path: '',
@@ -28,7 +27,7 @@ const appRoutes: Routes = [
       },
     ],
   },
-  { path: '**', redirectTo: 'auth', pathMatch: 'full' },
+  { path: '**', redirectTo: 'news' },
 ];
 
 @NgModule({

@@ -33,7 +33,6 @@ export class UserRequestService {
             return user;
           })
         )
-
         .subscribe((value) => this.userSubject?.next(value));
     }
   }
@@ -42,8 +41,6 @@ export class UserRequestService {
     return this.userSubject!.asObservable();
   }
 
-  
-
   public Update(item: User) {
     const body = {
       login: item.login,
@@ -51,15 +48,14 @@ export class UserRequestService {
       name: item.name,
       surname: item.surname,
       email: item.email,
-      admin: item?.admin?? true,
+      admin: item?.admin ?? false,
     };
-    this.http
-      .put(API_USER_URL, {
-        body: body,
-        responseType: 'text',
-      });
-      console.log(body)
-      this.userSubject?.next(item);
+    this.http.put(API_USER_URL, {
+      body: body,
+      responseType: 'text',
+    }).subscribe();
+    console.log(body);
+    this.userSubject?.next(item);
   }
 }
 
