@@ -86,8 +86,7 @@ export class DataRequestService {
             console.log(posts);
           }
         })
-      )
-      .subscribe();
+      );
   }
 
   public Add(item: NewsPost) {
@@ -112,8 +111,7 @@ export class DataRequestService {
             console.log(posts);
           }
         })
-      )
-      .subscribe();
+      );
   }
 
   public Update(item: NewsPost) {
@@ -129,8 +127,7 @@ export class DataRequestService {
       .put(API_URL, {
         body: body,
         responseType: 'text',
-      })
-      .subscribe();
+      });
   }
 }
 

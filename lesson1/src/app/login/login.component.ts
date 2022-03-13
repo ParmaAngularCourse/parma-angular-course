@@ -6,7 +6,7 @@ import {
 } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AuthServiceService } from '../auth-service.service';
+import { AuthService } from '../auth-service.service';
 
 @Component({
   selector: 'app-login',
@@ -17,7 +17,7 @@ import { AuthServiceService } from '../auth-service.service';
 export class LoginComponent implements OnInit {
   constructor(
     private cdr: ChangeDetectorRef,
-    private authService: AuthServiceService,
+    private authService: AuthService,
     private router: Router
   ) {}
   loginForm!: FormGroup;

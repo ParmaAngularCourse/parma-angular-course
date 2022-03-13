@@ -2,32 +2,32 @@ import { Injectable } from '@angular/core';
 import { UserHasPemission } from 'src/models/userPermissions';
 import { UserService } from 'src/services/userService';
 import { CookieService } from 'ngx-cookie-service';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
-export class AuthServiceService {
+export class AuthService {
   private user!: User | null;
+  private subscrition!: Subscription;
+
   constructor(
     private userService: UserService,
     private cookieService: CookieService
   ) {
-    this.userService.GetAll().subscribe({
+    this.subscrition = this.userService.GetAll().subscribe({
       next: (data) => {
         this.user = data;
 
-        this.cookieService.set('IsLoggedIn', 'true');
+        if (data.admin) this.cookieService.set('IsLoggedIn', 'true');
       },
     });
   }
 
   IsLoggedIn(): boolean {
     const hasSomeValueInCookie = this.cookieService.get('IsLoggedIn');
-    
+
     return !!hasSomeValueInCookie;
-    // console.log(this.user);
-    // return !!this.user && !!this.user?.login;
   }
 
   public AuthString(): string {
@@ -39,7 +39,7 @@ export class AuthServiceService {
   }
 
   public LogIn(login: string, password: string): boolean {
-    this.userService.GetAll().subscribe({
+    this.subscrition = this.userService.GetAll().subscribe({
       next: (data) => {
         this.user = data;
 
@@ -56,10 +56,10 @@ export class AuthServiceService {
   public LogOut() {
     this.user = {} as User;
     this.cookieService.delete('IsLoggedIn');
+    this.subscrition.unsubscribe();
   }
 
   public GetUserData(): Observable<User | null> {
-   
     return this.userService.GetAll();
   }
 

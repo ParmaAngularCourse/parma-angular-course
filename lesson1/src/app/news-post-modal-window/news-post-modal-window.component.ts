@@ -4,6 +4,7 @@ import {
   ElementRef,
   EventEmitter,
   Input,
+  OnDestroy,
   OnInit,
   Output,
   ViewChild,
@@ -14,7 +15,16 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
-import { EMPTY, map, of, skip, switchMap, tap } from 'rxjs';
+import {
+  EMPTY,
+  map,
+  of,
+  skip,
+  Subscriber,
+  Subscription,
+  switchMap,
+  tap,
+} from 'rxjs';
 import { NewsPost } from 'src/models/NewsPost';
 import { NewsPostTag } from 'src/models/NewsPostTag';
 import { MyDateYearValidator } from 'src/validators/dateYearValidator';
@@ -25,7 +35,9 @@ import { IDeactivateComponent } from '../close-page.guard';
   styleUrls: ['./news-post-modal-window.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class NewsPostModalWindowComponent implements IDeactivateComponent {
+export class NewsPostModalWindowComponent
+  implements IDeactivateComponent, OnInit, OnDestroy
+{
   @Input()
   newsPost: NewsPost | null | undefined;
   @Input() isOpen = false;
@@ -45,6 +57,8 @@ export class NewsPostModalWindowComponent implements IDeactivateComponent {
   private editedDate!: string;
   private editedTag = NewsPostTag.noTag;
   private hasChanged: boolean = false;
+  private subscription!: Subscription;
+
   constructor(private fb: FormBuilder) {}
 
   ngOnInit() {
@@ -63,29 +77,24 @@ export class NewsPostModalWindowComponent implements IDeactivateComponent {
       }),
     });
 
-    this.newsPostForm.valueChanges
-      .pipe(
-        tap(() => console.log('alive request inner modal change')),
-        switchMap((switchVal) => {
-          return of(switchVal).pipe(
-            map((form) => {
-              this.editedTitle = form.titleControl;
-              this.editedText = form.textControl;
-              this.editedDate = form.dateControl;
-              this.editedTag = form.radioControl?.selectedTag;
-              this.hasChanged = false;
+    this.newsPostForm.valueChanges.pipe(
+      tap(() => console.log('alive request inner modal change')),
+      switchMap((switchVal) => {
+        return of(switchVal).pipe(
+          map((form) => {
+            this.editedTitle = form.titleControl;
+            this.editedText = form.textControl;
+            this.editedDate = form.dateControl;
+            this.editedTag = form.radioControl?.selectedTag;
+            this.hasChanged = false;
 
-              return form;
-            })
-          );
-        })
-      )
-      .subscribe((form) =>
-        console.log('request end inner modal change' + JSON.stringify(form))
-      );
+            return form;
+          })
+        );
+      })
+    );
 
-    this.newsPostForm.valueChanges.subscribe((_) => {
-      console.log('changed');
+    this.subscription = this.newsPostForm.valueChanges.subscribe((_) => {
       this.hasChanged = true;
     });
   }
@@ -155,5 +164,9 @@ export class NewsPostModalWindowComponent implements IDeactivateComponent {
     return this.hasChanged
       ? confirm('Имеются несохраненные изменения. Выйти со страницы?')
       : true;
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 }

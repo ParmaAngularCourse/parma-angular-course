@@ -1,6 +1,14 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  OnDestroy,
+} from '@angular/core';
 import { Router } from '@angular/router';
-import { AuthServiceService } from '../auth-service.service';
+import { Subscription, tap } from 'rxjs';
+import { UserService } from 'src/services/userService';
+import { AuthService } from '../auth-service.service';
 
 @Component({
   selector: 'app-header-page-switcher',
@@ -8,8 +16,20 @@ import { AuthServiceService } from '../auth-service.service';
   styleUrls: ['./header-page-switcher.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class HeaderPageSwitcherComponent implements OnInit {
-  constructor(private authService: AuthServiceService, private router: Router) {
+export class HeaderPageSwitcherComponent implements OnInit, OnDestroy {
+  userPermission!: boolean;
+  private subscrition!: Subscription;
+
+  constructor(
+    private authService: AuthService,
+    private userService: UserService,
+    private router: Router,
+    private cdr: ChangeDetectorRef
+  ) {
+    this.subscrition = this.userService.IsAdmin().subscribe((x) => {
+      this.userPermission = x;
+      this.cdr.markForCheck();
+    });
   }
 
   ngOnInit(): void {}
@@ -17,5 +37,9 @@ export class HeaderPageSwitcherComponent implements OnInit {
   logOut() {
     this.authService.LogOut();
     this.router.navigate(['auth']);
+  }
+
+  ngOnDestroy() {
+    this.subscrition.unsubscribe();
   }
 }

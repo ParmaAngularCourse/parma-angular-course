@@ -57,8 +57,7 @@ export class UserRequestService {
       .put(API_USER_URL, {
         body: body,
         responseType: 'text',
-      })
-      .subscribe();
+      });
       console.log(body)
       this.userSubject?.next(item);
   }

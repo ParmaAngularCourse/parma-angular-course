@@ -4,7 +4,7 @@
       <a routerLink="news">Новости</a>
     </li>
 
-    <li>
+    <li *ngIf="userPermission">
       <a routerLink="profile">Профиль</a>
     </li>
 

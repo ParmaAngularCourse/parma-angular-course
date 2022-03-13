@@ -3,6 +3,7 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  OnDestroy,
   OnInit,
   ViewChild,
 } from '@angular/core';
@@ -34,7 +35,11 @@ import { ModalCommonComponent } from '../modal-common/modal-common.component';
   styleUrls: ['./all-news.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AllNewsComponent implements OnInit {
+export class AllNewsComponent implements OnInit, OnDestroy {
+  private subscritionAdmin$!: Subscription;
+  private subscritionUser$!: Subscription;
+  private subscriptionTag$!: Subscription;
+  private subscritionFilter$!: Subscription;
   constructor(
     private _newsService: NewsService,
     private userService: UserService,
@@ -43,15 +48,19 @@ export class AllNewsComponent implements OnInit {
   ) {
     this.PullData();
 
-    this.userService.IsAdmin().subscribe((x) => (this.userPermission = x));
-    this.userService.GetAll().subscribe((x) => (this.user = x));
+    this.subscritionAdmin$ = this.userService
+      .IsAdmin()
+      .subscribe((x) => (this.userPermission = x));
+
+    this.subscritionUser$ = this.userService
+      .GetAll()
+      .subscribe((x) => (this.user = x));
   }
 
   ngOnInit(): void {
     this.search = new FormControl(this.searchClause, Validators.required);
-    this.search.valueChanges
+    this.subscritionFilter$ = this.search.valueChanges
       .pipe(
-        tap(() => console.log('alive request')),
         debounceTime(600),
         distinctUntilChanged(),
         switchMap(async (val) => this._newsService.Find(val))
@@ -63,15 +72,17 @@ export class AllNewsComponent implements OnInit {
           );
       });
 
-    this.activatedRoute.queryParams.subscribe((params) => {
-      if (typeof params['tag'] !== 'undefined') {
-        this.tagTitle = params['tag'];
-      } else {
-        this.tagTitle = null;
-      }
+    this.subscriptionTag$ = this.activatedRoute.queryParams.subscribe(
+      (params) => {
+        if (typeof params['tag'] !== 'undefined') {
+          this.tagTitle = params['tag'];
+        } else {
+          this.tagTitle = null;
+        }
 
-      this.PullData();
-    });
+        this.PullData();
+      }
+    );
   }
 
   @ViewChild(ModalCommonComponent) public modalComponent!: ModalCommonComponent;
@@ -154,6 +165,10 @@ export class AllNewsComponent implements OnInit {
 
   ngOnDestroy() {
     this.subscrition.unsubscribe();
+    this.subscritionAdmin$.unsubscribe();
+    this.subscritionUser$.unsubscribe();
+    this.subscriptionTag$.unsubscribe();
+    this.subscritionFilter$.unsubscribe();
   }
 
   private PullData() {
