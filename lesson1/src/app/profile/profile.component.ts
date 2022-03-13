@@ -22,18 +22,6 @@ export class ProfileComponent
 {
   private userSubscription!: Subscription;
   private formSubscription!: Subscription;
-
-  constructor(private authService: AuthService, private router: Router) {
-    this.userSubscription = this.authService
-      .GetUserData()
-      .pipe(filter((x) => !!x && Object.keys(x).length !== 0))
-      .subscribe((x) => {
-        this.name = x?.name ?? '';
-        this.secondName = x?.surname ?? '';
-        this.email = x?.email ?? '';
-      });
-  }
-
   name: string = '';
   secondName: string = '';
   email: string = '';
@@ -41,18 +29,31 @@ export class ProfileComponent
 
   profileForm!: FormGroup;
   hasChanged = false;
-  ngOnInit(): void {
-    this.profileForm = new FormGroup({
-      nameControl: new FormControl(this.name, [Validators.required]),
-      secondNameControl: new FormControl(this.secondName, [
-        Validators.required,
-      ]),
-      emailControl: new FormControl(this.email, [Validators.required]),
-    });
 
-    this.formSubscription = this.profileForm.valueChanges.subscribe((_) => {
-      this.hasChanged = true;
-    });
+  constructor(private authService: AuthService, private router: Router) {}
+
+  ngOnInit(): void {
+    this.userSubscription = this.authService
+      .GetUserData()
+      .pipe(filter((x) => !!x && Object.keys(x).length !== 0))
+      .subscribe((x) => {
+        console.log(JSON.stringify(x));
+        this.name = x?.name ?? '';
+        this.secondName = x?.surname ?? '';
+        this.email = x?.email ?? '';
+
+        this.profileForm = new FormGroup({
+          nameControl: new FormControl(this.name, [Validators.required]),
+          secondNameControl: new FormControl(this.secondName, [
+            Validators.required,
+          ]),
+          emailControl: new FormControl(this.email, [Validators.required]),
+        });
+
+        this.formSubscription = this.profileForm.valueChanges.subscribe((_) => {
+          this.hasChanged = true;
+        });
+      });
   }
 
   onSave() {
