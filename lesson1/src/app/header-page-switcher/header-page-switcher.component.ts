@@ -35,8 +35,9 @@ export class HeaderPageSwitcherComponent implements OnInit, OnDestroy {
   ngOnInit(): void {}
 
   logOut() {
-    this.authService.LogOut();
-    this.router.navigate(['auth']);
+    if (this.userPermission) this.authService.LogOut();
+    else this.router.navigate(['auth']);
+    this.cdr.markForCheck();
   }
 
   ngOnDestroy() {

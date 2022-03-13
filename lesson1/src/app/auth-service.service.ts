@@ -26,7 +26,6 @@ export class AuthService {
 
   IsLoggedIn(): boolean {
     const hasSomeValueInCookie = this.cookieService.get('IsLoggedIn');
-
     return !!hasSomeValueInCookie;
   }
 
@@ -39,24 +38,21 @@ export class AuthService {
   }
 
   public LogIn(login: string, password: string): boolean {
-    this.subscrition = this.userService.GetAll().subscribe({
+    this.subscrition = this.userService.Login(login, password).subscribe({
       next: (data) => {
         this.user = data;
-
         this.cookieService.set('IsLoggedIn', 'true');
       },
     });
-    if (this.user?.login === login && this.user?.password === password) {
-      return true;
-    } else this.user = null;
 
     return false;
   }
 
   public LogOut() {
-    this.user = {} as User;
+    console.log(JSON.stringify(this.user));
+    this.user!.admin = false;
+    this.Update(this.user!);
     this.cookieService.deleteAll('IsLoggedIn');
-    this.subscrition.unsubscribe();
   }
 
   public GetUserData(): Observable<User | null> {

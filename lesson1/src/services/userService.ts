@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
-import { map, Observable } from 'rxjs';
+import { map, Observable, take, tap } from 'rxjs';
 import { AuthService, User } from 'src/app/auth-service.service';
 import { UserRequestService } from './userRequestService';
 
@@ -17,11 +17,21 @@ export class UserService {
     return this.requestService.Get();
   }
 
-  public Login(login: string, password: string): Observable<boolean> {
+  public Login(login: string, password: string): Observable<User> {
     return this.GetAll().pipe(
+      take(1),
+      tap((x) => console.log(JSON.stringify(x))),
       map((x) => {
-        return x.login == login && x.password === password;
+        if (x?.login === login && x?.password === password) {
+          x.admin = true;
+          return x;
+        } else return {} as User;
       })
+      // ,
+      // tap((user) => {
+      //   if (!!user  && Object.keys(user).length !== 0) this.Update(user);
+      // }
+      // )
     );
   }
 
@@ -34,7 +44,6 @@ export class UserService {
   }
 
   public Update(item: User) {
-    console.log(JSON.stringify(item));
     this.requestService.Update(item);
     if (!item?.admin) this.cookieService.deleteAll('IsLoggedIn');
   }
