@@ -5,7 +5,7 @@ import {
   Input,
   OnInit,
 } from '@angular/core';
-import { IDeactivateComponent } from '../close-page.guard';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-modal-common',
@@ -17,6 +17,7 @@ export class ModalCommonComponent {
   constructor(private changeDetection: ChangeDetectorRef) {}
   @Input() isModalOpen!: boolean;
   @Input() operationTitle!: string;
+  @Input() changed!: Observable<boolean>;
 
   Open() {
     this.isModalOpen = true;

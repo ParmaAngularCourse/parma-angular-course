@@ -8,27 +8,23 @@ import {
   ViewChild,
 } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import {
-  bufferCount,
   debounceTime,
   distinctUntilChanged,
-  filter,
-  from,
   Observable,
-  of,
-  startWith,
   Subscription,
   switchMap,
-  tap,
-  toArray,
 } from 'rxjs';
-import { UserHasPemission } from 'src/models/userPermissions';
 import { NewsService } from 'src/services/newsService';
 import { UserService } from 'src/services/userService';
 import { NewsPost } from '../../models/NewsPost';
 import { User } from '../auth-service.service';
 import { ModalCommonComponent } from '../modal-common/modal-common.component';
+import { select, Store } from '@ngrx/store';
+import * as fromStore from '../store';
+import { NewsPostTag } from 'src/models/NewsPostTag';
+
 @Component({
   selector: 'app-all-news',
   templateUrl: './all-news.component.html',
@@ -36,17 +32,42 @@ import { ModalCommonComponent } from '../modal-common/modal-common.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AllNewsComponent implements OnInit, OnDestroy {
+  @ViewChild(ModalCommonComponent) public modalComponent!: ModalCommonComponent;
+
+  public search!: FormControl;
+  public Tags = NewsPostTag;
+
   private subscritionAdmin$!: Subscription;
   private subscritionUser$!: Subscription;
   private subscriptionTag$!: Subscription;
   private subscritionFilter$!: Subscription;
+  isModalOpen: boolean = false;
+  contextmenu = false;
+  contextmenuX = 0;
+  contextmenuY = 0;
+  news!: NewsPost[];
+  postToEdit: NewsPost = new NewsPost();
+  userPermission!: boolean;
+  private subscrition!: Subscription;
+  private tagTitle: string | null = null;
+  searchClause: string = '';
+  private user!: User;
+
+  storeNews$!: Observable<NewsPost[]>;
+  storeNewsCount$!: Observable<number>;
+
   constructor(
     private _newsService: NewsService,
     private userService: UserService,
     private cdr: ChangeDetectorRef,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private router: Router,
+    private store: Store<fromStore.State>
   ) {
     this.PullData();
+
+    this.storeNews$ = this.store.pipe(select(fromStore.selectPosts));
+    this.storeNewsCount$ = this.store.pipe(select(fromStore.selectPostsCount));
 
     this.subscritionAdmin$ = this.userService
       .IsAdmin()
@@ -55,6 +76,13 @@ export class AllNewsComponent implements OnInit, OnDestroy {
     this.subscritionUser$ = this.userService
       .GetAll()
       .subscribe((x) => (this.user = x));
+
+    router.events.subscribe((_) => {
+      console.log('changed1');
+      this.tagTitle = null;
+      this.search = new FormControl('', Validators.required);
+      this.search.updateValueAndValidity();
+    });
   }
 
   ngOnInit(): void {
@@ -85,20 +113,6 @@ export class AllNewsComponent implements OnInit, OnDestroy {
     );
   }
 
-  @ViewChild(ModalCommonComponent) public modalComponent!: ModalCommonComponent;
-
-  isModalOpen: boolean = false;
-  contextmenu = false;
-  contextmenuX = 0;
-  contextmenuY = 0;
-  news!: NewsPost[];
-  postToEdit: NewsPost = new NewsPost();
-  userPermission!: boolean;
-  private subscrition!: Subscription;
-  public search!: FormControl;
-  private tagTitle: string | null = null;
-  searchClause: string = '';
-  private user!: User;
   onDeletePost(postId: number) {
     this._newsService.Delete([postId]);
   }
@@ -172,6 +186,10 @@ export class AllNewsComponent implements OnInit, OnDestroy {
   }
 
   private PullData() {
+    this._newsService.GetAll().subscribe((result) => {
+      this.store.dispatch(fromStore.loadPostSuccess({ news: result }));
+    });
+
     this.subscrition = this._newsService.GetAll().subscribe({
       next: (data) => {
         this.news = data;
@@ -193,5 +211,9 @@ export class AllNewsComponent implements OnInit, OnDestroy {
 
   public isAnySelected(): boolean {
     return this.news.some((x) => x.isSelected);
+  }
+
+  public GetCountByTag(tag: NewsPostTag): Observable<number> {
+    return this.store.pipe(select(fromStore.selectPostsByTag(tag)));
   }
 }

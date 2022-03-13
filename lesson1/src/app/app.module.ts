@@ -27,6 +27,8 @@ import { LoginComponent } from './login/login.component';
 import { TagSwitcherComponent } from './tag-switcher/tag-switcher.component';
 import { MainComponent } from './main/main.component';
 import { CookieService } from 'ngx-cookie-service';
+import { StoreModule } from '@ngrx/store';
+import { reducers } from './store';
 
 @NgModule({
   declarations: [
@@ -53,6 +55,7 @@ import { CookieService } from 'ngx-cookie-service';
     HttpClientModule,
     ReactiveFormsModule,
     AppRoutingModule,
+    StoreModule.forRoot(reducers),
   ],
   providers: [/*
     {
