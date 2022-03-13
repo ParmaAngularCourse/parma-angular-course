@@ -38,14 +38,19 @@ export class AuthService {
   }
 
   public LogIn(login: string, password: string): boolean {
-    this.subscrition = this.userService.Login(login, password).subscribe({
-      next: (data) => {
-        this.user = data;
-        this.cookieService.set('IsLoggedIn', 'true');
-      },
-    });
+    this.subscrition = this.userService
+      .Login(login, password)
+      .subscribe((user) => {
+        if (Object.keys(user).length !== 0) {
+          this.user = user;
+          this.cookieService.set('IsLoggedIn', 'true');
+        } else {
+          this.user = null;
+          this.cookieService.deleteAll('IsLoggedIn');
+        }
+      });
 
-    return false;
+    return !!this.cookieService.get('IsLoggedIn');
   }
 
   public LogOut() {
