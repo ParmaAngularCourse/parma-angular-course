@@ -72,6 +72,7 @@ export class AllNewsComponent implements OnInit, OnDestroy {
       .subscribe((x) => {
         this.searchClause = x.get('clause');
       });
+
     this.search = new FormControl(this.searchClause, Validators.required);
 
     this.subscritionFilter$ = this.search.valueChanges
@@ -79,16 +80,15 @@ export class AllNewsComponent implements OnInit, OnDestroy {
         debounceTime(600),
         distinctUntilChanged(),
         tap((x: string) => {
-          if (x!== '')
+          if (x !== '')
             this.router.navigate([], {
-              queryParams: {'clause': x},
+              queryParams: { clause: x },
               queryParamsHandling: 'merge',
             });
         }),
         switchMap(async (val) => {
           this._newsService.Find(val);
-        }),
-        
+        })
       )
       .subscribe(() => {
         if (this.tagTitle)
@@ -109,6 +109,19 @@ export class AllNewsComponent implements OnInit, OnDestroy {
         this.PullData();
       }
     );
+
+    this.activatedRoute.queryParamMap
+      .pipe(
+        filter((x) => x.has('operation')),
+        debounceTime(200)
+      )
+      .subscribe((x) => {
+        if (x.get('operation') === 'add') this.onAddPost();
+        else {
+          if (x.has('itemId') && x.get('operation') === 'edit')
+            this.onEditPost(parseInt(x.get('itemId')!));
+        }
+      });
   }
 
   @ViewChild(ModalCommonComponent) public modalComponent!: ModalCommonComponent;
@@ -124,6 +137,13 @@ export class AllNewsComponent implements OnInit, OnDestroy {
 
   onAddPost() {
     this.postToEdit = new NewsPost();
+    this.router.navigate([], {
+      relativeTo: this.activatedRoute,
+      queryParams: {
+        operation: 'add',
+      },
+      queryParamsHandling: 'merge',
+    });
     this.modalComponent.Open();
   }
 
