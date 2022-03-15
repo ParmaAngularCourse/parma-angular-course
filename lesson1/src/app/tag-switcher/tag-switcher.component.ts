@@ -1,3 +1,4 @@
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import {
   Component,
   OnInit,
@@ -6,8 +7,8 @@ import {
   HostBinding,
   Input,
 } from '@angular/core';
-import { Router } from '@angular/router';
-import { of } from 'rxjs';
+import { ActivatedRoute, Router } from '@angular/router';
+import { filter, of } from 'rxjs';
 import { NewsPostTag } from 'src/models/NewsPostTag';
 import { GetStyleFromTag } from 'src/services/tagStyleService';
 import { AllNewsComponent } from '../all-news/all-news.component';
@@ -22,15 +23,30 @@ export class TagSwitcherComponent implements OnInit {
   constructor(
     private cdr: ChangeDetectorRef,
     private newsComponent: AllNewsComponent,
+    private route: ActivatedRoute,
     private router: Router
   ) {}
 
   newsTags = Object.values(NewsPostTag);
-  ngOnInit(): void {}
+  private newsTagsKeys = Object.keys(NewsPostTag);
+
+  ngOnInit(): void {
+    this.route.queryParamMap
+      .pipe(filter((x) => x.has('tag')))
+      .subscribe((x) => {
+        const tagUrlVal: string = x.get('tag')!;
+
+        this.selectedTagKey = this.newsTags.findIndex((x) => x == tagUrlVal);
+      });
+  }
   selectedTagKey: number = 0;
+
   onTagClick(i: number) {
     this.selectedTagKey = i;
     const params = i !== 0 ? { tag: this.newsTags[i] } : null;
-    this.router.navigate([], { queryParams: params });
+    this.router.navigate([], {
+      queryParams: params,
+      queryParamsHandling: 'merge',
+    });
   }
 }

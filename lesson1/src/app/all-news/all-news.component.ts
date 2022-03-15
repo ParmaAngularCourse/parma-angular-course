@@ -10,20 +10,13 @@ import {
 import { FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
-  bufferCount,
   debounceTime,
   distinctUntilChanged,
   filter,
-  from,
-  Observable,
-  of,
-  startWith,
   Subscription,
   switchMap,
   tap,
-  toArray,
 } from 'rxjs';
-import { UserHasPemission } from 'src/models/userPermissions';
 import { NewsService } from 'src/services/newsService';
 import { UserService } from 'src/services/userService';
 import { NewsPost } from '../../models/NewsPost';
@@ -52,6 +45,7 @@ export class AllNewsComponent implements OnInit, OnDestroy {
   public search!: FormControl;
   private tagTitle: string | null = null;
   private user!: User;
+  private searchClause: string | null = '';
 
   constructor(
     private _newsService: NewsService,
@@ -72,15 +66,29 @@ export class AllNewsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.search = new FormControl('', Validators.required);
+    this.searchClause = '';
+    this.activatedRoute.queryParamMap
+      .pipe(filter((x) => x.has('clause')))
+      .subscribe((x) => {
+        this.searchClause = x.get('clause');
+      });
+    this.search = new FormControl(this.searchClause, Validators.required);
 
     this.subscritionFilter$ = this.search.valueChanges
       .pipe(
         debounceTime(600),
         distinctUntilChanged(),
+        tap((x: string) => {
+          if (x!== '')
+            this.router.navigate([], {
+              queryParams: {'clause': x},
+              queryParamsHandling: 'merge',
+            });
+        }),
         switchMap(async (val) => {
           this._newsService.Find(val);
-        })
+        }),
+        
       )
       .subscribe(() => {
         if (this.tagTitle)
