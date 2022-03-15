@@ -54,7 +54,6 @@ export class UserRequestService {
       body: body,
       responseType: 'text',
     }).subscribe();
-    console.log(body);
     this.userSubject?.next(item);
   }
 }

@@ -37,7 +37,6 @@ export class ProfileComponent
       .GetUserData()
       .pipe(filter((x) => !!x && Object.keys(x).length !== 0))
       .subscribe((x) => {
-        console.log(JSON.stringify(x));
         this.name = x?.name ?? '';
         this.secondName = x?.surname ?? '';
         this.email = x?.email ?? '';
@@ -62,7 +61,6 @@ export class ProfileComponent
       surname: this.profileForm.controls['secondNameControl'].value,
       email: this.profileForm.controls['emailControl'].value,
     } as User;
-    console.log(user);
     this.authService.Update(user);
 
     this.hasChanged = false;

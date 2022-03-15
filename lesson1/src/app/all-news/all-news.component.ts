@@ -8,7 +8,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import {
   bufferCount,
   debounceTime,
@@ -40,11 +40,25 @@ export class AllNewsComponent implements OnInit, OnDestroy {
   private subscritionUser$!: Subscription;
   private subscriptionTag$!: Subscription;
   private subscritionFilter$!: Subscription;
+
+  isModalOpen: boolean = false;
+  contextmenu = false;
+  contextmenuX = 0;
+  contextmenuY = 0;
+  news!: NewsPost[];
+  postToEdit: NewsPost = new NewsPost();
+  userPermission!: boolean;
+  private subscrition!: Subscription;
+  public search!: FormControl;
+  private tagTitle: string | null = null;
+  private user!: User;
+
   constructor(
     private _newsService: NewsService,
     private userService: UserService,
     private cdr: ChangeDetectorRef,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private router: Router
   ) {
     this.PullData();
 
@@ -58,12 +72,15 @@ export class AllNewsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.search = new FormControl(this.searchClause, Validators.required);
+    this.search = new FormControl('', Validators.required);
+
     this.subscritionFilter$ = this.search.valueChanges
       .pipe(
         debounceTime(600),
         distinctUntilChanged(),
-        switchMap(async (val) => this._newsService.Find(val))
+        switchMap(async (val) => {
+          this._newsService.Find(val);
+        })
       )
       .subscribe(() => {
         if (this.tagTitle)
@@ -71,6 +88,7 @@ export class AllNewsComponent implements OnInit, OnDestroy {
             (x) => x.tag.toString() === this.tagTitle
           );
       });
+    this.search.updateValueAndValidity();
 
     this.subscriptionTag$ = this.activatedRoute.queryParams.subscribe(
       (params) => {
@@ -87,18 +105,6 @@ export class AllNewsComponent implements OnInit, OnDestroy {
 
   @ViewChild(ModalCommonComponent) public modalComponent!: ModalCommonComponent;
 
-  isModalOpen: boolean = false;
-  contextmenu = false;
-  contextmenuX = 0;
-  contextmenuY = 0;
-  news!: NewsPost[];
-  postToEdit: NewsPost = new NewsPost();
-  userPermission!: boolean;
-  private subscrition!: Subscription;
-  public search!: FormControl;
-  private tagTitle: string | null = null;
-  searchClause: string = '';
-  private user!: User;
   onDeletePost(postId: number) {
     this._newsService.Delete([postId]);
   }
@@ -169,6 +175,8 @@ export class AllNewsComponent implements OnInit, OnDestroy {
     this.subscritionUser$.unsubscribe();
     this.subscriptionTag$.unsubscribe();
     this.subscritionFilter$.unsubscribe();
+
+    this.news = [];
   }
 
   private PullData() {

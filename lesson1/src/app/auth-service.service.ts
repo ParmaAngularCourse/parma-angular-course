@@ -54,7 +54,6 @@ export class AuthService {
   }
 
   public LogOut() {
-    console.log(JSON.stringify(this.user));
     this.user!.admin = false;
     this.Update(this.user!);
     this.cookieService.deleteAll('IsLoggedIn');

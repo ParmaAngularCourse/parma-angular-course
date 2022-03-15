@@ -12,7 +12,6 @@ export class NewsTagStyleDirectiveDirective {
   constructor() { }
 
   ngOnChanges(){
-    console.log(this.tagValue);
     this.backColorStyle =  GetStyleFromTag(this.tagValue);
   }
 }

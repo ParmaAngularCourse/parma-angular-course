@@ -20,7 +20,6 @@ export class UserService {
   public Login(login: string, password: string): Observable<User> {
     return this.GetAll().pipe(
       take(1),
-      tap((x) => console.log(JSON.stringify(x))),
       map((x) => {
         if (x?.login === login && x?.password === password) {
           x.admin = true;

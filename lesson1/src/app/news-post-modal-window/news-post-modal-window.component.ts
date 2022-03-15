@@ -96,7 +96,6 @@ export class NewsPostModalWindowComponent
   }
 
   onEditSave() {
-    console.log(this.editedTag);
     const currentEditablePost = new NewsPost();
     currentEditablePost.id = this.newsPost?.id ?? -1;
     currentEditablePost.title =
@@ -108,7 +107,6 @@ export class NewsPostModalWindowComponent
     currentEditablePost.tag =
       this.editedTag === NewsPostTag.noTag ? NewsPostTag.noTag : this.editedTag;
     const editedNewsPost = new NewsPost(currentEditablePost);
-    console.log(editedNewsPost);
     this.newsPost = null;
     this.editedText = '';
     this.editedTitle = '';

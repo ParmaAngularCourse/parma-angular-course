@@ -67,7 +67,6 @@ export class NewsRadioControlComponent
     this.selectedTagKey = this.controlValue.newsTags.indexOf(
       this.controlValue.selectedTag!
     );
-    console.log('selectedTag' + this.selectedTagKey);
     this.cdr.markForCheck();
   }
   registerOnChange(fn: any): void {
@@ -90,7 +89,6 @@ type ControlRadioValue = {
 };
 
 function validate(control: AbstractControl): ValidationErrors | null {
-  console.log('onValidate' + JSON.stringify(control.value));
   if (control.value.selectedTag === "" || control.value.selectedTag === undefined)
     return {
       message: 'не выбран тип новости',
