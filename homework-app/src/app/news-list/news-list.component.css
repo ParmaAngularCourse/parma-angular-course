@@ -28,3 +28,10 @@
     display: table;
     clear: both;
 }
+
+.newsCount {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 12px;
+    margin-top: 10px;
+    margin-right: 10px;
+}

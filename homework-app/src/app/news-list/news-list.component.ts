@@ -2,10 +2,12 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { debounceTime, distinctUntilChanged, forkJoin, Subject, switchMap, takeUntil, from, toArray, bufferCount, startWith } from 'rxjs';
+import { debounceTime, distinctUntilChanged, forkJoin, Subject, switchMap, takeUntil, from, toArray, bufferCount, startWith, Observable, Subscription } from 'rxjs';
 import { NewsService } from '../news.service';
 import { ContextMenuComponent } from './context-menu/context-menu.component';
 import { News, NewsType } from './news-types';
+import { select, Store } from '@ngrx/store';
+import * as fromStore from '../store';
 
 @Component({
   selector: 'app-news-list',
@@ -13,12 +15,16 @@ import { News, NewsType } from './news-types';
   styleUrls: ['./news-list.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class NewsListComponent implements OnInit, OnDestroy {
+export class NewsListComponent implements /*OnInit,*/ OnDestroy {
 
   public search!: FormControl;
   public searchStr: string = '';
 
   public newsGrid: News[][] = [];
+
+  public news$!: Observable<News[]> | undefined;
+  public count$!: Observable<number | undefined>;
+  public countsNewsByType = new Map<any, Observable<number | undefined>>();
 
   @ViewChild("contextMenuComponent") private viewContextMenu!: ContextMenuComponent;
 
@@ -26,11 +32,24 @@ export class NewsListComponent implements OnInit, OnDestroy {
   private newsTypeFilter: NewsType | null = null;
 
   constructor(private _newsService: NewsService, private cdr: ChangeDetectorRef,
-    private route: ActivatedRoute, private router: Router) {
+    private route: ActivatedRoute, private router: Router, private store: Store<fromStore.State>) {
     this.ngUnsubscribe$ = new Subject();
+    
+    this.countsNewsByType = new Map<any, Observable<number | undefined>>();
+
+    this.store.dispatch(fromStore.loadNews());
+
+    this.news$ = this.store.pipe(select(fromStore.selectNews));
+    this.count$ = this.store.pipe(select(fromStore.selectNewsCount));
+  
+    const newsTypes = this.getNewsTypeFilters();
+    newsTypes.forEach(newsType => {
+      const newsTypeCount = this.store.pipe(select(fromStore.selectNewsByTypeCount(newsType.name)));
+      this.countsNewsByType.set(newsType, newsTypeCount);
+    });
   }
 
-  ngOnInit(): void {
+  /*ngOnInit(): void {
     this.search = new FormControl(this.searchStr);
     this.search.valueChanges.pipe(
       debounceTime(600),
@@ -78,7 +97,7 @@ export class NewsListComponent implements OnInit, OnDestroy {
         error: (error: HttpErrorResponse) => { console.log(`${error.status} ${error.message}`); }
       }
     );
-  }
+  }*/
 
   ngOnDestroy(): void {
       this.ngUnsubscribe$.next(true);
@@ -124,5 +143,23 @@ export class NewsListComponent implements OnInit, OnDestroy {
     this.newsGrid = this.newsGrid.map(row => {
       return row.map(el => { return {...el, selected: true} })
     });
+  }
+
+  getNewsTypeFilters() {
+    const keysAndValues = Object.entries(NewsType);
+    const typeValues : any[] = [];
+
+    keysAndValues.forEach((keyAndValue: any) => {
+        typeValues.push(
+          {
+            value: keyAndValue[0],
+            name: keyAndValue[1]
+          });
+    });
+
+    return typeValues;
+  }
+  getKeys(map: any) : any {
+    return Array.from(map.keys());
   }
 }

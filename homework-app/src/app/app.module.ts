@@ -20,6 +20,10 @@ import { ProfileComponent } from './profile/profile.component';
 import { NewsTypeFiltersComponent } from './news-type-filters/news-type-filters.component';
 import { NewsPageComponent } from './news-page/news-page.component';
 import { AuthorizationComponent } from './authorization/authorization.component';
+import { StoreModule } from '@ngrx/store';
+import { reducers } from './store';
+import { EffectsModule } from '@ngrx/effects';
+import { effects } from './store/effects';
 
 @NgModule({
   declarations: [
@@ -43,7 +47,9 @@ import { AuthorizationComponent } from './authorization/authorization.component'
     BrowserModule,
     HttpClientModule,
     ReactiveFormsModule,
-    AppRoutingModule
+    AppRoutingModule,
+    StoreModule.forRoot(reducers),
+    EffectsModule.forRoot(effects)
   ],
   providers: [
     {

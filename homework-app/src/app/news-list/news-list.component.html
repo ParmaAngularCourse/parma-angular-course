@@ -6,11 +6,9 @@
             <label for="search">Поиск: </label>
             <input type="text" id="search" [formControl]="search"/>
         </div>
-        <div class="row" *ngFor="let row of newsGrid">
-            <div class="column" *ngFor="let news of row">
-                <app-news [newsItem]='news' (removeNews)='onRemoveNews($event)' (editNews)='openEditNewsDialog($event)'></app-news>
-            </div>
-        </div>
+        <app-news [newsItem]="item" *ngFor="let item of news$ | async" (removeNews)='onRemoveNews($event)' (editNews)='openEditNewsDialog($event)'></app-news>
+        <div class="newsCount">Все: {{count$ | async}}</div>
+        <div class="newsCount" *ngFor="let key of getKeys(countsNewsByType)">{{key.name}}: {{countsNewsByType.get(key) | async}}</div>
     </div>
     <app-context-menu #contextMenuComponent (selectAll)="onSelectAll()"></app-context-menu>
 </div>
