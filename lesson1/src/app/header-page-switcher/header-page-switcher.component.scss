@@ -1,0 +1,27 @@
+li {
+  display: inline-block;
+  margin: 10px;
+  cursor: pointer;
+}
+a {
+  color: wheat;
+}
+a:hover {
+  background-color: slategray;
+}
+.header-main {
+  background-color: darkslategrey;
+}
+.is-selected {
+  font-weight: bold;
+  color: wheat;
+  background-color: darkblue;
+}
+
+.enter-button,
+.exit-button {
+  color: rgb(228, 202, 155);
+  position: fixed;
+  right: 10%;
+}
+

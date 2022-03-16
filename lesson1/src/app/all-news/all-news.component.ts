@@ -3,24 +3,24 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  OnDestroy,
   OnInit,
   ViewChild,
 } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 import {
-  bufferCount,
   debounceTime,
   distinctUntilChanged,
-  from,
-  startWith,
+  filter,
   Subscription,
   switchMap,
   tap,
-  toArray,
 } from 'rxjs';
-import { UserHasPemission } from 'src/models/userPermissions';
 import { NewsService } from 'src/services/newsService';
+import { UserService } from 'src/services/userService';
 import { NewsPost } from '../../models/NewsPost';
+import { User } from '../auth-service.service';
 import { ModalCommonComponent } from '../modal-common/modal-common.component';
 @Component({
   selector: 'app-all-news',
@@ -28,27 +28,11 @@ import { ModalCommonComponent } from '../modal-common/modal-common.component';
   styleUrls: ['./all-news.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AllNewsComponent implements OnInit {
-  constructor(
-    private _newsService: NewsService,
-    private cdr: ChangeDetectorRef
-  ) {
-    this.PullData();
-  }
-
-  ngOnInit(): void {
-    this.search = new FormControl(this.searchClause, Validators.required);
-    this.search.valueChanges
-      .pipe(
-        tap(() => console.log('alive request')),
-        debounceTime(600),
-        distinctUntilChanged(),
-        switchMap(async (val) => this._newsService.Find(val))
-      )
-      .subscribe(() => console.log('request end'));
-  }
-
-  @ViewChild(ModalCommonComponent) public modalComponent!: ModalCommonComponent;
+export class AllNewsComponent implements OnInit, OnDestroy {
+  private subscritionAdmin$!: Subscription;
+  private subscritionUser$!: Subscription;
+  private subscriptionTag$!: Subscription;
+  private subscritionFilter$!: Subscription;
 
   isModalOpen: boolean = false;
   contextmenu = false;
@@ -56,11 +40,92 @@ export class AllNewsComponent implements OnInit {
   contextmenuY = 0;
   news!: NewsPost[];
   postToEdit: NewsPost = new NewsPost();
-  userPermission: boolean = UserHasPemission;
+  userPermission!: boolean;
   private subscrition!: Subscription;
   public search!: FormControl;
+  private tagTitle: string | null = null;
+  private user!: User;
+  private searchClause: string | null = '';
 
-  searchClause: string = '';
+  constructor(
+    private _newsService: NewsService,
+    private userService: UserService,
+    private cdr: ChangeDetectorRef,
+    private activatedRoute: ActivatedRoute,
+    private router: Router
+  ) {
+    this.PullData();
+
+    this.subscritionAdmin$ = this.userService
+      .IsAdmin()
+      .subscribe((x) => (this.userPermission = x));
+
+    this.subscritionUser$ = this.userService
+      .GetAll()
+      .subscribe((x) => (this.user = x));
+  }
+
+  ngOnInit(): void {
+    this.searchClause = '';
+    this.activatedRoute.queryParamMap
+      .pipe(filter((x) => x.has('clause')))
+      .subscribe((x) => {
+        this.searchClause = x.get('clause');
+      });
+
+    this.search = new FormControl(this.searchClause, Validators.required);
+
+    this.subscritionFilter$ = this.search.valueChanges
+      .pipe(
+        debounceTime(600),
+        distinctUntilChanged(),
+        tap((x: string) => {
+          if (x !== '')
+            this.router.navigate([], {
+              queryParams: { clause: x },
+              queryParamsHandling: 'merge',
+            });
+        }),
+        switchMap(async (val) => {
+          this._newsService.Find(val);
+        })
+      )
+      .subscribe(() => {
+        if (this.tagTitle)
+          this.news = this.news.filter(
+            (x) => x.tag.toString() === this.tagTitle
+          );
+      });
+    this.search.updateValueAndValidity();
+
+    this.subscriptionTag$ = this.activatedRoute.queryParams.subscribe(
+      (params) => {
+        if (typeof params['tag'] !== 'undefined') {
+          this.tagTitle = params['tag'];
+        } else {
+          this.tagTitle = null;
+        }
+
+        this.PullData();
+      }
+    );
+
+    this.activatedRoute.queryParamMap
+      .pipe(
+        filter((x) => x.has('operation')),
+        debounceTime(200)
+      )
+      .subscribe((x) => {
+        if (x.get('operation') === 'add') this.onAddPost();
+        else {
+          if (x.has('itemId') && x.get('operation') === 'edit')
+            this.onEditPost(parseInt(x.get('itemId')!));
+        }
+      });
+  }
+
+  @ViewChild(ModalCommonComponent) public modalComponent!: ModalCommonComponent;
+
   onDeletePost(postId: number) {
     this._newsService.Delete([postId]);
   }
@@ -72,6 +137,13 @@ export class AllNewsComponent implements OnInit {
 
   onAddPost() {
     this.postToEdit = new NewsPost();
+    this.router.navigate([], {
+      relativeTo: this.activatedRoute,
+      queryParams: {
+        operation: 'add',
+      },
+      queryParamsHandling: 'merge',
+    });
     this.modalComponent.Open();
   }
 
@@ -120,22 +192,29 @@ export class AllNewsComponent implements OnInit {
     return this.postToEdit.id === -1 ? 'Добавление' : 'Редактирование';
   }
 
-  Search(clause: string) {
-    //  this._newsService.Find(clause);
-  }
-
   onPermissionToggleClick() {
-    this.userPermission = !this.userPermission;
+    this.user.admin = !this.userPermission;
+    this.userService.Update(this.user);
   }
 
   ngOnDestroy() {
     this.subscrition.unsubscribe();
+    this.subscritionAdmin$.unsubscribe();
+    this.subscritionUser$.unsubscribe();
+    this.subscriptionTag$.unsubscribe();
+    this.subscritionFilter$.unsubscribe();
+
+    this.news = [];
   }
 
   private PullData() {
     this.subscrition = this._newsService.GetAll().subscribe({
       next: (data) => {
         this.news = data;
+        if (this.tagTitle)
+          this.news = this.news.filter(
+            (x) => x.tag.toString() === this.tagTitle
+          );
         this.PushToRefresh();
       },
       error: (error: HttpErrorResponse) => {

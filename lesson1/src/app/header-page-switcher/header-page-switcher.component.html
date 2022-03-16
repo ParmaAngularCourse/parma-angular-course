@@ -1,0 +1,17 @@
+<div class="header-main">
+  <ul>
+    <li>
+      <a routerLink="news">Новости</a>
+    </li>
+
+    <li *ngIf="userPermission">
+      <a routerLink="profile">Профиль</a>
+    </li>
+
+    <li>
+      <div class="enter-button" (click)="logOut()">
+        <button>{{ userPermission ? "Выход" : "Вход" }}</button>
+      </div>
+    </li>
+  </ul>
+</div>

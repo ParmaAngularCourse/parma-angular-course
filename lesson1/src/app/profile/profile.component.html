@@ -1,0 +1,95 @@
+<div [formGroup]="profileForm">
+  <div>
+    <label for="name">Имя</label>
+    <input
+      id="name"
+      type="text"
+      value="{{ name }}"
+      formControlName="nameControl"
+    />
+  </div>
+  <ng-container
+    [ngTemplateOutlet]="error"
+    [ngTemplateOutletContext]="{
+      show: profileForm.get('nameControl')?.errors,
+      error: profileForm.get('nameControl')?.errors
+    }"
+  >
+  </ng-container>
+
+  <div>
+    <label for="secondName">Фамилия</label>
+    <input
+      id="secondName"
+      type="text"
+      value="{{ secondName }}"
+      formControlName="secondNameControl"
+    />
+  </div>
+  <ng-container
+    [ngTemplateOutlet]="error"
+    [ngTemplateOutletContext]="{
+      show: profileForm.get('secondNameControl')?.errors,
+      error: profileForm.get('secondNameControl')?.errors
+    }"
+  >
+  </ng-container>
+
+  <div>
+    <label for="email">E-mail</label>
+    <input
+      id="email"
+      type="text"
+      value="{{ email }}"
+      formControlName="emailControl"
+    />
+  </div>
+  <ng-container
+    [ngTemplateOutlet]="error"
+    [ngTemplateOutletContext]="{
+      show: profileForm.get('emailControl')?.errors,
+      error: profileForm.get('emailControl')?.errors
+    }"
+  >
+  </ng-container>
+
+  <div>
+    <input class="button" type="button" (click)="onSave()" value="Сохранить" [disabled]="!profileForm.valid || !hasChanged"/>
+    <input class="button" type="button" (click)="onCancel()" value="Отмена" />
+  </div>
+</div>
+
+<ng-template
+  #profileInput
+  let-idName="idName"
+  let-labelValue="labelValue"
+  let-inputValue="inputValue"
+  let-errors="errors"
+  let-controlName="controlName"
+>
+  <div>
+    <label for="idName">{{ labelValue }}</label>
+    <input
+      id="idName"
+      type="text"
+      value="{{ inputValue }}"
+      formControlName="controlName"
+    />
+  </div>
+  <ng-container
+    [ngTemplateOutlet]="error"
+    [ngTemplateOutletContext]="{
+      show: errors,
+      error: errors
+    }"
+  >
+  </ng-container>
+</ng-template>
+
+<ng-template #error let-show="show" let-error="error">
+  <div *ngIf="show">
+    <span class="errorText">{{
+      error?.message ?? "Поле должно быть заполнено"
+    }}</span>
+  </div>
+</ng-template>

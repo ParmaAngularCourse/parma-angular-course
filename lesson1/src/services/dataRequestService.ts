@@ -83,7 +83,6 @@ export class DataRequestService {
               (x) => !keys.includes(x.id)
             );
             this.newsSubject.next(posts);
-            console.log(posts);
           }
         })
       )
@@ -91,7 +90,6 @@ export class DataRequestService {
   }
 
   public Add(item: NewsPost) {
-    console.log(item);
     const body = {
       title: item.title,
       text: item.text,
@@ -109,7 +107,6 @@ export class DataRequestService {
             const posts = this.newsSubject?.value;
             posts.push(item);
             this.newsSubject.next(posts);
-            console.log(posts);
           }
         })
       )
@@ -117,7 +114,6 @@ export class DataRequestService {
   }
 
   public Update(item: NewsPost) {
-    console.log(item);
     const body = {
       id: item.id,
       title: item.title,

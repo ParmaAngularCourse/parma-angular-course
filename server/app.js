@@ -7,6 +7,7 @@ app.use(cors());
 
 const jsonParser = express.json();
 const filePath = "news.json";
+const userPath = "user.json";
 
 // Получение новостей
 app.get("/api/news", jsonParser, function (req, res) {
@@ -106,6 +107,54 @@ app.put("/api/news", jsonParser, function (req, res) {
 
   data = JSON.stringify(news);
   fs.writeFileSync(filePath, data); // отправляем удаленную новость
+  res.sendStatus(200);
+});
+
+// Получение пользователя
+app.get("/api/user", jsonParser, function (req, res) {
+  const content = fs.readFileSync(userPath, "utf8");
+  const user = JSON.parse(content);
+  console.log("User. Read " + JSON.stringify(user));
+  res.send(user);
+});
+
+// Получение пользователя
+app.post("/api/user", jsonParser, function (req, res) {
+  const content = fs.readFileSync(userPath, "utf8");
+  const user = JSON.parse(content);
+  let bodyValue = req.body;
+  const login = bodyValue.login;
+  const password = bodyValue.password;
+  const checkValue = user.login === login && user.password === password;
+
+  console.log("User. Login " + checkValue);
+  res.send(checkValue);
+});
+
+// обновление пользователя
+app.put("/api/user", jsonParser, function (req, res) {
+  if (!req.body) return res.sendStatus(400);
+  let data = fs.readFileSync(userPath, "utf8");
+  const user = JSON.parse(data);
+
+  let bodyValue = req.body.body;
+  const name = bodyValue.name;
+  const surname = bodyValue.surname;
+  const email = bodyValue.email;
+  const admin = bodyValue.admin;
+  let record = {
+    login: user.login,
+    password: user.password,
+    name: name,
+    surname: surname,
+    email: email,
+    admin: admin,
+  };
+
+  console.log("User. Updated " + JSON.stringify(record));
+
+  data = JSON.stringify(record);
+  fs.writeFileSync(userPath, data);
   res.sendStatus(200);
 });
 

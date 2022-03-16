@@ -1,28 +1,54 @@
 <div (click)="disableContextMenu()" oncontextmenu="return false;">
+  <div class="left-side"><app-tag-switcher></app-tag-switcher></div>
 
-
+  <div class="main-side">
     <div>
-        <input #searchLine type="text" placeholder="Поиск" class="searchBar" [formControl]="search">
-      
+      <input
+        #searchLine
+        type="text"
+        placeholder="Поиск"
+        class="searchBar"
+        [formControl]="search"
+      />
     </div>
 
     <app-modal-common [operationTitle]="getTitle()">
-        <app-news-post-modal-window (saveNews)="onAddNewsPost($event)" [newsPost]="postToEdit" [userPermissions]="userPermission" (cancel)="onCloseModal()">
-
-        </app-news-post-modal-window>
+      <app-news-post-modal-window
+        (saveNews)="onAddNewsPost($event)"
+        [newsPost]="postToEdit"
+        [userPermissions]="userPermission"
+        (cancel)="onCloseModal()"
+      >
+      </app-news-post-modal-window>
     </app-modal-common>
 
     <div (contextmenu)="onRightClick($event)">
-        <button (click)="onPermissionToggleClick()">Изменить права</button>
-        <button (click)="onAddPost()">Добавить</button>
-        <button (click)="onDeleteSelected()" [disabled]="!isAnyToDelete()" *appPermissionDirective="userPermission">Удалить выбранные</button>
+      <button (click)="onPermissionToggleClick()">Изменить права</button>
+      <button (click)="onAddPost()">Добавить</button>
+      <button
+        (click)="onDeleteSelected()"
+        [disabled]="!isAnyToDelete()"
+        *appPermissionDirective="userPermission"
+      >
+        Удалить выбранные
+      </button>
 
-        <app-singe-card-news *ngFor="let item of news" [singlePost]="item" (deletePost)="onDeletePost($event)" [userPermissions]="userPermission" (editPost)="onEditPost($event)">
-        </app-singe-card-news>
+      <app-singe-card-news
+        *ngFor="let item of news"
+        [singlePost]="item"
+        (deletePost)="onDeletePost($event)"
+        [userPermissions]="userPermission"
+        (editPost)="onEditPost($event)"
+      >
+      </app-singe-card-news>
     </div>
-
+  </div>
 </div>
 
 <div *ngIf="contextmenu">
-    <app-context-menu [x]="contextmenuX" [y]="contextmenuY" (selectAll)="onSelectAll()"></app-context-menu>
+  <app-context-menu
+    [x]="contextmenuX"
+    [y]="contextmenuY"
+    (selectAll)="onSelectAll()"
+  ></app-context-menu>
 </div>

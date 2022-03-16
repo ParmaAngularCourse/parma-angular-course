@@ -4,6 +4,7 @@ import {
   ElementRef,
   EventEmitter,
   Input,
+  OnDestroy,
   OnInit,
   Output,
   ViewChild,
@@ -14,17 +15,30 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
-import { EMPTY, map, of, switchMap, tap } from 'rxjs';
+import {
+  EMPTY,
+  filter,
+  map,
+  of,
+  skip,
+  Subscriber,
+  Subscription,
+  switchMap,
+  tap,
+} from 'rxjs';
 import { NewsPost } from 'src/models/NewsPost';
 import { NewsPostTag } from 'src/models/NewsPostTag';
 import { MyDateYearValidator } from 'src/validators/dateYearValidator';
+import { IDeactivateComponent } from '../close-page.guard';
 @Component({
   selector: 'app-news-post-modal-window',
   templateUrl: './news-post-modal-window.component.html',
   styleUrls: ['./news-post-modal-window.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class NewsPostModalWindowComponent {
+export class NewsPostModalWindowComponent
+  implements IDeactivateComponent, OnInit, OnDestroy
+{
   @Input()
   newsPost: NewsPost | null | undefined;
   @Input() isOpen = false;
@@ -43,6 +57,8 @@ export class NewsPostModalWindowComponent {
   private editedTitle = '';
   private editedDate!: string;
   private editedTag = NewsPostTag.noTag;
+  private hasChanged: boolean = false;
+  private subscription!: Subscription;
 
   constructor(private fb: FormBuilder) {}
 
@@ -62,22 +78,9 @@ export class NewsPostModalWindowComponent {
       }),
     });
 
-    this.newsPostForm.valueChanges
-      .pipe(
-        tap(() => console.log('alive request inner modal change')),
-        switchMap((switchVal) => {
-          return of(switchVal).pipe(
-            map((form) => {
-              this.editedTitle = form.titleControl;
-              this.editedText = form.textControl;
-              this.editedDate = form.dateControl;
-              this.editedTag = form.radioControl?.selectedTag;
-              return form;
-            })
-          );
-        })
-      )
-      .subscribe((form) => console.log('request end inner modal change' + JSON.stringify(form)));
+    this.subscription = this.newsPostForm.valueChanges.subscribe((x) => {
+      this.hasChanged = true;
+    });
   }
 
   ngOnChanges() {
@@ -93,7 +96,6 @@ export class NewsPostModalWindowComponent {
   }
 
   onEditSave() {
-    console.log(this.editedTag);
     const currentEditablePost = new NewsPost();
     currentEditablePost.id = this.newsPost?.id ?? -1;
     currentEditablePost.title =
@@ -105,36 +107,31 @@ export class NewsPostModalWindowComponent {
     currentEditablePost.tag =
       this.editedTag === NewsPostTag.noTag ? NewsPostTag.noTag : this.editedTag;
     const editedNewsPost = new NewsPost(currentEditablePost);
-    console.log(editedNewsPost);
     this.newsPost = null;
     this.editedText = '';
     this.editedTitle = '';
     this.editedDate = '';
     this.editedTag = NewsPostTag.noTag;
     this.saveNews.emit(editedNewsPost);
+    this.hasChanged = false;
     this.onCancel();
   }
 
   onCancel() {
-    this.isOpen = false;
-    this.newsPost = null;
-    this.cancel.emit();
+    if (this.canDeactivate()) {
+      this.isOpen = false;
+      this.newsPost = null;
+      this.cancel.emit();
+    }
   }
 
-  onTextInputChanged = (value: string) => {
-    this.editedText = value;
-    console.log(value);
-  };
+  canDeactivate(): boolean {
+    return this.hasChanged
+      ? confirm('Имеются несохраненные изменения. Выйти со страницы?')
+      : true;
+  }
 
-  onTitleInputChanged = (value: string) => {
-    this.editedTitle = value;
-  };
-
-  onRadioChange = (index: number) => {
-    this.editedTag = this.newsTags[index];
-  };
-
-  onDateInputChanged = (value: string) => {
-    this.editedDate = value;
-  };
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
+  }
 }
