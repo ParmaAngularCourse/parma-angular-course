@@ -1,4 +1,3 @@
-import { HttpErrorResponse } from '@angular/common/http';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -9,19 +8,26 @@ import {
 } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { select, Store } from '@ngrx/store';
 import {
   debounceTime,
   distinctUntilChanged,
+  map,
+  Observable,
+  pipe,
   filter,
   Subscription,
   switchMap,
   tap,
 } from 'rxjs';
+import { NewsPostTag } from 'src/models/NewsPostTag';
 import { NewsService } from 'src/services/newsService';
 import { UserService } from 'src/services/userService';
 import { NewsPost } from '../../models/NewsPost';
 import { User } from '../auth-service.service';
 import { ModalCommonComponent } from '../modal-common/modal-common.component';
+import * as fromStore from '../store';
+
 @Component({
   selector: 'app-all-news',
   templateUrl: './all-news.component.html',
@@ -29,32 +35,42 @@ import { ModalCommonComponent } from '../modal-common/modal-common.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AllNewsComponent implements OnInit, OnDestroy {
+  @ViewChild(ModalCommonComponent) public modalComponent!: ModalCommonComponent;
+
+  public search!: FormControl;
+  public Tags = NewsPostTag;
+  news!: NewsPost[];
+
   private subscritionAdmin$!: Subscription;
   private subscritionUser$!: Subscription;
   private subscriptionTag$!: Subscription;
   private subscritionFilter$!: Subscription;
-
   isModalOpen: boolean = false;
   contextmenu = false;
   contextmenuX = 0;
   contextmenuY = 0;
-  news!: NewsPost[];
   postToEdit: NewsPost = new NewsPost();
   userPermission!: boolean;
   private subscrition!: Subscription;
-  public search!: FormControl;
   private tagTitle: string | null = null;
+  searchClause: string = '';
   private user!: User;
-  private searchClause: string | null = '';
+
+  storeNews$!: Observable<NewsPost[] | undefined>;
+  storeNewsCount$!: Observable<number | undefined>;
 
   constructor(
     private _newsService: NewsService,
     private userService: UserService,
     private cdr: ChangeDetectorRef,
     private activatedRoute: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private store: Store<fromStore.State>
   ) {
     this.PullData();
+
+    this.storeNews$ = this.store.pipe(select(fromStore.selectPosts));
+    this.storeNewsCount$ = this.store.pipe(select(fromStore.selectPostsCount));
 
     this.subscritionAdmin$ = this.userService
       .IsAdmin()
@@ -63,6 +79,13 @@ export class AllNewsComponent implements OnInit, OnDestroy {
     this.subscritionUser$ = this.userService
       .GetAll()
       .subscribe((x) => (this.user = x));
+
+    router.events.subscribe((_) => {
+      console.log('changed1');
+      this.tagTitle = null;
+      this.search = new FormControl('', Validators.required);
+      this.search.updateValueAndValidity();
+    });
   }
 
   ngOnInit(): void {
@@ -124,8 +147,6 @@ export class AllNewsComponent implements OnInit, OnDestroy {
       });
   }
 
-  @ViewChild(ModalCommonComponent) public modalComponent!: ModalCommonComponent;
-
   onDeletePost(postId: number) {
     this._newsService.Delete([postId]);
   }
@@ -152,12 +173,7 @@ export class AllNewsComponent implements OnInit, OnDestroy {
   }
 
   onAddNewsPost(newsPost: NewsPost) {
-    const existedPostIndex = this.news.findIndex((x) => x.id === newsPost.id);
-    if (existedPostIndex > -1) {
-      this._newsService.Update(newsPost);
-    } else {
-      this._newsService.Add(newsPost);
-    }
+    this.store.dispatch(fromStore.addNewsPost({ post: newsPost }));
   }
 
   onDeleteSelected() {
@@ -208,26 +224,14 @@ export class AllNewsComponent implements OnInit, OnDestroy {
   }
 
   private PullData() {
-    this.subscrition = this._newsService.GetAll().subscribe({
-      next: (data) => {
-        this.news = data;
-        if (this.tagTitle)
-          this.news = this.news.filter(
-            (x) => x.tag.toString() === this.tagTitle
-          );
-        this.PushToRefresh();
-      },
-      error: (error: HttpErrorResponse) => {
-        console.log(error.status);
-      },
+    this.store.dispatch(fromStore.loadPost());
+
+    this._newsService.GetAll().subscribe((result) => {
+      this.store.dispatch(fromStore.loadPostSuccess({ news: result }));
     });
   }
 
-  private PushToRefresh() {
-    this.cdr.markForCheck();
-  }
-
-  public isAnySelected(): boolean {
-    return this.news.some((x) => x.isSelected);
+  public GetCountByTag(tag: NewsPostTag): Observable<number | undefined> {
+    return this.store.pipe(select(fromStore.selectPostsByTag(tag)));
   }
 }

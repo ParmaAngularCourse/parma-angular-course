@@ -34,13 +34,24 @@
       </button>
 
       <app-singe-card-news
-        *ngFor="let item of news"
+        *ngFor="let item of storeNews$ | async"
         [singlePost]="item"
         (deletePost)="onDeletePost($event)"
         [userPermissions]="userPermission"
         (editPost)="onEditPost($event)"
       >
       </app-singe-card-news>
+    </div>
+    <div class="footer-counter">
+      <span> Всего новостей в базе: {{ storeNewsCount$ | async }}</span>
+      <div *ngFor="let enum of Tags | keyvalue">
+        <div>
+          <span>
+            Количество типа {{ enum.key }} :
+            {{ GetCountByTag(enum.value) | async }}</span
+          >
+        </div>
+      </div>
     </div>
   </div>
 </div>

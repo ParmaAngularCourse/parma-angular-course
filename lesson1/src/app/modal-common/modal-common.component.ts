@@ -7,6 +7,7 @@ import {
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IDeactivateComponent } from '../close-page.guard';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-modal-common',

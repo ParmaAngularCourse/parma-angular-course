@@ -8,40 +8,29 @@ import { toDateString } from 'src/utils/DateUtils';
 
 @Injectable({ providedIn: 'root' })
 export class DataRequestService {
-  constructor(private readonly http: HttpClient) {
-    this.Init();
-  }
+  constructor(private readonly http: HttpClient) {}
   private newsSubject?: BehaviorSubject<Array<NewsPost>>;
 
-  public Init() {
-    if (!this.newsSubject) {
-      this.newsSubject = new BehaviorSubject<NewsPost[]>([]);
-
-      this.http
-        .get<newsObj[]>(API_URL, {
-          observe: 'body',
-          responseType: 'json',
-        })
-        .pipe(
-          map((item) =>
-            item.map((x) => {
-              const post = new NewsPost();
-              post.id = x.id;
-              post.text = x.text;
-              post.title = x.title;
-              post.isSelected = false;
-              post.tag = Object.values(NewsPostTag).find((t) => t === x.tag)!;
-              post.uploadDate = toDateString(new Date(x.date));
-              return post;
-            })
-          )
-        )
-        .subscribe((value) => this.newsSubject?.next(value));
-    }
-  }
-
   public Get(): Observable<Array<NewsPost>> {
-    return this.newsSubject!.asObservable();
+    return this.http
+      .get<newsObj[]>(API_URL, {
+        observe: 'body',
+        responseType: 'json',
+      })
+      .pipe(
+        map((item) =>
+          item.map((x) => {
+            const post = new NewsPost();
+            post.id = x.id;
+            post.text = x.text;
+            post.title = x.title;
+            post.isSelected = false;
+            post.tag = Object.values(NewsPostTag).find((t) => t === x.tag)!;
+            post.uploadDate = toDateString(new Date(x.date));
+            return post;
+          })
+        )
+      );
   }
 
   public Find(clause: string) {

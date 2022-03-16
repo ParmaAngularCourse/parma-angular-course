@@ -1,8 +1,8 @@
 {
-    "login":"login",
-    "password":"password",
-    "name":"Максим",
-    "surname":"Гильман",
-    "email":"some-email@mail.mail",
-    "admin": true
+  "login": "login",
+  "password": "password",
+  "name": "Максим",
+  "surname": "Гильман",
+  "email": "some-email@mail.mail",
+  "admin": true
 }
