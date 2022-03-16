@@ -5,6 +5,8 @@ import { Subject, switchMap, takeUntil } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NewsService } from 'src/app/news.service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { select, Store } from '@ngrx/store';
+import * as fromStore from '../../store';
 
 @Component({
   selector: 'app-news-editform',
@@ -24,7 +26,8 @@ export class NewsEditformComponent implements OnInit {
 
   constructor(private cdr: ChangeDetectorRef, private fb: FormBuilder,
     private router: Router, private route: ActivatedRoute,
-    private _newsService: NewsService) { 
+    private _newsService: NewsService,
+    private store: Store<fromStore.State>) { 
     this.ngUnsubscribe$ = new Subject();
   }
 
@@ -75,11 +78,13 @@ export class NewsEditformComponent implements OnInit {
         ...this.editForm.value
       };
       if(this.newsId) {
-        this._newsService.updateNews(newsToSave).pipe(
+        this.store.dispatch(fromStore.editNews({ news: newsToSave }));
+        this.router.navigate(['', { outlets: { editform: null } }]);
+        /*this._newsService.updateNews(newsToSave).pipe(
           takeUntil(this.ngUnsubscribe$)
         ).subscribe(v => {
           this.router.navigate(['', { outlets: { editform: null } }])
-        });
+        });*/
       }
       else {
         newsToSave.id = Math.max(...(this.allNews.map(el => el.id))) + 1;
