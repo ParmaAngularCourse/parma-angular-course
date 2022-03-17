@@ -14,6 +14,10 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { HttpInterceptorService } from './http-interceptor.service';
 import { ReactiveFormsModule } from '@angular/forms';
 import { NewsTypeComponent } from './news/news-type/news-type.component';
+import { AppRoutingModule } from './app-routing/app-routing.module';
+import { ProfileComponent } from './profile/profile.component';
+import { LoginComponent } from './login/login.component';
+import { OutletModalEditorComponent } from './outlet-modal-editor/outlet-modal-editor.component';
 
 @NgModule({
   declarations: [
@@ -26,12 +30,16 @@ import { NewsTypeComponent } from './news/news-type/news-type.component';
     NewsTypePipePipe,
     NewsTypeStylesDirective,
     UserRightsStrDirective,
-    NewsTypeComponent
+    NewsTypeComponent,
+    ProfileComponent,
+    LoginComponent,
+    OutletModalEditorComponent
   ],
   imports: [
     BrowserModule,
     HttpClientModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    AppRoutingModule
   ],
   providers: [{
     provide: HTTP_INTERCEPTORS,

@@ -1,5 +1,3 @@
-import { HtmlAstPath } from '@angular/compiler';
-import { Message } from '@angular/compiler/src/i18n/i18n_ast';
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, ControlValueAccessor, NG_VALIDATORS, NG_VALUE_ACCESSOR, ValidationErrors, Validator, Validators } from '@angular/forms';
 import { NewsTypes } from '../news-types';
@@ -69,7 +67,9 @@ export class NewsTypeComponent implements OnInit, ControlValueAccessor, Validato
     this.nTypes.map(i=> i.isCheck = false);
 
     var item = this.nTypes.filter(i=> i.value == val);
-    item[0].isCheck = true;
+    
+    if(item.length > 0)
+      item[0].isCheck = true;
   }
 
 

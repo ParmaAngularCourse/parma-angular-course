@@ -1,1 +1,7 @@
-input.ng-invalid{border-color: red; }
+input.ng-invalid{
+    border-color: red; 
+}
+
+.avtiveLinkClass{
+    font-weight: bold;
+}
