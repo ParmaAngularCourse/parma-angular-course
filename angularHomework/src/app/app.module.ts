@@ -14,6 +14,11 @@ import { UserPermissionsDirective } from './directives/user-permissions.directiv
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from './auth.interceptor';
 import { NewsTypeInputComponent } from './news-list/news-modal-content/news-type-input/news-type-input.component';
+import { AppRoutingModule } from './app-routing.module';
+import { FilterTypeComponent } from './filter-type/filter-type.component';
+import { UserInfoComponent } from './user-info/user-info.component';
+import { AuthComponent } from './auth/auth.component';
+import { PageHeaderComponent } from './page-header/page-header.component';
 
 @NgModule({
   declarations: [
@@ -27,12 +32,17 @@ import { NewsTypeInputComponent } from './news-list/news-modal-content/news-type
     FirstLetterLowerPipe,
     NewsTypeStyleDirective,
     UserPermissionsDirective,
-    NewsTypeInputComponent
+    NewsTypeInputComponent,
+    FilterTypeComponent,
+    UserInfoComponent,
+    AuthComponent,
+    PageHeaderComponent
   ],
   imports: [
     BrowserModule,
     HttpClientModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    AppRoutingModule
   ],
   providers: [{
     provide: HTTP_INTERCEPTORS,

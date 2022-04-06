@@ -27,3 +27,8 @@ button[disabled]{
   display: flex;
   flex-direction: row;
 }
+
+.interfacePart {
+  display: inline-block;
+  vertical-align: top;
+}

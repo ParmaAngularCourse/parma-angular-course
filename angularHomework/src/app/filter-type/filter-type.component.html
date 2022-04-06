@@ -1,0 +1,4 @@
+<div><button routerLink="../main" >Все</button></div>
+<div *ngFor="let item of newsTypes"><button routerLink="../main" [queryParams]="{typeId:item.id}"
+        [appNewsTypeStyle]="item.color">{{item.text}}</button></div>
+<!--item.id-->

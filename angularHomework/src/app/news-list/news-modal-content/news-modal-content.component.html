@@ -27,5 +27,5 @@
 
     <app-news-type-input formControlName="newsType"></app-news-type-input>
 </div>
-<p><button (click)="clickSaveNews()" [disabled]="!newsForm.valid">Сохранить</button> <!--*appUserPermissions="{currUser: currUser, permission: 'allowSave'}"-->
+<p><button (click)="clickSaveNews()" [disabled]="!newsForm.valid" *appUserPermissions="{currUser: currUser, permission: 'allowSave'}">Сохранить</button>
 <button (click)="clickCancel()">Отмена</button></p>

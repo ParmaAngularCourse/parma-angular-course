@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { environment } from 'src/environments/environment';
 import { NewsObj } from '../../model/news-type';
 
 @Injectable({
@@ -8,7 +9,7 @@ import { NewsObj } from '../../model/news-type';
 })
 export class HttpNewsService {
 
-  private rootUrl = 'http://localhost:5185/';
+  private rootUrl = environment.host;
 
   constructor(private http: HttpClient) { }
 

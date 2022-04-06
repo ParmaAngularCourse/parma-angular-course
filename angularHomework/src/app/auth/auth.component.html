@@ -1,0 +1,19 @@
+<div [formGroup]="userForm">
+    <div>
+        <p><label for="username">Username:</label></p>
+        <input id="username" type="text" formControlName="username">
+    </div>
+    <div *ngIf="userForm.get('username')?.errors">
+        {{userForm.get('username')?.errors | json}}
+    </div>
+
+    <div>
+        <p><label for="password">Password:</label></p>
+        <input id="password" type="text" formControlName="password">
+    </div>
+    <div *ngIf="userForm.get('password')?.errors">
+        {{userForm.get('password')?.errors | json}}
+    </div>
+</div>
+
+<p><button (click)="login()" [disabled]="!userForm.valid">Log In</button></p>

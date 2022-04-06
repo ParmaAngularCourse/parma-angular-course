@@ -1,0 +1,30 @@
+<app-page-header></app-page-header>
+<div [formGroup]="userForm">
+    <div>
+        <p><label for="name">Name:</label></p>
+        <input id="name" type="text" formControlName="name">
+    </div>
+    <div *ngIf="userForm.get('name')?.errors">
+        {{userForm.get('name')?.errors | json}}
+    </div>
+
+    <div>
+        <p><label for="surname">Surname:</label></p>
+        <input id="surname" type="text" formControlName="surname">
+    </div>
+    <div *ngIf="userForm.get('surname')?.errors">
+        {{userForm.get('surname')?.errors | json}}
+    </div>
+
+    <div>
+        <p><label for="email">Email:</label></p>
+        <input id="email" type="text" formControlName="email">
+    </div>
+    <div *ngIf="userForm.get('email')?.errors">
+        {{userForm.get('email')?.errors | json}}
+    </div>
+</div>
+
+<p><button (click)="clickSave()" [disabled]="!userForm.valid">Сохранить</button>
+    <button (click)="clickCancel()">Отмена</button>
+</p>

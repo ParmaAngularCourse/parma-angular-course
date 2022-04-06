@@ -12,18 +12,17 @@ import { UserAuthService } from './user-authservice';
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
 
-
-  authString: string;
-
-  constructor(private _userAuthService: UserAuthService) {
-    this.authString = this._userAuthService.getUserAuthorizationData();
-  }
+    constructor(private _userAuthService: UserAuthService) { }
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
-    let copyRequest = request.clone({
-      headers: new HttpHeaders().set('Authorization', this.authString),
-    });
+    if (this._userAuthService.isAuthorised()) {
+      let copyRequest = request.clone({
+        headers: new HttpHeaders().set('Authorization', this._userAuthService.getUserAuthorizationData()),
+      });
 
-    return next.handle(copyRequest)
+      return next.handle(copyRequest)
+    }
+
+    return next.handle(request);
   }
 }
