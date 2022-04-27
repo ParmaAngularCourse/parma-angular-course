@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, ViewChild } from
 import { AbstractControl, FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { debounceTime, distinctUntilChanged, filter, Observable, of, Subject, switchMap, takeUntil } from 'rxjs';
+import { AuthServiceService } from '../auth-service.service';
 import { ContextMenuComponent } from './context-menu/context-menu.component';
 import { Information, NewsTypes, UserRightsObj } from './news-types';
 import { PostEditorComponent } from './post-editor/post-editor.component';
@@ -32,42 +33,42 @@ export class NewsComponent implements OnInit, OnDestroy  {
 
   private ngUnsubscribe$: Subject<void> = new Subject();
   searchTitle!: FormControl;
-  searchTitleValue: string = "Поиск...";
+  searchTitleValue: string = "";
   searchTitleStatus: string = "";
 
-  public userRights: UserRightsObj = {isUsercanDeleteNews: true, isUsercanEditNews: true};
+  public userRights!: UserRightsObj;
 
-  constructor(private _postService: PostsService, private route: ActivatedRoute, private router: Router ) { 
+  constructor(private _postService: PostsService, private route: ActivatedRoute, private router: Router, private authService: AuthServiceService) { 
 
+    this.searchTitleValue = _postService.getSearchString();
+
+    this.userRights = this.authService.getUserRights();
 
     this.newsTypeFilter = route.snapshot.params['newstypeid'];
     
-    
-    //console.log(this.newsTypeFilter);
 
-/*
-    route.params.subscribe(params=> {
-        
-      
-        //console.log(params);
-        //console.log(params['newstypeid']);
+    this.router.events.pipe(filter(e=> e instanceof NavigationEnd), takeUntil(this.ngUnsubscribeValueChange$)).subscribe(()=> this._postService.getPosts(this.searchTitleValue)
+                                                                    .pipe(takeUntil(this.ngUnsubscribe$))
+                                                                    .subscribe(posts => {
+                                                                      this.posts = this.filterPostsByNewsType(posts);
+                                                                    })) ;  
 
-        this.newsTypeFilter = params['newstypeid'];
-        //this.posts = this.posts.filter(i=> i.newsType == newsFilter);
 
-    });*/
 
+
+    route.params.pipe(takeUntil(this.ngUnsubscribeValueChange$)).subscribe(value => 
+                  ()=> this._postService.getPosts(this.searchTitleValue)
+                  .pipe(takeUntil(this.ngUnsubscribe$))
+                  .subscribe(posts => {
+                    this.posts = this.filterPostsByNewsType(posts);
+
+                  }));
 
   }
   
 
 @ViewChild('modalWindowPostEdit') modalWindowPost!: PostEditorComponent;
 @ViewChild('contextMenuNews') contextMenu!: ContextMenuComponent;
-
-/*getPosts(searchString: string){
-  return this._postService.getPosts(searchString);
-}*/
-
 
 initFormGroup()
 {
@@ -79,42 +80,19 @@ initFormGroup()
               .pipe(takeUntil(this.ngUnsubscribeValueChange$))
               .subscribe((value)=>{
                 this.newsTypeFilter = value.newsTypeFilter;
-                
-                let newsLink = '/news/'+this.newsTypeFilter;
-                
-                // не происходит перенаправление, хоть и меняется строка адреса в браузере
-                this.router.navigate([newsLink], {relativeTo: this.route});
-                //this.router.navigateByUrl(newsLink);
 
-                //console.log(newsLink);
+                let newsLink = '/news/'+this.newsTypeFilter;
+                this.router.navigate([newsLink], {relativeTo: this.route});
               });
 }
-
-
-  allNews()
-  {
-    //this.router.navigate(['news'], {relativeTo: this.route});                
-    //this.router.navigate([''], {relativeTo: this.route});                
-  }
-
-
   ngOnInit(): void {
-    
 
-    this.router.events.pipe(filter(e=> e instanceof NavigationEnd)).subscribe(()=> this._postService.getPosts()
-                                                                    .pipe(takeUntil(this.ngUnsubscribe$))
-                                                                    .subscribe(posts => {
-                                                                      this.posts = this.filterPostsByNewsType(posts);
-                                                                    })) ;
-
-
-    this._postService.getPosts()
+    this._postService.getPosts(this.searchTitleValue)
                       .pipe(takeUntil(this.ngUnsubscribe$))
                       .subscribe(posts => {
                         this.posts = this.filterPostsByNewsType(posts);
                       });
 
-    //this.searchTitle = new FormControl(this.searchTitleValue, [Validators.required, Validators.minLength(5)], [notOneAsyncValidator] );
     this.searchTitle = new FormControl(this.searchTitleValue, [], [notOneAsyncValidator] );
 
     this.searchTitleValue = this.searchTitle.value;
@@ -129,7 +107,9 @@ initFormGroup()
                 .subscribe(
                   posts => {
                     this.posts = this.filterPostsByNewsType(posts);
+                    this.searchTitleValue = this._postService.getSearchString();
                   });
+
 
     this.initFormGroup();
   }
@@ -153,7 +133,7 @@ initFormGroup()
   }
 
   ngDoCheck(){
-    //console.log('news-component');
+
   }
 
 
@@ -174,7 +154,8 @@ initFormGroup()
   onNewPost(){    
     this.editorTitle = "Добавить новость";
     this.editedPost = {date: "", title: "", text: "" };
-    this.modalWindowPost.show(true);
+
+    this.router.navigate([{outlets: {modalPostEditor: 'modal'}}]);
   }
 
 
@@ -213,17 +194,9 @@ initFormGroup()
 }
 
 
-/*function notOneValidator(formControl: FormControl): null| errorValidate{
-  if(formControl.value == 'Петров') {
-    return {notOneValidator: {message: 'Нельзя вводить'}}
-  }
-  
-  return null;
-}*/
-
 function notOneAsyncValidator(formControl: AbstractControl): Observable<null| errorValidate>{
 
-    if(formControl.value?.length < 4) {
+    if(formControl.value?.length < 4 && formControl.value?.length > 0) {
       return of({notOneValidator: {message: 'Для поиска необходимо ввести больше 3х символов'}})
     }
   

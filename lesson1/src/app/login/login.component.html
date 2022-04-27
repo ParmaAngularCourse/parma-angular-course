@@ -1,12 +1,20 @@
-    <div>
-        <div>Логин:</div>
-        <input type="text" #login>
-    </div>
-    <div>
-        <div>Пароль:</div>
-        <input type="text" #password >
+    <div [formGroup]="editLoginData">
+        <div>
+            <div>Логин:</div>
+            <input type="text" formControlName="login">
+            <div *ngIf=login?.invalid style="color: red;">Введите логин</div>
+        </div>
+        <div>
+            <div>Пароль:</div>
+            <input type="text" formControlName="password">
+            <div *ngIf=password?.invalid style="color: red;">Введите пароль</div>
+        </div>
     </div>
 
+
+
+
+
     <div style="margin: 5px; text-align: left;">
-        <button style="display: inline-block;" (click)="loginClick(login.value, password.value) " class="blueButton" >Войти</button>
+        <button style="display: inline-block;" (click)="loginClick() " class="blueButton" >Войти</button>
     </div>

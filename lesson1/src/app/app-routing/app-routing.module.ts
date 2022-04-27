@@ -22,12 +22,6 @@ const routes: Routes = [
   path: 'news/:newstypeid',
   component: NewsComponent,
   canActivate: [AuthGuard]
-  /*children:[
-    {
-      path: 'main3',
-      component: NewsComponent
-    }
-  ]*/
 },
 {
   path: 'modal',
@@ -48,7 +42,6 @@ const routes: Routes = [
 @NgModule({
   declarations: [],
   imports: [
-    //RouterModule.forRoot(routes, {onSameUrlNavigation: 'reload'}),
     RouterModule.forRoot(routes),
     CommonModule
   ],

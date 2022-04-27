@@ -11,16 +11,7 @@ export class AppComponent {
   title = 'lesson7';
 
   loginText = this.getLoginText();
-  //isUserLogin = false;
-  //newsLink = 'news';
-
-
- // editForm!: FormGroup;
- // currentNewsType = 1;
-  //private ngUnsubscribeValueChange$: Subject<void> = new Subject();
-
-  //get newsTypeFilter() { return this.editForm.get('newsTypeFilter'); }
-
+  isUserLogin = this.authService.isAuth();
 
     constructor(private authService: AuthServiceService,  private router: Router)
     {
@@ -30,40 +21,13 @@ export class AppComponent {
 
   ngOnInit(): void {
 
-    //this.initFormGroup();
   }
 
-  /*
+  ngDoCheck(): void {
+    this.isUserLogin = this.authService.isAuth();
+    this.loginText = this.getLoginText();
 
-  initFormGroup()
-  {
-    this.editForm = new FormGroup({
-      newsTypeFilter: new FormControl(this.currentNewsType, []),
-    });
-
-    this.editForm.valueChanges
-                .pipe(takeUntil(this.ngUnsubscribeValueChange$))
-                .subscribe((value)=>{
-                  this.currentNewsType = value.newsTypeFilter == undefined ? NewsTypes.Politic: value.newsTypeFilter;
-                    
-                  this.newsLink = 'news/'+this.currentNewsType;
-                  console.log(this.newsLink);
-
-                  // currentNewsType возомжно не нужен - перенаправлять с параметром value.newsTypeFilter
-
-                });
   }
-
-  ngOnDestroy() {
-    this.ngUnsubscribeValueChange$.next();
-    this.ngUnsubscribeValueChange$.complete();
-  }
-*/
-
-
-
-
-
 
 
   getLoginText(){   
@@ -72,5 +36,18 @@ export class AppComponent {
     else
       return 'Вход';
   }
+
+
+  loginClick(){   
+
+    if(this.authService.isAuth())
+      this.authService.logout();
+
+      if(!this.authService.isAuth())
+        this.router.navigate(['/login']);
+  } 
+
+
+
 
 }

@@ -1,25 +1,20 @@
-<!--<app-news></app-news> -->
+
 <div>
     <div style="color: white; font-size: 25px; width: 100%; background-color: black; text-align: right; cursor:default; ">
         <div style="width: 5px; display: inline-block; height: 25px; float: left;"></div>
         
         <div style="float: left;  text-align: left; " >
-            <!-- <a routerLink="news" style="color: white;" routerLinkActive="avtiveLinkClass">Новости</a> -->
             <a routerLink='news' style="color: white;" routerLinkActive="avtiveLinkClass">Новости</a>        
         </div>
         <div style="width: 25px; display: inline-block; height: 25px; float: left;"></div>
-        <div style="float: left;  text-align: left; ">
+        
+
+        <div style="float: left;  text-align: left; " *ngIf="isUserLogin">
             <a routerLink="profile" style="color: white;" routerLinkActive="avtiveLinkClass">Профиль</a>
         </div>
 
-        <!--
-            <div style="display: inline-block; text-align: center; margin-right: 10px;">
-                <a [routerLink]="['main/main3']" style="color: white;" routerLinkActive="avtiveLinkClass">test</a>
-            </div>
-        -->
-
         <div style="display: inline-block; text-align: center; margin-right: 10px;">
-            <a routerLink="login" style="color: white;" routerLinkActive="avtiveLinkClass" >{{getLoginText()}}</a>
+            <a (click)="loginClick()" style="color: white; text-decoration: underline; margin-right: 15px;" >{{getLoginText()}}</a>
         </div>
 
     </div>
@@ -27,3 +22,4 @@
 
 
 <router-outlet></router-outlet>
+<router-outlet name='modalPostEditor'></router-outlet>
