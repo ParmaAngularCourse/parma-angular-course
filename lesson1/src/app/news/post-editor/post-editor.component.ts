@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { filter, Subject, Subscription, takeUntil } from 'rxjs';
 import { Information, NewsTypes, UserRightsObj } from '../news-types';
 
@@ -26,10 +27,10 @@ export class PostEditorComponent implements OnInit, OnDestroy  {
 
   editForm!: FormGroup;
 
-  public isEditorOpen: boolean = false;
+  public isEditorOpen: boolean = true;
   private ngUnsubscribeValueChange$: Subject<void> = new Subject();
   
-  constructor() { }
+  constructor(private router: Router ) { }
 
 
   ngOnInit(): void {
@@ -76,7 +77,12 @@ export class PostEditorComponent implements OnInit, OnDestroy  {
 
   show(isShow: boolean)
   {
-    this.isEditorOpen = isShow;
+    //this.isEditorOpen = isShow;
+
+    if(isShow)
+      this.router.navigate([{outlets: {modalPostEditor: 'modal'}}]);
+    else
+      this.router.navigate([{outlets: {modalPostEditor: null}}]);
   }
 
 

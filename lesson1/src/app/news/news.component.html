@@ -9,6 +9,14 @@
     </div>
     <br>
 
+
+    <div style="width: 10%; display: inline-block; float: left;" [formGroup]="editForm">
+        <div><a routerLink="/news" routerLinkActive="avtiveLinkClass" >Все</a></div>
+        <app-news-type formControlName="newsTypeFilter" ></app-news-type>
+    </div>
+    
+    <div style="display: inline-block; float: right; width: 90%;">
+
     <div style="width: max-content; border: 2px solid gray; margin-left: 10px; padding: 10px; ">
         <div style="display: inline-block;">
             <button (click)="onNewPost()" class="blueButton">Добавить</button>
@@ -19,22 +27,7 @@
         <app-single-post (editPost)="onEditPost($event)" (deletePost)="onDeletePost($event)" (checkPost)="onCheckPost($event)" *ngFor="let item of posts" [single_post_data]="item" ></app-single-post>
     </div>
 
-
-    <app-post-editor #modalWindowPostEdit (savePost)="onSavePost($event)" (cancelEditPost)="onCancelEditPost()" [edit_post_data] = editedPost [user_data]="userRights">
-
-        <div style="width: 100%; height: 20px; background-color: darkgray; text-align: right; cursor:default; ">
-            <div style="width: 25%; display: inline-block; height: 20px; float: left;"></div>
-            <div style="float: left;  text-align: left; ">
-                {{editorTitle}}
-            </div>
-            <div (click)="onCancelEditPost()" style="background-color: coral; color: black; width: 20px; height: 20px; display: inline-block; text-align: center;">
-                X
-            </div>
-        </div>
-
-    </app-post-editor>
-    
-
+</div>    
 </div>
 
 <app-context-menu #contextMenuNews (checkAll)="onCheckAll()"></app-context-menu>
