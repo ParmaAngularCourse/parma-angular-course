@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
-import { ModalComponent } from '../shared/modal/modal.component';
 import { ContextMenuComponent } from '../shared/context-menu/context-menu.component';
 import { News, NewsTypeObjectEnum } from '../model/news-type';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -7,14 +6,15 @@ import { NewsService } from './services/news.service';
 import { UserAuthService } from '../user-authservice';
 import { UserPermissions } from '../model/userPermissions';
 import { FormControl } from '@angular/forms';
-import { bufferCount, combineLatest, concatAll, debounceTime, distinctUntilChanged, filter, from, map, mergeAll, mergeMap, of, Subject, switchMap, take, takeUntil, tap, toArray } from 'rxjs';
+import { bufferCount, combineLatest, concatAll, debounceTime, distinctUntilChanged, filter, first, of, Subject, switchMap, takeUntil, toArray } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ChangeEditNewsService } from './services/change-edit-news.service';
 
 @Component({
   selector: 'app-news-list',
   templateUrl: './news-list.component.html',
   styleUrls: ['./news-list.component.css'],
-  //changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NewsListComponent implements OnInit {
 
@@ -22,14 +22,10 @@ export class NewsListComponent implements OnInit {
 
   public chechedNewsIds: number[] = [];
 
-  readonly  currUser: UserPermissions;
-
-  public selectedNews: News | undefined;
-
+  readonly currUser: UserPermissions;
   private ngUnsubscribe$!: Subject<void>;
 
   @ViewChild(ContextMenuComponent) menuComponent: ContextMenuComponent | undefined;
-  @ViewChild(ModalComponent) modalComponent: ModalComponent | undefined;
 
   searchControl!: FormControl;
 
@@ -37,20 +33,10 @@ export class NewsListComponent implements OnInit {
     private cdr: ChangeDetectorRef,
     private _userAuthService: UserAuthService,
     private _route: ActivatedRoute,
-    private _router: Router) {
+    private _router: Router,
+    private _changeEditService: ChangeEditNewsService) {
 
     this.ngUnsubscribe$ = new Subject();
-
-    this._newsService.getNews().pipe(
-      switchMap(value => of(value).pipe(concatAll(),
-        bufferCount(3),
-        toArray())),
-      takeUntil(this.ngUnsubscribe$)
-    ).subscribe({
-      next: (data) => { this.groupedNews = data; this.cdr.markForCheck(); },
-      error: (error: HttpErrorResponse) => { console.log(error) }
-    });
-
     this.currUser = this._userAuthService.getUserPermissions();
   }
 
@@ -58,7 +44,7 @@ export class NewsListComponent implements OnInit {
     this.searchControl = new FormControl();
 
     const searchValueChanges = this.searchControl.valueChanges;
-    const queryParamChanges =  this._route.queryParams;
+    const queryParamChanges = this._route.queryParams;
 
     combineLatest([searchValueChanges, queryParamChanges]).pipe(
       debounceTime(600),
@@ -66,8 +52,8 @@ export class NewsListComponent implements OnInit {
       switchMap(value => this._newsService.searchNews(value[0])),
       switchMap(value => of(value).pipe(
         concatAll(),
-        filter(s => !this._route.snapshot.queryParams["typeId"] 
-        || s.newsType.id.toString() === this._route.snapshot.queryParams["typeId"]),
+        filter(s => !this._route.snapshot.queryParams["typeId"]
+          || s.newsType.id.toString() === this._route.snapshot.queryParams["typeId"]),
         bufferCount(3),
         toArray())),
       takeUntil(this.ngUnsubscribe$)).subscribe({
@@ -75,7 +61,7 @@ export class NewsListComponent implements OnInit {
         error: (error: HttpErrorResponse) => { console.log(error.status) }
       });
 
-      this.searchControl.setValue("");
+    this.searchControl.setValue("");
   }
 
   OnDeleteNews($event: number) {
@@ -98,10 +84,41 @@ export class NewsListComponent implements OnInit {
     let allNews = this.groupedNews.flat();
     const index = allNews.findIndex(item => item.id === $event);
     if (index > -1) {
-      this.selectedNews = allNews[index];
-      this._router.navigate([{outlets: {modal: 'add-edit-news'}}]);
-      //this.modalComponent?.open();
+      this._changeEditService.selectedNews = allNews[index];
+      this.subscribeOnChangeNews('Failed to update the news');
+
+      this._router.navigate([{ outlets: { modal: 'add-edit-news' } }]);
     }
+  }
+
+  private subscribeOnChangeNews(message: string) {
+    this._changeEditService.$safe.pipe(
+      first(),
+      switchMap((news) => combineLatest([of(news), this._newsService.addOrEditNews(news)]))
+    ).subscribe(
+      (result) => {
+        if (result[1]) {
+          this._router.navigate([{ outlets: { modal: null } }]);
+          this._changeEditService.selectedNews = result[0];
+        }
+        else {
+          console.log(message);
+        }
+      }
+    );
+  }
+
+  OnClickAddButton() {
+    let newNews = {
+      id: 0,
+      dateTime: '',
+      title: '',
+      text: '',
+      newsType: NewsTypeObjectEnum.Politics
+    };
+    this._changeEditService.selectedNews = newNews;
+    this.subscribeOnChangeNews('Failed to add the news');
+    this._router.navigate([{outlets: {modal: 'add-edit-news'}}]);
   }
 
   onCheckedNews($event: number) {
@@ -113,24 +130,6 @@ export class NewsListComponent implements OnInit {
     } else {
       this.chechedNewsIds.push($event);
     }
-  }
-
-  OnClickAddButton() {
-    this.selectedNews = {
-      id: 0,
-      dateTime: '',
-      title: '',
-      text: '',
-      newsType: NewsTypeObjectEnum.Politics
-    };
-    this._router.navigate([{outlets: {modal: 'add-edit-news'}}]);
-    //this.modalComponent?.open();
-  }
-
-  onCancelModal() {
-    //this.modalComponent?.close();
-    this._router.navigate([{outlets: {modal: null}}]);
-    this.selectedNews = undefined;
   }
 
   OnClickDeleteButton() {
@@ -157,20 +156,6 @@ export class NewsListComponent implements OnInit {
 
   onClick() {
     this.menuComponent?.close();
-  }
-
-  onSaveNews($event: News) {
-    this._newsService.addOrEditNews($event).subscribe(
-      (isOk) => {
-        if (isOk) {
-          this._router.navigate([{outlets: {modal: null}}]);
-          //this.modalComponent?.close();
-          this.selectedNews = undefined;
-        }
-        else {
-          console.log('Failed to update the news');
-        }
-      });
   }
 
   ngOnDestroy() {

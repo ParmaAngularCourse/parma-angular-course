@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-modal',
@@ -7,28 +8,14 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, On
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ModalComponent implements OnInit {
-  
-  public isOpen: boolean = false;
 
-  @Output() cancel = new EventEmitter();
-
-  constructor(private cdr: ChangeDetectorRef) { }
+  constructor(private _router: Router) { }
 
   ngOnInit(): void {
   }
 
   clickCancel() {
-    this.cancel.emit();
-  }
-
-  open(){
-    this.cdr.markForCheck();
-    this.isOpen = true;
-  }
-
-  close() {
-    this.cdr.markForCheck();
-    this.isOpen = false;
+    this._router.navigate([{outlets: {modal: null}}]);
   }
 
 }

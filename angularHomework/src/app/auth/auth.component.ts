@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { filter } from 'rxjs';
@@ -7,7 +7,8 @@ import { UserAuthService } from '../user-authservice';
 @Component({
   selector: 'app-auth',
   templateUrl: './auth.component.html',
-  styleUrls: ['./auth.component.css']
+  styleUrls: ['./auth.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AuthComponent implements OnInit {
 
@@ -17,7 +18,7 @@ export class AuthComponent implements OnInit {
    }
 
   ngOnInit(): void {
-
+    this._userAuthService.logOut();
     this.userForm = this._fb.group({
       username: ["", [Validators.required]],
       password: ["", [Validators.required]]

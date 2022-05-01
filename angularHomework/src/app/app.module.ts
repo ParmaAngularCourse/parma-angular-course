@@ -19,6 +19,7 @@ import { FilterTypeComponent } from './filter-type/filter-type.component';
 import { UserInfoComponent } from './user-info/user-info.component';
 import { AuthComponent } from './auth/auth.component';
 import { PageHeaderComponent } from './page-header/page-header.component';
+import { NewsModalComponent } from './news-list/news-modal/news-modal.component';
 
 @NgModule({
   declarations: [
@@ -36,7 +37,8 @@ import { PageHeaderComponent } from './page-header/page-header.component';
     FilterTypeComponent,
     UserInfoComponent,
     AuthComponent,
-    PageHeaderComponent
+    PageHeaderComponent,
+    NewsModalComponent
   ],
   imports: [
     BrowserModule,

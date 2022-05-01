@@ -1,11 +1,12 @@
-import { Component, OnInit, Optional, Self } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, Optional, Self } from '@angular/core';
 import { AbstractControl, ControlValueAccessor, NgControl, ValidationErrors, Validators } from '@angular/forms';
 import { NewsType, NewsTypeObjectEnum } from 'src/app/model/news-type';
 
 @Component({
   selector: 'app-news-type-input',
   templateUrl: './news-type-input.component.html',
-  styleUrls: ['./news-type-input.component.css']
+  styleUrls: ['./news-type-input.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NewsTypeInputComponent implements OnInit, ControlValueAccessor {
 

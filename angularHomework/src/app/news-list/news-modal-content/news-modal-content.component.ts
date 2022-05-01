@@ -1,9 +1,11 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { UserPermissions } from '../../model/userPermissions';
 import { UserAuthService } from '../../user-authservice';
 import { News } from '../../model/news-type';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { filter } from 'rxjs';
+import { ChangeEditNewsService } from '../services/change-edit-news.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-news-modal-content',
@@ -13,34 +15,31 @@ import { filter } from 'rxjs';
 })
 export class NewsModalContentComponent implements OnInit {
 
-  
   public title: string = '';
-  private _news: News | undefined;
 
   readonly currUser: UserPermissions;
 
   newsForm!: FormGroup;
 
-  @Input()
-  get news(): News | undefined { return this._news}
-  set news(_news: News | undefined) {
-    this._news = _news;
-    this.title = this._news && this._news.id != 0 ? "изменить новость" : "Добавить новость";
-  }
-
-  @Output() saveNews: EventEmitter<News> = new EventEmitter();
-  @Output() cancel = new EventEmitter();
+  private news!: News;
   
-  constructor(private _userAuthService: UserAuthService, private fb: FormBuilder) { 
+  constructor(private _userAuthService: UserAuthService, 
+    private fb: FormBuilder,
+    private _changeEditService: ChangeEditNewsService,
+    private _router: Router) { 
     this.currUser = this._userAuthService.getUserPermissions();
   }
 
   ngOnInit(): void {
+
+    this.news = this._changeEditService.selectedNews;
+    this.title = this.news && this.news.id != 0 ? "изменить новость" : "Добавить новость";
+
     this.newsForm = this.fb.group({
-      date: [new Date()],
-      title: ["", [Validators.required]],
-      text: ["", [Validators.required]],
-      newsType: [],
+      date: [this.news?.dateTime ?? new Date()],
+      title: [this.news?.title ?? "", [Validators.required]],
+      text: [this.news?.text ?? "", [Validators.required]],
+      newsType: [this.news?.newsType],
     })
 
     this.newsForm.valueChanges.pipe(filter(() => this.newsForm.valid)).subscribe((value) =>
@@ -56,22 +55,12 @@ export class NewsModalContentComponent implements OnInit {
     );
   }
 
-  ngOnChanges(): void {
-    if (this.newsForm) {
-      this.newsForm.setValue({
-        title: this.news?.title,
-        text: this.news?.text,
-        date: this.news?.dateTime,
-        newsType: this.news?.newsType,
-      });
-    }
-  }
-
   clickSaveNews() {
-    this.saveNews.emit(this.news);
+    if (this.news)
+        this._changeEditService.$safe.next(this.news);
   }
 
   clickCancel() {
-    this.cancel.emit();
+    this._router.navigate([{outlets: {modal: null}}]);
   }
 }

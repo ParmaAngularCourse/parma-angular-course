@@ -11,6 +11,7 @@ import { UserPermissions } from './model/userPermissions';
 export class UserAuthService {
 
   private rootUrl = environment.host;
+  private userKey = "currentUser";
 
   private CurrentUser: UserInfo | null = null;
 
@@ -31,35 +32,43 @@ export class UserAuthService {
   }
 
   public getUserAuthorizationData(): string {
-    return this.CurrentUser?.login ?? "";
+    return this.getCurrentUser()?.login ?? "";
   }
 
   public authorise(login: string, password: string): Observable<boolean> {
     return this.http.get<UserInfo>(this.rootUrl + 'User', 
     {params: new HttpParams().set("login", login).append("pass", password)}).pipe(
-      tap(value => this.CurrentUser = value),
+      tap(value => {
+        this.CurrentUser = value;
+        localStorage.setItem(this.userKey, JSON.stringify(value))
+      }),
       map(value => value != null)
     );
   }
 
   public getCurrentUser(): UserInfo | null {
+    if (!this.CurrentUser) {
+      let info = localStorage.getItem(this.userKey);
+      this.CurrentUser = info != null ? JSON.parse(info) : null;
+    }
     return this.CurrentUser;
   }
 
   public logOut() {
     this.CurrentUser = null;
-  }
+    localStorage.removeItem(this.userKey);  }
 
   public changeUserInfo(newUserInfo: UserInfo): Observable<boolean> {
     return this.http.post<boolean>(this.rootUrl + 'User', newUserInfo).pipe(
       tap(isOk => {
         if (isOk) {
           this.CurrentUser = newUserInfo;
+          localStorage.setItem(this.userKey, JSON.stringify(newUserInfo))
         }
       }));
   }
 
-  public isAuthorised(): boolean {
-    return this.CurrentUser != null;
+  public isAuthorised(): boolean {   
+    return this.getCurrentUser() != null;
   }
 }

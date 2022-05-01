@@ -14,10 +14,5 @@
                 (deleteNews)="OnDeleteNews($event)" (editNews)="OnEditNews($event)"
                 (checkedNews)="onCheckedNews($event)"></app-news>
         </div>
-
-        <app-modal (cancel)="onCancelModal()">
-            <app-news-modal-content [news]="selectedNews" (cancel)="onCancelModal()" (saveNews)="onSaveNews($event)">
-            </app-news-modal-content>
-        </app-modal>
     </div>
 </div>

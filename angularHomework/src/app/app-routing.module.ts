@@ -3,13 +3,13 @@ import { RouterModule, Routes } from '@angular/router';
 import { AuthComponent } from './auth/auth.component';
 import { AuthGuard } from './guards/auth.guard';
 import { NewsListComponent } from './news-list/news-list.component';
-import { ModalComponent } from './shared/modal/modal.component';
+import { NewsModalComponent } from './news-list/news-modal/news-modal.component';
 import { UserInfoComponent } from './user-info/user-info.component';
 
 const routes: Routes = [
   {
     path: '',
-    redirectTo: '/auth',
+    redirectTo: '/main',
     pathMatch: 'full'
   },
   {
@@ -27,7 +27,7 @@ const routes: Routes = [
   },
   {
     path: 'add-edit-news',
-    component: ModalComponent,
+    component: NewsModalComponent,
     outlet: 'modal'
   }];
 
