@@ -26,3 +26,8 @@ export enum NewsTypes {
 export type JsonInformationListData = {
     informationList: Information[]
   }
+
+  export type searchData = {
+    titleValue?: string,
+    newsTypeValue?: number
+}

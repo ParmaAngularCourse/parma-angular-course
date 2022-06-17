@@ -8,7 +8,7 @@ import { AuthServiceService } from './auth-service.service';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'lesson7';
+  title = 'lesson8';
 
   loginText = this.getLoginText();
   isUserLogin = this.authService.isAuth();

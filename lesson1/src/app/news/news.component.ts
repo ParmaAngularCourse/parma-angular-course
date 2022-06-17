@@ -1,12 +1,16 @@
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { AbstractControl, FormControl, FormGroup } from '@angular/forms';
+import { AbstractControl, FormControl, FormGroup, FormsModule } from '@angular/forms';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
-import { debounceTime, distinctUntilChanged, filter, Observable, of, Subject, switchMap, takeUntil } from 'rxjs';
+import { debounceTime, distinctUntilChanged, filter, observable, Observable, of, Subject, switchMap, takeUntil } from 'rxjs';
 import { AuthServiceService } from '../auth-service.service';
 import { ContextMenuComponent } from './context-menu/context-menu.component';
-import { Information, NewsTypes, UserRightsObj } from './news-types';
+import { Information, UserRightsObj } from './news-types';
 import { PostEditorComponent } from './post-editor/post-editor.component';
 import { PostsService } from './posts.service';
+
+import {select, Store} from '@ngrx/store';
+import * as formStore from '../store';
+
 
 
 type errorValidate = {
@@ -25,20 +29,30 @@ export class NewsComponent implements OnInit, OnDestroy  {
   public posts: Information[] = [];
   public editedPost!: Information;
   public editorTitle?: string;
-  private newsTypeFilter?: null;
+  private newsTypeFilter?: number;
 
   editForm!: FormGroup;
   private ngUnsubscribeValueChange$: Subject<void> = new Subject();
 
 
-  private ngUnsubscribe$: Subject<void> = new Subject();
+  //private ngUnsubscribe$: Subject<void> = new Subject();
   searchTitle!: FormControl;
   searchTitleValue: string = "";
   searchTitleStatus: string = "";
 
   public userRights!: UserRightsObj;
 
-  constructor(private _postService: PostsService, private route: ActivatedRoute, private router: Router, private authService: AuthServiceService) { 
+  public posts$!: Observable<Information[] | undefined>;
+  public count$!: Observable<number | undefined>;
+  public countWithoutSomething$!: Observable<number>;
+  
+
+  constructor(
+    private store: Store<formStore.State>,
+    private _postService: PostsService, 
+    private route: ActivatedRoute, 
+    private router: Router, 
+    private authService: AuthServiceService) { 
 
     this.searchTitleValue = _postService.getSearchString();
 
@@ -46,24 +60,25 @@ export class NewsComponent implements OnInit, OnDestroy  {
 
     this.newsTypeFilter = route.snapshot.params['newstypeid'];
     
+    this.router.events.pipe(filter(e=> e instanceof NavigationEnd), takeUntil(this.ngUnsubscribeValueChange$))
+                          .subscribe(() => {
+          
+                                              this.store.dispatch(formStore.LoadPosts({searchData: {titleValue: this.searchTitleValue, newsTypeValue: this.newsTypeFilter}}));
 
-    this.router.events.pipe(filter(e=> e instanceof NavigationEnd), takeUntil(this.ngUnsubscribeValueChange$)).subscribe(()=> this._postService.getPosts(this.searchTitleValue)
-                                                                    .pipe(takeUntil(this.ngUnsubscribe$))
-                                                                    .subscribe(posts => {
-                                                                      this.posts = this.filterPostsByNewsType(posts);
-                                                                    })) ;  
+                                              this.posts$ = this.store.pipe(select(formStore.selectPosts));
+                                              this.count$ = this.store.pipe(select(formStore.selectPostsCount));
+                                              this.countWithoutSomething$ = this.store.pipe(select(formStore.selectPostsWithoutSomethingCount));
+                                          });
 
 
+    route.params.pipe(takeUntil(this.ngUnsubscribeValueChange$)).subscribe(() => {
 
+                        this.store.dispatch(formStore.LoadPosts({searchData: {titleValue: this.searchTitleValue, newsTypeValue: this.newsTypeFilter}}));
 
-    route.params.pipe(takeUntil(this.ngUnsubscribeValueChange$)).subscribe(value => 
-                  ()=> this._postService.getPosts(this.searchTitleValue)
-                  .pipe(takeUntil(this.ngUnsubscribe$))
-                  .subscribe(posts => {
-                    this.posts = this.filterPostsByNewsType(posts);
-
-                  }));
-
+                        this.posts$ = this.store.pipe(select(formStore.selectPosts));
+                        this.count$ = this.store.pipe(select(formStore.selectPostsCount));
+                        this.countWithoutSomething$ = this.store.pipe(select(formStore.selectPostsWithoutSomethingCount));
+      });
   }
   
 
@@ -86,12 +101,13 @@ initFormGroup()
               });
 }
   ngOnInit(): void {
+       
+    this.store.dispatch(formStore.LoadPosts({searchData: {titleValue: this.searchTitleValue, newsTypeValue: this.newsTypeFilter}}));
 
-    this._postService.getPosts(this.searchTitleValue)
-                      .pipe(takeUntil(this.ngUnsubscribe$))
-                      .subscribe(posts => {
-                        this.posts = this.filterPostsByNewsType(posts);
-                      });
+    this.posts$ = this.store.pipe(select(formStore.selectPosts));
+    this.count$ = this.store.pipe(select(formStore.selectPostsCount));
+    this.countWithoutSomething$ = this.store.pipe(select(formStore.selectPostsWithoutSomethingCount));
+
 
     this.searchTitle = new FormControl(this.searchTitleValue, [], [notOneAsyncValidator] );
 
@@ -99,17 +115,19 @@ initFormGroup()
     this.searchTitleStatus = this.searchTitle.status;
 
     this.searchTitle.valueChanges   
-                .pipe(debounceTime(600),
-                      distinctUntilChanged(),
-                      filter(() => this.searchTitle.valid),
-                      switchMap(value => this._postService.getPosts(value)),
-                      takeUntil(this.ngUnsubscribe$))
-                .subscribe(
-                  posts => {
-                    this.posts = this.filterPostsByNewsType(posts);
-                    this.searchTitleValue = this._postService.getSearchString();
-                  });
+                  .pipe(debounceTime(600),
+                        distinctUntilChanged(),
+                        filter(() => this.searchTitle.valid),
+                        takeUntil(this.ngUnsubscribeValueChange$)
+                      )
+                      .subscribe(value => {
+                        this.store.dispatch(formStore.LoadPosts({searchData: {titleValue: value, newsTypeValue: this.newsTypeFilter}}));
 
+                        this.posts$ = this.store.pipe(select(formStore.selectPosts));
+                        this.count$ = this.store.pipe(select(formStore.selectPostsCount));
+                        this.countWithoutSomething$ = this.store.pipe(select(formStore.selectPostsWithoutSomethingCount));
+
+                      });
 
     this.initFormGroup();
   }
@@ -124,9 +142,10 @@ initFormGroup()
   }
 
 
+
   ngOnDestroy(){
-    this.ngUnsubscribe$.next();
-    this.ngUnsubscribe$.complete();
+    //this.ngUnsubscribe$.next();
+    //this.ngUnsubscribe$.complete();
 
     this.ngUnsubscribeValueChange$.next();
     this.ngUnsubscribeValueChange$.complete();
@@ -139,45 +158,63 @@ initFormGroup()
 
   onEditPost($event: Information){   
     this.editorTitle = "Редактировать новость"; 
+       
     this.editedPost = $event;
+   
+    //this.router.navigate([{outlets: {modalPostEditor: 'modal'}}]);
     this.modalWindowPost.show(true);
   }
 
   onDeletePost($event: Information){    
-    this._postService.deletePost($event);
+    //this._postService.deletePost($event);
   }
 
   onCheckPost($event: Information){    
-    this._postService.checkPost($event);
+    //this._postService.checkPost($event);
   }
 
   onNewPost(){    
-    this.editorTitle = "Добавить новость";
-    this.editedPost = {date: "", title: "", text: "" };
+    this.modalWindowPost.editorTitle = "Добавить новость";
+    this.modalWindowPost.edit_post = {date: "", title: "", text: "" };
 
-    this.router.navigate([{outlets: {modalPostEditor: 'modal'}}]);
+    this.modalWindowPost.show(true);
+    //this.router.navigate([{outlets: {modalPostEditor: 'modal'}}]);
   }
 
 
   onSavePost($event: Information){    
-    this._postService.savePost($event);
+
+/*
+    this.editedPost.date = $event.date;
+    this.editedPost.title = $event.title;
+    this.editedPost.text = $event.text;
+    this.editedPost.newsType = $event.newsType;
+*/
+    this.store.dispatch(formStore.addPost({post: $event}));
+
+    //this._postService.savePost($event);
     this.modalWindowPost.show(false);
+
+    //this.router.navigate([{outlets: {modalPostEditor: null}}]);
   }
 
   onCancelEditPost(){   
+    
+    //this.router.navigate([{outlets: {modalPostEditor: null}}]);
     this.modalWindowPost.show(false);
   } 
 
   onCheckAll(){   
-    this._postService.checkAll(); 
+    //this._postService.checkAll(); 
   }
 
   onDeleteSelected(){
-    this._postService.deleteSelected(); 
+    //this._postService.deleteSelected(); 
   }
 
   getIsAnySelect(){
-    return this._postService.getIsAnySelect();
+    return false; 
+    //return this._postService.getIsAnySelect();
   }
 
 

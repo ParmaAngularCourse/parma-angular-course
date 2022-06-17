@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Information, JsonInformationListData, NewsTypes } from './news-types';
-import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams } from '@angular/common/http';
-import { BehaviorSubject, delay, map, Observable, ReplaySubject, Subject, Subscription, takeLast, takeUntil } from 'rxjs';
+import { Information, JsonInformationListData } from './news-types';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { map, Observable, Subject, takeUntil } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -10,8 +10,7 @@ import { BehaviorSubject, delay, map, Observable, ReplaySubject, Subject, Subscr
 
 export class PostsService {
 
-  private postSubject?: BehaviorSubject<Information[]>;
-  private postSubjectSubscription!: Subscription;
+  //private postSubject?: BehaviorSubject<Information[]>;
   private ngUnsubscribe$!: Subject<number>;
 
   private searchString = "";
@@ -46,44 +45,50 @@ export class PostsService {
     this.searchString = searchString ?? "";
   }
 
-  public getPosts (searchString?: string): Observable<Information[]>
+  public getPosts (searchString?: string, newsType?: number): Observable<Information[]>
   {  
     this.setSearchString(searchString);
 
-      this.postSubject = new BehaviorSubject<Information[]>([]);
-      this.getNewsFromServer(searchString)
-          .pipe(takeUntil(this.ngUnsubscribe$))
-          .subscribe((value)=> {this.postSubject?.next(value)});
+      //this.postSubject = new BehaviorSubject<Information[]>([]);
+
+
+      return this.getNewsFromServer(searchString, newsType)
+          .pipe(takeUntil(this.ngUnsubscribe$));
+          //.subscribe((value)=> {this.postSubject?.next(value)});
     
-          return this.postSubject.asObservable();
+          //return this.postSubject.asObservable();
   }
 
-  public savePost(param: Information){    
+  public savePost(param: Information){   
 
+    /*
     let currentPostIndex = this.postSubject?.value.indexOf(param);
       
     if(currentPostIndex == -1) {
       this.postSubject?.value.push(param);
-    }
+    }*/
   }
 
   public checkAll(){    
-    this.postSubject?.value.map(i=> i.isCheck = true);
+    //this.postSubject?.value.map(i=> i.isCheck = true);
   }
 
   public deleteSelected(){
-    this.postSubject?.next(this.postSubject?.value.filter(i=> !i.isCheck));
+    //this.postSubject?.next(this.postSubject?.value.filter(i=> !i.isCheck));
   }
 
   public  getIsAnySelect(){
+    /*
     if(this.postSubject?.value)
       return this.postSubject?.value.filter(i=> i.isCheck).length > 0;
+    */
 
-    return false;
+    //return false; 
   }
 
   public deletePost(param: Information){    
-    this.postSubject?.value.splice(this.postSubject?.value.indexOf(param), 1);
+    
+    //this.postSubject?.value.splice(this.postSubject?.value.indexOf(param), 1);
   }
 
   public checkPost(param: Information){    
@@ -95,11 +100,16 @@ export class PostsService {
   }
  
 
-  private getNewsFromServer(searchString?: string): Observable<Information[]>
+  private getNewsFromServer(searchString?: string, newsType?: number): Observable<Information[]>
   {
-    let params;
+    let params = new HttpParams();
+
     if(searchString)
-      params = new HttpParams().set('searchString', searchString);
+      params = params.set('searchString', searchString);
+
+    if(newsType)
+      params = params.set('newsType', newsType);
+
 
     /*
       // вариант для POST-запроса

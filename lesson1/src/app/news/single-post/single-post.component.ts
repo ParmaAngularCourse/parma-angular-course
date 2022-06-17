@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy } from '@angular/core';
 import { Component, Input, OnInit, Output } from '@angular/core';
 import { EventEmitter } from '@angular/core';
+import { Router } from '@angular/router';
 import { Information, NewsTypes } from '../news-types';
 
 
@@ -17,16 +18,18 @@ export class SinglePostComponent implements OnInit {
   @Output() deletePost: EventEmitter<Information> = new EventEmitter(); 
   @Output() checkPost: EventEmitter<Information> = new EventEmitter(); 
 
-  constructor() { }
+  constructor(private router: Router ) { }
 
   ngOnInit(): void {
   }
 
   ngDoCheck(){
-    //console.log('single-post-component ' + this.single_post.title);
+
   }
 
   clickEditButton(param: Information){
+    
+    //this.router.navigate([{outlets: {modalPostEditor: 'modal'}}]);
     this.editPost.emit(param);
   }
 
