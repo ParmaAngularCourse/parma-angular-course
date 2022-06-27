@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnDestroy, OnI
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { filter, Subject, Subscription, takeUntil } from 'rxjs';
+import { AuthServiceService } from 'src/app/auth-service.service';
 import { Information, NewsTypes, UserRightsObj } from '../news-types';
 
 @Component({
@@ -14,7 +15,6 @@ export class PostEditorComponent implements OnInit, OnDestroy  {
 
 
   @Input("edit_post_data") edit_post!: Information;
-  @Input("user_data") userRights!: UserRightsObj;
   
   @Output() savePost: EventEmitter<Information> = new EventEmitter(); 
   @Output() cancelEditPost: EventEmitter<boolean> = new EventEmitter(); 
@@ -27,10 +27,17 @@ export class PostEditorComponent implements OnInit, OnDestroy  {
 
   editForm!: FormGroup;
 
-  public isEditorOpen: boolean = true;
+  public userRights!: UserRightsObj;
+
+  public isEditorOpen: boolean = false;
   private ngUnsubscribeValueChange$: Subject<void> = new Subject();
+  public editorTitle = 'Заголовок';
   
-  constructor(private router: Router ) { }
+  constructor(private router: Router, private authService: AuthServiceService) { 
+      
+    this.userRights = this.authService.getUserRights();
+
+  }
 
 
   ngOnInit(): void {
@@ -47,6 +54,7 @@ export class PostEditorComponent implements OnInit, OnDestroy  {
   get title() { return this.editForm.get('title'); }
   get text() { return this.editForm.get('text'); }
   get newsType() { return this.editForm.get('newsType'); }
+  
   get newsTypeError() {
     
     let errors = this.editForm.controls['newsType'].errors;
@@ -68,6 +76,7 @@ export class PostEditorComponent implements OnInit, OnDestroy  {
     this.editForm.valueChanges
                 .pipe(takeUntil(this.ngUnsubscribeValueChange$))
                 .subscribe((value)=>{
+                  
                   this.localData.date = value.date;
                   this.localData.title = value.title;
                   this.localData.text = value.text == undefined ? "": value.text;
@@ -77,12 +86,14 @@ export class PostEditorComponent implements OnInit, OnDestroy  {
 
   show(isShow: boolean)
   {
-    //this.isEditorOpen = isShow;
-
+    this.isEditorOpen = isShow;
+    
+    /*
     if(isShow)
       this.router.navigate([{outlets: {modalPostEditor: 'modal'}}]);
     else
       this.router.navigate([{outlets: {modalPostEditor: null}}]);
+      */
   }
 
 
@@ -96,17 +107,31 @@ export class PostEditorComponent implements OnInit, OnDestroy  {
     this.initFormGroup();
   }
 
-  clickPostEditorSaveButton(param: Information){
-    param.date = this.localData.date;
-    param.title = this.localData.title;
-    param.text = this.localData.text;
-    param.newsType = this.localData.newsType;
+  clickPostEditorSaveButton(){
+    //this.edit_post.date = this.localData.date;
+    //this.edit_post.title = this.localData.title;
+    //this.edit_post.text = this.localData.text;
+    //this.edit_post.newsType = this.localData.newsType;
 
-    this.savePost.emit(param);
+    this.savePost.emit(this.localData);
+    
+    /*
+      this.savePost.emit({
+      date:  this.localData.date,
+      title: this.localData.title,
+      text: this.localData.text,
+      newsType: this.localData.newsType,
+      isCheck: param.isCheck,
+    });
+     */
+
+    //this.router.navigate([{outlets: {modalPostEditor: null}}]);
   }
 
   clickPostEditorCancelButton(){
     this.cancelEditPost.emit();
+
+    //this.router.navigate([{outlets: {modalPostEditor: null}}]);
   }
 
 }

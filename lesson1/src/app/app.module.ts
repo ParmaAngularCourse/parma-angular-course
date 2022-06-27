@@ -18,6 +18,10 @@ import { AppRoutingModule } from './app-routing/app-routing.module';
 import { ProfileComponent } from './profile/profile.component';
 import { LoginComponent } from './login/login.component';
 import { OutletModalEditorComponent } from './outlet-modal-editor/outlet-modal-editor.component';
+import { StoreModule } from '@ngrx/store';
+import { EffectsModule } from '@ngrx/effects';
+import { reducers } from './store';
+import { effects } from './store/effects';
 
 @NgModule({
   declarations: [
@@ -39,7 +43,9 @@ import { OutletModalEditorComponent } from './outlet-modal-editor/outlet-modal-e
     BrowserModule,
     HttpClientModule,
     ReactiveFormsModule,
-    AppRoutingModule
+    AppRoutingModule,
+    StoreModule.forRoot(reducers),
+    EffectsModule.forRoot(effects)
   ],
   providers: [{
     provide: HTTP_INTERCEPTORS,

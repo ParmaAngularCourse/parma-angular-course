@@ -1,3 +1,4 @@
+
 <div *ngIf="isEditorOpen" style="position: absolute; left: 50%; top: 50%; z-index: 999;  margin-left: -150px; margin-top: -150px;" >
 
     <ng-content></ng-content>
@@ -25,13 +26,12 @@
         <app-news-type formControlName="newsType"></app-news-type>
         <div *ngIf=newsType?.invalid style="color: red;">{{newsTypeError}}</div>
 
-        <!--    <div *ngIf=editForm.get(newsType).hasError(required) style="color: red;">{{newsType?.errors|json}}}</div>-->
-        <!--<div *ngIf=newsType?.invalid style="color: red;">{{newsType?.errors['[customValidator]'].message}}}</div>-->
-        <!--<div *ngIf=newsType?.invalid style="color: red;">{{newsType?.errors|json}}}</div>-->
-
         <div style="margin-bottom: 5px; text-align: right;">
             <br>
-            <button *appUserRightsStr=userRights.isUsercanEditNews style="display: inline-block;" (click)="clickPostEditorSaveButton(edit_post) " class="blueButton" [disabled]="!editForm.valid"   >Сохранить</button>
+            <button *appUserRightsStr=userRights.isUsercanEditNews style="display: inline-block;" (click)="clickPostEditorSaveButton() " class="blueButton" [disabled]="!editForm.valid"   >Сохранить</button>
             <div style="width: 10px; display: inline-block;"></div>
             <button style="display: inline-block; " (click)="clickPostEditorCancelButton()" class="blueButton">Отмена</button>
         </div>
+    </div>
+    </div>
+</div>
