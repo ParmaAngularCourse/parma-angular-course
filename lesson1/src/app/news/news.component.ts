@@ -42,11 +42,16 @@ export class NewsComponent implements OnInit, OnDestroy  {
 
   public userRights!: UserRightsObj;
 
-  public posts$!: Observable<Information[] | undefined>;
-  public count$!: Observable<number | undefined>;
-  public countWithoutSomething$!: Observable<number>;
+  public posts$ = this.store.pipe(select(formStore.selectPosts));
+  public count$ = this.store.pipe(select(formStore.selectPostsCount));
+  public countWithoutSomething$ = this.store.pipe(select(formStore.selectPostsWithoutSomethingCount));
   
-
+  public countNewsPolitic$ = this.store.pipe(select(formStore.selectPostsPolitic));
+  public countNewsTravel$ = this.store.pipe(select(formStore.selectPostsTravel));
+  public countNewsEconomic$ = this.store.pipe(select(formStore.selectPostsEconomic));
+  public countNewsSince$ = this.store.pipe(select(formStore.selectPostsSince));
+  public countNewsInternet$ = this.store.pipe(select(formStore.selectPostsInternet));
+  
   constructor(
     private store: Store<formStore.State>,
     private _postService: PostsService, 
@@ -54,7 +59,7 @@ export class NewsComponent implements OnInit, OnDestroy  {
     private router: Router, 
     private authService: AuthServiceService) { 
 
-    this.searchTitleValue = _postService.getSearchString();
+    this.searchTitleValue = this._postService.getSearchString();
 
     this.userRights = this.authService.getUserRights();
 
@@ -62,22 +67,12 @@ export class NewsComponent implements OnInit, OnDestroy  {
     
     this.router.events.pipe(filter(e=> e instanceof NavigationEnd), takeUntil(this.ngUnsubscribeValueChange$))
                           .subscribe(() => {
-          
                                               this.store.dispatch(formStore.LoadPosts({searchData: {titleValue: this.searchTitleValue, newsTypeValue: this.newsTypeFilter}}));
-
-                                              this.posts$ = this.store.pipe(select(formStore.selectPosts));
-                                              this.count$ = this.store.pipe(select(formStore.selectPostsCount));
-                                              this.countWithoutSomething$ = this.store.pipe(select(formStore.selectPostsWithoutSomethingCount));
                                           });
 
 
     route.params.pipe(takeUntil(this.ngUnsubscribeValueChange$)).subscribe(() => {
-
                         this.store.dispatch(formStore.LoadPosts({searchData: {titleValue: this.searchTitleValue, newsTypeValue: this.newsTypeFilter}}));
-
-                        this.posts$ = this.store.pipe(select(formStore.selectPosts));
-                        this.count$ = this.store.pipe(select(formStore.selectPostsCount));
-                        this.countWithoutSomething$ = this.store.pipe(select(formStore.selectPostsWithoutSomethingCount));
       });
   }
   
@@ -104,11 +99,6 @@ initFormGroup()
        
     this.store.dispatch(formStore.LoadPosts({searchData: {titleValue: this.searchTitleValue, newsTypeValue: this.newsTypeFilter}}));
 
-    this.posts$ = this.store.pipe(select(formStore.selectPosts));
-    this.count$ = this.store.pipe(select(formStore.selectPostsCount));
-    this.countWithoutSomething$ = this.store.pipe(select(formStore.selectPostsWithoutSomethingCount));
-
-
     this.searchTitle = new FormControl(this.searchTitleValue, [], [notOneAsyncValidator] );
 
     this.searchTitleValue = this.searchTitle.value;
@@ -122,10 +112,6 @@ initFormGroup()
                       )
                       .subscribe(value => {
                         this.store.dispatch(formStore.LoadPosts({searchData: {titleValue: value, newsTypeValue: this.newsTypeFilter}}));
-
-                        this.posts$ = this.store.pipe(select(formStore.selectPosts));
-                        this.count$ = this.store.pipe(select(formStore.selectPostsCount));
-                        this.countWithoutSomething$ = this.store.pipe(select(formStore.selectPostsWithoutSomethingCount));
 
                       });
 

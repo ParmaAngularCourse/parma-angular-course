@@ -1,5 +1,6 @@
 import { isNgTemplate } from '@angular/compiler';
 import { createSelector } from '@ngrx/store';
+import { NewsTypes } from 'src/app/news/news-types';
 import * as formreducer from '../reducers';
 
 export function selectPosts(state: formreducer.State){
@@ -22,8 +23,25 @@ export function selectPostsByNewsType(state: formreducer.State, newsType?: numbe
     return state.postObjects.posts;
 }
 
+export function selectPostsEconomic(state: formreducer.State){
+    return state.postObjects.posts?.filter(item => item.newsType == NewsTypes.Economic).length;
+}
+export function selectPostsInternet(state: formreducer.State){
+    return state.postObjects.posts?.filter(item => item.newsType == NewsTypes.Internet).length;
+}
+export function selectPostsPolitic(state: formreducer.State){
+    return state.postObjects.posts?.filter(item => item.newsType == NewsTypes.Politic).length;
+}
+export function selectPostsSince(state: formreducer.State){
+    return state.postObjects.posts?.filter(item => item.newsType == NewsTypes.Since).length;
+}
+export function selectPostsTravel(state: formreducer.State){
+    return state.postObjects.posts?.filter(item => item.newsType == NewsTypes.Travel).length;
+}
+
+
 export const selectPostsWithoutSomethingCount = createSelector(
     selectPostsCount,
     selectPostsWithSomethingCount,
-    (postsCount, PostsWithSomethingCount ) => (postsCount &&PostsWithSomethingCount ) ? postsCount - PostsWithSomethingCount : 0
+    (postsCount, PostsWithSomethingCount ) => (postsCount && PostsWithSomethingCount ) ? postsCount - PostsWithSomethingCount : 0
 );
