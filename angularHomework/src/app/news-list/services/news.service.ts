@@ -33,6 +33,13 @@ export class NewsService {
   return this.newsSubject.asObservable();
 }
 
+public getOneNews(id: number): Observable<News | undefined> {
+  console.log("getOneNews", id);
+  return this.getNews().pipe(
+    map(s => s.find(n => n.id == id))
+  );
+}
+
   public deleteNews(id: number): Observable<boolean> {
     return this.httpNewsService.deleteNews(id).pipe(
       tap(isOk => {
@@ -63,6 +70,7 @@ export class NewsService {
 
   public addOrEditNews(news: News): Observable<boolean> {
 
+    //console.log("addOrEditNews, id: ", news.id)
     var newsObj = {
       id: news.id,
       title: news.title,

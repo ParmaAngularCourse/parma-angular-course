@@ -6,7 +6,7 @@ import { NewsService } from './services/news.service';
 import { UserAuthService } from '../user-authservice';
 import { UserPermissions } from '../model/userPermissions';
 import { FormControl } from '@angular/forms';
-import { bufferCount, combineLatest, concatAll, debounceTime, distinctUntilChanged, filter, first, of, Subject, switchMap, takeUntil, toArray } from 'rxjs';
+import { bufferCount, combineLatest, concatAll, debounceTime, distinctUntilChanged, filter, first, map, of, Subject, switchMap, takeUntil, toArray, tap  } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ChangeEditNewsService } from './services/change-edit-news.service';
 
@@ -84,22 +84,22 @@ export class NewsListComponent implements OnInit {
     let allNews = this.groupedNews.flat();
     const index = allNews.findIndex(item => item.id === $event);
     if (index > -1) {
-      this._changeEditService.selectedNews = allNews[index];
       this.subscribeOnChangeNews('Failed to update the news');
 
-      this._router.navigate([{ outlets: { modal: 'add-edit-news' } }]);
+      this._router.navigate([{ outlets: { modal: 'add-edit-news' } }], {queryParams: {newsId: $event}});
     }
   }
 
   private subscribeOnChangeNews(message: string) {
     this._changeEditService.$safe.pipe(
       first(),
-      switchMap((news) => combineLatest([of(news), this._newsService.addOrEditNews(news)]))
+      tap(news => console.log(news)),
+      switchMap((news) => this._newsService.addOrEditNews(news))
     ).subscribe(
       (result) => {
-        if (result[1]) {
+        console.log("addOrEditNews result:", result)
+        if (result) {
           this._router.navigate([{ outlets: { modal: null } }]);
-          this._changeEditService.selectedNews = result[0];
         }
         else {
           console.log(message);
@@ -109,14 +109,6 @@ export class NewsListComponent implements OnInit {
   }
 
   OnClickAddButton() {
-    let newNews = {
-      id: 0,
-      dateTime: '',
-      title: '',
-      text: '',
-      newsType: NewsTypeObjectEnum.Politics
-    };
-    this._changeEditService.selectedNews = newNews;
     this.subscribeOnChangeNews('Failed to add the news');
     this._router.navigate([{outlets: {modal: 'add-edit-news'}}]);
   }
